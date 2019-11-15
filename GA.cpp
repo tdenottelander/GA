@@ -17,6 +17,31 @@ int runs = 100;
 bool optFound = false;
 auto rng = default_random_engine(0);
 
+class Individual {
+    public:
+        uvec genotype;
+        int fitness;
+        
+        Individual(int length){
+            genotype = uvec (length);
+            for(int i = 0; i < length; i++){
+                genotype[i] = ((float)rand() / RAND_MAX) < 0.5 ? 1 : 0;
+            }
+        }
+        
+        string toString(){
+            string result = "[";
+            for (int i = 0; i < genotype.size(); i++){
+                result += to_string(genotype[i]);
+                if(i != (genotype.size() - 1)){
+                    result += " ";
+                }
+            }
+            result += "]";
+            return result;
+        }
+};
+
 void printSolution(uvec vec){
     cout << "[";
     for (int i = 0; i < vec.size(); i++){
@@ -292,9 +317,13 @@ int main()
     // uvec x(10);
     // x.fill(0);
 
-    vector<uvec> x = initPopulation(5, 10);
+    // vector<uvec> x = initPopulation(5, 10);
 
-    for(uvec y: x) cout << y << endl;
+    // for(uvec y: x) cout << y << endl;
+
+    Individual individual (5);
+    string result = individual.toString();
+    cout << result << endl;
 
     return 0;
 }
