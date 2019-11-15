@@ -9,9 +9,9 @@
           "-std=c++17",
           "-stdlib=libc++",
           "-larmadillo",
-          "GA.cpp",
+          "main.cpp",
           "-o",
-          "GA.out",
+          "main.out",
           "--debug"
         ],
         "group": {

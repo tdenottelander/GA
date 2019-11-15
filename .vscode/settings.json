@@ -60,6 +60,20 @@
         "unordered_map": "cpp",
         "utility": "cpp",
         "armadillo": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "deque": "cpp",
+        "__errc": "cpp",
+        "__node_handle": "cpp",
+        "__tree": "cpp",
+        "clocale": "cpp",
+        "condition_variable": "cpp",
+        "optional": "cpp",
+        "fstream": "cpp",
+        "map": "cpp",
+        "queue": "cpp",
+        "thread": "cpp",
+        "bit": "cpp",
+        "memory_resource": "cpp",
+        "cinttypes": "cpp"
     }
 }
