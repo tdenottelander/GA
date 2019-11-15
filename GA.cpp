@@ -17,7 +17,7 @@ int runs = 100;
 bool optFound = false;
 auto rng = default_random_engine(0);
 
-void printSolution(vector<int> vec){
+void printSolution(uvec vec){
     cout << "[";
     for (int i = 0; i < vec.size(); i++){
         cout << vec[i];
@@ -28,7 +28,7 @@ void printSolution(vector<int> vec){
     cout << "]";
 }
 
-int evaluate(vector<int> sol){
+int evaluate(uvec sol){
     int res = 0;
     for(int i = 0; i < sol.size(); i++){
         res += sol[i];
@@ -39,7 +39,7 @@ int evaluate(vector<int> sol){
     return res;
 }
 
-float getAvgFitness(vector<vector<int>> population){
+float getAvgFitness(vector<uvec> population){
     int totalFitness = 0;
     int n = population.size();
     for(int i = 0; i < n; i++){
@@ -49,7 +49,7 @@ float getAvgFitness(vector<vector<int>> population){
     return avgFitness;
 }
 
-vector<float> getProportions(vector<vector<int>> population){
+vector<float> getProportions(vector<uvec> population){
     int n = population.size();
     vector<float> proportions (n);
     vector<int> fitness (n);
@@ -77,7 +77,7 @@ void printAvgFitness(){
     cout << "Average fitness of the population: " << avgFitness << endl;
 }
 
-void printPopulation(vector<vector<int>> pop){
+void printPopulation(vector<uvec> pop){
     vector<float> proportions = getProportions(pop);
     for(int i = 0; i < pop.size(); i++){
         cout << i << ": ";
@@ -99,19 +99,19 @@ uvec initSolution(int l){
     return sol;
 }
 
-vector<vector<int>> initPopulation (int n, int l){
-    vector<vector<int>> population;
+vector<uvec> initPopulation (int n, int l){
+    vector<uvec> population;
     population.reserve(n);
     for (int i = 0; i < n; i++){
-        // vector<int> individual = initSolution(l);
-        // population.push_back(individual);
+        uvec individual = initSolution(l);
+        population.push_back(individual);
     }
     return population;
 }
 
-vector<vector<int>> univariateCrossover(vector<int> & sol1, vector<int> & sol2){
+vector<uvec> univariateCrossover(uvec & sol1, uvec & sol2){
 
-    vector<vector<int>> result;
+    vector<uvec> result;
 
     for(int i = 0; i < sol1.size(); i++){
         if(getRand() < 0.5){
@@ -127,7 +127,7 @@ vector<vector<int>> univariateCrossover(vector<int> & sol1, vector<int> & sol2){
     return result;
 }
 
-int getRandomParentIndex (vector<vector<int>> population, vector<float> proportions){
+int getRandomParentIndex (vector<uvec> population, vector<float> proportions){
     float r = getRand();
     for(int i = 0; i < population.size(); i++){
         if(r < proportions[i]){
@@ -137,8 +137,8 @@ int getRandomParentIndex (vector<vector<int>> population, vector<float> proporti
     return -1;
 }
 
-vector<vector<int>> selectionAndVariation (vector<vector<int>> population){
-    vector<vector<int>> newPopulation;
+vector<uvec> proportionateSelectionAndVariation (vector<uvec> population){
+    vector<uvec> newPopulation;
     newPopulation.reserve(population.size());
     vector<float> proportions = getProportions(population);
 
@@ -146,7 +146,7 @@ vector<vector<int>> selectionAndVariation (vector<vector<int>> population){
         int parent1 = getRandomParentIndex(population, proportions);
         int parent2 = getRandomParentIndex(population, proportions);
 
-        vector<vector<int>> offspring = univariateCrossover(population[parent1], population[parent2]);
+        vector<uvec> offspring = univariateCrossover(population[parent1], population[parent2]);
         newPopulation.push_back(offspring[0]);
         newPopulation.push_back(offspring[1]);
     }
@@ -154,12 +154,12 @@ vector<vector<int>> selectionAndVariation (vector<vector<int>> population){
     return newPopulation;
 }
 
-vector<vector<int>> tournament2(vector<vector<int>> population){
+vector<uvec> tournament2(vector<uvec> population){
     vector<int> randomIndices;
     randomIndices.reserve(2 * n);
     for (int i = 0; i < (2*n); i++) randomIndices.push_back(i);
     shuffle(randomIndices.begin(), randomIndices.end(), rng);
-    vector<vector<int>> newPopulation;
+    vector<uvec> newPopulation;
     newPopulation.reserve(n);
 
     for(int i = 0; i < n; i++){
@@ -176,8 +176,8 @@ vector<vector<int>> tournament2(vector<vector<int>> population){
     return newPopulation;
 }
 
-vector<vector<int>> tournament4(vector<vector<int>> population){
-    vector<vector<int>> newPopulation;
+vector<uvec> tournament4(vector<uvec> population){
+    vector<uvec> newPopulation;
     newPopulation.reserve(n);
 
     //Do the tournament twice, because we have 2*n indivudals and tournament size 4.
@@ -227,7 +227,7 @@ vector<vector<int>> tournament4(vector<vector<int>> population){
     return newPopulation;
 }
 
-vector<vector<int>> variationAndSelection(vector<vector<int>> & population){
+vector<uvec> variationAndSelection(vector<uvec> & population){
     //Create a vector of random indices of all individuals in the population
     vector<int> randomIndices;
     randomIndices.reserve(n);
@@ -239,7 +239,7 @@ vector<vector<int>> variationAndSelection(vector<vector<int>> & population){
         int parent1idx = randomIndices[i*2];
         int parent2idx = randomIndices[i*2+1];
 
-        vector<vector<int>> offspring = univariateCrossover(population[parent1idx], population[parent2idx]);
+        vector<uvec> offspring = univariateCrossover(population[parent1idx], population[parent2idx]);
 
         population.push_back(offspring[0]);
         population.push_back(offspring[1]);
@@ -247,7 +247,7 @@ vector<vector<int>> variationAndSelection(vector<vector<int>> & population){
     //Now we have P+O in population
 
     //Do tournament selection on P+O
-    vector<vector<int>> newPopulation = tournament4(population);
+    vector<uvec> newPopulation = tournament4(population);
 
     return newPopulation;
 }
@@ -257,7 +257,7 @@ void GA(){
     int optimalFound = 0;
     for (int i = 0; i < runs; i++){
         optFound = false;
-        vector<vector<int>> population = initPopulation(n, l);
+        vector<uvec> population = initPopulation(n, l);
         // printPopulation(population);
 
         for(int i = 0; i < gens; i++){
@@ -292,9 +292,9 @@ int main()
     // uvec x(10);
     // x.fill(0);
 
-    uvec x = initSolution(20);
+    vector<uvec> x = initPopulation(5, 10);
 
-    cout << x << endl;
+    for(uvec y: x) cout << y << endl;
 
     return 0;
 }
