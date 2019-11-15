@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 using namespace std;
 
@@ -14,7 +12,10 @@ class UnivariateCrossover : public Variation {
     public:
         vector<Individual> variate(vector<Individual> &population){
             int n = population.size();
-            vector<int> randomIndices = getRandomlyPermutedArray(population.size(), rng);
+            vector<int> randomIndices;
+            randomIndices.reserve(n);
+            for (int i = 0; i < n; i++) randomIndices.push_back(i);
+            shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
             vector<Individual> newPopulation;
             newPopulation.reserve(n);
 
@@ -38,7 +39,7 @@ class UnivariateCrossover : public Variation {
             Individual newInd2 = ind2.copy();
 
             for(int i = 0; i < ind1.genotype.size(); i++){
-                if(getRand() < 0.5){
+                if(((float)rand() / RAND_MAX) < 0.5){
                     newInd1.genotype[i] = ind2.genotype[i];
                     newInd2.genotype[i] = ind1.genotype[i];
                 }

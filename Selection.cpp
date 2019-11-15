@@ -1,8 +1,4 @@
-#pragma once
-
-// #include "Individual.h"
-#include "Selection.h"
-
+#include <iostream>
 using namespace std;
 
 class Selection {
@@ -56,7 +52,10 @@ class TournamentSelection : public Selection {
     //TODO FINISH THIS
         void select(vector<Individual> &population, int outputSize, int tournamentSize){
             int n = population.size();
-            vector<int> randomIndices = getRandomlyPermutedArray(population.size(), rng);
+            vector<int> randomIndices;
+            randomIndices.reserve(n);
+            for (int i = 0; i < n; i++) randomIndices.push_back(i);
+            shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
             vector<Individual> newPopulation;
             newPopulation.reserve(n);
 

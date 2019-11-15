@@ -1,7 +1,4 @@
-#pragma once
-
 #include <vector>
-#include "RNG.cpp"
 using namespace std;
 
 vector<int> getRandomlyPermutedArray (int n, RNG rng){

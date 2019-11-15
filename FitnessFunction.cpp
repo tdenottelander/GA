@@ -1,8 +1,3 @@
-#pragma once
-#include "FitnessFunction.h"
-
-using namespace N;
-
 class FitnessFunction {
     public:
         Individual bestIndividual = (0);

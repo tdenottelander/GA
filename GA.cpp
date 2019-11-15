@@ -1,14 +1,7 @@
-#pragma once
-
-#include "FitnessFunction.cpp"
-#include "Selection.h"
-#include "Variation.cpp"
-
 #include <vector>
 #include <string>
 
 using namespace std;
-using namespace N;
 
 class GA {
     public:

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,13 +5,13 @@
 #include <algorithm>
 #include <random>
 #include <armadillo>
-#include "GA.cpp"
-#include "Individual.h"
-#include "Selection.h"
-#include "FitnessFunction.cpp"
-#include "Variation.cpp"
 #include "RNG.cpp"
 #include "Utility.cpp"
+#include "Individual.cpp"
+#include "FitnessFunction.cpp"
+#include "Variation.cpp"
+#include "Selection.cpp"
+#include "GA.cpp"
 
 using namespace std;
 using namespace arma;
@@ -24,7 +22,7 @@ int l = 25;
 int gens = 100;
 int runs = 100;
 bool optFound = false;
-RNG rng (2);
+RNG rng;
 
 void printSolution(uvec vec){
     cout << "[";
