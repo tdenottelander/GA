@@ -42,6 +42,77 @@ class Individual {
         }
 };
 
+class FitnessFunction {
+    public:
+        Individual bestIndividual;
+
+        int evaluate(Individual &ind){
+            int result = 0;
+            for(int i = 0; i < ind.genotype.size(); i++){
+                result += ind.genotype[i];
+            }
+            if(result > bestIndividual.fitness){
+                bestIndividual = ind;
+            }
+            return result;
+        }
+};
+class Selection {
+    public:
+        void select() {
+            cout << "Do a selection" << endl;
+        }
+};
+class Variation {
+    public:
+        void variate(){
+            cout << "Do a variation" << endl;
+        }
+};
+
+class GAClass {
+    public:
+        int populationSize;
+        FitnessFunction fitFunc;
+        Selection selection;
+        Variation variation;
+        vector<Individual> population;
+        int problemLength;
+
+        GAClass(int popSize, int probLength, FitnessFunction f, Selection s, Variation v){
+            populationSize = popSize;
+            fitFunc = f;
+            selection = s;
+            variation = v;
+            problemLength = probLength;
+
+            initialize();
+        }
+
+        void initialize(){
+            population.reserve(populationSize);
+            for(int i = 0; i < populationSize; i++){
+                Individual ind (problemLength);
+                ind.fitness = fitFunc.evaluate(ind);
+                population.push_back(ind);
+            }
+        }
+
+        void round(){
+            selection.select();
+            variation.variate();
+        }
+
+        string toString() {
+            string result;
+            for(Individual ind: population){
+                result += ind.toString();
+                result += "\n";
+            }
+            return result;
+        }
+};
+
 void printSolution(uvec vec){
     cout << "[";
     for (int i = 0; i < vec.size(); i++){
@@ -321,9 +392,9 @@ int main()
 
     // for(uvec y: x) cout << y << endl;
 
-    Individual individual (5);
-    string result = individual.toString();
-    cout << result << endl;
+    FitnessFunction func;
+    GAClass ga (5, 5, func);
+    cout << ga.toString() << endl;
 
     return 0;
 }
