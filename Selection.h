@@ -7,7 +7,7 @@
 
 class Selection {
     public:
-        Selection();
+        // Selection();
         std::vector<Individual> select(std::vector<Individual> &population, int outputSize);
         virtual void display();
 };
@@ -26,4 +26,4 @@ class TournamentSelection : public Selection {
         void display() override;
 };
 
-#endif SELECTION_H
+#endif //SELECTION_H

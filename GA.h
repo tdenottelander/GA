@@ -30,4 +30,4 @@ class GA {
         std::string toString();
 };
 
-#endif GA_H
+#endif //GA_H

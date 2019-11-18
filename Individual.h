@@ -15,4 +15,4 @@ class Individual {
         std::string toString();
 };
 
-#endif INDIVIDUAL_H
+#endif //INDIVIDUAL_H

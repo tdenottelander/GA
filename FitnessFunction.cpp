@@ -1,32 +1,34 @@
-class FitnessFunction {
-    public:
-        Individual bestIndividual = (0);
+#include "FitnessFunction.h"
 
-        FitnessFunction(){}
+using namespace std;
 
-        virtual int evaluate(Individual &ind){
-            return -1;
-        }
+/* ------------------------ Base Fitness Function ------------------------ */
 
-        virtual void display(){
-            cout << "Base fitness function" << endl;
-        }
-};
+// Individual * FitnessFunction::bestIndividual = (0);
 
-class OneMax : public FitnessFunction {
-    public:
-    int evaluate(Individual &ind) override {
-        int result = 0;
-        for(int i = 0; i < ind.genotype.size(); i++){
-            result += ind.genotype[i];
-        }
-        if(result > bestIndividual.fitness){
-            bestIndividual = ind;
-        }
-        return result;
-    }   
+FitnessFunction::FitnessFunction(){}
 
-    void display() override {
-        cout << "OneMax fitness function" << endl;
+int FitnessFunction::evaluate(Individual &ind){
+    return -1;
+}
+
+void FitnessFunction::display(){
+    cout << "Base fitness function" << endl;
+}
+
+/* ------------------------ OneMax Fitness Function ------------------------ */
+
+int OneMax::evaluate(Individual &ind) {
+    int result = 0;
+    for(int i = 0; i < ind.genotype.size(); i++){
+        result += ind.genotype[i];
     }
-};
+    if(result > bestIndividual->fitness){
+        bestIndividual = &ind;
+    }
+    return result;
+}   
+
+void OneMax::display() {
+    cout << "OneMax fitness function" << endl;
+}

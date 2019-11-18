@@ -1,3 +1,5 @@
+// #pragma once
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -5,13 +7,12 @@
 #include <algorithm>
 #include <random>
 #include <armadillo>
-#include "RNG.cpp"
-#include "Utility.cpp"
-#include "Individual.cpp"
-#include "FitnessFunction.cpp"
-#include "Variation.cpp"
-#include "Selection.cpp"
-#include "GA.cpp"
+#include "Utility.h"
+#include "Individual.h"
+#include "FitnessFunction.h"
+#include "Variation.h"
+#include "Selection.h"
+#include "GA.h"
 
 using namespace std;
 using namespace arma;
@@ -22,7 +23,6 @@ int l = 25;
 int gens = 100;
 int runs = 100;
 bool optFound = false;
-RNG rng;
 
 void printSolution(uvec vec){
     cout << "[";
@@ -165,7 +165,7 @@ vector<uvec> tournament2(vector<uvec> population){
     vector<int> randomIndices;
     randomIndices.reserve(2 * n);
     for (int i = 0; i < (2*n); i++) randomIndices.push_back(i);
-    shuffle(randomIndices.begin(), randomIndices.end(), rng.rng);
+    shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
     vector<uvec> newPopulation;
     newPopulation.reserve(n);
 
@@ -194,7 +194,7 @@ vector<uvec> tournament4(vector<uvec> population){
         vector<int> randomIndices;
         randomIndices.reserve(2 * n);
         for (int i = 0; i < (2*n); i++) randomIndices.push_back(i);
-        shuffle(randomIndices.begin(), randomIndices.end(), rng.rng);
+        shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
 
         for(int i = 0; i < (n/2); i++){
             //Take 4 indices from the random index vector
@@ -239,7 +239,7 @@ vector<uvec> variationAndSelection(vector<uvec> & population){
     vector<int> randomIndices;
     randomIndices.reserve(n);
     for (int i = 0; i < n; i++) randomIndices.push_back(i);
-    shuffle(randomIndices.begin(), randomIndices.end(), rng.rng);
+    shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
 
     //Generate 2 offspring for every 2 parents in a random order
     for(int i = 0; i < (n / 2); i++){

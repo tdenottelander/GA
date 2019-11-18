@@ -7,7 +7,7 @@
 
 class Variation{
     public:
-        Variation();
+        // Variation();
         void variate();
         virtual void display();
 };
@@ -17,6 +17,7 @@ class UnivariateCrossover : public Variation {
         UnivariateCrossover();
         std::vector<Individual> variate(std::vector<Individual> &population);
         std::vector<Individual> univariateCrossover(Individual &ind1, Individual &ind2);
+        void display() override;
 };
 
 #endif //VARIATION_H

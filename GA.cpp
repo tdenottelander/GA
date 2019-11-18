@@ -1,60 +1,61 @@
-#include <vector>
-#include <string>
+#include "GA.h"
+
+// #include <string>
 
 using namespace std;
 
-class GA {
-    public:
-        int populationSize;
-        FitnessFunction * fitFunc;
-        Selection * selection;
-        Variation * variation;
-        vector<Individual> population;
-        int problemLength;
 
-        GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v){
-            populationSize = popSize;
-            fitFunc = f;
-            selection = s;
-            variation = v;
-            v->display();
-            s->display();
-            problemLength = probLength;
+/* ------------------------ Genetic Algorithm ------------------------ */
 
-            initialize();
-        }
+// int populationSize;
+// FitnessFunction * fitFunc;
+// Selection * selection;
+// Variation * variation;
+// vector<Individual> population;
+// int problemLength;
 
-        void initialize(){
-            population.reserve(populationSize);
-            for(int i = 0; i < populationSize; i++){
-                Individual ind (problemLength);
-                ind.initialize();
-                ind.fitness = fitFunc->evaluate(ind);
-                population.push_back(ind);
-            }
-        }
+GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v){
+    populationSize = popSize;
+    fitFunc = f;
+    selection = s;
+    variation = v;
+    v->display();
+    s->display();
+    problemLength = probLength;
 
-        void round(){
-            // population = selection.select(population, population.size());
-            selection->display();
-            variation->display();
-            // variation.variate();
-        }
+    initialize();
+}
 
-        double getAvgFitness(){
-            double result = 0;
-            for(Individual ind: population){
-                result += ind.fitness;
-            }
-            return result / population.size();
-        }
+void GA::initialize(){
+    population.reserve(populationSize);
+    for(int i = 0; i < populationSize; i++){
+        Individual ind (problemLength);
+        ind.initialize();
+        ind.fitness = fitFunc->evaluate(ind);
+        population.push_back(ind);
+    }
+}
 
-        string toString() {
-            string result;
-            for(Individual ind: population){
-                result += ind.toString();
-                result += "\n";
-            }
-            return result;
-        }
-};
+void GA::round(){
+    // population = selection.select(population, population.size());
+    selection->display();
+    variation->display();
+    // variation.variate();
+}
+
+double GA::getAvgFitness(){
+    double result = 0;
+    for(Individual ind: population){
+        result += ind.fitness;
+    }
+    return result / population.size();
+}
+
+string GA::toString() {
+    string result;
+    for(Individual ind: population){
+        result += ind.toString();
+        result += "\n";
+    }
+    return result;
+}

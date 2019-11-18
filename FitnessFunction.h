@@ -15,8 +15,9 @@ class FitnessFunction {
 
 class OneMax : public FitnessFunction {
     public:
+        OneMax ();
         int evaluate(Individual &ind) override;
         void display() override;
 };
 
-#endif FITNESSFUNCTION_H
+#endif //FITNESSFUNCTION_H
