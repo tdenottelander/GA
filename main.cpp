@@ -291,11 +291,15 @@ int main()
 {
     // GAfunc();
 
-    FitnessFunction func;
-    Selection s;
+    OneMax func;
+    ProportionateSelection s;
     UnivariateCrossover v;
-    GA ga (5, 5, func, s, v);
+
+    GA ga (6, 15, &func, &s, &v);
     cout << ga.toString() << endl;
+
+    // ga.round();
+    // cout << ga.toString() << endl;
 
     return 0;
 }

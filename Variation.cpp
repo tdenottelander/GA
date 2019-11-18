@@ -3,13 +3,23 @@ using namespace std;
 
 class Variation {
     public:
+
+        Variation(){}
+
         void variate(){
             cout << "Do a variation" << endl;
+        }
+
+        virtual void display(){
+            cout << "Base variation" << endl;
         }
 };
 
 class UnivariateCrossover : public Variation {
     public:
+
+        UnivariateCrossover(){}
+
         vector<Individual> variate(vector<Individual> &population){
             int n = population.size();
             vector<int> randomIndices;
@@ -48,5 +58,10 @@ class UnivariateCrossover : public Variation {
             result.push_back(newInd1);
             result.push_back(newInd2);
             return result;
+        }
+
+        virtual void display() override {
+            cout << "Univariate Crossover" << endl;
+
         }
 };

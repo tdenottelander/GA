@@ -3,13 +3,25 @@ using namespace std;
 
 class Selection {
     public:
-        void select() {
-            cout << "Do a selection" << endl;
+
+        Selection(){}
+
+        vector<Individual> select(vector<Individual> &population, int outputSize) {
+            cout << "Do a base selection" << endl;
+            vector<Individual> v;
+            return v;
+        }
+
+        virtual void display(){
+            cout << "Base selection" << endl;
         }
 };
 
 class ProportionateSelection : public Selection {
     public:
+
+        ProportionateSelection(){}
+
         vector<Individual> select(vector<Individual> &population, int outputSize) {
             vector<Individual> selection;
             selection.reserve(outputSize);
@@ -24,6 +36,10 @@ class ProportionateSelection : public Selection {
                 }
             }
             return selection;
+        }
+
+        void display() override {
+            cout << "Proportionate selection" << endl;
         }
 
         vector<float> getProportions(vector<Individual> &population){
@@ -71,4 +87,7 @@ class TournamentSelection : public Selection {
             }
         }
 
+        void display() override {
+            cout << "Tournament selection" << endl;
+        }
 };
