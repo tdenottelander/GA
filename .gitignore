@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Random Xcode files
+GA.xcodeproj/project.xcworkspace/xcuserdata/tomdenottelander.xcuserdatad/UserInterfaceState.xcuserstate
+GA.xcodeproj/xcuserdata/tomdenottelander.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
