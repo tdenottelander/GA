@@ -9,6 +9,7 @@
 #include "Utility.hpp"
 
 using namespace std;
+using namespace chrono;
 
 vector<int> Utility::getRandomlyPermutedArray (int n){
     vector<int> arr;
@@ -35,6 +36,10 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     return result;
 }
 
-double Utility::getRand(){    
+double Utility::getRand(){
     return dist(rng);
+}
+
+long Utility::millis(){
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

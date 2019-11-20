@@ -27,6 +27,8 @@ uniform_real_distribution<float> dist(0.0, 1.0);
 
 int main(int argc, const char * argv[]) {
     
+    long begin = millis();
+
     int l = 50;
     int n = 50;
     int maxGenerations = 50;
@@ -36,6 +38,7 @@ int main(int argc, const char * argv[]) {
     
     for (int run = 0; run < runs; run++){
         bool optFound = false;
+        cout << "run " << run+1 << ". ";
         
         TournamentSelection selection(2);
         UnivariateCrossover variation;
@@ -44,7 +47,7 @@ int main(int argc, const char * argv[]) {
         GA ga (n, l, &fitnessFunc, &selection, &variation);
 //        cout << ga.toString() << endl;
         
-        for(int j = 0; j < maxGenerations; j++){
+        for(int gen = 0; gen < maxGenerations; gen++){
             ga.roundPOVariationSelection();
 //            cout << "\nRound " << j << "  | Avg fitness: " << ga.getAvgFitness() << "  | Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
 //            cout << ga.toString() << endl;
@@ -52,7 +55,7 @@ int main(int argc, const char * argv[]) {
 
             if(ga.fitFunc->optimumFound){
                 optFound = true;
-                cout << "Optimum found after " << j << " rounds" << endl;
+                cout << "Optimum found after " << gen << " generations" << endl;
 //                cout << "Individual: " << ga.fitFunc->bestIndividual.toString() << endl;
                 break;
             }
@@ -74,6 +77,10 @@ int main(int argc, const char * argv[]) {
 //    vector<int> x = Utility::getRandomlyPermutedArray(5);
 
 //    cout << x << endl;
+    
+    long end = millis();
+    cout << end - begin << endl;
+    
     
     return 0;
 }

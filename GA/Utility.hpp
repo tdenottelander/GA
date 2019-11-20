@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <vector>
 #include <armadillo>
+#include <chrono>
 
 extern std::mt19937 rng;
 extern std::uniform_real_distribution<float> dist;
@@ -20,6 +21,7 @@ namespace Utility{
     std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     double getRand();
+    long millis();
 }
 
 #endif /* Utility_hpp */

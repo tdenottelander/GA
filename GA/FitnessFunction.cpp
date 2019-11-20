@@ -34,10 +34,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 OneMax::OneMax(int optimum) : FitnessFunction(optimum) {}
 
 int OneMax::evaluate(Individual &ind) {
-    int result = 0;
-    for(int i = 0; i < ind.genotype.size(); i++){
-        result += ind.genotype[i];
-    }
+    int result = sum(ind.genotype);
     ind.fitness = result;
     
     checkIfBestFound(ind);
