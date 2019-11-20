@@ -15,6 +15,7 @@
 
 namespace Utility{
     std::vector<int> getRandomlyPermutedArray (int n);
+    std::vector<int> getRandomlyPermutedArrayV2 (int n);
     double getRand();
 }
 

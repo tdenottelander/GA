@@ -13,20 +13,13 @@ using namespace std;
 
 /* ------------------------ Genetic Algorithm ------------------------ */
 
-// int populationSize;
-// FitnessFunction * fitFunc;
-// Selection * selection;
-// Variation * variation;
-// vector<Individual> population;
-// int problemLength;
-
-GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v){
-    populationSize = popSize;
-    fitFunc = f;
-    selection = s;
-    variation = v;
-    problemLength = probLength;
-    
+GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v) :
+    populationSize(popSize),
+    fitFunc(f),
+    selection(s),
+    variation(v),
+    problemLength(probLength)
+{
     initialize();
 }
 
@@ -41,16 +34,29 @@ void GA::initialize(){
 }
 
 void GA::round(){
-    // population = selection.select(population, population.size());
     population = variation->variate(population);
     evaluateAll(population);
     population = selection->select(population, population.size());
 }
 
+void GA::roundPOVariationSelection(){
+    vector<Individual> offspring = variation->variate(population);
+    evaluateAll(offspring);
+    
+    vector<Individual> PO;
+    PO.reserve(population.size() * 2);
+    PO.insert(PO.begin(), population.begin(), population.end());
+    PO.insert(PO.end(), offspring.begin(), offspring.end());
+    
+//    cout << "Combined P+O population: " << endl;
+//    cout << populationToString(PO) << endl;
+
+    population = selection->select(PO, population.size());
+}
+
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
         fitFunc->evaluate(ind);
-//        ind.fitness = fitness;
     }
 }
 
@@ -63,6 +69,10 @@ double GA::getAvgFitness(){
 }
 
 string GA::toString() {
+    return populationToString(population);
+}
+
+string GA::populationToString(vector<Individual> &population){
     string result;
     for (int i = 0; i < population.size(); i++){
         result += to_string(i);
@@ -74,4 +84,3 @@ string GA::toString() {
     }
     return result;
 }
-

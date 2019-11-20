@@ -33,11 +33,14 @@ public:
     
     void round();
     
+    void roundPOVariationSelection();
+    
     void evaluateAll(std::vector<Individual> &population);
     
     double getAvgFitness();
     
     std::string toString();
+    std::string populationToString(std::vector<Individual> &population);
 };
 
 #endif /* GA_hpp */

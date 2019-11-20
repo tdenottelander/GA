@@ -14,8 +14,25 @@ vector<int> Utility::getRandomlyPermutedArray (int n){
     vector<int> arr;
     arr.reserve(n);
     for (int i = 0; i < n; i++) arr.push_back(i);
-    shuffle(arr.begin(), arr.end(), default_random_engine(0));
+    shuffle(arr.begin(), arr.end(), default_random_engine());
     return arr;
+}
+
+vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
+    vector<int> arr;
+    arr.reserve(n);
+    for (int i = 0; i < n; i++) arr.push_back(i);
+    
+    vector<int> result;
+    result.reserve(n);
+    for (int i = 0; i < n; i++){
+        float rand = getRand();
+        int idx = floor(rand * arr.size());
+        result.push_back(arr[idx]);
+        arr.erase(arr.begin()+idx);
+    }
+    
+    return result;
 }
 
 double Utility::getRand(){

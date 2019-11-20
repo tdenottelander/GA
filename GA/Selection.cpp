@@ -68,26 +68,46 @@ vector<float> ProportionateSelection::getProportions(vector<Individual> &populat
 
 /* ------------------------ Tournament Selection ------------------------ */
 
-//TODO: FINISH THIS
-void TournamentSelection::select(vector<Individual> &population, int outputSize, int tournamentSize){
+TournamentSelection::TournamentSelection(int tournamentSize) : tournamentSize(tournamentSize) {}
+
+vector<Individual> TournamentSelection::select(vector<Individual> &population, int outputSize){
     int n = (int)population.size();
-    vector<int> randomIndices;
-    randomIndices.reserve(n);
-    for (int i = 0; i < n; i++) randomIndices.push_back(i);
-    shuffle(randomIndices.begin(), randomIndices.end(), default_random_engine(0));
     vector<Individual> newPopulation;
-    newPopulation.reserve(n);
+    newPopulation.reserve(outputSize);
     
-    for(int i = 0; i < (n/2); i++){
-        int idx1 = randomIndices[i * 2];
-        int idx2 = randomIndices[i * 2 + 1];
-        
-        if(population[idx1].fitness > population[idx2].fitness){
-            newPopulation.push_back(population[idx1]);
-        } else {
-            newPopulation.push_back(population[idx2]);
+    int rounds = tournamentSize * outputSize / n;
+    
+    for (int round = 0; round < rounds; round++){
+        vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
+        for (int i = 0; i < (n/tournamentSize); i++){
+            vector<Individual*> selectedIndividuals;
+            selectedIndividuals.reserve(tournamentSize);
+//            cout << "Tournament with " << tournamentSize << " individuals:" << endl;
+            for (int j = 0; j < tournamentSize; j++){
+                int index = randomIndices[i * tournamentSize + j];
+                selectedIndividuals.push_back(&population[index]);
+//                cout << index << ": " << population[index].toString() << endl;
+            }
+            
+            newPopulation.push_back(tournament(selectedIndividuals)->copy());
         }
     }
+    
+    return newPopulation;
+}
+
+Individual* TournamentSelection::tournament(vector<Individual *> selectedIndividuals){
+    int n = selectedIndividuals.size();
+    int bestIndIdx = 0;
+    int bestFitness = selectedIndividuals[0]->fitness;
+    for(int i = 1; i < n; i++){
+        if (selectedIndividuals[i]->fitness > bestFitness){
+            bestIndIdx = i;
+            bestFitness = selectedIndividuals[i]->fitness;
+        }
+    }
+//    cout << "Winner is " << bestIndIdx << " with fitness " << bestFitness << "\n" << endl;
+    return selectedIndividuals[bestIndIdx];
 }
 
 void TournamentSelection::display() {

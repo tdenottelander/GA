@@ -22,21 +22,21 @@ using namespace Utility;
 
 int main(int argc, const char * argv[]) {
     
-    int l = 5;
-    int n = 10;
-    
-    ProportionateSelection selection;
-    OnePointCrossover variation;
-    LeadingOnes fitnessFunc(l);
+    int l = 50;
+    int n = 30;
+        
+    TournamentSelection selection(2);
+    UnivariateCrossover variation;
+    OneMax fitnessFunc(l);
     
     GA ga (n, l, &fitnessFunc, &selection, &variation);
     cout << ga.toString() << endl;
     
     for(int i = 0; i < 50; i++){
-        ga.round();
-        cout << "\nRound " << i << endl;
+        ga.roundPOVariationSelection();
+        cout << "\nRound " << i << "  | Avg fitness: " << ga.getAvgFitness() << "  | Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
         cout << ga.toString() << endl;
-        cout << "Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
+//        cout << "Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
 
         if(ga.fitFunc->optimumFound){
             cout << "\nOptimum found after " << i << " rounds" << endl;

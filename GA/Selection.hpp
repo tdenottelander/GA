@@ -25,14 +25,17 @@ public:
 class ProportionateSelection : public Selection {
 public:
     ProportionateSelection();
-    std::vector<Individual> select(std::vector<Individual> &population, int outputSize);
+    std::vector<Individual> select(std::vector<Individual> &population, int outputSize) override;
     void display() override;
     std::vector<float> getProportions(std::vector<Individual> &population);
 };
 
 class TournamentSelection : public Selection {
 public:
-    void select(std::vector<Individual> &population, int outputSize, int tournamentSize);
+    int tournamentSize;
+    TournamentSelection(int tournamentSize);
+    std::vector<Individual> select(std::vector<Individual> &population, int outputSize) override;
+    Individual* tournament(std::vector<Individual*>);
     void display() override;
 };
 

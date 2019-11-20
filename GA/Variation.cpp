@@ -25,7 +25,7 @@ UnivariateCrossover::UnivariateCrossover(){}
 
 vector<Individual> UnivariateCrossover::variate(vector<Individual> &population){
     int n = (int)population.size();
-    vector<int> randomIndices = getRandomlyPermutedArray(n);
+    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
     vector<Individual> newPopulation;
     newPopulation.reserve(n);
     
@@ -68,7 +68,7 @@ OnePointCrossover::OnePointCrossover(){}
 
 vector<Individual> OnePointCrossover::variate(std::vector<Individual> &population){
     int n = (int)population.size();
-    vector<int> randomIndices = getRandomlyPermutedArray(n);
+    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
     vector<Individual> newPopulation;
     newPopulation.reserve(n);
     
