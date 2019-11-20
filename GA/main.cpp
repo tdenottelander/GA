@@ -20,30 +20,52 @@ using namespace std;
 using namespace arma;
 using namespace Utility;
 
+// The random generator used throughout the whole application
+mt19937 rng(1234);
+// A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
+uniform_real_distribution<float> dist(0.0, 1.0);
+
 int main(int argc, const char * argv[]) {
     
     int l = 50;
-    int n = 30;
+    int n = 50;
+    int maxGenerations = 50;
+    int runs = 100;
+    
+    int optFoundCounter = 0;
+    
+    for (int run = 0; run < runs; run++){
+        bool optFound = false;
         
-    TournamentSelection selection(2);
-    UnivariateCrossover variation;
-    OneMax fitnessFunc(l);
-    
-    GA ga (n, l, &fitnessFunc, &selection, &variation);
-    cout << ga.toString() << endl;
-    
-    for(int i = 0; i < 50; i++){
-        ga.roundPOVariationSelection();
-        cout << "\nRound " << i << "  | Avg fitness: " << ga.getAvgFitness() << "  | Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
-        cout << ga.toString() << endl;
-//        cout << "Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
+        TournamentSelection selection(2);
+        UnivariateCrossover variation;
+        OneMax fitnessFunc(l);
+        
+        GA ga (n, l, &fitnessFunc, &selection, &variation);
+//        cout << ga.toString() << endl;
+        
+        for(int j = 0; j < maxGenerations; j++){
+            ga.roundPOVariationSelection();
+//            cout << "\nRound " << j << "  | Avg fitness: " << ga.getAvgFitness() << "  | Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
+//            cout << ga.toString() << endl;
+    //        cout << "Best fitness: " << ga.fitFunc->bestIndividual.fitness << endl;
 
-        if(ga.fitFunc->optimumFound){
-            cout << "\nOptimum found after " << i << " rounds" << endl;
-            cout << "Individual: " << ga.fitFunc->bestIndividual.toString() << endl;
-            break;
+            if(ga.fitFunc->optimumFound){
+                optFound = true;
+                cout << "Optimum found after " << j << " rounds" << endl;
+//                cout << "Individual: " << ga.fitFunc->bestIndividual.toString() << endl;
+                break;
+            }
+        }
+        
+        if(!optFound){
+            cout << "No optimum found" << endl;
+        } else {
+            optFoundCounter++;
         }
     }
+    
+    cout << "Optimal found " << optFoundCounter << " out of " << runs << " runs" << endl;
     
 //    auto x = randu(1);
 //    double x = arma::arma_rng::randu<double>();

@@ -35,6 +35,6 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     return result;
 }
 
-double Utility::getRand(){
-    return ((float)rand() / RAND_MAX);
+double Utility::getRand(){    
+    return dist(rng);
 }

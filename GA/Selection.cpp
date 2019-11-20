@@ -89,7 +89,9 @@ vector<Individual> TournamentSelection::select(vector<Individual> &population, i
 //                cout << index << ": " << population[index].toString() << endl;
             }
             
-            newPopulation.push_back(tournament(selectedIndividuals)->copy());
+            Individual* winner = tournament(selectedIndividuals);
+            
+            newPopulation.push_back(winner->copy());
         }
     }
     

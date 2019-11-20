@@ -26,7 +26,7 @@ class UnivariateCrossover : public Variation {
 public:
     UnivariateCrossover();
     std::vector<Individual> variate(std::vector<Individual> &population) override;
-    std::vector<Individual> univariateCrossover(Individual &ind1, Individual &ind2);
+    std::pair<Individual, Individual> univariateCrossover(Individual &ind1, Individual &ind2);
     void display() override;
 };
 

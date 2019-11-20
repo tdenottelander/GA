@@ -28,7 +28,7 @@ void GA::initialize(){
     for(int i = 0; i < populationSize; i++){
         Individual ind (problemLength);
         ind.initialize();
-        ind.fitness = fitFunc->evaluate(ind);
+        fitFunc->evaluate(ind);
         population.push_back(ind);
     }
 }

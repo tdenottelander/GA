@@ -33,18 +33,16 @@ vector<Individual> UnivariateCrossover::variate(vector<Individual> &population){
         int idx1 = randomIndices[i * 2];
         int idx2 = randomIndices[i * 2 + 1];
         
-        vector<Individual> offspring = univariateCrossover(population[idx1], population[idx2]);
+        pair<Individual, Individual> offspring = univariateCrossover(population[idx1], population[idx2]);
         
-        newPopulation.push_back(offspring[0]);
-        newPopulation.push_back(offspring[1]);
+        newPopulation.push_back(offspring.first);
+        newPopulation.push_back(offspring.second);
     }
     
     return newPopulation;
 }
 
-vector<Individual> UnivariateCrossover::univariateCrossover (Individual &ind1, Individual &ind2){
-    vector<Individual> result;
-    
+pair<Individual, Individual> UnivariateCrossover::univariateCrossover (Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
     
@@ -55,8 +53,7 @@ vector<Individual> UnivariateCrossover::univariateCrossover (Individual &ind1, I
         }
     }
     
-    result.push_back(newInd1);
-    result.push_back(newInd2);
+    pair<Individual, Individual> result(newInd1, newInd2);
     return result;
 }
 
