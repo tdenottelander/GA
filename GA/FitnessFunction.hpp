@@ -22,11 +22,21 @@ public:
     
     virtual int evaluate(Individual &ind) = 0;
     virtual void display();
+    
+    void checkIfBestFound(Individual &ind);
 };
 
 class OneMax : public FitnessFunction {
 public:
     OneMax (int optimum);
+    int evaluate(Individual &ind) override;
+    void display() override;
+};
+
+
+class LeadingOnes : public FitnessFunction {
+public:
+    LeadingOnes (int optimum);
     int evaluate(Individual &ind) override;
     void display() override;
 };

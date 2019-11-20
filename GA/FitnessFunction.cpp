@@ -19,6 +19,15 @@ void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
 }
 
+void FitnessFunction::checkIfBestFound(Individual &ind){
+    if(ind.fitness > bestIndividual.fitness){
+        bestIndividual = ind.copy();
+        if(ind.fitness == optimum){
+            optimumFound = true;
+        }
+    }
+}
+
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
@@ -30,15 +39,37 @@ int OneMax::evaluate(Individual &ind) {
         result += ind.genotype[i];
     }
     ind.fitness = result;
-    if(result > bestIndividual.fitness){
-        bestIndividual = ind.copy();
-        if(result == optimum){
-            optimumFound = true;
-        }
-    }
+    
+    checkIfBestFound(ind);
+    
     return result;
 }
 
 void OneMax::display() {
     cout << "OneMax fitness function" << endl;
+}
+
+
+/* ------------------------ Leading Ones Fitness Function ------------------------ */
+
+LeadingOnes::LeadingOnes(int optimum) : FitnessFunction(optimum) {}
+
+int LeadingOnes::evaluate(Individual &ind) {
+    int result = 0;
+    for (int i = 0; i < ind.genotype.size(); i++){
+        int tempResult = 1;
+        for (int j = 0; j < (i + 1); j++){
+            tempResult *= ind.genotype[j];
+        }
+        result += tempResult;
+    }
+    ind.fitness = result;
+    
+    checkIfBestFound(ind);
+    
+    return result;
+}
+
+void LeadingOnes::display() {
+    cout << "LeadingOnes fitness function" << endl;
 }

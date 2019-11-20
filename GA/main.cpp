@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]) {
     
     ProportionateSelection selection;
     OnePointCrossover variation;
-    OneMax fitnessFunc(l);
+    LeadingOnes fitnessFunc(l);
     
     GA ga (n, l, &fitnessFunc, &selection, &variation);
     cout << ga.toString() << endl;
