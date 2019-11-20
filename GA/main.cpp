@@ -29,8 +29,8 @@ int main(int argc, const char * argv[]) {
     
     long begin = millis();
 
-    int l = 50;
-    int n = 50;
+    int l = 100;
+    int n = 150;
     int maxGenerations = 50;
     int runs = 100;
     
@@ -40,7 +40,7 @@ int main(int argc, const char * argv[]) {
         bool optFound = false;
         cout << "run " << run+1 << ". ";
         
-        TournamentSelection selection(2);
+        TournamentSelection selection(4);
         UnivariateCrossover variation;
         OneMax fitnessFunc(l);
         
@@ -76,10 +76,10 @@ int main(int argc, const char * argv[]) {
 //    vec  v = ones<vec>(10);
 //    vector<int> x = Utility::getRandomlyPermutedArray(5);
 
-//    cout << x << endl;
+//    cout << x[0] << endl;
     
     long end = millis();
-    cout << end - begin << endl;
+    cout << "Time taken: " << end - begin << "ms" << endl;
     
     
     return 0;
