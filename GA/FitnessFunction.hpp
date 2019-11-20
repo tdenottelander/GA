@@ -14,17 +14,19 @@
 
 class FitnessFunction {
 public:
-    Individual * bestIndividual;
+    Individual bestIndividual;
+    int optimum;
+    bool optimumFound;
     
-    FitnessFunction();
+    FitnessFunction(int optimum);
     
-    virtual int evaluate(Individual &ind);
+    virtual int evaluate(Individual &ind) = 0;
     virtual void display();
 };
 
 class OneMax : public FitnessFunction {
 public:
-    OneMax ();
+    OneMax (int optimum);
     int evaluate(Individual &ind) override;
     void display() override;
 };

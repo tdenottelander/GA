@@ -18,7 +18,7 @@
 class Selection {
 public:
     Selection();
-    std::vector<Individual> select(std::vector<Individual> &population, int outputSize);
+    virtual std::vector<Individual> select(std::vector<Individual> &population, int outputSize) = 0;
     virtual void display();
 };
 

@@ -12,29 +12,29 @@ using namespace std;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-// Individual * FitnessFunction::bestIndividual = (0);
-
-FitnessFunction::FitnessFunction(){}
-
-int FitnessFunction::evaluate(Individual &ind){
-    return -1;
+FitnessFunction::FitnessFunction(int optimum) : optimum(optimum), bestIndividual(0), optimumFound(false){
 }
 
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
 }
 
+
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(){}
+OneMax::OneMax(int optimum) : FitnessFunction(optimum) {}
 
 int OneMax::evaluate(Individual &ind) {
     int result = 0;
     for(int i = 0; i < ind.genotype.size(); i++){
         result += ind.genotype[i];
     }
-    if(!bestIndividual || result > bestIndividual->fitness){
-        bestIndividual = &ind;
+    ind.fitness = result;
+    if(result > bestIndividual.fitness){
+        bestIndividual = ind.copy();
+        if(result == optimum){
+            optimumFound = true;
+        }
     }
     return result;
 }

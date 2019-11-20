@@ -16,12 +16,6 @@ using namespace Utility;
 
 Selection::Selection(){}
 
-vector<Individual> Selection::select(vector<Individual> &population, int outputSize) {
-    cout << "Do a base selection" << endl;
-    vector<Individual> v;
-    return v;
-}
-
 void Selection::display(){
     cout << "Base selection" << endl;
 }
@@ -39,7 +33,7 @@ vector<Individual> ProportionateSelection::select(vector<Individual> &population
         float randomValue = getRand();
         for (int j = 0; j < proportions.size(); j++){
             if(randomValue < proportions[j]){
-                selection.push_back(population[i]);
+                selection.push_back(population[j]);
                 break;
             }
         }

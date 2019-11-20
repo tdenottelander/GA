@@ -44,12 +44,13 @@ void GA::round(){
     // population = selection.select(population, population.size());
     population = variation->variate(population);
     evaluateAll(population);
+    population = selection->select(population, population.size());
 }
 
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
-        int fitness = fitFunc->evaluate(ind);
-        ind.fitness = fitness;
+        fitFunc->evaluate(ind);
+//        ind.fitness = fitness;
     }
 }
 
@@ -63,12 +64,13 @@ double GA::getAvgFitness(){
 
 string GA::toString() {
     string result;
-    int i = 0;
-    for(Individual ind: population){
-        result += to_string(i++);
+    for (int i = 0; i < population.size(); i++){
+        result += to_string(i);
         result += ". ";
-        result += ind.toString();
-        result += "\n";
+        result += population[i].toString();
+        if(i != population.size() - 1){
+            result += "\n";
+        }
     }
     return result;
 }

@@ -18,7 +18,7 @@ using namespace Utility;
 // uvec genotype;
 // int fitness = -1;
 
-Individual::Individual(int length){
+Individual::Individual(int length) : fitness(-1){
     genotype = uvec (length);
 }
 
@@ -34,6 +34,7 @@ Individual Individual::copy(){
     for(int i = 0; i < l; i++){
         ind.genotype[i] = genotype[i];
     }
+    ind.fitness = fitness;
     return ind;
 }
 

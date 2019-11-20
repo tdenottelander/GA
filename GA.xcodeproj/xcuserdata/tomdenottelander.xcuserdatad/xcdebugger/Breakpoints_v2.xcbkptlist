@@ -9,12 +9,28 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GA/FitnessFunction.cpp"
-            timestampString = "595875755.195616"
+            filePath = "GA/Selection.cpp"
+            timestampString = "595938139.8277121"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "ProportionateSelection::select(vector&lt;Individual&gt; &amp;population, int outputSize)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GA/FitnessFunction.cpp"
+            timestampString = "595938139.827777"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "OneMax::evaluate(Individual &amp;ind)"
             landmarkType = "7">
          </BreakpointContent>
