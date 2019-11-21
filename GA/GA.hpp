@@ -28,6 +28,7 @@ public:
     int problemLength;
     bool terminated;
     bool initialized;
+    int roundsCount;
     
     GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v);
     
@@ -35,13 +36,14 @@ public:
     
     void round();
     
+    void roundReplacementVariationSelection();
     void roundPOVariationSelection();
     
     void evaluateAll(std::vector<Individual> &population);
     
     bool isConverged();
-    
     bool isDiverse();
+    bool isOptimal();
     
     double getAvgFitness();
     
