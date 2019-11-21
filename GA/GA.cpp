@@ -18,9 +18,11 @@ GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation 
     fitFunc(f),
     selection(s),
     variation(v),
-    problemLength(probLength)
+    problemLength(probLength),
+    terminated(false),
+    initialized(false)
 {
-    initialize();
+//    initialize();
 }
 
 void GA::initialize(){
@@ -31,6 +33,7 @@ void GA::initialize(){
         fitFunc->evaluate(ind);
         population.push_back(ind);
     }
+    initialized = true;
 }
 
 void GA::round(){
@@ -66,6 +69,22 @@ double GA::getAvgFitness(){
         result += ind.fitness;
     }
     return result / population.size();
+}
+
+bool GA::isConverged(){
+    if(fitFunc->optimumFound || !isDiverse()){
+        return true;
+    }
+    return false;
+}
+
+bool GA::isDiverse(){
+    for (int i = 1; i < population.size(); i++){
+        if (population[i] != population[0]){
+            return true;
+        }
+    }
+    return false;
 }
 
 string GA::toString() {

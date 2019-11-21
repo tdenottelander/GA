@@ -23,6 +23,8 @@ public:
     void initialize();
     Individual copy();
     std::string toString();
+    bool operator==(Individual const& ind);
+    bool operator!=(Individual const& ind);
 };
 
 #endif /* Individual_hpp */

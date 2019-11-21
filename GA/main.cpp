@@ -25,8 +25,7 @@ mt19937 rng(1234);
 // A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
 uniform_real_distribution<float> dist(0.0, 1.0);
 
-int main(int argc, const char * argv[]) {
-    
+int mainLoop(){
     long begin = millis();
 
     int l = 100;
@@ -81,6 +80,26 @@ int main(int argc, const char * argv[]) {
     long end = millis();
     cout << "Time taken: " << end - begin << "ms" << endl;
     
+    return 0;
+}
+
+void interleavedRoundsSchedule(int initialPopSize){
+//    int popSize(initialPopSize);
+    
+    
+}
+
+int main(int argc, const char * argv[]) {
+    
+    mainLoop();
+    
+//    auto x = randu(1);
+//        double x = arma::randu();
+    //    mat A = randu<mat>(4,5);
+    //    vec  v = ones<vec>(10);
+    //    vector<int> x = Utility::getRandomlyPermutedArray(5);
+    
+//        cout << x << endl;
     
     return 0;
 }

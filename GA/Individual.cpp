@@ -50,3 +50,16 @@ string Individual::toString(){
     result += to_string(fitness);
     return result;
 }
+
+bool Individual::operator==(const Individual &ind) {
+    for (int i = 0; i < genotype.size(); i++){
+        if(genotype[i] != ind.genotype[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Individual::operator!=(const Individual &ind) {
+    return !(*this == ind);
+}
