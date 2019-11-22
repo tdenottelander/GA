@@ -18,6 +18,10 @@ void Variation::display(){
     cout << "Base variation" << endl;
 }
 
+string Variation::id(){
+    return "base";
+}
+
 
 /* ------------------------ Univariate Crossover Variation ------------------------ */
 
@@ -61,6 +65,13 @@ void UnivariateCrossover::display() {
     cout << "Univariate Crossover" << endl;
 }
 
+string UnivariateCrossover::id() {
+    return "univariate";
+}
+
+
+/* ------------------------ OnePoint Crossover Variation ------------------------ */
+
 OnePointCrossover::OnePointCrossover(){}
 
 vector<Individual> OnePointCrossover::variate(std::vector<Individual> &population){
@@ -99,4 +110,8 @@ pair<Individual, Individual> OnePointCrossover::onePointCrossover(Individual &in
     
 void OnePointCrossover::display() {
     cout << "OnePoint Crossover" << endl;
+}
+
+string OnePointCrossover::id() {
+    return "onepoint";
 }

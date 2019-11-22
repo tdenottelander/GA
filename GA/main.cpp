@@ -28,6 +28,8 @@ mt19937 rng(1234);
 // A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
 uniform_real_distribution<float> dist(0.0, 1.0);
 
+const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/";
+
 int mainLoop(){
     long begin = millis();
 
@@ -73,29 +75,14 @@ int mainLoop(){
     }
     
     cout << "Optimal found " << optFoundCounter << " out of " << runs << " runs" << endl;
-        
+    
     long end = millis();
     cout << "Time taken: " << end - begin << "ms" << endl;
     
     return 0;
 }
 
-int jsonTestFunction(){
-    
-    vector<double> data = {0.1, 0.2, 0.3};
-    
-    json j = json{{"name", "tom"}, {"age", "24"}};
-    json j2 = data;
-    
-    cout << j2.dump() << endl;
-    
-    return 0;
-}
-
-int main(int argc, const char * argv[]) {
-    
-//    jsonTestFunction();
-    
+void roundSchedule(){
     RoundSchedule rs(500, 10);
     TournamentSelection sel(4);
     UnivariateCrossover var;
@@ -104,6 +91,16 @@ int main(int argc, const char * argv[]) {
     json j = rs.run();
     cout << j.dump() << endl;
     
+    ofstream out("test.txt", ofstream::out);
+    out << j.dump();
+    out.close();
+    
+    write(j.dump(), dataDir);
+}
+
+int main(int argc, const char * argv[]) {
+    
+    roundSchedule();
 //    mainLoop();
     
     return 0;

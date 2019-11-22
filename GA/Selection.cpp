@@ -20,6 +20,10 @@ void Selection::display(){
     cout << "Base selection" << endl;
 }
 
+string Selection::id(){
+    return "base";
+}
+
 
 /* ------------------------ Proportionate Selection ------------------------ */
 
@@ -43,6 +47,10 @@ vector<Individual> ProportionateSelection::select(vector<Individual> &population
 
 void ProportionateSelection::display() {
     cout << "Proportionate selection" << endl;
+}
+
+string ProportionateSelection::id(){
+    return "proportionate";
 }
 
 vector<float> ProportionateSelection::getProportions(vector<Individual> &population){
@@ -114,4 +122,8 @@ Individual* TournamentSelection::tournament(vector<Individual *> selectedIndivid
 
 void TournamentSelection::display() {
     cout << "Tournament selection" << endl;
+}
+
+string TournamentSelection::id(){
+    return ("tournament" + to_string(tournamentSize));
 }

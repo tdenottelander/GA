@@ -20,6 +20,7 @@ class Variation {
 public:
     virtual std::vector<Individual> variate(std::vector<Individual> &population) = 0;
     virtual void display();
+    virtual std::string id();
 };
 
 class UnivariateCrossover : public Variation {
@@ -28,6 +29,7 @@ public:
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     std::pair<Individual, Individual> univariateCrossover(Individual &ind1, Individual &ind2);
     void display() override;
+    std::string id() override;
 };
 
 class OnePointCrossover : public Variation {
@@ -36,6 +38,7 @@ public:
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     std::pair<Individual, Individual> onePointCrossover(Individual &ind1, Individual &ind2);
     void display() override;
+    std::string id() override;
 };
 
 #endif /* Variation_hpp */

@@ -10,6 +10,7 @@
 
 using namespace std;
 using nlohmann::json;
+using Utility::millis;
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxLevel) :
     maxRounds(maxRounds),
@@ -21,6 +22,16 @@ void RoundSchedule::initialize(Selection &sel, Variation &var, int problemSize) 
     gaList.reserve(maxLevel);
     selection = &sel;
     variation = &var;
+    
+    output["problemSize"] = problemSize;
+    output["maxLevel"] = maxLevel;
+    output["maxRounds"] = maxRounds;
+    output["roundInterval"] = interval;
+    output["variationType"] = var.id();
+    output["selectionType"] = sel.id();
+    //TODO: Make this modular:
+    output["fitnessType"] = "onemax";
+    output["succesfulGAPopulation"] = -1;
     
     //TODO: Refactor as armadillo uvec
     whichShouldRun.reserve(maxLevel);
@@ -39,6 +50,8 @@ json RoundSchedule::run() {
     int lowestActiveGAIdx = 0;
     bool optimumFound = false;
     bool done = false;
+    long start = millis();
+    output["start"] = start;
     while (!done) {
 
         //Stopping conditions
@@ -81,6 +94,8 @@ json RoundSchedule::run() {
                     if (ga->isOptimal()){
                         cout << "Opt  GA(" << ga->populationSize << ") at round " << ga->roundsCount << endl;
                         optimumFound = true;
+                        output["succesfulGAPopulation"] = ga->populationSize;
+                        output["succesfulGARoundCount"] = ga->roundsCount;
                         break;
 
                         // Else if the GA is converged, terminate this GA and all before.
@@ -116,9 +131,14 @@ json RoundSchedule::run() {
         round++;
     }
     
-    json j = {"value", "0"};
+//    json j = {"value", "0"};
     
-    return j;
+    long stop = millis();
+    output["stop"] = stop;
+    output["timeTaken"] = stop - start;
+    
+    
+    return output;
 }
 
 // Terminate ga's in gaList up to and including index n

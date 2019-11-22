@@ -43,3 +43,44 @@ double Utility::getRand(){
 long Utility::millis(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
+
+string Utility::getDateString(){
+    std::time_t t = std::time(0);   // get time now
+    std::tm* now = std::localtime(&t);
+    string result = to_string(now->tm_year - 100);
+    result += padFrontWith0(to_string(now->tm_mon + 1), 2);
+    result += padFrontWith0(to_string(now->tm_mday), 2);
+    result += "_";
+    result += padFrontWith0(to_string(now->tm_hour), 2);
+    result += padFrontWith0(to_string(now->tm_min), 2);
+    result += padFrontWith0(to_string(now->tm_sec), 2);
+    return result;
+}
+
+string Utility:: padFrontWith0(string target, int length){
+    int curLength = target.size();
+    for (int i = 0; i < (length - curLength); i++) target = "0" + target;
+    return target;
+}
+
+void Utility::write(string content, string dir){
+    ofstream file;
+    file.open (dir + getDateString() + "_rawdata.json");
+    file << content;
+    file.close();
+}
+
+void Utility::read(string filename){
+    ifstream file;
+    file.open(filename);
+    if(!file){
+        cerr << "Unable to open file" + filename;
+        exit(1);   // call system to stop
+    }
+    string s;
+    while (file >> s) {
+        cout << s;
+    }
+    cout << endl;
+    file.close();
+}

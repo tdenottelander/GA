@@ -15,6 +15,7 @@
 #include "GA.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
+#include "Utility.hpp"
 
 class RoundSchedule {
 public:
@@ -23,6 +24,7 @@ public:
     int interval;
     Selection* selection;
     Variation* variation;
+    nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
     RoundSchedule(int maxRounds, int maxLevel);
