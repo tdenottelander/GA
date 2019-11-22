@@ -15,9 +15,9 @@ using namespace std;
 
 GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v) :
     populationSize(popSize),
-    fitFunc(f),
-    selection(s),
-    variation(v),
+    fitFunc_ptr(f),
+    selection_ptr(s),
+    variation_ptr(v),
     problemLength(probLength),
     terminated(false),
     initialized(false),
@@ -31,7 +31,7 @@ void GA::initialize(){
     for(int i = 0; i < populationSize; i++){
         Individual ind (problemLength);
         ind.initialize();
-        fitFunc->evaluate(ind);
+        fitFunc_ptr->evaluate(ind);
         population.push_back(ind);
     }
     initialized = true;
@@ -44,13 +44,13 @@ void GA::round(){
 }
 
 void GA::roundReplacementVariationSelection(){
-    population = variation->variate(population);
+    population = variation_ptr->variate(population);
     evaluateAll(population);
-    population = selection->select(population, population.size());
+    population = selection_ptr->select(population, population.size());
 }
 
 void GA::roundPOVariationSelection(){
-    vector<Individual> offspring = variation->variate(population);
+    vector<Individual> offspring = variation_ptr->variate(population);
     evaluateAll(offspring);
     
     vector<Individual> PO;
@@ -61,12 +61,12 @@ void GA::roundPOVariationSelection(){
 //    cout << "Combined P+O population: " << endl;
 //    cout << populationToString(PO) << endl;
 
-    population = selection->select(PO, population.size());
+    population = selection_ptr->select(PO, population.size());
 }
 
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
-        fitFunc->evaluate(ind);
+        fitFunc_ptr->evaluate(ind);
     }
 }
 
@@ -96,7 +96,7 @@ bool GA::isDiverse(){
 }
 
 bool GA::isOptimal(){
-    return fitFunc->optimumFound;
+    return fitFunc_ptr->optimumFound;
 }
 
 string GA::toString() {

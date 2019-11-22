@@ -21,9 +21,9 @@
 class GA {
 public:
     int populationSize;
-    FitnessFunction * fitFunc;
-    Selection * selection;
-    Variation * variation;
+    FitnessFunction * fitFunc_ptr;
+    Selection * selection_ptr;
+    Variation * variation_ptr;
     std::vector<Individual> population;
     int problemLength;
     bool terminated;
