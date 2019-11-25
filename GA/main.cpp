@@ -100,7 +100,7 @@ void roundSchedule(){
     experiment["maxProblemExponent"] = maxProblemExponent;
     experiment["interleavedRoundInterval"] = interval;
     
-    vector<Variation*> variations = {new OnePointCrossover(), new UnivariateCrossover()};
+    vector<Variation*> variations = {new OnePointCrossover(), new UnivariateCrossover(), new GOM()};
     vector<Selection*> selections = {new TournamentSelection(2)};
     
     
@@ -154,39 +154,8 @@ void roundSchedule(){
 
 int main(int argc, const char * argv[]) {
     
-//    roundSchedule();
+    roundSchedule();
 //    mainLoop();
-    
-    FitnessFunction* fitfunc = new OneMax(20);
-    
-    int problemLength = 20;
-    
-    vector<uvec> fos = GOM::getFixedLTFOS(problemLength);
-    GOM gom(fitfunc, fos);
-    
-    GA ga(10, problemLength, fitfunc, new ProportionateSelection(), &gom);
-    ga.initialize();
-    
-//    uvec subset1 = {0,1,2};
-//    uvec subset2 = {2,3,4};
-//    vector<uvec> fos = {subset1, subset2};
-    
-//    vector<uvec> fos;
-//    fos.reserve(20);
-//    for (int i = 0; i < 20; i++) {
-//        uvec subset = {(unsigned long long)i};
-//        fos.push_back(subset);
-//    }
-    
-    cout << ga.toString() << endl;
-    ga.population = gom.variate(ga.population);
-    cout << ga.toString() << endl;
-    ga.population = gom.variate(ga.population);
-    cout << ga.toString() << endl;
-    ga.population = gom.variate(ga.population);
-    cout << ga.toString() << endl;
-    ga.population = gom.variate(ga.population);
-    cout << ga.toString() << endl;
     
     return 0;
 }

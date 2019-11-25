@@ -35,6 +35,14 @@ void GA::initialize(){
         fitFunc_ptr->evaluate(ind);
         population.push_back(ind);
     }
+    
+    //TODO: Make this piece of code below more elegant
+    if(variation_ptr->id() == "gom"){
+        GOM* gom = dynamic_cast<GOM*>(variation_ptr);
+        (*gom).FOS = GOM::getFixedLTFOS(problemLength);
+        (*gom).fitfunc = fitFunc_ptr;
+    }
+    
     initialized = true;
 }
 

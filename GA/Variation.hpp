@@ -46,7 +46,7 @@ class GOM : public Variation {
 public:
     FitnessFunction *fitfunc;
     std::vector<arma::uvec> FOS;
-    GOM(FitnessFunction *fitfunc, std::vector<arma::uvec> &FOS);
+    GOM();
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     Individual gom(Individual &ind, std::vector<Individual> &population);
     void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);

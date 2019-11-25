@@ -119,7 +119,7 @@ string OnePointCrossover::id() {
 
 /* ------------------------ GOM Variation ------------------------ */
 
-GOM::GOM(FitnessFunction *fitfunc, vector<uvec> &FOS) : fitfunc(fitfunc), FOS(FOS){}
+GOM::GOM() {};
 
 vector<Individual> GOM::variate(std::vector<Individual> &population){
     vector<Individual> offspring;
