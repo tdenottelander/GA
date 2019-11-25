@@ -28,6 +28,10 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     }
 }
 
+string FitnessFunction::id() {
+    return "base";
+}
+
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
@@ -44,6 +48,14 @@ int OneMax::evaluate(Individual &ind) {
 
 void OneMax::display() {
     cout << "OneMax fitness function" << endl;
+}
+
+string OneMax::id() {
+    return "om";
+}
+
+FitnessFunction* OneMax::clone() const {
+    return new OneMax(static_cast<const OneMax&>(*this));
 }
 
 
@@ -67,8 +79,16 @@ int LeadingOnes::evaluate(Individual &ind) {
     return result;
 }
 
+FitnessFunction* LeadingOnes::clone() const {
+    return new LeadingOnes(static_cast<const LeadingOnes&>(*this));
+}
+
 void LeadingOnes::display() {
     cout << "LeadingOnes fitness function" << endl;
+}
+
+string LeadingOnes::id() {
+    return "lo";
 }
 
 
@@ -76,7 +96,11 @@ void LeadingOnes::display() {
 
 TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
 
-float TrapFive::evaluate(Individual &ind) {
+int TrapFive::evaluate(Individual &ind) {
+    return 0;
+}
+
+float TrapFive::eval(Individual &ind) {
     float result = 0;
     
     for (int i = 0; i < blocks; i++) {
@@ -103,3 +127,14 @@ float TrapFive::subfunc(Individual &ind, int startIdx, int endIdx) {
     }
 }
 
+FitnessFunction* TrapFive::clone() const {
+    return new TrapFive(static_cast<const TrapFive&>(*this));
+}
+
+void TrapFive::display() {
+    cout << "TrapFive fitness function" << endl;
+}
+
+string TrapFive::id() {
+    return "t5";
+}

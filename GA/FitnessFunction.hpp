@@ -22,8 +22,11 @@ public:
     
     virtual int evaluate(Individual &ind) = 0;
     virtual void display();
+    virtual std::string id();
     
     void checkIfBestFound(Individual &ind);
+    
+    virtual FitnessFunction* clone() const = 0;
 };
 
 class OneMax : public FitnessFunction {
@@ -31,6 +34,8 @@ public:
     OneMax (int length);
     int evaluate(Individual &ind) override;
     void display() override;
+    std::string id() override;
+    FitnessFunction* clone() const override;
 };
 
 
@@ -39,6 +44,8 @@ public:
     LeadingOnes (int length);
     int evaluate(Individual &ind) override;
     void display() override;
+    std::string id() override;
+    FitnessFunction* clone() const override;
 };
 
 
@@ -47,9 +54,12 @@ public:
     int blocks;
     int k;
     TrapFive (int blocks);
-    float evaluate(Individual &ind) override;
-    float subfunc (Indiviudal &ind, int startIdx, int endIdx);
+    int evaluate(Individual &ind) override;
+    float eval(Individual &ind);
+    float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;
+    std::string id() override;
+    FitnessFunction* clone() const override;
 };
 
 #endif /* FitnessFunction_hpp */
