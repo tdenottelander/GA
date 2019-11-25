@@ -22,6 +22,7 @@ namespace Utility{
     std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     double getRand();
+    int getRand(int start, int end);
     long millis();
     std::string getDateString();
     std::string padFrontWith0(std::string target, int length);

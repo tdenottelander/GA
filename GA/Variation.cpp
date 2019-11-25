@@ -115,3 +115,74 @@ void OnePointCrossover::display() {
 string OnePointCrossover::id() {
     return "op";
 }
+
+
+/* ------------------------ GOM Variation ------------------------ */
+
+GOM::GOM(FitnessFunction *fitfunc, vector<uvec> &FOS) : fitfunc(fitfunc), FOS(FOS){}
+
+vector<Individual> GOM::variate(std::vector<Individual> &population){
+    vector<Individual> offspring;
+    offspring.reserve(population.size());
+    for (Individual ind : population){
+        Individual child = gom(ind, population);
+        offspring.push_back(child);
+    }
+    return offspring;
+}
+
+Individual GOM::gom(Individual &ind, std::vector<Individual> &population){
+    int popSize = population.size();
+    Individual b = ind.copy();
+    Individual o = ind.copy();
+//    cout << "b: " << b.toString() << " " << &b << endl;
+//    cout << "o: " << o.toString() << " " << &o << endl;
+    
+    for (uvec subset : FOS) {
+        Individual *p = &population[getRand(0, popSize)];
+//        cout << "p: " << (*p).toString() << " " << &b << endl;
+        applyDonor(o, *p, subset);
+        
+        if (o != b) {
+            fitfunc->evaluate(o);
+            if (o.fitness > b.fitness){
+                applyDonor(b, o, subset);
+                b.fitness = o.fitness;
+            } else {
+                applyDonor(o, b, subset);
+                o.fitness = b.fitness;
+            }
+        }
+//        cout << "b: " << b.toString() << " " << &b << endl;
+//        cout << "o: " << o.toString() << " " << &o << endl;
+    }
+//        cout << "o: " << o.toString() << " " << &o << endl;
+    return o;
+}
+
+void GOM::applyDonor(Individual &ind, Individual &parent, arma::uvec &subset){
+    for (int idx : subset){
+        ind.genotype[idx] = parent.genotype[idx];
+    }
+}
+
+vector<uvec> GOM::getFixedLTFOS(int l){
+    vector<uvec> fos;
+    fos.reserve(l);
+    for(int i = 0; i < l; i++){
+        uvec subset (i + 1);
+        for(int j = 0; j < (i + 1); j++){
+            subset[j] = j;
+        }
+        fos.push_back(subset);
+    }
+    return fos;
+}
+
+void GOM::display() {
+    cout << "GOM Crossover" << endl;
+}
+
+string GOM::id() {
+    return "gom";
+}

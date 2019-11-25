@@ -37,7 +37,7 @@ string FitnessFunction::id() {
 
 OneMax::OneMax(int length) : FitnessFunction(length) {}
 
-int OneMax::evaluate(Individual &ind) {
+float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
     ind.fitness = result;
     
@@ -63,8 +63,8 @@ FitnessFunction* OneMax::clone() const {
 
 LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) {}
 
-int LeadingOnes::evaluate(Individual &ind) {
-    int result = 0;
+float LeadingOnes::evaluate(Individual &ind) {
+    float result = 0;
     for (int i = 0; i < ind.genotype.size(); i++){
         int tempResult = 1;
         for (int j = 0; j < (i + 1); j++){
@@ -96,19 +96,13 @@ string LeadingOnes::id() {
 
 TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
 
-int TrapFive::evaluate(Individual &ind) {
-    return 0;
-}
-
-float TrapFive::eval(Individual &ind) {
+float TrapFive::evaluate(Individual &ind) {
     float result = 0;
-    
     for (int i = 0; i < blocks; i++) {
         result += subfunc(ind, i, i + k);
     }
     
     ind.fitness = result;
-    
     checkIfBestFound(ind);
     
     return result;

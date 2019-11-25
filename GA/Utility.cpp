@@ -40,6 +40,10 @@ double Utility::getRand(){
     return dist(rng);
 }
 
+int Utility::getRand(int begin, int end){
+    return floor(begin + (end - begin) * getRand());
+}
+
 long Utility::millis(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

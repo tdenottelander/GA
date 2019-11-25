@@ -15,6 +15,7 @@
 #include <armadillo>
 #include "Individual.hpp"
 #include "Utility.hpp"
+#include "FitnessFunction.hpp"
 
 class Variation {
 public:
@@ -37,6 +38,19 @@ public:
     OnePointCrossover();
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     std::pair<Individual, Individual> onePointCrossover(Individual &ind1, Individual &ind2);
+    void display() override;
+    std::string id() override;
+};
+
+class GOM : public Variation {
+public:
+    FitnessFunction *fitfunc;
+    std::vector<arma::uvec> FOS;
+    GOM(FitnessFunction *fitfunc, std::vector<arma::uvec> &FOS);
+    std::vector<Individual> variate(std::vector<Individual> &population) override;
+    Individual gom(Individual &ind, std::vector<Individual> &population);
+    void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
+    static std::vector<arma::uvec> getFixedLTFOS(int n);
     void display() override;
     std::string id() override;
 };
