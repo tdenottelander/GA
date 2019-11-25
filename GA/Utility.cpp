@@ -63,9 +63,10 @@ string Utility:: padFrontWith0(string target, int length){
     return target;
 }
 
-void Utility::write(string content, string dir){
+void Utility::write(string content, string dir, string suffix){
     ofstream file;
-    file.open (dir + getDateString() + "_rawdata.json");
+    if(suffix != "") suffix = "_" + suffix;
+    file.open (dir + getDateString() + "_rawdata" + suffix + ".json");
     file << content;
     file.close();
 }
@@ -74,7 +75,7 @@ void Utility::read(string filename){
     ifstream file;
     file.open(filename);
     if(!file){
-        cerr << "Unable to open file" + filename;
+        cerr << "Unable to open file " + filename;
         exit(1);   // call system to stop
     }
     string s;

@@ -21,13 +21,14 @@ class RoundSchedule {
 public:
     int maxRounds;
     int maxLevel;
+    int maxSeconds;
     int interval;
     Selection* selection;
     Variation* variation;
     nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
-    RoundSchedule(int maxRounds, int maxLevel);
+    RoundSchedule(int maxRounds, int maxLevel, int maxSeconds, int interleavedRoundInterval);
     void initialize(Selection &selection, Variation &variation, int problemSize);
     nlohmann::json run();
     void terminateGAs(int n);

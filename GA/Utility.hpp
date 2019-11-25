@@ -25,7 +25,7 @@ namespace Utility{
     long millis();
     std::string getDateString();
     std::string padFrontWith0(std::string target, int length);
-    void write(std::string content, std::string filename);
+    void write(std::string content, std::string filename, std::string suffix = "");
     void read(std::string filename);
 }
 

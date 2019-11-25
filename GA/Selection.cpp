@@ -50,7 +50,7 @@ void ProportionateSelection::display() {
 }
 
 string ProportionateSelection::id(){
-    return "proportionate";
+    return "prop";
 }
 
 vector<float> ProportionateSelection::getProportions(vector<Individual> &population){
@@ -125,5 +125,5 @@ void TournamentSelection::display() {
 }
 
 string TournamentSelection::id(){
-    return ("tournament" + to_string(tournamentSize));
+    return ("tour" + to_string(tournamentSize));
 }

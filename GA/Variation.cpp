@@ -66,7 +66,7 @@ void UnivariateCrossover::display() {
 }
 
 string UnivariateCrossover::id() {
-    return "univariate";
+    return "uni";
 }
 
 
@@ -113,5 +113,5 @@ void OnePointCrossover::display() {
 }
 
 string OnePointCrossover::id() {
-    return "onepoint";
+    return "op";
 }

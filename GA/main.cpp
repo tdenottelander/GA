@@ -26,7 +26,7 @@ using nlohmann::json;
 // The random generator used throughout the whole application
 mt19937 rng(1234);
 // A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
-uniform_real_distribution<float> dist(0.0, 1.0);
+uniform_real_distribution<float> dist(0.0, 0.9999);
 
 const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/";
 
@@ -83,19 +83,68 @@ int mainLoop(){
 }
 
 void roundSchedule(){
-    RoundSchedule rs(500, 10);
-    TournamentSelection sel(4);
-    UnivariateCrossover var;
-    int problemSize = 50;
-    rs.initialize(sel, var, problemSize);
-    json j = rs.run();
-    cout << j.dump() << endl;
+    json experiment;
+
+    // Set to -1 if it should not be a stopping condition
+    int maxRounds = -1;
+    int maxSeconds = 60;
+    int maxLevel = 100;
+    int interval = 4;
+    int repetitions = 30;
     
-    ofstream out("test.txt", ofstream::out);
-    out << j.dump();
-    out.close();
+    experiment["maxLevel"] = maxLevel;
+    experiment["maxRounds"] = maxRounds;
+    experiment["maxSeconds"] = maxSeconds;
+    experiment["interleavedRoundInterval"] = interval;
     
-    write(j.dump(), dataDir);
+    vector<Variation*> variations = {new OnePointCrossover(), new UnivariateCrossover()};
+    vector<Selection*> selections = {new TournamentSelection(2)};
+    
+//    int counter = 0;
+    bool breakOutOfProblemSize = false;
+    for(Selection *sel : selections){
+        json sel_json;
+        for(Variation *var : variations){
+            json var_json;
+            for(int i = 2; i < 20; i++){
+                int problemSize = pow(2,i);
+                json l_json;
+//                l_json["problemSize"] = problemSize;
+//                l_json["variation"] = var->id();
+//                l_json["selection"] = sel->id();
+                for(int rep = 0; rep < repetitions; rep++){
+                    RoundSchedule rs(maxRounds, maxLevel, maxSeconds, interval);
+                    rs.initialize(*sel, *var, problemSize);
+                    json result = rs.run();
+                    l_json[to_string(rep)] = result;
+                    cout << "rep" << rep
+                    << " Sel=" << sel->id()
+                    << " Var=" << var->id()
+                    << " l=" << problemSize
+                    << " success=" << result.at("success")
+                    << " time=" << result.at("timeTaken") << endl;
+        //            cout << "Optimum " << (j.at("success") ? "    " : "not ") << "found for l=" << problemSize << " after " << j.at("timeTaken") << "ms" << endl;
+                    if(result.at("stoppingCondition") == "maxTimeExceeded"){
+                        cout << "Max time exceeded, not starting anymore runs" << endl;
+                        breakOutOfProblemSize = true;
+                        break;
+                    }
+                }
+                cout << endl;
+                if(breakOutOfProblemSize){
+                    breakOutOfProblemSize = false;
+                    break;
+                } else {
+                    var_json[to_string(problemSize)] = l_json;
+                }
+            }
+            sel_json["var=" + var->id()] = var_json;
+        }
+        experiment["sel=" + sel->id()] = sel_json;
+    }
+    
+    write(experiment.dump(), dataDir);
+
 }
 
 int main(int argc, const char * argv[]) {
