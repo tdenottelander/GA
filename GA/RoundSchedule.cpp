@@ -19,13 +19,13 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxLevel, int maxSeconds, int i
     interval(interleavedRoundInterval)
 {}
 
-void RoundSchedule::initialize(Selection &sel, Variation &var, int problemSize) {
+void RoundSchedule::initialize(Selection &sel, Variation &var, FitnessFunction &fit, int problemSize) {
     gaList.reserve(maxLevel);
     selection = &sel;
     variation = &var;
     
     //TODO: Make this modular:
-    output["fitness"] = "onemax";
+    output["fitness"] = fit.id();
     output["successfulGAPopulation"] = -1;
     output["successfulGARoundCount"] = -1;
     output["success"] = false;
@@ -36,7 +36,7 @@ void RoundSchedule::initialize(Selection &sel, Variation &var, int problemSize) 
     for(int i = 0; i < maxLevel; i++){
         whichShouldRun.push_back(0);
         int popSize = pow(2, i + 1);
-        GA* ga = new GA(popSize, problemSize, new OneMax(problemSize), selection, variation);
+        GA* ga = new GA(popSize, problemSize, fit.clone(), selection, variation);
         gaList.push_back(ga);
     }
     whichShouldRun[0] = 1;
@@ -136,6 +136,7 @@ json RoundSchedule::run() {
     
     long stop = millis();
     output["timeTaken"] = stop - start;
+    output["evaluations"] = getAmountOfEvaluations();
     
     return output;
 }
@@ -145,4 +146,12 @@ void RoundSchedule::terminateGAs(int n){
     for(int i = 0; i < (n + 1); i++){
         (*gaList[i]).terminated = true;
     }
+}
+
+int RoundSchedule::getAmountOfEvaluations(){
+    int evaluations = 0;
+    for (GA *ga : gaList) {
+        evaluations += ga->evaluations;
+    }
+    return evaluations;
 }

@@ -21,7 +21,8 @@ GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation 
     problemLength(probLength),
     terminated(false),
     initialized(false),
-    roundsCount(0)
+    roundsCount(0),
+    evaluations(0)
 {
 //    initialize();
 }
@@ -67,6 +68,7 @@ void GA::roundPOVariationSelection(){
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
         fitFunc_ptr->evaluate(ind);
+        evaluations++;
     }
 }
 

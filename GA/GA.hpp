@@ -29,6 +29,7 @@ public:
     bool terminated;
     bool initialized;
     int roundsCount;
+    int evaluations;
     
     GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v);
     

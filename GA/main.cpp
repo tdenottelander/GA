@@ -91,30 +91,34 @@ void roundSchedule(){
     int maxLevel = 100;
     int interval = 4;
     int repetitions = 30;
+    int maxProblemExponent = 100;
     
     experiment["maxLevel"] = maxLevel;
     experiment["maxRounds"] = maxRounds;
     experiment["maxSeconds"] = maxSeconds;
+    experiment["repetitions"] = repetitions;
+    experiment["maxProblemExponent"] = maxProblemExponent;
     experiment["interleavedRoundInterval"] = interval;
     
     vector<Variation*> variations = {new OnePointCrossover(), new UnivariateCrossover()};
     vector<Selection*> selections = {new TournamentSelection(2)};
     
-//    int counter = 0;
+    
     bool breakOutOfProblemSize = false;
     for(Selection *sel : selections){
         json sel_json;
         for(Variation *var : variations){
             json var_json;
-            for(int i = 2; i < 20; i++){
+            for(int i = 2; i < maxProblemExponent; i++){
                 int problemSize = pow(2,i);
+                FitnessFunction* fit = new LeadingOnes(problemSize);
                 json l_json;
 //                l_json["problemSize"] = problemSize;
 //                l_json["variation"] = var->id();
 //                l_json["selection"] = sel->id();
                 for(int rep = 0; rep < repetitions; rep++){
                     RoundSchedule rs(maxRounds, maxLevel, maxSeconds, interval);
-                    rs.initialize(*sel, *var, problemSize);
+                    rs.initialize(*sel, *var, *fit, problemSize);
                     json result = rs.run();
                     l_json[to_string(rep)] = result;
                     cout << "rep" << rep
@@ -122,7 +126,8 @@ void roundSchedule(){
                     << " Var=" << var->id()
                     << " l=" << problemSize
                     << " success=" << result.at("success")
-                    << " time=" << result.at("timeTaken") << endl;
+                    << " time=" << result.at("timeTaken")
+                    << " evaluations=" << result.at("evaluations") << endl;
         //            cout << "Optimum " << (j.at("success") ? "    " : "not ") << "found for l=" << problemSize << " after " << j.at("timeTaken") << "ms" << endl;
                     if(result.at("stoppingCondition") == "maxTimeExceeded"){
                         cout << "Max time exceeded, not starting anymore runs" << endl;

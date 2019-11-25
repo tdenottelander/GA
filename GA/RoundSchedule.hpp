@@ -29,9 +29,10 @@ public:
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
     RoundSchedule(int maxRounds, int maxLevel, int maxSeconds, int interleavedRoundInterval);
-    void initialize(Selection &selection, Variation &variation, int problemSize);
+    void initialize(Selection &selection, Variation &variation, FitnessFunction &fit, int problemSize);
     nlohmann::json run();
     void terminateGAs(int n);
+    int getAmountOfEvaluations();
 };
 
 #endif /* RoundSchedule_hpp */
