@@ -28,7 +28,7 @@ public:
 
 class OneMax : public FitnessFunction {
 public:
-    OneMax (int optimum);
+    OneMax (int length);
     int evaluate(Individual &ind) override;
     void display() override;
 };
@@ -36,8 +36,19 @@ public:
 
 class LeadingOnes : public FitnessFunction {
 public:
-    LeadingOnes (int optimum);
+    LeadingOnes (int length);
     int evaluate(Individual &ind) override;
+    void display() override;
+};
+
+
+class TrapFive : public FitnessFunction {
+public:
+    int blocks;
+    int k;
+    TrapFive (int blocks);
+    float evaluate(Individual &ind) override;
+    float subfunc (Indiviudal &ind, int startIdx, int endIdx);
     void display() override;
 };
 

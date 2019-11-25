@@ -31,7 +31,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int optimum) : FitnessFunction(optimum) {}
+OneMax::OneMax(int length) : FitnessFunction(length) {}
 
 int OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -49,7 +49,7 @@ void OneMax::display() {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int optimum) : FitnessFunction(optimum) {}
+LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) {}
 
 int LeadingOnes::evaluate(Individual &ind) {
     int result = 0;
@@ -70,3 +70,36 @@ int LeadingOnes::evaluate(Individual &ind) {
 void LeadingOnes::display() {
     cout << "LeadingOnes fitness function" << endl;
 }
+
+
+/* ------------------------ Trap Five Fitness Function ------------------------ */
+
+TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
+
+float TrapFive::evaluate(Individual &ind) {
+    float result = 0;
+    
+    for (int i = 0; i < blocks; i++) {
+        result += subfunc(ind, i, i + k);
+    }
+    
+    ind.fitness = result;
+    
+    checkIfBestFound(ind);
+    
+    return result;
+}
+
+float TrapFive::subfunc(Individual &ind, int startIdx, int endIdx) {
+    float result = 0;
+    for(int i = startIdx; i < endIdx; i++){
+        result += ind.genotype[i];
+    }
+    
+    if (result == k){
+        return result;
+    } else {
+        return ((k - 1 - result) / k);
+    }
+}
+
