@@ -101,7 +101,7 @@ void roundSchedule(){
     experiment["interleavedRoundInterval"] = interval;
     
     vector<Variation*> variations = {new OnePointCrossover(), new UnivariateCrossover()};
-    vector<Selection*> selections = {new TournamentSelection(2)};
+    vector<Selection*> selections = {new TournamentSelection(4)};
     
     
     bool breakOutOfProblemSize = false;
