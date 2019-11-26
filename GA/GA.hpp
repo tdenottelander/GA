@@ -29,7 +29,6 @@ public:
     bool terminated;
     bool initialized;
     int roundsCount;
-    int evaluations;
     
     GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v);
     
@@ -47,6 +46,7 @@ public:
     bool isOptimal();
     
     double getAvgFitness();
+    int getTotalAmountOfEvaluations();
     
     std::string toString();
     std::string populationToString(std::vector<Individual> &population);

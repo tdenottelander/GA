@@ -17,6 +17,7 @@ public:
     Individual bestIndividual;
     float optimum;
     bool optimumFound;
+    int evaluations;
     
     FitnessFunction(int optimum);
     

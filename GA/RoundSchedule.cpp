@@ -151,7 +151,7 @@ void RoundSchedule::terminateGAs(int n){
 int RoundSchedule::getAmountOfEvaluations(){
     int evaluations = 0;
     for (GA *ga : gaList) {
-        evaluations += ga->evaluations;
+        evaluations += ga->getTotalAmountOfEvaluations();
     }
     return evaluations;
 }

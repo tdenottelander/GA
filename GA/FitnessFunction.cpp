@@ -12,7 +12,7 @@ using namespace std;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(int optimum) : optimum(optimum), bestIndividual(0), optimumFound(false){
+FitnessFunction::FitnessFunction(int optimum) : optimum(optimum), bestIndividual(0), optimumFound(false), evaluations(0){
 }
 
 void FitnessFunction::display(){
@@ -43,6 +43,7 @@ float OneMax::evaluate(Individual &ind) {
     
     checkIfBestFound(ind);
     
+    evaluations++;
     return result;
 }
 
@@ -76,6 +77,7 @@ float LeadingOnes::evaluate(Individual &ind) {
     
     checkIfBestFound(ind);
     
+    evaluations++;
     return result;
 }
 
@@ -105,6 +107,7 @@ float TrapFive::evaluate(Individual &ind) {
     ind.fitness = result;
     checkIfBestFound(ind);
     
+    evaluations++;
     return result;
 }
 
