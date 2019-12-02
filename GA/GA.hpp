@@ -46,6 +46,9 @@ public:
     double getAvgFitness();
     int getTotalAmountOfEvaluations();
     
+    void initializeTrueRandomPopulation();
+    void initializeSolvablePopulation();
+    
     std::string toString();
     std::string populationToString(std::vector<Individual> &population);
     

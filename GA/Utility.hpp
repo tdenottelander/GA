@@ -23,6 +23,7 @@ namespace Utility{
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     double getRand();
     int getRand(int start, int end);
+    int getConditionalBit(int counter0, int counter1, int max);
     long millis();
     std::string getDateString();
     std::string padFrontWith0(std::string target, int length);

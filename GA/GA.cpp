@@ -20,13 +20,8 @@ GA::GA() :
 {}
 
 void GA::initialize(){
-    population.reserve(populationSize);
-    for(int i = 0; i < populationSize; i++){
-        Individual ind (problemLength);
-        ind.initialize();
-        fitFunc_ptr->evaluate(ind);
-        population.push_back(ind);
-    }
+//    initializeTrueRandomPopulation();
+    initializeSolvablePopulation();
     
     initialized = true;
 }
@@ -94,6 +89,35 @@ bool GA::isOptimal(){
 
 int GA::getTotalAmountOfEvaluations(){
     return fitFunc_ptr->evaluations;
+}
+
+void GA::initializeTrueRandomPopulation(){
+    population.reserve(populationSize);
+    for(int i = 0; i < populationSize; i++){
+        Individual ind (problemLength);
+        ind.initialize();
+        fitFunc_ptr->evaluate(ind);
+        population.push_back(ind);
+    }
+}
+
+void GA::initializeSolvablePopulation(){
+    population.reserve(populationSize);
+    for(int i = 0; i < populationSize; i++){
+        Individual ind (problemLength);
+        population.push_back(ind);
+    }
+    
+    for (int i = 0; i < problemLength; i++){
+        vector<int> counters = {0, 0};
+        for (Individual &ind : population){
+            int bit = Utility::getConditionalBit(counters[0], counters[1], populationSize);
+            ind.genotype[i] = bit;
+            counters[bit] = counters[bit] + 1;
+        }
+    }
+    
+    evaluateAll(population);
 }
 
 string GA::toString() {

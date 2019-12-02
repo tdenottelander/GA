@@ -20,7 +20,9 @@ string FOS::toString() { return "baseFOS"; }
 
 /* ------------------------ Incremental LT FOS ------------------------ */
 
-IncrementalLT_FOS::IncrementalLT_FOS(){}
+IncrementalLT_FOS::IncrementalLT_FOS(){
+    randomizeOnNewRound = false;
+}
 
 vector<uvec> IncrementalLT_FOS::getFOS (int n){
     return FOSStructures::getIncrementalLT_FOS(n);
@@ -31,18 +33,22 @@ string IncrementalLT_FOS::toString() { return "Incremental Linkage Tree FOS"; }
 
 /* ------------------------ Univariate FOS ------------------------ */
 
-Univariate_FOS::Univariate_FOS(){}
+UnivariateOrdered_FOS::UnivariateOrdered_FOS(){
+    randomizeOnNewRound = false;
+}
 
-vector<uvec> Univariate_FOS::getFOS (int n){
+vector<uvec> UnivariateOrdered_FOS::getFOS (int n){
     return FOSStructures::getUnivariate_FOS(n);
 }
-string Univariate_FOS::id(){ return "UniOrd"; }
-string Univariate_FOS::toString() { return "Univariate (ordered) FOS"; }
+string UnivariateOrdered_FOS::id(){ return "UniOrd"; }
+string UnivariateOrdered_FOS::toString() { return "Univariate (ordered) FOS"; }
 
 
 /* ------------------------ Incremental LT + Univariate FOS ------------------------ */
 
-IncrementalLT_Univariate_FOS::IncrementalLT_Univariate_FOS(){}
+IncrementalLT_Univariate_FOS::IncrementalLT_Univariate_FOS(){
+    randomizeOnNewRound = false;
+}
 
 vector<uvec> IncrementalLT_Univariate_FOS::getFOS (int n){
     vector<uvec> fos;
@@ -56,6 +62,20 @@ vector<uvec> IncrementalLT_Univariate_FOS::getFOS (int n){
 string IncrementalLT_Univariate_FOS::id() { return "incrLT-UniOrd"; }
 string IncrementalLT_Univariate_FOS::toString(){ return "Incremental Linkage Tree, followed by (ordered) Univariate FOS"; }
 
+
+
+/* ------------------------ Unordered Univariate FOS ------------------------ */
+
+Univariate_FOS::Univariate_FOS(){
+    randomizeOnNewRound = true;
+}
+
+vector<uvec> Univariate_FOS::getFOS (int n){
+    return FOSStructures::getRandomUnivariate_FOS(n);
+}
+
+string Univariate_FOS::id() { return "UniUnord"; }
+string Univariate_FOS::toString(){ return "Unordered Univariate FOS"; }
 
 
 
@@ -81,6 +101,18 @@ vector<uvec> FOSStructures::getUnivariate_FOS(int n){
     for(int i = 0; i < n; i++){
         uvec subset(1);
         subset[0] = i;
+        fos.push_back(subset);
+    }
+    return fos;
+}
+
+vector<uvec> FOSStructures::getRandomUnivariate_FOS(int n){
+    vector<uvec> fos;
+    fos.reserve(n);
+    vector<int> randArray = Utility::getRandomlyPermutedArrayV2(n);
+    for (int i = 0; i < n; i++){
+        uvec subset(1);
+        subset[0] = randArray[i];
         fos.push_back(subset);
     }
     return fos;

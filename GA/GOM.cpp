@@ -10,7 +10,7 @@
 
 using namespace std;
 
-GOM::GOM(FitnessFunction * fitfunc, FOS *fos) : GA(), fos(fos), gom_variation(*new GOM_Variation()) {
+GOM::GOM(FitnessFunction * fitfunc, FOS *fos, bool forcedImprovement = false) : GA(), fos(fos), gom_variation(*new GOM_Variation(forcedImprovement)) {
     fitFunc_ptr = fitfunc;
 }
 
@@ -20,8 +20,10 @@ void GOM::initialize() {
 }
 
 void GOM::round() {
+    if(fos->randomizeOnNewRound){
+        gom_variation.setFOS(fos->getFOS(populationSize));
+    }
     vector<Individual> offspring = gom_variation.variate(population);
-    evaluateAll(offspring);
     
     population = offspring;
     
@@ -38,5 +40,5 @@ void GOM::setProblemLength (int length) {
 }
 
 string GOM::id(){
-    return "GOM_fos=" + fos->id();
+    return "GOM_fos=" + fos->id() + "_FI=" + (gom_variation.forcedImprovement ? "t" : "f");
 }

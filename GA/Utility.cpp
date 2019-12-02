@@ -44,6 +44,19 @@ int Utility::getRand(int begin, int end){
     return floor(begin + (end - begin) * getRand());
 }
 
+int Utility::getConditionalBit(int counter0, int counter1, int max){
+    int leftFor0 = (max / 2) - counter0;
+    int leftFor1 = (max / 2) - counter1;
+    int totalLeft = leftFor0 + leftFor1;
+    
+    float chanceOn0 = (float)leftFor0 / totalLeft;
+    if (getRand() < chanceOn0){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 long Utility::millis(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

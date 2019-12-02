@@ -45,10 +45,13 @@ public:
 class GOM_Variation : public Variation {
 public:
     FitnessFunction *fitfunc;
+    Individual *bestIndividual;
+    bool forcedImprovement;
     std::vector<arma::uvec> fos;
-    GOM_Variation();
+    GOM_Variation(bool forcedInprovement = false);
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     Individual gom(Individual &ind, std::vector<Individual> &population);
+    bool gomWithEliteIndividual(Individual &o, Individual &b);
     void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
     static std::vector<arma::uvec> getFixedLTFOS(int n);
     static std::vector<arma::uvec> getUnivariateFOS(int n);

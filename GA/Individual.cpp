@@ -18,7 +18,7 @@ using namespace Utility;
 // uvec genotype;
 // int fitness = -1;
 
-Individual::Individual(int length) : fitness(-1){
+Individual::Individual(int length) : fitness(-1), counterNotChanged(0){
     genotype = uvec (length);
 }
 

@@ -119,13 +119,21 @@ string OnePointCrossover::id() {
 
 /* ------------------------ GOM Variation ------------------------ */
 
-GOM_Variation::GOM_Variation() {};
+GOM_Variation::GOM_Variation(bool forcedImprovement) : forcedImprovement(forcedImprovement) {
+    cout << forcedImprovement << endl;
+};
 
 vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
+//    bestIndividual = &(fitfunc->bestIndividual);
     vector<Individual> offspring;
     offspring.reserve(population.size());
     for (Individual ind : population){
         Individual child = gom(ind, population);
+        if(child.fitness > ind.fitness){
+            child.counterNotChanged = 0;
+        } else {
+            child.counterNotChanged++;
+        }
         offspring.push_back(child);
     }
     return offspring;
@@ -135,23 +143,61 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
     int popSize = population.size();
     Individual b = ind.copy();
     Individual o = ind.copy();
+    bool changed = false;
     
+//    cout << "start\n";
     for (uvec subset : fos) {
+//        for (int i : subset) cout << i << " ";
+//        cout << endl;
         Individual *p = &population[getRand(0, popSize)];
         applyDonor(o, *p, subset);
         
         if (o != b) {
             fitfunc->evaluate(o);
-            if (o.fitness > b.fitness){
+            if (o.fitness >= b.fitness){
                 applyDonor(b, o, subset);
                 b.fitness = o.fitness;
+                changed = true;
             } else {
                 applyDonor(o, b, subset);
                 o.fitness = b.fitness;
             }
         }
     }
+//    cout << "end\n";
+//    cout << endl;
+    
+    if(forcedImprovement && (!changed || o.counterNotChanged > (1 + log(popSize) / log(10)))){
+        changed = gomWithEliteIndividual(o, b);
+        
+        if(!changed){
+            o = fitfunc->bestIndividual.copy();
+        }
+    }
+    
     return o;
+}
+
+bool GOM_Variation::gomWithEliteIndividual(Individual &o, Individual &b){
+    bool changed = false;
+    for (uvec subset : fos) {
+        applyDonor(o, fitfunc->bestIndividual, subset);
+        if(o != b) {
+            fitfunc->evaluate(o);
+            if(o.fitness > b.fitness) {
+                applyDonor(b, o, subset);
+                b.fitness = o.fitness;
+                changed = true;
+            } else {
+                applyDonor(o, b, subset);
+                o.fitness = b.fitness;
+            }
+        }
+        if(changed){
+            break;
+        }
+    }
+    return changed;
 }
 
 void GOM_Variation::applyDonor(Individual &ind, Individual &parent, arma::uvec &subset){
