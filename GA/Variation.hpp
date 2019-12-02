@@ -50,7 +50,7 @@ public:
     std::vector<arma::uvec> fos;
     GOM_Variation(bool forcedInprovement = false);
     std::vector<Individual> variate(std::vector<Individual> &population) override;
-    Individual gom(Individual &ind, std::vector<Individual> &population);
+    Individual gom(Individual &ind, std::vector<Individual> &population, int indIdx);
     bool gomWithEliteIndividual(Individual &o, Individual &b);
     void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
     static std::vector<arma::uvec> getFixedLTFOS(int n);

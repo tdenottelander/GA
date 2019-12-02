@@ -127,9 +127,10 @@ vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
 //    bestIndividual = &(fitfunc->bestIndividual);
     vector<Individual> offspring;
     offspring.reserve(population.size());
-    for (Individual ind : population){
-        Individual child = gom(ind, population);
-        if(child.fitness > ind.fitness){
+    for (int i = 0; i < population.size(); i++){
+        Individual &parent = population[i];
+        Individual child = gom(parent, population, i);
+        if(child.fitness > parent.fitness){
             child.counterNotChanged = 0;
         } else {
             child.counterNotChanged++;
@@ -139,7 +140,7 @@ vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
     return offspring;
 }
 
-Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &population){
+Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &population, int indIdx){
     int popSize = population.size();
     Individual b = ind.copy();
     Individual o = ind.copy();
@@ -149,7 +150,13 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
     for (uvec subset : fos) {
 //        for (int i : subset) cout << i << " ";
 //        cout << endl;
-        Individual *p = &population[getRand(0, popSize)];
+        
+        // Find a donor that is different than this individual.
+        int donorIdx = indIdx;
+        while(donorIdx == indIdx){
+            donorIdx = getRand(0, popSize);
+        }
+        Individual *p = &population[donorIdx];
         applyDonor(o, *p, subset);
         
         if (o != b) {

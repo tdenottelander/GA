@@ -45,7 +45,7 @@ void roundSchedule(){
     int maxEvaluations = 1000000;
     int interval = 4;
     int repetitions = 30;
-    int maxProblemExponent = 100;
+    int maxProblemExponent = 10;
     
     main_json["maxPopSizeLevel"] = maxPopSizeLevel;
     main_json["maxRounds"] = maxRounds;
@@ -61,15 +61,16 @@ void roundSchedule(){
     Selection * sel = new TournamentSelection(2);
     
     vector<GA*> gaList = {
-//        new SimpleGA(fit, new UnivariateCrossover(), sel),
-//        new SimpleGA(fit, new OnePointCrossover(), sel),
-//        new GOM(fit, new Univariate_FOS(), false),
-//        new GOM(fit, new IncrementalLT_FOS(), false),
-//        new GOM(fit, new IncrementalLT_Univariate_FOS(), false)
+        new SimpleGA(fit, new UnivariateCrossover(), sel),
+        new SimpleGA(fit, new OnePointCrossover(), sel),
+        new GOM(fit, new Univariate_FOS(), false),
+        new GOM(fit, new UnivariateOrdered_FOS(), false),
+        new GOM(fit, new IncrementalLT_FOS(), false),
+        new GOM(fit, new IncrementalLT_Univariate_FOS(), false),
+        new GOM(fit, new Univariate_FOS(), true),
         new GOM(fit, new UnivariateOrdered_FOS(), true),
         new GOM(fit, new IncrementalLT_FOS(), true),
         new GOM(fit, new IncrementalLT_Univariate_FOS(), true)
-//        new GOM(fit, new Univariate_FOS(), true)
     };
      
     

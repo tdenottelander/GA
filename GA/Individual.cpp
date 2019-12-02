@@ -15,9 +15,6 @@ using namespace Utility;
 
 /* ------------------------ Individual ------------------------ */
 
-// uvec genotype;
-// int fitness = -1;
-
 Individual::Individual(int length) : fitness(-1), counterNotChanged(0){
     genotype = uvec (length);
 }
@@ -52,6 +49,9 @@ string Individual::toString(){
 }
 
 bool Individual::operator==(const Individual &ind) {
+    if(fitness != ind.fitness){
+        return false;
+    }
     for (int i = 0; i < genotype.size(); i++){
         if(genotype[i] != ind.genotype[i]){
             return false;
