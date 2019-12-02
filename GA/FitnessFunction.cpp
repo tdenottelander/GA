@@ -15,6 +15,8 @@ using namespace std;
 FitnessFunction::FitnessFunction(int optimum) : optimum(optimum), bestIndividual(0), optimumFound(false), evaluations(0){
 }
 
+FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
+
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
 }
@@ -32,10 +34,15 @@ string FitnessFunction::id() {
     return "base";
 }
 
+void FitnessFunction::setLength(int length){
+    optimum = length;
+}
+
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
 OneMax::OneMax(int length) : FitnessFunction(length) {}
+OneMax::OneMax() {}
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -52,7 +59,7 @@ void OneMax::display() {
 }
 
 string OneMax::id() {
-    return "om";
+    return "OM";
 }
 
 FitnessFunction* OneMax::clone() const {
@@ -63,17 +70,20 @@ FitnessFunction* OneMax::clone() const {
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
 LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) {}
+LeadingOnes::LeadingOnes() {}
 
 float LeadingOnes::evaluate(Individual &ind) {
     float result = 0;
     for (int i = 0; i < ind.genotype.size(); i++){
-        int tempResult = 1;
-        for (int j = 0; j < (i + 1); j++){
-            tempResult *= ind.genotype[j];
+        if (ind.genotype[i] == 0){
+            break;
+        } else {
+            result++;
         }
-        result += tempResult;
     }
     ind.fitness = result;
+    
+    
     
     checkIfBestFound(ind);
     
@@ -90,13 +100,14 @@ void LeadingOnes::display() {
 }
 
 string LeadingOnes::id() {
-    return "lo";
+    return "LO";
 }
 
 
 /* ------------------------ Trap Five Fitness Function ------------------------ */
 
 TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
+TrapFive::TrapFive() : FitnessFunction(), k(5) {}
 
 float TrapFive::evaluate(Individual &ind) {
     float result = 0;
@@ -133,5 +144,10 @@ void TrapFive::display() {
 }
 
 string TrapFive::id() {
-    return "t5";
+    return "T5";
+}
+
+void TrapFive::setLength (int length) {
+    blocks = length;
+    optimum = 5 * length;
 }

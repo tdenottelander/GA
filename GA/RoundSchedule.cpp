@@ -12,32 +12,33 @@ using namespace std;
 using nlohmann::json;
 using Utility::millis;
 
-RoundSchedule::RoundSchedule (int maxRounds, int maxLevel, int maxSeconds, int interleavedRoundInterval) :
+RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
-    maxLevel(maxLevel),
+    maxPopSizeLevel(maxPopSizeLevel),
     maxSeconds(maxSeconds),
+    maxEvaluations(maxEvaluations),
     interval(interleavedRoundInterval)
 {}
 
-void RoundSchedule::initialize(Selection &sel, Variation &var, FitnessFunction &fit, int problemSize) {
-    gaList.reserve(maxLevel);
-    selection = &sel;
-    variation = &var;
-    
-    //TODO: Make this modular:
-    output["fitness"] = fit.id();
+void RoundSchedule::initialize(GA *g, int problemSize) {
+    gaList.reserve(maxPopSizeLevel);
+
+    output["fitness"] = g->fitFunc_ptr->id();
     output["successfulGAPopulation"] = -1;
     output["successfulGARoundCount"] = -1;
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
     //TODO: Refactor as armadillo uvec
-    whichShouldRun.reserve(maxLevel);
-    for(int i = 0; i < maxLevel; i++){
+    whichShouldRun.reserve(maxPopSizeLevel);
+    for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);
         int popSize = pow(2, i + 1);
-        GA* ga = new GA(popSize, problemSize, fit.clone(), selection, variation);
-        gaList.push_back(ga);
+        GA* newGA = g->clone();
+        newGA->fitFunc_ptr = g->fitFunc_ptr->clone();
+        newGA->setPopulationSize(popSize);
+        newGA->setProblemLength(problemSize);
+        gaList.push_back(newGA);
     }
     whichShouldRun[0] = 1;
 }
@@ -59,9 +60,12 @@ json RoundSchedule::run() {
 //            cout << "Did not found the optimum after " << maxSeconds * 1000 << " seconds" << endl;
             output["stoppingCondition"] = "maxTimeExceeded";
             break;
+        } else if (maxEvaluations != -1 && getAmountOfEvaluations() > maxEvaluations){
+            output["stoppingCondition"] = "maxEvaluationsExceeded";
+            break;
         }
 
-        for (int i = lowestActiveGAIdx; i < maxLevel; i++) {
+        for (int i = lowestActiveGAIdx; i < maxPopSizeLevel; i++) {
 
             //First check if GA is not terminated
             if (!gaList[i]->terminated) {

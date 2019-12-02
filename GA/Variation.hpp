@@ -42,15 +42,18 @@ public:
     std::string id() override;
 };
 
-class GOM : public Variation {
+class GOM_Variation : public Variation {
 public:
     FitnessFunction *fitfunc;
-    std::vector<arma::uvec> FOS;
-    GOM();
+    std::vector<arma::uvec> fos;
+    GOM_Variation();
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     Individual gom(Individual &ind, std::vector<Individual> &population);
     void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
     static std::vector<arma::uvec> getFixedLTFOS(int n);
+    static std::vector<arma::uvec> getUnivariateFOS(int n);
+    static std::vector<arma::uvec> getFixedLTUnivariateFOS(int n);
+    void setFOS(std::vector<arma::uvec> f);
     void display() override;
     std::string id() override;
 };

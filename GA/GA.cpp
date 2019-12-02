@@ -13,18 +13,11 @@ using namespace std;
 
 /* ------------------------ Genetic Algorithm ------------------------ */
 
-GA::GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v) :
-    populationSize(popSize),
-    fitFunc_ptr(f),
-    selection_ptr(s),
-    variation_ptr(v),
-    problemLength(probLength),
+GA::GA() :
     terminated(false),
     initialized(false),
     roundsCount(0)
-{
-//    initialize();
-}
+{}
 
 void GA::initialize(){
     population.reserve(populationSize);
@@ -35,19 +28,11 @@ void GA::initialize(){
         population.push_back(ind);
     }
     
-    //TODO: Make this piece of code below more elegant
-    if(variation_ptr->id() == "gom"){
-        GOM* gom = dynamic_cast<GOM*>(variation_ptr);
-        (*gom).FOS = GOM::getFixedLTFOS(problemLength);
-        (*gom).fitfunc = fitFunc_ptr;
-    }
-    
     initialized = true;
 }
 
 void GA::round(){
     roundPOVariationSelection();
-//    roundReplacementVariationSelection();
     roundsCount++;
 }
 
@@ -127,3 +112,41 @@ string GA::populationToString(vector<Individual> &population){
     }
     return result;
 }
+
+void GA::setPopulationSize(int n){
+    populationSize = n;
+}
+
+void GA::setProblemLength(int l){
+    if(fitFunc_ptr != NULL){
+        fitFunc_ptr->setLength(l);
+    }
+    problemLength = l;
+}
+
+void GA::setFitnessFunction (FitnessFunction * fitfunc){
+    fitFunc_ptr = fitfunc;
+}
+
+void GA::setSelection (Selection * sel){
+    selection_ptr = sel;
+}
+
+void GA::setVariation (Variation * var){
+    variation_ptr = var;
+}
+
+void GA::setPointers(FitnessFunction * fitfunc, Selection * sel, Variation * var){
+    setFitnessFunction(fitfunc);
+    setSelection(sel);
+    setVariation(var);
+}
+
+GA* GA::clone() const {
+    return new GA(static_cast<const GA&>(*this));
+}
+
+string GA::id(){
+    return "Base GA";
+}
+

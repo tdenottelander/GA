@@ -119,9 +119,9 @@ string OnePointCrossover::id() {
 
 /* ------------------------ GOM Variation ------------------------ */
 
-GOM::GOM() {};
+GOM_Variation::GOM_Variation() {};
 
-vector<Individual> GOM::variate(std::vector<Individual> &population){
+vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
     vector<Individual> offspring;
     offspring.reserve(population.size());
     for (Individual ind : population){
@@ -131,16 +131,13 @@ vector<Individual> GOM::variate(std::vector<Individual> &population){
     return offspring;
 }
 
-Individual GOM::gom(Individual &ind, std::vector<Individual> &population){
+Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &population){
     int popSize = population.size();
     Individual b = ind.copy();
     Individual o = ind.copy();
-//    cout << "b: " << b.toString() << " " << &b << endl;
-//    cout << "o: " << o.toString() << " " << &o << endl;
     
-    for (uvec subset : FOS) {
+    for (uvec subset : fos) {
         Individual *p = &population[getRand(0, popSize)];
-//        cout << "p: " << (*p).toString() << " " << &b << endl;
         applyDonor(o, *p, subset);
         
         if (o != b) {
@@ -153,36 +150,24 @@ Individual GOM::gom(Individual &ind, std::vector<Individual> &population){
                 o.fitness = b.fitness;
             }
         }
-//        cout << "b: " << b.toString() << " " << &b << endl;
-//        cout << "o: " << o.toString() << " " << &o << endl;
     }
-//        cout << "o: " << o.toString() << " " << &o << endl;
     return o;
 }
 
-void GOM::applyDonor(Individual &ind, Individual &parent, arma::uvec &subset){
+void GOM_Variation::applyDonor(Individual &ind, Individual &parent, arma::uvec &subset){
     for (int idx : subset){
         ind.genotype[idx] = parent.genotype[idx];
     }
 }
 
-vector<uvec> GOM::getFixedLTFOS(int l){
-    vector<uvec> fos;
-    fos.reserve(l);
-    for(int i = 0; i < l; i++){
-        uvec subset (i + 1);
-        for(int j = 0; j < (i + 1); j++){
-            subset[j] = j;
-        }
-        fos.push_back(subset);
-    }
-    return fos;
+void GOM_Variation::setFOS(vector<arma::uvec> f){
+    fos = f;
 }
 
-void GOM::display() {
+void GOM_Variation::display() {
     cout << "GOM Crossover" << endl;
 }
 
-string GOM::id() {
+string GOM_Variation::id() {
     return "gom";
 }

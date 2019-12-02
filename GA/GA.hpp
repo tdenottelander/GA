@@ -30,26 +30,35 @@ public:
     bool initialized;
     int roundsCount;
     
-    GA(int popSize, int probLength, FitnessFunction *f, Selection *s, Variation *v);
+    GA();
     
-    void initialize();
+    virtual void initialize();
     
-    void round();
+    virtual void round();
     
     void roundReplacementVariationSelection();
     void roundPOVariationSelection();
     
     void evaluateAll(std::vector<Individual> &population);
-    
     bool isConverged();
     bool isDiverse();
     bool isOptimal();
-    
     double getAvgFitness();
     int getTotalAmountOfEvaluations();
     
     std::string toString();
     std::string populationToString(std::vector<Individual> &population);
+    
+    void setPopulationSize (int n);
+    virtual void setProblemLength (int l);
+    void setFitnessFunction (FitnessFunction * fitfunc);
+    void setSelection (Selection * sel);
+    void setVariation (Variation * var);
+    void setPointers(FitnessFunction * fitfunc, Selection * sel, Variation * var);
+    
+    virtual GA* clone() const;
+    
+    virtual std::string id();
 };
 
 #endif /* GA_hpp */
