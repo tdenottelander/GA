@@ -21,7 +21,7 @@ void GOM::initialize() {
 
 void GOM::round() {
     if(fos->randomizeOnNewRound){
-        gom_variation.setFOS(fos->getFOS(populationSize));
+        gom_variation.setFOS(fos->getFOS(problemLength));
     }
     vector<Individual> offspring = gom_variation.variate(population);
     
