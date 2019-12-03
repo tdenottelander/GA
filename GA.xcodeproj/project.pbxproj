@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
+		C269FF1823952D0800B98092 /* Stuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF1623952D0800B98092 /* Stuff.cpp */; };
 		C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4CE23840C6700D6E774 /* main.cpp */; };
 		C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4D523840CEB00D6E774 /* Individual.cpp */; };
 		C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4DB23840FC000D6E774 /* Selection.cpp */; };
@@ -14,6 +16,10 @@
 		C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E1238410BE00D6E774 /* FitnessFunction.cpp */; };
 		C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E42384113A00D6E774 /* GA.cpp */; };
 		C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E7238441A300D6E774 /* Utility.cpp */; };
+		C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */; };
+		C2BC66DD238EC888006BA6BF /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BC66D0238EBA10006BA6BF /* Python.framework */; };
+		C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66DE238FE5BF006BA6BF /* FOS.cpp */; };
+		C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66E4238FF7DA006BA6BF /* GOM.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +35,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C269FF132390090500B98092 /* SimpleGA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleGA.cpp; sourceTree = "<group>"; };
+		C269FF142390090500B98092 /* SimpleGA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleGA.hpp; sourceTree = "<group>"; };
+		C269FF1623952D0800B98092 /* Stuff.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Stuff.cpp; sourceTree = "<group>"; };
+		C269FF1723952D0800B98092 /* Stuff.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Stuff.hpp; sourceTree = "<group>"; };
 		C2ABE4CB23840C6700D6E774 /* GA */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GA; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2ABE4CE23840C6700D6E774 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C2ABE4D523840CEB00D6E774 /* Individual.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Individual.cpp; sourceTree = "<group>"; };
@@ -43,6 +53,18 @@
 		C2ABE4E52384113A00D6E774 /* GA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GA.hpp; sourceTree = "<group>"; };
 		C2ABE4E7238441A300D6E774 /* Utility.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
 		C2ABE4E8238441A300D6E774 /* Utility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Utility.hpp; sourceTree = "<group>"; };
+		C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RoundSchedule.cpp; sourceTree = "<group>"; };
+		C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RoundSchedule.hpp; sourceTree = "<group>"; };
+		C2BC66D0238EBA10006BA6BF /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
+		C2BC66D2238EC4F7006BA6BF /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = python3.7; path = ../../../../../miniconda3/envs/myenv/lib/python3.7; sourceTree = "<group>"; };
+		C2BC66D4238EC50D006BA6BF /* libpython.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpython.tbd; path = usr/lib/libpython.tbd; sourceTree = SDKROOT; };
+		C2BC66D7238EC556006BA6BF /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../../../../../miniconda3/envs/myenv/lib; sourceTree = "<group>"; };
+		C2BC66D9238EC71B006BA6BF /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = python3.7; path = ../../../../../miniconda3/envs/myenv/bin/python3.7; sourceTree = "<group>"; };
+		C2BC66DB238EC874006BA6BF /* python.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = python.app; path = ../../../../../miniconda3/python.app; sourceTree = "<group>"; };
+		C2BC66DE238FE5BF006BA6BF /* FOS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FOS.cpp; sourceTree = "<group>"; };
+		C2BC66DF238FE5BF006BA6BF /* FOS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FOS.hpp; sourceTree = "<group>"; };
+		C2BC66E4238FF7DA006BA6BF /* GOM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GOM.cpp; sourceTree = "<group>"; };
+		C2BC66E5238FF7DA006BA6BF /* GOM.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GOM.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2BC66DD238EC888006BA6BF /* Python.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +84,7 @@
 			children = (
 				C2ABE4CD23840C6700D6E774 /* GA */,
 				C2ABE4CC23840C6700D6E774 /* Products */,
+				C2BC66CF238EBA10006BA6BF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +99,14 @@
 		C2ABE4CD23840C6700D6E774 /* GA */ = {
 			isa = PBXGroup;
 			children = (
+				C269FF1623952D0800B98092 /* Stuff.cpp */,
+				C269FF1723952D0800B98092 /* Stuff.hpp */,
+				C269FF132390090500B98092 /* SimpleGA.cpp */,
+				C269FF142390090500B98092 /* SimpleGA.hpp */,
+				C2BC66DE238FE5BF006BA6BF /* FOS.cpp */,
+				C2BC66DF238FE5BF006BA6BF /* FOS.hpp */,
+				C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */,
+				C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */,
 				C2ABE4CE23840C6700D6E774 /* main.cpp */,
 				C2ABE4E7238441A300D6E774 /* Utility.cpp */,
 				C2ABE4E8238441A300D6E774 /* Utility.hpp */,
@@ -88,8 +120,23 @@
 				C2ABE4DC23840FC000D6E774 /* Selection.hpp */,
 				C2ABE4D523840CEB00D6E774 /* Individual.cpp */,
 				C2ABE4D623840CEB00D6E774 /* Individual.hpp */,
+				C2BC66E4238FF7DA006BA6BF /* GOM.cpp */,
+				C2BC66E5238FF7DA006BA6BF /* GOM.hpp */,
 			);
 			path = GA;
+			sourceTree = "<group>";
+		};
+		C2BC66CF238EBA10006BA6BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C2BC66DB238EC874006BA6BF /* python.app */,
+				C2BC66D9238EC71B006BA6BF /* python3.7 */,
+				C2BC66D7238EC556006BA6BF /* lib */,
+				C2BC66D4238EC50D006BA6BF /* libpython.tbd */,
+				C2BC66D2238EC4F7006BA6BF /* python3.7 */,
+				C2BC66D0238EBA10006BA6BF /* Python.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,12 +196,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
+				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
+				C269FF1823952D0800B98092 /* Stuff.cpp in Sources */,
 				C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */,
 				C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */,
+				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
 				C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */,
+				C269FF152390090500B98092 /* SimpleGA.cpp in Sources */,
 				C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */,
 				C2ABE4E02384106F00D6E774 /* Variation.cpp in Sources */,
+				C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +332,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -288,6 +344,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

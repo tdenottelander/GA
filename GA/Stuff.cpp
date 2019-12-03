@@ -82,7 +82,8 @@ void Stuff::pythonSimpleString (){
 
 PyObject* Stuff::loadPythonModule (){
     PyObject* sysPath = PySys_GetObject((char*)"path");
-    PyList_Append(sysPath, PyString_FromString("."));
+//    PyList_Append(sysPath, PyString_FromString("."));
+    PyList_Append(sysPath, PyString_FromString("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/GA/"));
     
     PyObject *module = PyImport_ImportModule("python_functions");
     if(module == NULL){
