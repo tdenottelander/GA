@@ -10,7 +10,7 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-#include "Python.h"
+#include <Python/Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
@@ -21,6 +21,7 @@
 //#include "FOS.hpp"
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
+#include "Stuff.hpp"
 
 using namespace std;
 using namespace arma;
@@ -127,8 +128,12 @@ void roundSchedule(){
 
 int main(int argc, const char * argv[]) {
     
-    roundSchedule();
-        
+//    roundSchedule();
+    
+//    Stuff::pythonSimpleFunction();
+//    Stuff::pythonArgumentFunction1();
+    Stuff::pythonArgumentFunction2();
+    
     return 0;
 }
 

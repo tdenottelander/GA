@@ -74,11 +74,83 @@ int Stuff::mainLoop(){
 }
 
 
-void Stuff::pythonScript1 (){
+void Stuff::pythonSimpleString (){
     Py_Initialize();
     PyRun_SimpleString("print('hello world')");
     Py_Finalize();
 }
+
+PyObject* Stuff::loadPythonModule (){
+    PyObject* sysPath = PySys_GetObject((char*)"path");
+    PyList_Append(sysPath, PyString_FromString("."));
+    
+    PyObject *module = PyImport_ImportModule("python_functions");
+    if(module == NULL){
+        printf("ERROR importing module 'python_functions'\n");
+        exit(-1);
+    }
+    return module;
+}
+
+void Stuff::pythonSimpleFunction(){
+    Py_Initialize();
+    PyObject* module = loadPythonModule();
+    
+    PyObject* fooFunc = PyObject_GetAttrString(module, "foo");
+    if(!fooFunc){
+        PyErr_Print();
+    }
+    PyObject_CallObject(fooFunc, NULL);
+    
+    PyObject* barFunc = PyObject_GetAttrString(module, "bar");
+    if(!barFunc) PyErr_Print();
+    
+    PyObject* result = PyObject_CallObject(barFunc, NULL);
+    if(!result) PyErr_Print();
+    
+    int x = _PyInt_AsInt(result);
+    cout << x << endl;
+}
+
+void Stuff::pythonArgumentFunction1(){
+    Py_Initialize();
+    PyObject* module = loadPythonModule();
+    
+    PyObject* foobarFunc = PyObject_GetAttrString(module, "foobar");
+    PyObject* pyArg = Py_BuildValue("(i)", 1);
+    PyObject* result = PyObject_CallObject(foobarFunc, pyArg);
+    if(!result) PyErr_Print();
+
+    int x = _PyInt_AsInt(result);
+    cout << x << endl;
+    
+    
+    PyObject* add = PyObject_GetAttrString(module, "add");
+    PyObject* pyArgs = Py_BuildValue("(ii)", 5, 10);
+    PyObject* resultAdd = PyObject_CallObject(add, pyArgs);
+    if(!resultAdd) PyErr_Print();
+    
+    int y = _PyInt_AsInt(resultAdd);
+    cout << y << endl;
+}
+
+void Stuff::pythonArgumentFunction2(){
+    Py_Initialize();
+    PyObject* module = loadPythonModule();
+    
+    PyObject* func = PyObject_GetAttrString(module, "listAppend");
+    PyObject* pyArgList = Py_BuildValue("[iii]", 1, 2, 3);
+    PyObject* pyArgInt = Py_BuildValue("i", 4);
+    
+    PyObject* pyArgs = PyTuple_Pack(2, pyArgList, pyArgInt);
+
+    PyObject* result = PyObject_CallObject(func, pyArgs);
+    if(!result) PyErr_Print();
+    
+    PyObject *pyvalue = PyList_GetItem(result, 3);
+    cout << PyInt_AsLong(pyvalue) << endl;
+}
+
 
 void Stuff::pythonScript () {
     //    Py_Initialize();
@@ -94,14 +166,14 @@ void Stuff::pythonScript () {
     //
     //    //uploading .py module
     
-    string filename = "./module.py";
-    PyObject* sysPath = PySys_GetObject((char*)"path");
+//    string filename = "./module.py";
+//    PyObject* sysPath = PySys_GetObject((char*)"path");
     //    cout << sysPath << endl;
     //    PyObject* programName = PyUnicode_FromString(filename.c_str());
     
     //    PyImport_ImportModule(filename.c_str());
     
-    PyObject *module = PyImport_ImportModule(filename.c_str());
+    PyObject *module = PyImport_ImportModule("python_functions");
     if (module == NULL)
     {
         printf("ERROR importing module python functions");
