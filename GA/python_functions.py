@@ -1,4 +1,4 @@
-print('hello module')
+myInteger = 5
 
 def foo ():
     print("foo")
@@ -16,6 +16,8 @@ def listAppend(list, integer):
     list.append(integer)
     return list
 
-l = [5, 6, 7];
-i = 8;
-print(listAppend(l, i))
+def incrementInteger():
+    global myInteger
+    myInteger += 1
+    print("integer value", myInteger)
+

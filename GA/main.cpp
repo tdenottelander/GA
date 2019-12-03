@@ -18,7 +18,6 @@
 #include "GA.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
-//#include "FOS.hpp"
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
 #include "Stuff.hpp"
@@ -130,9 +129,9 @@ int main(int argc, const char * argv[]) {
     
 //    roundSchedule();
     
-//    Stuff::pythonSimpleFunction();
+    Stuff::pythonSimpleFunction();
 //    Stuff::pythonArgumentFunction1();
-    Stuff::pythonArgumentFunction2();
+//    Stuff::pythonArgumentFunction2();
     
     return 0;
 }
