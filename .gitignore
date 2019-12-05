@@ -40,6 +40,8 @@ data/*
 # iPython Notebook checkpoints
 *.ipynb_checkpoints
 
+# Output files
+out/*
 
 # Random Xcode files
 GA.xcodeproj/project.xcworkspace/xcuserdata/tomdenottelander.xcuserdatad/UserInterfaceState.xcuserstate

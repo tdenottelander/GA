@@ -10,9 +10,7 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-//#include <Python/Python.h>
 #include <Python.h>
-//#include "Python.h"
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"

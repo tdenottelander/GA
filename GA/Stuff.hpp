@@ -11,9 +11,7 @@
 
 #include <stdio.h>
 #include <armadillo>
-//#include <Python/Python.h>
 #include <Python.h>
-//#include "Python.h" 
 #include "Variation.hpp"
 #include "Selection.hpp"
 #include "SimpleGA.hpp"
