@@ -10,7 +10,9 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-#include <Python/Python.h>
+//#include <Python/Python.h>
+#include <Python.h>
+//#include "Python.h"
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
@@ -21,6 +23,7 @@
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
 #include "Stuff.hpp"
+#include <stdlib.h>
 
 using namespace std;
 using namespace arma;
@@ -125,13 +128,23 @@ void roundSchedule(){
 
 }
 
+
+
 int main(int argc, const char * argv[]) {
+    
+    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/myenv/";
+    putenv( mypath );
+    
+//    std::cout << "PYTHONHOME = " << getenv("PYTHONHOME") << std::endl;
+
     
 //    roundSchedule();
     
-    Stuff::pythonSimpleFunction();
+//    Stuff::pythonSimpleFunction();
 //    Stuff::pythonArgumentFunction1();
 //    Stuff::pythonArgumentFunction2();
+    
+    Stuff::pythonLink();
     
     return 0;
 }

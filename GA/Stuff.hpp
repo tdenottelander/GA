@@ -11,7 +11,9 @@
 
 #include <stdio.h>
 #include <armadillo>
-#include <Python/Python.h>
+//#include <Python/Python.h>
+#include <Python.h>
+//#include "Python.h" 
 #include "Variation.hpp"
 #include "Selection.hpp"
 #include "SimpleGA.hpp"
@@ -20,10 +22,11 @@
 namespace Stuff {
     int mainLoop ();
     void pythonSimpleString();
-    PyObject* loadPythonModule();
+    PyObject* loadPythonModule(std::string modulename);
     void pythonArgumentFunction1();
     void pythonArgumentFunction2();
     void pythonSimpleFunction();
+    void pythonLink();
 }
 
 #endif /* Stuff_hpp */
