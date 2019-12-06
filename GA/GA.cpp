@@ -20,8 +20,8 @@ GA::GA() :
 {}
 
 void GA::initialize(){
-//    initializeTrueRandomPopulation();
-    initializeSolvablePopulation();
+    initializeTrueRandomPopulation();
+//    initializeSolvablePopulation();
     
     initialized = true;
 }
@@ -75,7 +75,7 @@ bool GA::isConverged(){
 }
 
 bool GA::isDiverse(){
-    for (int i = 1; i < population.size(); i++){
+    for (unsigned long i = 1; i < population.size(); i++){
         if (population[i] != population[0]){
             return true;
         }
@@ -95,18 +95,17 @@ void GA::initializeTrueRandomPopulation(){
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
         Individual ind (problemLength);
-        ind.initialize();
+        ProblemType* problemtype = fitFunc_ptr->problemType;
+        vector<int> alphabet = problemtype->alphabet;
+        ind.initialize(fitFunc_ptr->problemType->alphabet);
         fitFunc_ptr->evaluate(ind);
         population.push_back(ind);
     }
 }
 
+//TODO: Tweak this such that it works on non-binary GA's
 void GA::initializeSolvablePopulation(){
-    population.reserve(populationSize);
-    for(int i = 0; i < populationSize; i++){
-        Individual ind (problemLength);
-        population.push_back(ind);
-    }
+    initializeUninitializedPopulation();
     
     for (int i = 0; i < problemLength; i++){
         vector<int> counters = {0, 0};
@@ -120,13 +119,21 @@ void GA::initializeSolvablePopulation(){
     evaluateAll(population);
 }
 
+void GA::initializeUninitializedPopulation(){
+    population.reserve(populationSize);
+    for(int i = 0; i < populationSize; i++){
+        Individual ind (problemLength);
+        population.push_back(ind);
+    }
+}
+
 string GA::toString() {
     return populationToString(population);
 }
 
 string GA::populationToString(vector<Individual> &population){
     string result;
-    for (int i = 0; i < population.size(); i++){
+    for (unsigned long i = 0; i < population.size(); i++){
         result += to_string(i);
         result += ". ";
         result += population[i].toString();
@@ -135,6 +142,10 @@ string GA::populationToString(vector<Individual> &population){
         }
     }
     return result;
+}
+
+void GA::print(){
+    cout << toString() << endl;
 }
 
 void GA::setPopulationSize(int n){

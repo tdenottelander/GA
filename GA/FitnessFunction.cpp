@@ -12,10 +12,10 @@ using namespace std;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(int optimum) : optimum(optimum), bestIndividual(0), optimumFound(false), evaluations(0){
+FitnessFunction::FitnessFunction(int optimum) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0) {
 }
 
-FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
+FitnessFunction::FitnessFunction(ProblemType* problemType) : bestIndividual(0), optimumFound(false), evaluations(0), problemType(problemType) {}
 
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
@@ -42,7 +42,7 @@ void FitnessFunction::setLength(int length){
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
 OneMax::OneMax(int length) : FitnessFunction(length) {}
-OneMax::OneMax() {}
+OneMax::OneMax(ProblemType* problemType) : FitnessFunction(problemType) {}
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -63,18 +63,20 @@ string OneMax::id() {
 }
 
 FitnessFunction* OneMax::clone() const {
-    return new OneMax(static_cast<const OneMax&>(*this));
+    FitnessFunction* result = new OneMax(static_cast<const OneMax&>(*this));
+    result->problemType = this->problemType;
+    return result;
 }
 
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
 LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) {}
-LeadingOnes::LeadingOnes() {}
+LeadingOnes::LeadingOnes(ProblemType* problemType) : FitnessFunction(problemType) {}
 
 float LeadingOnes::evaluate(Individual &ind) {
     float result = 0;
-    for (int i = 0; i < ind.genotype.size(); i++){
+    for (unsigned long i = 0; i < ind.genotype.size(); i++){
         if (ind.genotype[i] == 0){
             break;
         } else {
@@ -92,7 +94,9 @@ float LeadingOnes::evaluate(Individual &ind) {
 }
 
 FitnessFunction* LeadingOnes::clone() const {
-    return new LeadingOnes(static_cast<const LeadingOnes&>(*this));
+    FitnessFunction* result = new LeadingOnes(static_cast<const LeadingOnes&>(*this));
+    result->problemType = this->problemType;
+    return result;
 }
 
 void LeadingOnes::display() {
@@ -107,7 +111,7 @@ string LeadingOnes::id() {
 /* ------------------------ Trap Five Fitness Function ------------------------ */
 
 TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
-TrapFive::TrapFive() : FitnessFunction(), k(5) {}
+TrapFive::TrapFive(ProblemType* problemType) : FitnessFunction(problemType), k(5) {}
 
 float TrapFive::evaluate(Individual &ind) {
     float result = 0;

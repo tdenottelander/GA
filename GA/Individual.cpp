@@ -19,9 +19,10 @@ Individual::Individual(int length) : fitness(-1), counterNotChanged(0){
     genotype = uvec (length);
 }
 
-void Individual::initialize(){
-    for(int i = 0; i < genotype.size(); i++){
-        genotype[i] = getRand() < 0.5 ? 1 : 0;
+void Individual::initialize(vector<int> alphabet){
+    int n = alphabet.size();
+    for(unsigned long long i = 0; i < genotype.size(); i++){
+        genotype[i] = alphabet[floor(getRand() * n)];
     }
 }
 
@@ -37,7 +38,7 @@ Individual Individual::copy(){
 
 string Individual::toString(){
     string result = "[";
-    for (int i = 0; i < genotype.size(); i++){
+    for (unsigned long i = 0; i < genotype.size(); i++){
         result += to_string(genotype[i]);
         if(i != (genotype.size() - 1)){
             result += " ";
@@ -52,7 +53,7 @@ bool Individual::operator==(const Individual &ind) {
     if(fitness != ind.fitness){
         return false;
     }
-    for (int i = 0; i < genotype.size(); i++){
+    for (unsigned long i = 0; i < genotype.size(); i++){
         if(genotype[i] != ind.genotype[i]){
             return false;
         }

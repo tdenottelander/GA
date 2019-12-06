@@ -35,7 +35,7 @@ vector<Individual> ProportionateSelection::select(vector<Individual> &population
     vector<float> proportions = getProportions(population);
     for(int i = 0; i < outputSize; i++){
         float randomValue = getRand();
-        for (int j = 0; j < proportions.size(); j++){
+        for (unsigned long j = 0; j < proportions.size(); j++){
             if(randomValue < proportions[j]){
                 selection.push_back(population[j]);
                 break;

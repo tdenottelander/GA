@@ -48,9 +48,11 @@ public:
     
     void initializeTrueRandomPopulation();
     void initializeSolvablePopulation();
+    void initializeUninitializedPopulation();
     
     std::string toString();
     std::string populationToString(std::vector<Individual> &population);
+    void print();
     
     void setPopulationSize (int n);
     virtual void setProblemLength (int l);

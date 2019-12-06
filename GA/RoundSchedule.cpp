@@ -65,6 +65,7 @@ json RoundSchedule::run() {
             break;
         }
 
+        //TODO: Loop only through active GA's, not until maxPopSizeLevel
         for (int i = lowestActiveGAIdx; i < maxPopSizeLevel; i++) {
 
             //First check if GA is not terminated
@@ -94,6 +95,7 @@ json RoundSchedule::run() {
                     // Do the round on this GA
 //                    cout << "     GA(" << ga->populationSize << ") round " << ga->roundsCount << endl;
                     ga->round();
+//                    ga->print();
 
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <armadillo>
 #include <string>
+#include <vector>
 #include "Utility.hpp"
 
 class Individual {
@@ -21,7 +22,7 @@ public:
     int counterNotChanged;
     
     Individual(int length);
-    void initialize();
+    void initialize(std::vector<int> alphabet);
     Individual copy();
     std::string toString();
     bool operator==(Individual const& ind);

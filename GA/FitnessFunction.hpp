@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "Individual.hpp"
+#include "ProblemType.hpp"
 
 class FitnessFunction {
 public:
@@ -18,9 +19,10 @@ public:
     float optimum;
     bool optimumFound;
     int evaluations;
+    ProblemType *problemType;
     
     FitnessFunction(int optimum);
-    FitnessFunction();
+    FitnessFunction(ProblemType* problemType);
     
     virtual float evaluate(Individual &ind) = 0;
     virtual void display();
@@ -36,7 +38,7 @@ public:
 class OneMax : public FitnessFunction {
 public:
     OneMax (int length);
-    OneMax ();
+    OneMax (ProblemType* problemType);
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -47,7 +49,7 @@ public:
 class LeadingOnes : public FitnessFunction {
 public:
     LeadingOnes (int length);
-    LeadingOnes ();
+    LeadingOnes (ProblemType* problemType);
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -60,7 +62,7 @@ public:
     int blocks;
     int k;
     TrapFive (int blocks);
-    TrapFive ();
+    TrapFive (ProblemType* problemType);
     float evaluate(Individual &ind) override;
     float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;

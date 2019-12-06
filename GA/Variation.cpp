@@ -50,7 +50,7 @@ pair<Individual, Individual> UnivariateCrossover::univariateCrossover (Individua
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
     
-    for(int i = 0; i < ind1.genotype.size(); i++){
+    for(unsigned long i = 0; i < ind1.genotype.size(); i++){
         if(getRand() < 0.5){
             newInd1.genotype[i] = ind2.genotype[i];
             newInd2.genotype[i] = ind1.genotype[i];
@@ -120,14 +120,13 @@ string OnePointCrossover::id() {
 /* ------------------------ GOM Variation ------------------------ */
 
 GOM_Variation::GOM_Variation(bool forcedImprovement) : forcedImprovement(forcedImprovement) {
-    cout << forcedImprovement << endl;
 };
 
 vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
 //    bestIndividual = &(fitfunc->bestIndividual);
     vector<Individual> offspring;
     offspring.reserve(population.size());
-    for (int i = 0; i < population.size(); i++){
+    for (unsigned i = 0; i < population.size(); i++){
         Individual &parent = population[i];
         Individual child = gom(parent, population, i);
         if(child.fitness > parent.fitness){

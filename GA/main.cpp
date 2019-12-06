@@ -21,6 +21,7 @@
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
 #include "Stuff.hpp"
+#include "ProblemType.hpp"
 #include <stdlib.h>
 
 using namespace std;
@@ -43,10 +44,10 @@ void roundSchedule(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 100;
-    int maxEvaluations = 1000000;
+    int maxEvaluations = 10000;
     int interval = 4;
-    int repetitions = 30;
-    int maxProblemExponent = 10;
+    int repetitions = 1;
+    int maxProblemExponent = 5;
     
     main_json["maxPopSizeLevel"] = maxPopSizeLevel;
     main_json["maxRounds"] = maxRounds;
@@ -56,8 +57,10 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-
-    FitnessFunction * fit = new LeadingOnes();
+    vector<int> vect = {0, 1, 2};
+    ProblemType* problemType = new AlphabetProblemType(vect);
+//    ProblemType* problemType = new BinaryProblemType();
+    FitnessFunction * fit = new LeadingOnes(problemType);
     main_json["fitnessFunction"] = fit->id();
     Selection * sel = new TournamentSelection(2);
     
@@ -79,20 +82,15 @@ void roundSchedule(){
     bool breakOutOfProblemSize = false;
     for(GA* ga : gaList){
         json setting;
-//        json sel_json;
-//        json var_json;
         for(int i = 2; i < maxProblemExponent; i++){
             int problemSize = pow(2,i);
             json prob_json;
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
-//                GA * ga = gaList[0];
                 rs.initialize(ga, problemSize);
                 json result = rs.run();
                 prob_json[to_string(rep)] = result;
                 cout << "rep" << rep
-//                << " Sel=" << ga->selection_ptr->id()
-//                << " Var=" << ga->variation_ptr->id()
                 << " ga=" << ga->id()
                 << " l=" << problemSize
                 << " success=" << result.at("success")
@@ -117,7 +115,6 @@ void roundSchedule(){
                 setting[to_string(problemSize)] = prob_json;
             }
         }
-//        sel_json["var=" + ga->variation_ptr->id()] = var_json;
         experiments[ga->id()] = setting;
     }
     
@@ -136,13 +133,13 @@ int main(int argc, const char * argv[]) {
 //    std::cout << "PYTHONHOME = " << getenv("PYTHONHOME") << std::endl;
 
     
-//    roundSchedule();
+    roundSchedule();
     
 //    Stuff::pythonSimpleFunction();
 //    Stuff::pythonArgumentFunction1();
 //    Stuff::pythonArgumentFunction2();
     
-    Stuff::pythonLink();
+//    Stuff::pythonLink();
     
     return 0;
 }
