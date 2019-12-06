@@ -22,11 +22,13 @@ public:
     ProblemType *problemType;
     
     FitnessFunction(int optimum);
-    FitnessFunction(ProblemType* problemType);
+    FitnessFunction();
     
     virtual float evaluate(Individual &ind) = 0;
     virtual void display();
     virtual std::string id();
+    virtual void setProblemType() = 0;
+    void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
     
@@ -38,10 +40,11 @@ public:
 class OneMax : public FitnessFunction {
 public:
     OneMax (int length);
-    OneMax (ProblemType* problemType);
+    OneMax ();
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
+    void setProblemType() override;
     FitnessFunction* clone() const override;
 };
 
@@ -49,10 +52,11 @@ public:
 class LeadingOnes : public FitnessFunction {
 public:
     LeadingOnes (int length);
-    LeadingOnes (ProblemType* problemType);
+    LeadingOnes ();
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
+    void setProblemType() override;
     FitnessFunction* clone() const override;
 };
 
@@ -62,11 +66,12 @@ public:
     int blocks;
     int k;
     TrapFive (int blocks);
-    TrapFive (ProblemType* problemType);
+    TrapFive ();
     float evaluate(Individual &ind) override;
     float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;
     std::string id() override;
+    void setProblemType() override;
     FitnessFunction* clone() const override;
     void setLength (int length);
 };

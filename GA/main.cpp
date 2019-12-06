@@ -57,10 +57,7 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-    vector<int> vect = {0, 1, 2};
-    ProblemType* problemType = new AlphabetProblemType(vect);
-//    ProblemType* problemType = new BinaryProblemType();
-    FitnessFunction * fit = new LeadingOnes(problemType);
+    FitnessFunction * fit = new LeadingOnes();
     main_json["fitnessFunction"] = fit->id();
     Selection * sel = new TournamentSelection(2);
     

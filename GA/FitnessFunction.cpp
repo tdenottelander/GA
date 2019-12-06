@@ -15,7 +15,7 @@ using namespace std;
 FitnessFunction::FitnessFunction(int optimum) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0) {
 }
 
-FitnessFunction::FitnessFunction(ProblemType* problemType) : bestIndividual(0), optimumFound(false), evaluations(0), problemType(problemType) {}
+FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
 
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
@@ -34,6 +34,10 @@ string FitnessFunction::id() {
     return "base";
 }
 
+void FitnessFunction::setProblemType(ProblemType* problemType){
+    this->problemType = problemType;
+}
+
 void FitnessFunction::setLength(int length){
     optimum = length;
 }
@@ -41,8 +45,8 @@ void FitnessFunction::setLength(int length){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int length) : FitnessFunction(length) {}
-OneMax::OneMax(ProblemType* problemType) : FitnessFunction(problemType) {}
+OneMax::OneMax(int length) : FitnessFunction(length) { setProblemType(); }
+OneMax::OneMax() : FitnessFunction() { setProblemType(); }
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -62,6 +66,10 @@ string OneMax::id() {
     return "OM";
 }
 
+void OneMax::setProblemType(){
+    FitnessFunction::setProblemType(new BinaryProblemType());
+}
+
 FitnessFunction* OneMax::clone() const {
     FitnessFunction* result = new OneMax(static_cast<const OneMax&>(*this));
     result->problemType = this->problemType;
@@ -71,8 +79,12 @@ FitnessFunction* OneMax::clone() const {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) {}
-LeadingOnes::LeadingOnes(ProblemType* problemType) : FitnessFunction(problemType) {}
+LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) { setProblemType(); }
+LeadingOnes::LeadingOnes() : FitnessFunction() { setProblemType(); }
+
+void LeadingOnes::setProblemType(){
+    FitnessFunction::setProblemType(new BinaryProblemType());
+}
 
 float LeadingOnes::evaluate(Individual &ind) {
     float result = 0;
@@ -110,8 +122,8 @@ string LeadingOnes::id() {
 
 /* ------------------------ Trap Five Fitness Function ------------------------ */
 
-TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) {}
-TrapFive::TrapFive(ProblemType* problemType) : FitnessFunction(problemType), k(5) {}
+TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) { setProblemType(); }
+TrapFive::TrapFive() : FitnessFunction(), k(5) { setProblemType(); }
 
 float TrapFive::evaluate(Individual &ind) {
     float result = 0;
@@ -149,6 +161,10 @@ void TrapFive::display() {
 
 string TrapFive::id() {
     return "T5";
+}
+
+void TrapFive::setProblemType(){
+    FitnessFunction::setProblemType(new BinaryProblemType());
 }
 
 void TrapFive::setLength (int length) {
