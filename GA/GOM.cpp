@@ -20,9 +20,6 @@ void GOM::initialize() {
 }
 
 void GOM::round() {
-    if(fos->randomizeOnNewRound){
-        gom_variation.setFOS(fos->getFOS(problemLength));
-    }
     vector<Individual> offspring = gom_variation.variate(population);
     
     population = offspring;
@@ -36,7 +33,7 @@ GA* GOM::clone() const {
 
 void GOM::setProblemLength (int length) {
     GA::setProblemLength(length);
-    gom_variation.setFOS(fos->getFOS(length));
+    gom_variation.setFOSObject(fos);
 }
 
 string GOM::id(){

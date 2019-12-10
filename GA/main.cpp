@@ -22,6 +22,7 @@
 #include "SimpleGA.hpp"
 #include "Stuff.hpp"
 #include "ProblemType.hpp"
+#include "LearnedLTFOS.hpp"
 #include <stdlib.h>
 
 using namespace std;
@@ -62,12 +63,13 @@ void roundSchedule(){
     Selection * sel = new TournamentSelection(2);
     
     vector<GA*> gaList = {
+        new GOM(fit, new LearnedLT_FOS(), true),
         new SimpleGA(fit, new UnivariateCrossover(), sel),
         new SimpleGA(fit, new OnePointCrossover(), sel),
-        new GOM(fit, new Univariate_FOS(), false),
-        new GOM(fit, new UnivariateOrdered_FOS(), false),
-        new GOM(fit, new IncrementalLT_FOS(), false),
-        new GOM(fit, new IncrementalLT_Univariate_FOS(), false),
+//        new GOM(fit, new Univariate_FOS(), false),
+//        new GOM(fit, new UnivariateOrdered_FOS(), false),
+//        new GOM(fit, new IncrementalLT_FOS(), false),
+//        new GOM(fit, new IncrementalLT_Univariate_FOS(), false),
         new GOM(fit, new Univariate_FOS(), true),
         new GOM(fit, new UnivariateOrdered_FOS(), true),
         new GOM(fit, new IncrementalLT_FOS(), true),

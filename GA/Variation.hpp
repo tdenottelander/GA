@@ -16,6 +16,7 @@
 #include "Individual.hpp"
 #include "Utility.hpp"
 #include "FitnessFunction.hpp"
+#include "FOS.hpp"
 
 class Variation {
 public:
@@ -48,15 +49,13 @@ public:
     Individual *bestIndividual;
     bool forcedImprovement;
     std::vector<arma::uvec> fos;
+    FOS *fosObject;
     GOM_Variation(bool forcedInprovement = false);
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     Individual gom(Individual &ind, std::vector<Individual> &population, int indIdx);
     bool gomWithEliteIndividual(Individual &o, Individual &b);
     void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
-    static std::vector<arma::uvec> getFixedLTFOS(int n);
-    static std::vector<arma::uvec> getUnivariateFOS(int n);
-    static std::vector<arma::uvec> getFixedLTUnivariateFOS(int n);
-    void setFOS(std::vector<arma::uvec> f);
+    void setFOSObject(FOS *f);
     void display() override;
     std::string id() override;
 };

@@ -21,11 +21,11 @@ string FOS::toString() { return "baseFOS"; }
 /* ------------------------ Incremental LT FOS ------------------------ */
 
 IncrementalLT_FOS::IncrementalLT_FOS(){
-    randomizeOnNewRound = false;
+    reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_FOS::getFOS (int n){
-    return FOSStructures::getIncrementalLT_FOS(n);
+vector<uvec> IncrementalLT_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getIncrementalLT_FOS(population[0].genotype.size());
 }
 string IncrementalLT_FOS::id(){ return "incrLT"; }
 string IncrementalLT_FOS::toString() { return "Incremental Linkage Tree FOS"; }
@@ -34,11 +34,11 @@ string IncrementalLT_FOS::toString() { return "Incremental Linkage Tree FOS"; }
 /* ------------------------ Univariate FOS ------------------------ */
 
 UnivariateOrdered_FOS::UnivariateOrdered_FOS(){
-    randomizeOnNewRound = false;
+    reinitializeOnNewRound = false;
 }
 
-vector<uvec> UnivariateOrdered_FOS::getFOS (int n){
-    return FOSStructures::getUnivariate_FOS(n);
+vector<uvec> UnivariateOrdered_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getUnivariate_FOS(population[0].genotype.size());
 }
 string UnivariateOrdered_FOS::id(){ return "UniOrd"; }
 string UnivariateOrdered_FOS::toString() { return "Univariate (ordered) FOS"; }
@@ -47,10 +47,11 @@ string UnivariateOrdered_FOS::toString() { return "Univariate (ordered) FOS"; }
 /* ------------------------ Incremental LT + Univariate FOS ------------------------ */
 
 IncrementalLT_Univariate_FOS::IncrementalLT_Univariate_FOS(){
-    randomizeOnNewRound = false;
+    reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_Univariate_FOS::getFOS (int n){
+vector<uvec> IncrementalLT_Univariate_FOS::getFOS (vector<Individual> &population){
+    int n = population[0].genotype.size();
     vector<uvec> fos;
     fos.reserve(2 * n);
     vector<uvec> fixedLT = FOSStructures::getIncrementalLT_FOS(n);
@@ -67,11 +68,11 @@ string IncrementalLT_Univariate_FOS::toString(){ return "Incremental Linkage Tre
 /* ------------------------ Unordered Univariate FOS ------------------------ */
 
 Univariate_FOS::Univariate_FOS(){
-    randomizeOnNewRound = true;
+    reinitializeOnNewRound = true;
 }
 
-vector<uvec> Univariate_FOS::getFOS (int n){
-    return FOSStructures::getRandomUnivariate_FOS(n);
+vector<uvec> Univariate_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getRandomUnivariate_FOS(population[0].genotype.size());
 }
 
 string Univariate_FOS::id() { return "UniUnord"; }
@@ -116,4 +117,23 @@ vector<uvec> FOSStructures::getRandomUnivariate_FOS(int n){
         fos.push_back(subset);
     }
     return fos;
+}
+
+void FOSStructures::printFOS(std::vector<arma::uvec> fos){
+    cout << "Learned LT: ";
+    for (int i = 0; i < fos.size(); i++){
+        cout << "[";
+        uvec subset = fos[i];
+        for (int j = 0; j < subset.size(); j++){
+            cout << subset[j];
+            if(j != subset.size() - 1){
+                cout << " ";
+            }
+        }
+        cout << "]";
+        if (i != fos.size() - 1){
+            cout << ",";
+        }
+    }
+    cout << endl;
 }

@@ -124,7 +124,9 @@ GOM_Variation::GOM_Variation(bool forcedImprovement) : forcedImprovement(forcedI
 
 vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
 //    bestIndividual = &(fitfunc->bestIndividual);
+    fos = fosObject->getFOS(population);
     vector<Individual> offspring;
+//    FOSStructures::printFOS(fos);
     offspring.reserve(population.size());
     for (unsigned i = 0; i < population.size(); i++){
         Individual &parent = population[i];
@@ -212,8 +214,8 @@ void GOM_Variation::applyDonor(Individual &ind, Individual &parent, arma::uvec &
     }
 }
 
-void GOM_Variation::setFOS(vector<arma::uvec> f){
-    fos = f;
+void GOM_Variation::setFOSObject(FOS *f){
+    fosObject = f;
 }
 
 void GOM_Variation::display() {
