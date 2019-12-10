@@ -12,17 +12,17 @@ using namespace std;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(int optimum) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0) {
+FitnessFunction::FitnessFunction(int optimum) : bestIndividual(NULL), optimum(optimum), optimumFound(false), evaluations(0) {
 }
 
-FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
+FitnessFunction::FitnessFunction() : bestIndividual(NULL), optimumFound(false), evaluations(0) {}
 
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
 }
 
 void FitnessFunction::checkIfBestFound(Individual &ind){
-    if(ind.fitness > bestIndividual.fitness){
+    if(bestIndividual == NULL || ind.fitness > bestIndividual.fitness){
         bestIndividual = ind.copy();
         if(ind.fitness == optimum){
             optimumFound = true;
