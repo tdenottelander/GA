@@ -34,7 +34,7 @@ public:
     
     virtual FitnessFunction* clone() const = 0;
     
-    void setLength (int length);
+    virtual void setLength (int length);
 };
 
 class OneMax : public FitnessFunction {
@@ -73,7 +73,18 @@ public:
     std::string id() override;
     void setProblemType() override;
     FitnessFunction* clone() const override;
-    void setLength (int length);
+    void setLength (int length) override;
+};
+
+class NonBinaryMax : public FitnessFunction {
+public:
+    NonBinaryMax ();
+    float evaluate(Individual &ind) override;
+    void display() override;
+    std::string id() override;
+    void setProblemType() override;
+    FitnessFunction* clone() const override;
+    void setLength (int length) override;
 };
 
 #endif /* FitnessFunction_hpp */

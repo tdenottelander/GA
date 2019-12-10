@@ -171,3 +171,39 @@ void TrapFive::setLength (int length) {
     blocks = length;
     optimum = 5 * length;
 }
+
+
+/* ------------------------ Non-Binary Max Fitness Function ------------------------ */
+
+NonBinaryMax::NonBinaryMax() {
+    setProblemType();
+}
+
+//TODO: FINISH IMPLEMENTATION OF NONBINARY MAX FITNESS FUNCTION
+
+float NonBinaryMax::evaluate(Individual &ind){
+    float result = sum(ind.genotype);
+    ind.fitness = result;
+    return result;
+}
+
+FitnessFunction* NonBinaryMax::clone() const {
+    return new NonBinaryMax(static_cast<const NonBinaryMax&>(*this));
+}
+
+void NonBinaryMax::display() {
+    cout << "Non-binary Maximum fitness function" << endl;
+}
+
+string NonBinaryMax::id() {
+    return "NBMax";
+}
+
+void NonBinaryMax::setProblemType() {
+    vector<int> vec = {0, 1, 2, 3, 4, 5};
+    FitnessFunction::setProblemType(new AlphabetProblemType(vec));
+}
+
+void NonBinaryMax::setLength(int length){
+    optimum = length * 5;
+}
