@@ -28,6 +28,6 @@ public:
     std::vector<std::vector<size_t>> BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, std::vector<std::vector<double_t>> &sim_matrix);
     int DetermineNearestNeighbour(int index, std::vector<std::vector<double_t>> &S_matrix, std::vector<int> & mpm_number_of_indices, int mpm_length);
     std::vector<arma::uvec> transformLinkageTreeFOS(std::vector<std::vector<size_t>>);
-}
+};
 
 #endif /* LearnedLTFOS_hpp */
