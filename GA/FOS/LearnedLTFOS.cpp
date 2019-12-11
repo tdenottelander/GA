@@ -19,7 +19,7 @@ LearnedLT_FOS::LearnedLT_FOS(){
 }
 
 vector<uvec> LearnedLT_FOS::getFOS(vector<Individual> &population){
-    return GenerateLinkageTreeFOS(population[0].genotype.size(), population, NULL, false);
+    return GenerateLinkageTreeFOS(population);
 }
 
 string LearnedLT_FOS::id() { return "LearnedLT"; }
@@ -28,12 +28,11 @@ string LearnedLT_FOS::toString(){ return "Learned Linkage Tree FOS"; }
 
 // Original function implementation by Marco Virgolin (https://github.com/marcovirgolin/GP-GOMEA/blob/master/GOMEA/GOMEAFOS.cpp).
 // Adapted by Tom den Ottelander.
-vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const std::vector<Individual>& population, arma::mat * MI_distribution_adjustments, bool fos_no_root_swap) {
-    //Changed number_of_nodes to problemLength
+vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>& population) {
     
-    problemLength = population[0].genotype.size();
+    size_t problemLength = population[0].genotype.size();
 
-    vector<vector <size_t>> FOS;
+    vector<uvec> FOS;
 
     size_t pop_size = population.size();
 
@@ -52,76 +51,18 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const s
     constants.reserve(max_constants);
     constants_v.reserve(max_constants);
 
-    /* NOT NEEDED TO MY UNDERSTANDING.
-    // pre-process the population: make a symbolic representation of the population nodes
-    vector<vector < uword >> pop_nodes(pop_size);
-
-    for (int i = 0; i < pop_size; i++) {
-
-        vector<uword> nodes;
-        vector<Node *> nnodes = population[i]->GetSubtreeNodes(false);
-
-        for (size_t j = 0; j < problemLength; j++) {
-
-            Node * n = nnodes[j];
-            string v = n->GetValue();
-
-            // use constant binning
-            if (n->op->type == OperatorType::opTerminal && n->op->term_type == OperatorTerminalType::opTermConstant) {
-
-                if (constants.size() < max_constants) {
-                    constants.insert(((OpRegrConstant*) n->op)->GetConstant());
-
-                    if (constants.size() >= max_constants && constants_v.empty()) {
-                        constants_v.insert(constants_v.begin(), constants.begin(), constants.end());
-                        sort(constants_v.begin(), constants_v.end());
-                    }
-
-                } else {
-                    // find nearest constant, set it to that value
-                    double_t q = ((OpRegrConstant*) n->op)->GetConstant();
-                    auto lower = std::lower_bound(constants_v.begin(), constants_v.end(), q);
-
-                    if (abs(*(lower - 1) - q) < abs(*lower - q)) {
-                        v = to_string(*(lower - 1));
-                    } else {
-                        v = to_string(*lower);
-                    }
-                }
-            }
-
-            auto it = values_to_int_map.find(v);
-            if (it == values_to_int_map.end()) {
-                values_to_int_map[v] = encode_number;
-
-                nodes.push_back(encode_number);
-
-                encode_number++;
-            } else {
-                nodes.push_back(it->second);
-            }
-        }
-
-        pop_nodes[i] = nodes;
-    }
-    */
-
     // build frequency table for symbol pairs
-//    mat frequencies(values_to_int_map.size(), values_to_int_map.size(), fill::zeros);
-    
-    // 2 X 2 for binary problems I guess?
+    // TODO: Rewrite this:
     mat frequencies(2, 2, fill::zeros);
     uword val_i, val_j;
     
-    // 2 for binary problems?
+    // TODO: Rewrite this:
     encode_number = 2;
 
     // measure frequencies of pairs & compute joint entropy
     for (uword i = 0; i < problemLength; i++) {
         for (uword j = i + 1; j < problemLength; j++) {
             for (uword p = 0; p < pop_size; p++) {
-//                val_i = pop_nodes[p][i];
-//                val_j = pop_nodes[p][j];
                 val_i = population[p].genotype[i];
                 val_j = population[p].genotype[j];
 
@@ -143,7 +84,6 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const s
         }
 
         for (uword p = 0; p < pop_size; p++) {
-//            val_i = pop_nodes[p][i];
             val_i = population[p].genotype[i];
             frequencies.at(val_i, val_i) += 1.0;
         }
@@ -162,42 +102,10 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const s
     }
 
     // transform entropy into mutual information
-    // apply correction if the pointer MI_distribution_adjustments is not null
-    if (!MI_distribution_adjustments) {
-
-        for (size_t i = 0; i < problemLength; i++) {
-            for (size_t j = i + 1; j < problemLength; j++) {
-                mi_matrix[i][j] = mi_matrix[i][i] + mi_matrix[j][j] - mi_matrix[i][j];
-                mi_matrix[j][i] = mi_matrix[i][j];
-            }
-        }
-
-    } else {
-
-        if (MI_distribution_adjustments->n_elem == 0) {
-            delete MI_distribution_adjustments->memptr();
-            MI_distribution_adjustments->set_size(problemLength, problemLength);
-            for (size_t i = 0; i < problemLength; i++) {
-                (*MI_distribution_adjustments)(i, i) = 1.0 / mi_matrix[i][i];
-                for (size_t j = i + 1; j < problemLength; j++) {
-                    (*MI_distribution_adjustments)(i, j) = 2.0 / mi_matrix[i][j];
-                }
-            }
-        }
-
-        for (size_t i = 0; i < problemLength; i++) {
-            mi_matrix[i][i] = mi_matrix[i][i] * (*MI_distribution_adjustments)(i, i);
-            for (size_t j = i + 1; j < problemLength; j++) {
-                mi_matrix[i][j] = mi_matrix[i][j] * (*MI_distribution_adjustments)(i, j);
-            }
-        }
-
-
-        for (size_t i = 0; i < problemLength; i++) {
-            for (size_t j = i + 1; j < problemLength; j++) {
-                mi_matrix[i][j] = mi_matrix[i][i] + mi_matrix[j][j] - mi_matrix[i][j];
-                mi_matrix[j][i] = mi_matrix[i][j];
-            }
+    for (size_t i = 0; i < problemLength; i++) {
+        for (size_t j = i + 1; j < problemLength; j++) {
+            mi_matrix[i][j] = mi_matrix[i][i] + mi_matrix[j][j] - mi_matrix[i][j];
+            mi_matrix[j][i] = mi_matrix[i][j];
         }
     }
 
@@ -205,33 +113,6 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const s
     FOS = BuildLinkageTreeFromSimilarityMatrix(problemLength, mi_matrix);
 
     FOS.pop_back(); // remove the root of the Linkage Tree (otherwise entire solution can be swapped during GOM)
-
-    if (fos_no_root_swap) {
-        for (size_t i = 0; i < FOS.size(); i++) {
-            vector<size_t> * set = &FOS[i];
-            auto it = find(set->begin(), set->end(), 0);
-            if (it != set->end()) {
-                set->erase(it);
-            }
-        }
-        // remove empty sets and duplicates
-        set<vector < size_t>> fos_set;
-        for (vector<size_t> set : FOS) {
-            if (!set.empty())
-                fos_set.insert(set);
-        }
-        FOS = vector<vector < size_t >> (fos_set.begin(), fos_set.end());
-    }
-
-    bool no_univar = false;
-    if (no_univar) {
-        set<vector < size_t>> fos_set;
-        for (vector<size_t> set : FOS) {
-            if (set.size() > 1)
-                fos_set.insert(set);
-        }
-        FOS = vector<vector < size_t >> (fos_set.begin(), fos_set.end());
-    }
 
     /*cout << " >>> generated FOS:" << endl;
      for (vector<size_t> & F : FOS) {
@@ -244,21 +125,15 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(size_t problemLength, const s
      }
      }*/
 
-    return transformLinkageTreeFOS(FOS);
+    return FOS;
 }
 
-vector<vector<size_t>> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, vector<vector<double_t>> &sim_matrix) {
-    // code taken from Peter's
+// Code by Peter Bosman.
+// Adapted by Tom den Ottelander.
+vector<uvec> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, vector<vector<double_t>> &sim_matrix) {
     
-    vector<vector<size_t> > FOS;
+    vector<uvec> FOS;
     
-//    vector<size_t> random_order;
-//    random_order.reserve(number_of_nodes);
-//    for (size_t i = 0; i < number_of_nodes; i++)
-//        random_order.push_back(i);
-//
-//    //TODO: Write this with my own random algorithm, don't use armadillo's rand.
-//    random_shuffle(random_order.begin(), random_order.end());
     vector<int> random_order = Utility::getRandomlyPermutedArrayV2(number_of_nodes);
     
     vector<vector < int >> mpm(number_of_nodes, vector<int>(1));
@@ -274,7 +149,11 @@ vector<vector<size_t>> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_
     FOS.resize(number_of_nodes + number_of_nodes - 1);
     size_t FOSs_index = 0;
     for (int i = 0; i < mpm_length; i++) {
-        FOS[FOSs_index] = vector<size_t>(mpm[i].begin(), mpm[i].end());
+        uvec vec (mpm[i].size());
+        for (int j = 0; j < mpm[i].size(); j++){
+            vec[j] = mpm[i][j];
+        }
+        FOS[i] = vec;
         FOSs_index++;
     }
     
@@ -321,7 +200,7 @@ vector<vector<size_t>> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_
         NN_chain_length -= 3;
         
         if (r1 < mpm_length) { /* This test is required for exceptional cases in which the nearest-neighbor ordering has changed within the chain while merging within that chain */
-            vector<size_t> indices(mpm_number_of_indices[r0] + mpm_number_of_indices[r1]);
+            uvec indices(mpm_number_of_indices[r0] + mpm_number_of_indices[r1]);
             //indices.resize((mpm_number_of_indices[r0] + mpm_number_of_indices[r1]));
             //indices.clear();
             
@@ -406,8 +285,6 @@ int LearnedLT_FOS::DetermineNearestNeighbour(int index, vector<vector<double_t>>
     return ( result);
 }
 
-
-//TODO: Make sure that this method is not needed. Rewrite generateLTFOS such that it builds up a vector<uvec> FOS from the beginning.
 vector<uvec> LearnedLT_FOS::transformLinkageTreeFOS(vector<vector<size_t>> FOS){
     vector<uvec> result;
     result.reserve(FOS.size());
