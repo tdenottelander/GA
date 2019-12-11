@@ -121,60 +121,6 @@ string LeadingOnes::id() {
 }
 
 
-/* ------------------------ Trap Five Fitness Function ------------------------ */
-
-TrapFive::TrapFive(int blocks) : FitnessFunction(blocks * 5), blocks(blocks), k(5) { setProblemType(); }
-TrapFive::TrapFive() : FitnessFunction(), k(5) { setProblemType(); }
-
-float TrapFive::evaluate(Individual &ind) {
-    float result = 0;
-    for (int i = 0; i < blocks; i++) {
-        result += subfunc(ind, i, i + k);
-    }
-    
-    ind.fitness = result;
-    checkIfBestFound(ind);
-    
-    evaluations++;
-    return result;
-}
-
-float TrapFive::subfunc(Individual &ind, int startIdx, int endIdx) {
-    float result = 0;
-    for(int i = startIdx; i < endIdx; i++){
-        result += ind.genotype[i];
-    }
-    
-    if (result == k){
-        return result;
-    } else {
-        return ((k - 1 - result) / k);
-    }
-}
-
-FitnessFunction* TrapFive::clone() const {
-    return new TrapFive(static_cast<const TrapFive&>(*this));
-}
-
-void TrapFive::display() {
-    cout << "TrapFive fitness function" << endl;
-}
-
-string TrapFive::id() {
-    return "T5";
-}
-
-void TrapFive::setProblemType(){
-    FitnessFunction::setProblemType(new BinaryProblemType());
-}
-
-void TrapFive::setLength (int length) {
-    totalProblemLength = 5 * length;
-    blocks = length;
-    optimum = 5 * length;
-}
-
-
 /* ------------------------ Non-Binary Max Fitness Function ------------------------ */
 
 NonBinaryMax::NonBinaryMax() {

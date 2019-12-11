@@ -91,6 +91,10 @@ json RoundSchedule::run() {
                     if(!ga->initialized){
 //                        cout << "Init GA(" << ga->populationSize << ")" << endl;
                         ga->initialize();
+                        // Define the first ever individual as bestIndividualOverall
+                        if(i == 0){
+                            bestIndividualOverall = ga->population[0].copy();
+                        }
                     }
                     
                     ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();

@@ -10,17 +10,18 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-#include <Python.h>
+//#include <Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
-#include "GA.hpp"
+#include "Trap.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
+#include "GA.hpp"
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
-#include "Stuff.hpp"
+//#include "Stuff.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -58,7 +59,7 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-    FitnessFunction * fit = new TrapFive();
+    FitnessFunction * fit = new Trap(3);
     main_json["fitnessFunction"] = fit->id();
     Selection * sel = new TournamentSelection(2);
     
@@ -66,10 +67,6 @@ void roundSchedule(){
         new GOM(fit, new LearnedLT_FOS(), true),
         new SimpleGA(fit, new UnivariateCrossover(), sel),
         new SimpleGA(fit, new OnePointCrossover(), sel),
-//        new GOM(fit, new Univariate_FOS(), false),
-//        new GOM(fit, new UnivariateOrdered_FOS(), false),
-//        new GOM(fit, new IncrementalLT_FOS(), false),
-//        new GOM(fit, new IncrementalLT_Univariate_FOS(), false),
         new GOM(fit, new Univariate_FOS(), true),
         new GOM(fit, new UnivariateOrdered_FOS(), true),
         new GOM(fit, new IncrementalLT_FOS(), true),
@@ -95,7 +92,6 @@ void roundSchedule(){
                 << " success=" << result.at("success")
                 << " time=" << result.at("timeTaken")
                 << " evaluations=" << result.at("evaluations") << endl;
-    //            cout << "Optimum " << (j.at("success") ? "    " : "not ") << "found for l=" << problemSize << " after " << j.at("timeTaken") << "ms" << endl;
                 if(result.at("stoppingCondition") == "maxTimeExceeded"){
                     cout << "Max time exceeded, not starting anymore runs" << endl;
                     breakOutOfProblemSize = true;
@@ -126,8 +122,8 @@ void roundSchedule(){
 
 int main(int argc, const char * argv[]) {
     
-    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/myenv/";
-    putenv( mypath );
+//    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/myenv/";
+//    putenv( mypath );
     
 //    std::cout << "PYTHONHOME = " << getenv("PYTHONHOME") << std::endl;
 

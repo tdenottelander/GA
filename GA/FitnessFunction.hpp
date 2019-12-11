@@ -61,22 +61,6 @@ public:
     FitnessFunction* clone() const override;
 };
 
-
-class TrapFive : public FitnessFunction {
-public:
-    int blocks;
-    int k;
-    TrapFive (int blocks);
-    TrapFive ();
-    float evaluate(Individual &ind) override;
-    float subfunc (Individual &ind, int startIdx, int endIdx);
-    void display() override;
-    std::string id() override;
-    void setProblemType() override;
-    FitnessFunction* clone() const override;
-    void setLength (int length) override;
-};
-
 class NonBinaryMax : public FitnessFunction {
 public:
     NonBinaryMax ();
