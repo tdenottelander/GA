@@ -76,7 +76,7 @@ bool GA::isConverged(){
 
 bool GA::isDiverse(){
     for (unsigned long i = 1; i < population.size(); i++){
-        if (population[i] != population[0]){
+        if (!population[i].equals(population[0])){
             return true;
         }
     }
@@ -94,7 +94,7 @@ int GA::getTotalAmountOfEvaluations(){
 void GA::initializeTrueRandomPopulation(){
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
-        Individual ind (problemLength);
+        Individual ind (fitFunc_ptr->totalProblemLength);
         ProblemType* problemtype = fitFunc_ptr->problemType;
         vector<int> alphabet = problemtype->alphabet;
         ind.initialize(fitFunc_ptr->problemType->alphabet);
@@ -107,7 +107,7 @@ void GA::initializeTrueRandomPopulation(){
 void GA::initializeSolvablePopulation(){
     initializeUninitializedPopulation();
     
-    for (int i = 0; i < problemLength; i++){
+    for (int i = 0; i < fitFunc_ptr->totalProblemLength; i++){
         vector<int> counters = {0, 0};
         for (Individual &ind : population){
             int bit = Utility::getConditionalBit(counters[0], counters[1], populationSize);
@@ -122,7 +122,7 @@ void GA::initializeSolvablePopulation(){
 void GA::initializeUninitializedPopulation(){
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
-        Individual ind (problemLength);
+        Individual ind (fitFunc_ptr->totalProblemLength);
         population.push_back(ind);
     }
 }
@@ -150,13 +150,6 @@ void GA::print(){
 
 void GA::setPopulationSize(int n){
     populationSize = n;
-}
-
-void GA::setProblemLength(int l){
-    if(fitFunc_ptr != NULL){
-        fitFunc_ptr->setLength(l);
-    }
-    problemLength = l;
 }
 
 void GA::setFitnessFunction (FitnessFunction * fitfunc){

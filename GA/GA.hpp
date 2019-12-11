@@ -25,7 +25,6 @@ public:
     Selection * selection_ptr;
     Variation * variation_ptr;
     std::vector<Individual> population;
-    int problemLength;
     bool terminated;
     bool initialized;
     int roundsCount;
@@ -55,7 +54,6 @@ public:
     void print();
     
     void setPopulationSize (int n);
-    virtual void setProblemLength (int l);
     void setFitnessFunction (FitnessFunction * fitfunc);
     void setSelection (Selection * sel);
     void setVariation (Variation * var);

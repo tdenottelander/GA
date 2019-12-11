@@ -20,6 +20,7 @@ public:
     bool optimumFound;
     int evaluations;
     ProblemType *problemType;
+    int totalProblemLength;
     
     FitnessFunction(int optimum);
     FitnessFunction();

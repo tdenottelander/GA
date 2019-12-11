@@ -160,7 +160,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
         Individual *p = &population[donorIdx];
         applyDonor(o, *p, subset);
         
-        if (o != b) {
+        if (!o.equals(b)) {
             fitfunc->evaluate(o);
             if (o.fitness >= b.fitness){
                 applyDonor(b, o, subset);
@@ -190,7 +190,7 @@ bool GOM_Variation::gomWithEliteIndividual(Individual &o, Individual &b){
     bool changed = false;
     for (uvec subset : fos) {
         applyDonor(o, fitfunc->bestIndividual, subset);
-        if(o != b) {
+        if(!o.equals(b)) {
             fitfunc->evaluate(o);
             if(o.fitness > b.fitness) {
                 applyDonor(b, o, subset);

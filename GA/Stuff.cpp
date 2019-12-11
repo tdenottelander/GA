@@ -39,7 +39,7 @@ int Stuff::mainLoop(){
         GA ga;
         ga.setPointers(&fitnessFunc, &selection, &variation);
         ga.setPopulationSize(n);
-        ga.setProblemLength(l);
+//        ga.setProblemLength(l);
         ga.initialize();
         //        cout << ga.toString() << endl;
         

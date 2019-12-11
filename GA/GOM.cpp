@@ -17,6 +17,7 @@ GOM::GOM(FitnessFunction * fitfunc, FOS *fos, bool forcedImprovement = false) : 
 void GOM::initialize() {
     GA::initialize();
     gom_variation.fitfunc = fitFunc_ptr;
+    gom_variation.setFOSObject(fos);
 }
 
 void GOM::round() {
@@ -29,11 +30,6 @@ void GOM::round() {
 
 GA* GOM::clone() const {
     return new GOM(static_cast<const GOM&>(*this));
-}
-
-void GOM::setProblemLength (int length) {
-    GA::setProblemLength(length);
-    gom_variation.setFOSObject(fos);
 }
 
 string GOM::id(){

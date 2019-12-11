@@ -58,7 +58,7 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-    FitnessFunction * fit = new LeadingOnes();
+    FitnessFunction * fit = new TrapFive();
     main_json["fitnessFunction"] = fit->id();
     Selection * sel = new TournamentSelection(2);
     
@@ -81,7 +81,7 @@ void roundSchedule(){
     bool breakOutOfProblemSize = false;
     for(GA* ga : gaList){
         json setting;
-        for(int i = 2; i < maxProblemExponent; i++){
+        for(int i = 1; i < maxProblemExponent; i++){
             int problemSize = pow(2,i);
             json prob_json;
             for(int rep = 0; rep < repetitions; rep++){

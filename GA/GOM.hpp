@@ -26,9 +26,7 @@ public:
     void round() override;
     
     GA* clone() const override;
-    
-    void setProblemLength (int length) override;
-    
+        
     std::string id() override;
 };
     

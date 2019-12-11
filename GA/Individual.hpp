@@ -21,12 +21,12 @@ public:
     int fitness;
     int counterNotChanged;
     
+    Individual();
     Individual(int length);
     void initialize(std::vector<int> alphabet);
     Individual copy();
     std::string toString();
-    bool operator==(Individual const& ind);
-    bool operator!=(Individual const& ind);
+    bool equals(Individual const& ind);
 };
 
 #endif /* Individual_hpp */

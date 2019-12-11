@@ -18,7 +18,7 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
     maxSeconds(maxSeconds),
     maxEvaluations(maxEvaluations),
     interval(interleavedRoundInterval),
-    bestIndividualOverall(NULL)
+    bestIndividualOverall(0)
 {}
 
 void RoundSchedule::initialize(GA *g, int problemSize) {
@@ -37,8 +37,8 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
         int popSize = pow(2, i + 1);
         GA* newGA = g->clone();
         newGA->fitFunc_ptr = g->fitFunc_ptr->clone();
+        newGA->fitFunc_ptr->setLength(problemSize);
         newGA->setPopulationSize(popSize);
-        newGA->setProblemLength(problemSize);
         gaList.push_back(newGA);
     }
     whichShouldRun[0] = 1;
@@ -93,16 +93,14 @@ json RoundSchedule::run() {
                         ga->initialize();
                     }
                     
-                    if(bestIndividualOverall != NULL){
-                        ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
-                    }
+                    ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
 
                     // Do the round on this GA
 //                    cout << "     GA(" << ga->populationSize << ") round " << ga->roundsCount << endl;
                     ga->round();
 //                    ga->print();
                     
-                    if(bestIndividualOverall == NULL || ga->fitFunc_ptr->bestIndividual.fitness > bestIndividualOverall.fitness){
+                    if(ga->fitFunc_ptr->bestIndividual.fitness > bestIndividualOverall.fitness){
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
 
