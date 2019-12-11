@@ -59,12 +59,12 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-    FitnessFunction * fit = new Trap(3);
+    FitnessFunction * fit = new Trap(5);
     main_json["fitnessFunction"] = fit->id();
     Selection * sel = new TournamentSelection(2);
     
     vector<GA*> gaList = {
-        new GOM(fit, new LearnedLT_FOS(), true),
+        new GOM(fit, new LearnedLT_FOS(fit->problemType), true),
         new SimpleGA(fit, new UnivariateCrossover(), sel),
         new SimpleGA(fit, new OnePointCrossover(), sel),
         new GOM(fit, new Univariate_FOS(), true),

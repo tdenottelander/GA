@@ -14,7 +14,7 @@ using namespace arma;
 
 /* ------------------------ Learned Linkage Tree FOS ------------------------ */
 
-LearnedLT_FOS::LearnedLT_FOS(){
+LearnedLT_FOS::LearnedLT_FOS(ProblemType *problemType) : problemType(problemType){
     reinitializeOnNewRound = true;
 }
 
@@ -52,12 +52,11 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
     constants_v.reserve(max_constants);
 
     // build frequency table for symbol pairs
-    // TODO: Rewrite this:
-    mat frequencies(2, 2, fill::zeros);
+    size_t alphabetSize = problemType->alphabet.size();
+    mat frequencies(alphabetSize, alphabetSize, fill::zeros);
     uword val_i, val_j;
     
-    // TODO: Rewrite this:
-    encode_number = 2;
+    encode_number = alphabetSize;
 
     // measure frequencies of pairs & compute joint entropy
     for (uword i = 0; i < problemLength; i++) {

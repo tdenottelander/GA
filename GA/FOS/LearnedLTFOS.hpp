@@ -17,10 +17,12 @@
 #include "FOS.hpp"
 #include "Utility.hpp"
 #include "Individual.hpp"
+#include "ProblemType.hpp"
 
 class LearnedLT_FOS : public FOS {
 public:
-    LearnedLT_FOS();
+    ProblemType *problemType;
+    LearnedLT_FOS(ProblemType *problemType);
     std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
     std::string id() override;
     std::string toString() override;
