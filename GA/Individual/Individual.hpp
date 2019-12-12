@@ -18,7 +18,7 @@
 class Individual {
 public:
     arma::uvec genotype;
-    int fitness;
+    float fitness;
     int counterNotChanged;
     
     Individual();

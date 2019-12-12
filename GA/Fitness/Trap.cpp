@@ -16,9 +16,9 @@ Trap::Trap(int blocksize, int blocks) : FitnessFunction(blocks * blocksize), blo
 Trap::Trap(int blocksize) : FitnessFunction(), blocksize(blocksize) { setProblemType(); }
 
 float Trap::evaluate(Individual &ind) {
-    float result = 0;
+    float result = 0.0;
     for (int i = 0; i < blocks; i++) {
-        result += subfunc(ind, i, i + blocksize);
+        result += subfunc(ind, i * blocksize, i * blocksize + blocksize);
     }
     
     ind.fitness = result;
@@ -29,15 +29,15 @@ float Trap::evaluate(Individual &ind) {
 }
 
 float Trap::subfunc(Individual &ind, int startIdx, int endIdx) {
-    float result = 0;
+    int ones = 0;
     for(int i = startIdx; i < endIdx; i++){
-        result += ind.genotype[i];
+        ones += ind.genotype[i];
     }
     
-    if (result == blocksize){
-        return result;
+    if (ones == blocksize){
+        return 1.0;
     } else {
-        return ((blocksize - 1 - result) / blocksize);
+        return ((blocksize - 1.0 - ones) / (1.0 * blocksize));
     }
 }
 
@@ -60,5 +60,5 @@ void Trap::setProblemType(){
 void Trap::setLength (int length) {
     totalProblemLength = blocksize * length;
     blocks = length;
-    optimum = blocksize * length;
+    optimum = length;
 }
