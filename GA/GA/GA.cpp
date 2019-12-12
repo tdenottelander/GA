@@ -133,10 +133,16 @@ string GA::toString() {
 
 string GA::populationToString(vector<Individual> &population){
     string result;
+    string fitfuncid = fitFunc_ptr->id();
+    bool trapfunc = fitfuncid.at(0) == 'T';
     for (unsigned long i = 0; i < population.size(); i++){
         result += to_string(i);
         result += ". ";
-        result += population[i].toString();
+        if(trapfunc){
+            result += population[i].toStringBlocks(stoi(fitfuncid.substr(1, fitfuncid.length())));
+        } else {
+            result += population[i].toString();
+        }
         if(i != population.size() - 1){
             result += "\n";
         }

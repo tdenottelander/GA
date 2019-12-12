@@ -51,6 +51,22 @@ string Individual::toString(){
     return result;
 }
 
+string Individual::toStringBlocks(int blocksize){
+    string result = "[";
+    for (unsigned long i = 0; i < genotype.size(); i++){
+        result += to_string(genotype[i]);
+        if(i != (genotype.size() - 1)){
+            result += " ";
+            if((i+1) % blocksize == 0){
+                result += "| ";
+            }
+        }
+    }
+    result += "]  F: ";
+    result += to_string(fitness);
+    return result;
+}
+
 bool Individual::equals(const Individual &ind) {
     if(fitness != ind.fitness){
         return false;

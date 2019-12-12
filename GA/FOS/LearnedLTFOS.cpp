@@ -39,24 +39,12 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
     // phase 1: estimate similarity matrix
     vector<vector < double_t >> mi_matrix(problemLength, vector<double_t>(problemLength, 0.0));
 
-    uword encode_number = 0;
-    unordered_map<string, uword> values_to_int_map;
-    values_to_int_map.reserve(1000000);
-
-    // maximum number of constants to consider, the subsequent ones will be binned
-    size_t max_constants = 100;
-    unordered_set<double_t> constants;
-    vector<double_t> constants_v;
-
-    constants.reserve(max_constants);
-    constants_v.reserve(max_constants);
-
     // build frequency table for symbol pairs
     size_t alphabetSize = problemType->alphabet.size();
     mat frequencies(alphabetSize, alphabetSize, fill::zeros);
     uword val_i, val_j;
     
-    encode_number = alphabetSize;
+    uword encode_number = alphabetSize;
 
     // measure frequencies of pairs & compute joint entropy
     for (uword i = 0; i < problemLength; i++) {
@@ -72,9 +60,12 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
             for (uword k = 0; k < encode_number; k++) {
                 for (uword l = 0; l < encode_number; l++) {
                     freq = frequencies(k, l);
+//                    if(pop_size > 4){
+//                        cout << "i: " << i << " j: " << j << " k: " << k << " l: " << l << " freq: " << freq << endl;
+//                    }
                     if (freq > 0.0) {
                         freq = freq / pop_size;
-                        mi_matrix[i][j] += -freq * log(freq);
+                        mi_matrix[i][j] += -freq * log2(freq);
                         frequencies.at(k, l) = 0.0; // reset the freq;
                     }
                 }
@@ -91,9 +82,12 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
         for (uword k = 0; k < encode_number; k++) {
             for (uword l = 0; l < encode_number; l++) {
                 freq = frequencies(k, l);
+//                if(pop_size > 4){
+//                    cout << "i: " << i << " j: " << i << " k: " << k << " l: " << l << " freq: " << freq << endl;
+//                }
                 if (freq > 0) {
                     freq = freq / pop_size;
-                    mi_matrix[i][i] += -freq * log(freq);
+                    mi_matrix[i][i] += -freq * log2(freq);
                     frequencies.at(k, l) = 0.0; // reset the freq;
                 }
             }
@@ -107,22 +101,18 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
             mi_matrix[j][i] = mi_matrix[i][j];
         }
     }
-
+    
+//    for (size_t i = 0; i < problemLength; i++) {
+//        for (size_t j = 0; j < problemLength; j++) {
+//            printf("%.2f  ", mi_matrix[i][j]);
+//        }
+//        cout << endl;
+//    }
+    
     // assemble the Linkage Tree with UPGMA
     FOS = BuildLinkageTreeFromSimilarityMatrix(problemLength, mi_matrix);
 
     FOS.pop_back(); // remove the root of the Linkage Tree (otherwise entire solution can be swapped during GOM)
-
-    /*cout << " >>> generated FOS:" << endl;
-     for (vector<size_t> & F : FOS) {
-     if (F.size() > 1) {
-     cout << "     ";
-     for (size_t idx : F) {
-     cout << idx << " ";
-     }
-     cout << endl;
-     }
-     }*/
 
     return FOS;
 }

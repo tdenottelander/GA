@@ -26,6 +26,7 @@ public:
     void initialize(std::vector<int> alphabet);
     Individual copy();
     std::string toString();
+    std::string toStringBlocks(int blocksize);
     bool equals(Individual const& ind);
 };
 
