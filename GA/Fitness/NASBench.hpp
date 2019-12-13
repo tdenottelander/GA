@@ -14,12 +14,11 @@
 #include <Python.h>
 #include "FitnessFunction.hpp"
 
-extern PyObject *module;
+static PyObject *module;
+static PyObject *py_queryfunc;
 
 class NASBench : public FitnessFunction {
 public:
-//    PyObject *module;
-    PyObject *py_queryfunc;
     NASBench(PyObject *module, PyObject *py_queryfunc);
     float evaluate(Individual &ind) override;
     std::string intToLayer(int encoding);
@@ -28,6 +27,8 @@ public:
     void setProblemType() override;
     FitnessFunction* clone() const override;
     void setLength (int length) override;
+    
+    static void pythonInit();
 };
 
 #endif /* NASBench_hpp */

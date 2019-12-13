@@ -22,7 +22,6 @@
 #include "GA.hpp"
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
-//#include "Stuff.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -43,7 +42,6 @@ const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/proj
 extern bool printfos = false;
 extern bool printPopulationAfterRound = false;
 extern bool printPopulationOnOptimum = false;
-extern PyObject *module = NULL;
 
 void roundSchedule(){
     json main_json;
@@ -129,7 +127,7 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 100;
-    int maxEvaluations = 1000000;
+    int maxEvaluations = 100000;
     int interval = 4;
     int repetitions = 10;
     
@@ -140,23 +138,7 @@ void runNasbench(){
     main_json["repetitions"] = repetitions;
     main_json["interleavedRoundInterval"] = interval;
     
-    Py_Initialize();
-    PyObject* sysPath = PySys_GetObject((char*)"path");
-    PyList_Append(sysPath, PyUnicode_FromString("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/nasbench/"));
-    //    PyObject *module = PyImport_ImportModule("queryscript");
-    module = PyImport_ImportModule("queryscript");
-    if(module == NULL){
-        printf("ERROR importing module 'queryscript'\n");
-        exit(-1);
-    }
-    PyObject* py_loaddatafunc = PyObject_GetAttrString(module, "load_data");
-    if(!py_loaddatafunc){
-        PyErr_Print();
-        exit(-1);
-    }
-    PyObject_CallObject(py_loaddatafunc, NULL);
-    
-    PyObject* py_queryfunc = PyObject_GetAttrString(module, "query");
+    NASBench::pythonInit();
     
     FitnessFunction * fit = new NASBench(NULL, py_queryfunc);
     main_json["fitnessFunction"] = fit->id();
@@ -206,62 +188,6 @@ void runNasbench(){
     
     Py_Finalize();
 }
-
-void pythonLink(){
-    Py_Initialize();
-    
-    PyObject* sysPath = PySys_GetObject((char*)"path");
-    PyList_Append(sysPath, PyUnicode_FromString("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/nasbench/"));
-    PyObject *module = PyImport_ImportModule("query");
-    if(module == NULL){
-        printf("ERROR importing module 'query'\n");
-        exit(-1);
-    }
-    
-    // Loading the data
-    PyObject* py_loaddatafunc = PyObject_GetAttrString(module, "load_data");
-    if(!py_loaddatafunc){
-        PyErr_Print();
-        exit(-1);
-    }
-    PyObject_CallObject(py_loaddatafunc, NULL);
-    
-//    // Setting a model
-//    PyObject* py_setmodelfunc = PyObject_GetAttrString(module, "set_model");
-//    if(!py_setmodelfunc){
-//        PyErr_Print();
-//        exit(-1);
-//    }
-//    PyObject* py_args = Py_BuildValue("[iiiii]", 0, 1, 0, 0, 0);
-//    PyObject_CallObject(py_setmodelfunc, py_args);
-//
-//
-//    // Printing the model
-//    PyObject* py_printmodelfunc = PyObject_GetAttrString(module, "print_model");
-//    if(!py_printmodelfunc){
-//        PyErr_Print();
-//        exit(-1);
-//    }
-//    PyObject_CallObject(py_printmodelfunc, NULL);
-    
-    
-    // Querying the model
-    PyObject* py_querymodelfunc = PyObject_GetAttrString(module, "query");
-    if(!py_querymodelfunc){
-        PyErr_Print();
-        exit(-1);
-    }
-    PyObject* py_args = Py_BuildValue("[iiiii]", 0, 1, 0, 0, 0);
-    PyObject_CallObject(py_querymodelfunc, py_args);
-    
-//    load_data()
-//    set_model([0, 1, 2, 1, 2])
-//    print_model()
-//    query()
-    
-    Py_Finalize();
-}
-
 
 int main(int argc, const char * argv[]) {
     

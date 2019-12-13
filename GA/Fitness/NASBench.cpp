@@ -10,22 +10,11 @@
 
 using namespace std;
 
-extern PyObject* module;
-
-NASBench::NASBench (PyObject *mod, PyObject *py_queryfunc) : FitnessFunction(1.0), py_queryfunc(py_queryfunc) {
+NASBench::NASBench (PyObject *mod, PyObject *py_queryfunc) : FitnessFunction(1.0) {
     setProblemType();
 }
 
 float NASBench::evaluate(Individual &ind){
-    //Translate integer encoding into vector of operation descriptions.
-//    vector<string> ops (7);
-//    ops[0] = "INPUT";
-//    for (int i = 1; i < 6; i++){
-//        ops[i] = intToLayer(ind.genotype[i]);
-//    }
-//    ops[6] = "OUTPUT";
-//
-//    vector<int> x = arma::conv_to<vector<int>>::from(ind.genotype);
     
     //Query solution here (together with sequential neural network structure.
     PyObject* py_args = Py_BuildValue("[iiiii]", ind.genotype[0], ind.genotype[1], ind.genotype[2], ind.genotype[3], ind.genotype[4]);
@@ -76,4 +65,27 @@ FitnessFunction* NASBench::clone() const {
 
 void NASBench::setLength (int length){
     totalProblemLength = length;
+}
+
+void NASBench::pythonInit(){
+    Py_Initialize();
+    PyObject* sysPath = PySys_GetObject((char*)"path");
+    PyList_Append(sysPath, PyUnicode_FromString("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/nasbench/"));
+    module = PyImport_ImportModule("queryscript");
+    if(module == NULL){
+        printf("ERROR importing module 'queryscript'\n");
+        exit(-1);
+    }
+    PyObject* py_loaddatafunc = PyObject_GetAttrString(module, "load_data");
+    if(!py_loaddatafunc){
+        PyErr_Print();
+        exit(-1);
+    }
+    PyObject_CallObject(py_loaddatafunc, NULL);
+    
+    py_queryfunc = PyObject_GetAttrString(module, "query");
+    if(!py_queryfunc){
+        PyErr_Print();
+        exit(-1);
+    }
 }
