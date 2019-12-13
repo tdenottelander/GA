@@ -12,6 +12,8 @@ using namespace std;
 using namespace arma;
 using namespace Utility;
 
+extern bool printfos;
+
 /* ------------------------ Base Variation ------------------------ */
 
 void Variation::display(){
@@ -126,7 +128,7 @@ vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
 //    bestIndividual = &(fitfunc->bestIndividual);
     fos = fosObject->getFOS(population);
     vector<Individual> offspring;
-//    FOSStructures::printFOS(fos);
+    if(printfos){ FOSStructures::printFOS(fos); }
     offspring.reserve(population.size());
     for (unsigned i = 0; i < population.size(); i++){
         Individual &parent = population[i];

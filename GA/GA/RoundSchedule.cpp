@@ -12,6 +12,9 @@ using namespace std;
 using nlohmann::json;
 using Utility::millis;
 
+extern bool printPopulationAfterRound;
+extern bool printPopulationOnOptimum;
+
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
     maxPopSizeLevel(maxPopSizeLevel),
@@ -102,7 +105,7 @@ json RoundSchedule::run() {
                     // Do the round on this GA
 //                    cout << "     GA(" << ga->populationSize << ") round " << ga->roundsCount << endl;
                     ga->round();
-//                    ga->print();
+                    if(printPopulationAfterRound) ga->print();
                     
                     if(ga->fitFunc_ptr->bestIndividual.fitness > bestIndividualOverall.fitness){
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
@@ -111,6 +114,7 @@ json RoundSchedule::run() {
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){
 //                        cout << "Opt  GA(" << ga->populationSize << ") at round " << ga->roundsCount << endl;
+                        if(printPopulationOnOptimum) ga->print();
                         optimumFound = true;
                         output["successfulGAPopulation"] = ga->populationSize;
                         output["successfulGARoundCount"] = ga->roundsCount;

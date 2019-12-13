@@ -1,5 +1,19 @@
+FOR ENVIRONMENT "myenv"
+
 OTHER C FLAGS
 -I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m -I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m -Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/Users/tomdenottelander/miniconda3/envs/myenv/include -arch x86_64 -I/Users/tomdenottelander/miniconda3/envs/myenv/include -arch x86_64
 
 OHTER LINKER FLAGS
 -L/Users/tomdenottelander/miniconda3/envs/myenv/lib/python3.7/config-3.7m-darwin -lpython3.7m -ldl -framework CoreFoundation
+
+
+
+
+
+FOR ENVIRONMENT "nasbench"
+
+OTHER C FLAGS
+-I/Users/tomdenottelander/miniconda3/envs/nasbench/include/python3.7m -I/Users/tomdenottelander/miniconda3/envs/nasbench/include/python3.7m -Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/Users/tomdenottelander/miniconda3/envs/nasbench/include -arch x86_64 -I/Users/tomdenottelander/miniconda3/envs/nasbench/include -arch x86_64
+
+OTHER LINKER FLAGS
+-L/Users/tomdenottelander/miniconda3/envs/nasbench/lib/python3.7/config-3.7m-darwin -lpython3.7m -ldl -framework CoreFoundation

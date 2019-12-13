@@ -1,0 +1,79 @@
+//
+//  NASBench.cpp
+//  GA
+//
+//  Created by Tom den Ottelander on 12/12/2019.
+//  Copyright © 2019 Tom den Ottelander. All rights reserved.
+//
+
+#include "NASBench.hpp"
+
+using namespace std;
+
+extern PyObject* module;
+
+NASBench::NASBench (PyObject *mod, PyObject *py_queryfunc) : FitnessFunction(1.0), py_queryfunc(py_queryfunc) {
+    setProblemType();
+}
+
+float NASBench::evaluate(Individual &ind){
+    //Translate integer encoding into vector of operation descriptions.
+//    vector<string> ops (7);
+//    ops[0] = "INPUT";
+//    for (int i = 1; i < 6; i++){
+//        ops[i] = intToLayer(ind.genotype[i]);
+//    }
+//    ops[6] = "OUTPUT";
+//
+//    vector<int> x = arma::conv_to<vector<int>>::from(ind.genotype);
+    
+    //Query solution here (together with sequential neural network structure.
+    PyObject* py_args = Py_BuildValue("[iiiii]", ind.genotype[0], ind.genotype[1], ind.genotype[2], ind.genotype[3], ind.genotype[4]);
+    PyObject* py_tuple = PyTuple_Pack(1, py_args);
+    if(!py_queryfunc){
+        PyErr_Print();
+        exit(-1);
+    }
+    PyObject* result = PyObject_CallObject(py_queryfunc, py_tuple);
+    
+    //Return the validation accuracy of some epoch budget.
+    float validationAccuracy = PyFloat_AsDouble(result);
+//    cout << validationAccuracy << endl;
+    
+    ind.fitness = validationAccuracy;
+    
+    checkIfBestFound(ind);
+    evaluations++;
+    
+    return 0.0;
+}
+
+string NASBench::intToLayer(int encoding){
+    switch (encoding){
+        case 0: return "CONV1X1";
+        case 1: return "CONV3X3";
+        case 2: return "MAXPOOL3X3";
+    }
+    return "ERROR";
+}
+
+void NASBench::display(){
+    cout << "NASBench fitness function" << endl;
+}
+
+string NASBench::id(){
+    return ("NASBench");
+}
+
+void NASBench::setProblemType(){
+    vector<int> alphabet = {0,1,2};
+    FitnessFunction::setProblemType(new AlphabetProblemType(alphabet));
+}
+
+FitnessFunction* NASBench::clone() const {
+    return new NASBench(static_cast<const NASBench&>(*this));
+}
+
+void NASBench::setLength (int length){
+    totalProblemLength = length;
+}
