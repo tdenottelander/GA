@@ -10,12 +10,12 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-//#include <Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
+#include "NASBenchV2.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -136,7 +136,7 @@ void runNasbench(){
     main_json["repetitions"] = repetitions;
     main_json["interleavedRoundInterval"] = interval;
     
-    FitnessFunction * fit = new Trap(5);
+    FitnessFunction * fit = new NASBenchV2();
     main_json["fitnessFunction"] = fit->id();
     
     vector<GA*> gaList = {
@@ -170,7 +170,7 @@ void runNasbench(){
                 break;
             } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
                 cout << "Max evaluations exceeded, not starting anymore runs" << endl;
-                break;
+//                break;
             }
         }
         cout << endl;
