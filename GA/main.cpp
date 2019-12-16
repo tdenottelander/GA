@@ -10,13 +10,12 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-#include <Python.h>
+//#include <Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
-#include "NASBench.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -137,9 +136,7 @@ void runNasbench(){
     main_json["repetitions"] = repetitions;
     main_json["interleavedRoundInterval"] = interval;
     
-    NASBench::pythonInit();
-    
-    FitnessFunction * fit = new NASBench();
+    FitnessFunction * fit = new Trap(5);
     main_json["fitnessFunction"] = fit->id();
     
     vector<GA*> gaList = {
@@ -182,15 +179,9 @@ void runNasbench(){
     
     main_json["experiments"] = experiments;
     write(main_json.dump(), dataDir);
-    
-    Py_Finalize();
 }
 
 int main(int argc, const char * argv[]) {
-    
-    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
-    putenv( mypath );
-//    std::cout << "PYTHONHOME = " << getenv("PYTHONHOME") << std::endl;
     
     runNasbench();
 //    roundSchedule();
