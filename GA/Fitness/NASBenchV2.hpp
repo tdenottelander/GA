@@ -30,9 +30,12 @@ public:
     
     static void greedyRun();
     static void greedyRunBackward();
+    static void greedyBothWays();
+    static void greedyInsideOut();
     static void findBest(int length);
     static void findBestRecursion(int length, std::vector<int> &temp, int idx);
     
+    static void printArchitecture(std::vector<int> architecture);
 };
 
 static float bestSoFar = -1.0;
