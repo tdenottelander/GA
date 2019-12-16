@@ -20,12 +20,22 @@ class NASBenchV2 : public FitnessFunction {
 public:
     NASBenchV2();
     float evaluate(Individual &ind) override;
-    float query(arma::uvec encoding);
+    static float query(arma::uvec encoding);
+    static float query(std::vector<int> encoding);
     void display() override;
     std::string id() override;
     void setProblemType() override;
     FitnessFunction* clone() const override;
     void setLength (int length) override;
+    
+    static void greedyRun();
+    static void greedyRunBackward();
+    static void findBest(int length);
+    static void findBestRecursion(int length, std::vector<int> &temp, int idx);
+    
 };
+
+static float bestSoFar = -1.0;
+
 
 #endif /* NASBenchV2_hpp */

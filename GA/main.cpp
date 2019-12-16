@@ -151,7 +151,7 @@ void runNasbench(){
     
     
     json experiments;
-    int problemSize = 5;
+    int problemSize = 7;
     for(GA* ga : gaList){
         json setting;
         for(int rep = 0; rep < repetitions; rep++){
@@ -185,6 +185,13 @@ int main(int argc, const char * argv[]) {
     
     runNasbench();
 //    roundSchedule();
+    
+//    NASBenchV2::greedyRunBackward();
+//    NASBenchV2::greedyRun();
+//    for(int i = 0; i < 8; i++){
+//        NASBenchV2::findBest(i);
+//        cout << endl;
+//    }
     
     return 0;
 }
