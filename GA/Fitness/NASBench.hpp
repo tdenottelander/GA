@@ -19,7 +19,7 @@ static PyObject *py_queryfunc;
 
 class NASBench : public FitnessFunction {
 public:
-    NASBench(PyObject *module, PyObject *py_queryfunc);
+    NASBench();
     float evaluate(Individual &ind) override;
     std::string intToLayer(int encoding);
     void display() override;

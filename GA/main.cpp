@@ -117,7 +117,6 @@ void roundSchedule(){
     
     main_json["experiments"] = experiments;
     write(main_json.dump(), dataDir);
-
 }
 
 void runNasbench(){
@@ -127,7 +126,7 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 100;
-    int maxEvaluations = 100000;
+    int maxEvaluations = 5000;
     int interval = 4;
     int repetitions = 10;
     
@@ -140,7 +139,7 @@ void runNasbench(){
     
     NASBench::pythonInit();
     
-    FitnessFunction * fit = new NASBench(NULL, py_queryfunc);
+    FitnessFunction * fit = new NASBench();
     main_json["fitnessFunction"] = fit->id();
     
     vector<GA*> gaList = {
@@ -158,12 +157,11 @@ void runNasbench(){
     int problemSize = 5;
     for(GA* ga : gaList){
         json setting;
-        json prob_json;
         for(int rep = 0; rep < repetitions; rep++){
             RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
             rs.initialize(ga, problemSize);
             json result = rs.run();
-            prob_json[to_string(rep)] = result;
+            setting[to_string(rep)] = result;
             cout << "rep" << rep
             << " ga=" << ga->id()
             << " l=" << problemSize
@@ -179,7 +177,6 @@ void runNasbench(){
             }
         }
         cout << endl;
-        setting[to_string(problemSize)] = prob_json;
         experiments[ga->id()] = setting;
     }
     

@@ -10,6 +10,7 @@
 #define FitnessFunction_hpp
 
 #include <stdio.h>
+#include <nlohmann/json.hpp>
 #include "Individual.hpp"
 #include "ProblemType.hpp"
 
@@ -26,6 +27,7 @@ public:
     FitnessFunction();
     
     virtual float evaluate(Individual &ind) = 0;
+    void evaluation(Individual &ind);
     virtual void display();
     virtual std::string id();
     virtual void setProblemType() = 0;

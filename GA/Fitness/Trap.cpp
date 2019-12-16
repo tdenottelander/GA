@@ -22,9 +22,7 @@ float Trap::evaluate(Individual &ind) {
     }
     
     ind.fitness = result;
-    checkIfBestFound(ind);
-    
-    evaluations++;
+    evaluation(ind);
     return result;
 }
 

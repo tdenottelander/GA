@@ -10,7 +10,7 @@
 
 using namespace std;
 
-NASBench::NASBench (PyObject *mod, PyObject *py_queryfunc) : FitnessFunction(1.0) {
+NASBench::NASBench () : FitnessFunction(1.0) {
     setProblemType();
 }
 
@@ -31,10 +31,9 @@ float NASBench::evaluate(Individual &ind){
     
     ind.fitness = validationAccuracy;
     
-    checkIfBestFound(ind);
-    evaluations++;
+    evaluation(ind);
     
-    return 0.0;
+    return validationAccuracy;
 }
 
 string NASBench::intToLayer(int encoding){

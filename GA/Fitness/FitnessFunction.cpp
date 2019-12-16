@@ -10,12 +10,22 @@
 
 using namespace std;
 
+extern int totalEvaluations;
+extern nlohmann::json convergence;
+
 /* ------------------------ Base Fitness Function ------------------------ */
 
 FitnessFunction::FitnessFunction(int optimum) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0) {
 }
 
 FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
+
+void FitnessFunction::evaluation(Individual &ind){
+    checkIfBestFound(ind);
+    evaluations++;
+    totalEvaluations++;
+    convergence[to_string(totalEvaluations)] = bestIndividual.fitness;
+}
 
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
@@ -53,9 +63,8 @@ float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
     ind.fitness = result;
     
-    checkIfBestFound(ind);
+    evaluation(ind);
     
-    evaluations++;
     return result;
 }
 
@@ -98,11 +107,8 @@ float LeadingOnes::evaluate(Individual &ind) {
     }
     ind.fitness = result;
     
+    evaluation(ind);
     
-    
-    checkIfBestFound(ind);
-    
-    evaluations++;
     return result;
 }
 
@@ -132,6 +138,7 @@ NonBinaryMax::NonBinaryMax() {
 float NonBinaryMax::evaluate(Individual &ind){
     float result = sum(ind.genotype);
     ind.fitness = result;
+    evaluation(ind);
     return result;
 }
 

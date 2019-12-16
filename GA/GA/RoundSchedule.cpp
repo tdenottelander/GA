@@ -15,6 +15,9 @@ using Utility::millis;
 extern bool printPopulationAfterRound;
 extern bool printPopulationOnOptimum;
 
+int totalEvaluations = 0;
+nlohmann::json convergence;
+
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
     maxPopSizeLevel(maxPopSizeLevel),
@@ -22,7 +25,9 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
     maxEvaluations(maxEvaluations),
     interval(interleavedRoundInterval),
     bestIndividualOverall(0)
-{}
+{
+    totalEvaluations = 0;
+}
 
 void RoundSchedule::initialize(GA *g, int problemSize) {
     gaList.reserve(maxPopSizeLevel);
@@ -45,6 +50,9 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
         gaList.push_back(newGA);
     }
     whichShouldRun[0] = 1;
+    
+    totalEvaluations = 0;
+    convergence.clear();
 }
 
 json RoundSchedule::run() {
@@ -110,6 +118,8 @@ json RoundSchedule::run() {
                     if(ga->fitFunc_ptr->bestIndividual.fitness > bestIndividualOverall.fitness){
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
+                    
+//                    cout << "Evaluations: " << getAmountOfEvaluations() << " bestFitnessSoFar: " << bestIndividualOverall.fitness << endl;
 
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){
@@ -158,6 +168,8 @@ json RoundSchedule::run() {
     long stop = millis();
     output["timeTaken"] = stop - start;
     output["evaluations"] = getAmountOfEvaluations();
+//    output["scaling"] = scalingJson;
+    output["convergence"] = convergence;
     
     return output;
 }
