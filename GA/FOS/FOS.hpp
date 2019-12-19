@@ -31,6 +31,14 @@ public:
     std::string toString() override;
 };
 
+class IncrementalLTReversed_FOS : public FOS {
+public:
+    IncrementalLTReversed_FOS();
+    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
 class UnivariateOrdered_FOS : public FOS {
 public:
     UnivariateOrdered_FOS();
@@ -39,9 +47,33 @@ public:
     std::string toString() override;
 };
 
+class UnivariateOrderedReversed_FOS : public FOS {
+public:
+    UnivariateOrderedReversed_FOS();
+    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
 class IncrementalLT_Univariate_FOS : public FOS {
 public:
     IncrementalLT_Univariate_FOS();
+    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
+class IncrementalLTReversed_UnivariateOrdered_FOS : public FOS {
+public:
+    IncrementalLTReversed_UnivariateOrdered_FOS();
+    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
+class IncrementalLTReversed_Univariate_FOS : public FOS {
+public:
+    IncrementalLTReversed_Univariate_FOS();
     std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
     std::string id() override;
     std::string toString() override;
@@ -57,7 +89,9 @@ public:
 
 namespace FOSStructures {
     std::vector<arma::uvec> getIncrementalLT_FOS (int n);
+    std::vector<arma::uvec> getIncrementalLTReversed_FOS (int n);
     std::vector<arma::uvec> getUnivariate_FOS (int n);
+    std::vector<arma::uvec> getUnivariateReversed_FOS (int n);
     std::vector<arma::uvec> getRandomUnivariate_FOS (int n);
     void printFOS(std::vector<arma::uvec> fos);
 };
