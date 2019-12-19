@@ -15,6 +15,7 @@ using namespace std;
 Trap::Trap(int blocksize, int blocks, int maxEvaluations) : FitnessFunction(blocks * blocksize, maxEvaluations), blocks(blocks), blocksize(blocksize) { setProblemType(); }
 Trap::Trap(int blocksize, int maxEvaluations) : FitnessFunction(maxEvaluations), blocksize(blocksize) { setProblemType(); }
 
+// Returns the fitness of an individual
 float Trap::evaluate(Individual &ind) {
     float result = 0.0;
     for (int i = 0; i < blocks; i++) {
@@ -26,6 +27,7 @@ float Trap::evaluate(Individual &ind) {
     return result;
 }
 
+// Returns the fitness of a block of genes.
 float Trap::subfunc(Individual &ind, int startIdx, int endIdx) {
     int ones = 0;
     for(int i = startIdx; i < endIdx; i++){

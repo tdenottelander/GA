@@ -23,6 +23,7 @@ FitnessFunction::FitnessFunction(float optimum, int maxEvaluations) : bestIndivi
 FitnessFunction::FitnessFunction(int maxEvaluations) : bestIndividual(0), optimumFound(false), evaluations(0), maxEvaluations(maxEvaluations) {
 }
 
+// Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
 void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
     evaluations++;
@@ -38,10 +39,13 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     }
 }
 
+// Displays the description of the fitness function
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
 }
 
+// Checks whether this individual is fitter than the best found individual so far.
+// Checks whether the individual is optimal.
 void FitnessFunction::checkIfBestFound(Individual &ind){
     if(ind.fitness > bestIndividual.fitness){
         bestIndividual = ind.copy();
@@ -51,22 +55,27 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     }
 }
 
+// Returns the total amount of evaluations over all fitness functions.
 int FitnessFunction::getTotalAmountOfEvaluations(){
     return totalEvaluations;
 }
 
+// Checks whether the maximum amount of evaluations is exceeded
 bool FitnessFunction::maxEvaluationsExceeded(){
     return totalEvaluations >= maxEvaluations && maxEvaluations != -1;
 }
 
+// Returns the id of the fitness function
 string FitnessFunction::id() {
     return "base";
 }
 
+// Sets the problem type
 void FitnessFunction::setProblemType(ProblemType* problemType){
     this->problemType = problemType;
 }
 
+// Sets the length and the optimum
 void FitnessFunction::setLength(int length){
     totalProblemLength = length;
     optimum = length;

@@ -11,18 +11,21 @@
 using namespace arma;
 using namespace std;
 
+// Constructor
 UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_set<int>()), alphabetSize(alphabetSize) {
 }
 
+// Inserts a hashed genotype into the unorderd set, regardless of already being in it
 void UniqueSolutions::put(uvec &genotype){
     genotypes.insert(hash(genotype));
 }
 
+// Returns true when the unordered set already contains the hash if this genotype
 bool UniqueSolutions::contains(uvec &genotype){
-    int hashresult = hash(genotype);
     return (genotypes.find(hash(genotype)) != genotypes.end());
 }
 
+// Hashes an individual's genotype by enumeration
 int UniqueSolutions::hash(uvec &genotype){
     int result = 0;
     int n = genotype.size();
@@ -31,26 +34,3 @@ int UniqueSolutions::hash(uvec &genotype){
     }
     return result;
 }
-
-//struct uvecHash {
-//public:
-//    size_t operator()(const arma::uvec & genotype) const {
-//        int result = 0;
-//        int n = genotype.size();
-//        int alphabetSize = 3;
-//        for (int i = 0; i < alphabetSize; i++){
-//            result += genotype[i] * pow(alphabetSize, n-i-1);
-//        }
-//        return std::hash<int>()(result);
-//    }
-//};
-//
-//struct uvecEqual {
-//public:
-//    bool operator()(const arma::uvec & g1, const arma::uvec & g2) const {
-//        if(g1[0] == g2[0])
-//            return true;
-//        else
-//            return false;
-//    }
-//};

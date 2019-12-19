@@ -16,10 +16,11 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-NASBenchV2::NASBenchV2(int problemSize, int maxEvaluations) : FitnessFunction(optima[problemSize], maxEvaluations) {
-    setProblemType();
+NASBenchV2::NASBenchV2(int problemSize, bool allowIdentityLayers, int maxEvaluations) : FitnessFunction(optima[problemSize], maxEvaluations) {
+    setProblemType(allowIdentityLayers);
 }
 
+// Returns the fitness of an individual
 float NASBenchV2::evaluate(Individual &ind){
     float fitness = query(ind.genotype);
     ind.fitness = fitness;
@@ -28,6 +29,7 @@ float NASBenchV2::evaluate(Individual &ind){
     return fitness;
 }
 
+// Returns the fitness of the architecture passed by its encoding by querying the benchmark
 float NASBenchV2::query(uvec encoding){
     //TODO: Implement this
     //Transform encoding into string
@@ -54,6 +56,7 @@ float NASBenchV2::query(uvec encoding){
     return result; 
 }
 
+// Returns the fitness of the architecture passed by its encoding (in vector<int>)
 float NASBenchV2::query(vector<int> encoding){
     uvec uvecEncoding(encoding.size());
     for (int i = 0; i < encoding.size(); i++){
@@ -70,12 +73,18 @@ string NASBenchV2::id(){
     return ("NASBenchV2");
 }
 
-void NASBenchV2::setProblemType(){
+void NASBenchV2::setProblemType(){}
+
+void NASBenchV2::setProblemType(bool allowIdentityLayers){
     // 0 = 3x3 convolution
     // 1 = 3x3 convolution with stride 2
     // 2 = 5x5 convolution
     // 3 = identity
-    vector<int> alphabet = {0,1,2,3};
+    vector<int> alphabet;
+    if(allowIdentityLayers)
+        alphabet = {0,1,2,3};
+    else
+        alphabet = {0,1,2};
     FitnessFunction::setProblemType(new AlphabetProblemType(alphabet));
 }
 

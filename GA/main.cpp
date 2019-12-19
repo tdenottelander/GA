@@ -141,23 +141,25 @@ void runNasbench(){
         main_json["repetitions"] = repetitions;
         main_json["interleavedRoundInterval"] = interval;
         
-        FitnessFunction * fit = new NASBenchV2(problemSize, maxEvaluations);
+        bool allowIdentityLayers = false;
+        FitnessFunction * fit = new NASBenchV2(problemSize, allowIdentityLayers, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
+        bool forcedImprovement = false;
         vector<GA*> gaList = {
-            new GOM(fit, new IncrementalLTReversed_FOS(), true),
-            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), true),
-            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), true),
+            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
             new RandomSearch(fit),
-            new GOM(fit, new LearnedLT_FOS(fit->problemType), true),
+            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
             new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
             new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
-            new GOM(fit, new Univariate_FOS(), true),
-            new GOM(fit, new UnivariateOrdered_FOS(), true),
-            new GOM(fit, new IncrementalLT_FOS(), true),
-            new GOM(fit, new IncrementalLT_Univariate_FOS(), true),
-            new GOM(fit, new UnivariateOrderedReversed_FOS(), true)
+            new GOM(fit, new Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement)
         };
         
         

@@ -18,13 +18,14 @@
 
 class NASBenchV2 : public FitnessFunction {
 public:
-    NASBenchV2(int problemSize, int maxEvaluations);
+    NASBenchV2(int problemSize, bool allowIdentityLayers, int maxEvaluations);
     float evaluate(Individual &ind) override;
     static float query(arma::uvec encoding);
     static float query(std::vector<int> encoding);
     void display() override;
     std::string id() override;
     void setProblemType() override;
+    void setProblemType(bool allowIdentityLayers);
     FitnessFunction* clone() const override;
     void setLength (int length) override;
     float getOptimum(int problemLength);

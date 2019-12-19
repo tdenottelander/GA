@@ -123,6 +123,10 @@ json RoundSchedule::run() {
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
                     
+                    if (totalEvaluations > maxEvaluations){
+                        break;
+                    }
+                    
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){
                         if(printPopulationOnOptimum) ga->print();
