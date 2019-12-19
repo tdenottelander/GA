@@ -7,3 +7,24 @@
 //
 
 #include "RandomSearch.hpp"
+
+using namespace std;
+
+RandomSearch::RandomSearch(){}
+
+RandomSearch::RandomSearch (FitnessFunction * fitFunc){
+    fitFunc_ptr = fitFunc;
+}
+
+void RandomSearch::round(){
+    GA::initializeTrueRandomPopulation();
+    roundsCount++;
+}
+
+GA* RandomSearch::clone() const {
+    return new RandomSearch(static_cast<const RandomSearch&>(*this));
+}
+
+string RandomSearch::id() {
+    return "RandomSearch";
+}

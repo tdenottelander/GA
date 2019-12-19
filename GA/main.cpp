@@ -21,6 +21,7 @@
 #include "GA.hpp"
 #include "GOM.hpp"
 #include "SimpleGA.hpp"
+#include "RandomSearch.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>

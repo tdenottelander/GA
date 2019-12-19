@@ -10,5 +10,15 @@
 #define RandomSearch_hpp
 
 #include <stdio.h>
+#include "GA.hpp"
+
+class RandomSearch : public GA {
+public:
+    RandomSearch ();
+    RandomSearch (FitnessFunction * fitFunc);
+    void round() override;
+    GA* clone() const override;
+    std::string id() override;
+};
 
 #endif /* RandomSearch_hpp */
