@@ -70,11 +70,9 @@ json RoundSchedule::run() {
 
         //Stopping conditions
         if (maxRounds != -1 && round >= maxRounds) {
-//            cout << "Did not found the optimum after " << round << " rounds" << endl;
             output["stoppingCondition"] = "maxRoundsExceeded";
             break;
         } else if (maxSeconds != -1 && millis() - start > maxSeconds * 1000) {
-//            cout << "Did not found the optimum after " << maxSeconds * 1000 << " seconds" << endl;
             output["stoppingCondition"] = "maxTimeExceeded";
             break;
         } else if (maxEvaluations != -1 && totalEvaluations > maxEvaluations){
@@ -105,7 +103,6 @@ json RoundSchedule::run() {
 
                     // Initialize the GA if that has not been done yet
                     if(!ga->initialized){
-//                        cout << "Init GA(" << ga->populationSize << ")" << endl;
                         ga->initialize();
                         // Define the first ever individual as bestIndividualOverall
                         if(i == 0){
@@ -119,7 +116,6 @@ json RoundSchedule::run() {
                     ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
 
                     // Do the round on this GA
-//                    cout << "     GA(" << ga->populationSize << ") round " << ga->roundsCount << endl;
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
@@ -127,11 +123,8 @@ json RoundSchedule::run() {
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
                     
-//                    cout << "Evaluations: " << getAmountOfEvaluations() << " bestFitnessSoFar: " << bestIndividualOverall.fitness << endl;
-
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){
-//                        cout << "Opt  GA(" << ga->populationSize << ") at round " << ga->roundsCount << endl;
                         if(printPopulationOnOptimum) ga->print();
                         optimumFound = true;
                         output["successfulGAPopulation"] = ga->populationSize;
@@ -142,14 +135,12 @@ json RoundSchedule::run() {
                     } else if (ga->isConverged()){
                         // GA.termination is already set to true inside isConverged()-method
                         // Set all previous GA's to terminated
-//                        cout << "Term GA(" << ga->populationSize << ") and all before" << endl;
                         terminateGAs(i);
                         lowestActiveGAIdx = i + 1;
                         continue;
 
                         // Else if it has a higher fitness than the previous GA, terminate all before this one
                     } else if (i != 0 && !gaList[i-1]->terminated && ga->getAvgFitness() > gaList[i-1]->getAvgFitness()){
-//                        cout << "Term GA(" << gaList[i-1]->populationSize << ") and all before" << endl;
                         terminateGAs(i - 1);
                         lowestActiveGAIdx = i;
                         continue;
