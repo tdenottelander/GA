@@ -121,66 +121,81 @@ void roundSchedule(){
 }
 
 void runNasbench(){
-    json main_json;
     
-    // Set to -1 if it should not be a stopping condition
-    int maxRounds = -1;
-    int maxSeconds = -1;
-    int maxPopSizeLevel = 100;
-    int maxEvaluations = 5000;
-    int interval = 4;
-    int repetitions = 10;
-    
-    main_json["maxPopSizeLevel"] = maxPopSizeLevel;
-    main_json["maxRounds"] = maxRounds;
-    main_json["maxSeconds"] = maxSeconds;
-    main_json["maxEvaluations"] = maxEvaluations;
-    main_json["repetitions"] = repetitions;
-    main_json["interleavedRoundInterval"] = interval;
-    
-    FitnessFunction * fit = new NASBenchV2();
-    main_json["fitnessFunction"] = fit->id();
-    
-    vector<GA*> gaList = {
-        new GOM(fit, new LearnedLT_FOS(fit->problemType), true),
-        new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-        new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
-        new GOM(fit, new Univariate_FOS(), true),
-        new GOM(fit, new UnivariateOrdered_FOS(), true),
-        new GOM(fit, new IncrementalLT_FOS(), true),
-        new GOM(fit, new IncrementalLT_Univariate_FOS(), true)
-    };
-    
-    
-    json experiments;
-    int problemSize = 7;
-    for(GA* ga : gaList){
-        json setting;
-        for(int rep = 0; rep < repetitions; rep++){
-            RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
-            rs.initialize(ga, problemSize);
-            json result = rs.run();
-            setting[to_string(rep)] = result;
-            cout << "rep" << rep
-            << " ga=" << ga->id()
-            << " l=" << problemSize
-            << " success=" << result.at("success")
-            << " time=" << result.at("timeTaken")
-            << " evaluations=" << result.at("evaluations") << endl;
-            if(result.at("stoppingCondition") == "maxTimeExceeded"){
-                cout << "Max time exceeded, not starting anymore runs" << endl;
-                break;
-            } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
-                cout << "Max evaluations exceeded, not starting anymore runs" << endl;
-//                break;
+    for (int problemSize = 6; problemSize < 8; problemSize++){
+        cout << "PROBLEMSIZE " << problemSize << endl;
+        json main_json;
+        
+        // Set to -1 if it should not be a stopping condition
+        int maxRounds = -1;
+        int maxSeconds = -1;
+        int maxPopSizeLevel = 100;
+        int maxEvaluations = 3000;
+        int interval = 4;
+        int repetitions = 5;
+        
+        main_json["maxPopSizeLevel"] = maxPopSizeLevel;
+        main_json["maxRounds"] = maxRounds;
+        main_json["maxSeconds"] = maxSeconds;
+        main_json["maxEvaluations"] = maxEvaluations;
+        main_json["repetitions"] = repetitions;
+        main_json["interleavedRoundInterval"] = interval;
+        
+        FitnessFunction * fit = new NASBenchV2(problemSize, maxEvaluations);
+        main_json["fitnessFunction"] = fit->id();
+        main_json["optimum"] = fit->optimum;
+        
+        vector<GA*> gaList = {
+            new GOM(fit, new IncrementalLTReversed_FOS(), true),
+            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), true),
+            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), true),
+            new RandomSearch(fit),
+            new GOM(fit, new LearnedLT_FOS(fit->problemType), true),
+            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
+            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+            new GOM(fit, new Univariate_FOS(), true),
+            new GOM(fit, new UnivariateOrdered_FOS(), true),
+            new GOM(fit, new IncrementalLT_FOS(), true),
+            new GOM(fit, new IncrementalLT_Univariate_FOS(), true),
+            new GOM(fit, new UnivariateOrderedReversed_FOS(), true)
+        };
+        
+        
+        json experiments;
+        for(GA* ga : gaList){
+            bool exceeded = false;
+            json setting;
+            for(int rep = 0; rep < repetitions; rep++){
+                RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
+                rs.initialize(ga, problemSize);
+                json result = rs.run();
+                setting[to_string(rep)] = result;
+                cout << "rep" << rep
+                << " ga=" << ga->id()
+                << " l=" << problemSize
+                << " success=" << result.at("success")
+                << " time=" << result.at("timeTaken")
+                << " evaluations=" << result.at("evaluations") << endl;
+                if(result.at("stoppingCondition") == "maxTimeExceeded"){
+                    cout << "Max time exceeded, not starting anymore runs" << endl;
+                    break;
+                } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
+                    cout << "Max evaluations exceeded, not starting anymore runs" << endl;
+//                    exceeded = true;
+//                    break;
+                }
+            }
+            cout << endl;
+            if(!exceeded){
+                json prob_json;
+                prob_json[to_string(problemSize)] = setting;
+                experiments[ga->id()] = prob_json;
             }
         }
-        cout << endl;
-        experiments[ga->id()] = setting;
+        
+        main_json["experiments"] = experiments;
+        write(main_json.dump(), dataDir);
     }
-    
-    main_json["experiments"] = experiments;
-    write(main_json.dump(), dataDir);
 }
 
 int main(int argc, const char * argv[]) {
