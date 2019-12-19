@@ -21,6 +21,7 @@ void GOM::initialize() {
 }
 
 void GOM::round() {
+    //TODO: Make the evaluations stop when the max number of evaluations is reached
     vector<Individual> offspring = gom_variation.variate(population);
     
     population = offspring;
@@ -33,5 +34,5 @@ GA* GOM::clone() const {
 }
 
 string GOM::id(){
-    return "GOM_fos=" + fos->id() + "_FI=" + (gom_variation.forcedImprovement ? "t" : "f");
+    return "GOM_" + fos->id(); // + "_FI=" + (gom_variation.forcedImprovement ? "t" : "f");
 }

@@ -16,7 +16,7 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-NASBenchV2::NASBenchV2() : FitnessFunction(100.0) {
+NASBenchV2::NASBenchV2(int problemSize, int maxEvaluations) : FitnessFunction(optima[problemSize], maxEvaluations) {
     setProblemType();
 }
 
@@ -24,7 +24,7 @@ float NASBenchV2::evaluate(Individual &ind){
     float fitness = query(ind.genotype);
     ind.fitness = fitness;
     
-    evaluation(ind);
+    evaluationProcedure(ind);
     return fitness;
 }
 

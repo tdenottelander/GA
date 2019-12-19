@@ -12,8 +12,8 @@ using namespace std;
 
 /* ------------------------ Trap Five Fitness Function ------------------------ */
 
-Trap::Trap(int blocksize, int blocks) : FitnessFunction(blocks * blocksize), blocks(blocks), blocksize(blocksize) { setProblemType(); }
-Trap::Trap(int blocksize) : FitnessFunction(), blocksize(blocksize) { setProblemType(); }
+Trap::Trap(int blocksize, int blocks, int maxEvaluations) : FitnessFunction(blocks * blocksize, maxEvaluations), blocks(blocks), blocksize(blocksize) { setProblemType(); }
+Trap::Trap(int blocksize, int maxEvaluations) : FitnessFunction(maxEvaluations), blocksize(blocksize) { setProblemType(); }
 
 float Trap::evaluate(Individual &ind) {
     float result = 0.0;
@@ -22,7 +22,7 @@ float Trap::evaluate(Individual &ind) {
     }
     
     ind.fitness = result;
-    evaluation(ind);
+    evaluationProcedure(ind);
     return result;
 }
 

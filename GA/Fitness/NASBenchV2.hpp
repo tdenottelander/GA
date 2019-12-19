@@ -18,7 +18,7 @@
 
 class NASBenchV2 : public FitnessFunction {
 public:
-    NASBenchV2();
+    NASBenchV2(int problemSize, int maxEvaluations);
     float evaluate(Individual &ind) override;
     static float query(arma::uvec encoding);
     static float query(std::vector<int> encoding);
@@ -27,6 +27,7 @@ public:
     void setProblemType() override;
     FitnessFunction* clone() const override;
     void setLength (int length) override;
+    float getOptimum(int problemLength);
     
     static void greedyRun();
     static void greedyRunBackward();
@@ -38,6 +39,7 @@ public:
     static void printArchitecture(std::vector<int> architecture);
 };
 
+static float optima[] = {30.82, 55.36, 67.21, 78.0, 84.04, 86.15, 88.09, 89.14};
 static float bestSoFar = -1.0;
 
 

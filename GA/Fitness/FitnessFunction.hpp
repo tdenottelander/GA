@@ -13,6 +13,7 @@
 #include <nlohmann/json.hpp>
 #include "Individual.hpp"
 #include "ProblemType.hpp"
+#include "UniqueSolutions.hpp"
 
 class FitnessFunction {
 public:
@@ -20,20 +21,24 @@ public:
     float optimum;
     bool optimumFound;
     int evaluations;
+    int maxEvaluations;
     ProblemType *problemType;
     int totalProblemLength;
     
-    FitnessFunction(int optimum);
-    FitnessFunction();
+    FitnessFunction(float optimum, int maxEvaluations);
+    FitnessFunction(int maxEvaluations);
     
     virtual float evaluate(Individual &ind) = 0;
-    void evaluation(Individual &ind);
+    void evaluationProcedure(Individual &ind);
     virtual void display();
     virtual std::string id();
     virtual void setProblemType() = 0;
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
+    
+    int getTotalAmountOfEvaluations();
+    bool maxEvaluationsExceeded();
     
     virtual FitnessFunction* clone() const = 0;
     
@@ -42,8 +47,8 @@ public:
 
 class OneMax : public FitnessFunction {
 public:
-    OneMax (int length);
-    OneMax ();
+    OneMax (int length, int maxEvaluations);
+    OneMax (int maxEvaluations);
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -54,8 +59,8 @@ public:
 
 class LeadingOnes : public FitnessFunction {
 public:
-    LeadingOnes (int length);
-    LeadingOnes ();
+    LeadingOnes (int length, int maxEvaluations);
+    LeadingOnes (int maxEvaluations);
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -65,7 +70,7 @@ public:
 
 class NonBinaryMax : public FitnessFunction {
 public:
-    NonBinaryMax ();
+    NonBinaryMax (int maxEvaluations);
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;

@@ -55,7 +55,14 @@ void GA::roundPOVariationSelection(){
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
         fitFunc_ptr->evaluate(ind);
+        if(fitFunc_ptr->optimumFound || fitFunc_ptr->maxEvaluationsExceeded()){
+            break;
+        }
     }
+}
+
+void GA::evaluateAll(){
+    evaluateAll(population);
 }
 
 double GA::getAvgFitness(){
@@ -98,7 +105,6 @@ void GA::initializeTrueRandomPopulation(){
         ProblemType* problemtype = fitFunc_ptr->problemType;
         vector<int> alphabet = problemtype->alphabet;
         ind.initialize(fitFunc_ptr->problemType->alphabet);
-        fitFunc_ptr->evaluate(ind);
         population.push_back(ind);
     }
 }
@@ -115,8 +121,6 @@ void GA::initializeSolvablePopulation(){
             counters[bit] = counters[bit] + 1;
         }
     }
-    
-    evaluateAll(population);
 }
 
 void GA::initializeUninitializedPopulation(){

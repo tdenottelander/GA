@@ -38,9 +38,10 @@ uniform_real_distribution<float> dist(0.0, 0.9999);
 const string projectsDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/";
 const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/";
 
-extern bool printfos = false;
-extern bool printPopulationAfterRound = false;
-extern bool printPopulationOnOptimum = false;
+bool printfos = false;
+bool printPopulationAfterRound = false;
+bool printPopulationOnOptimum = false;
+bool storeConvergence = false;
 
 void roundSchedule(){
     json main_json;
@@ -62,7 +63,7 @@ void roundSchedule(){
     main_json["maxProblemExponent"] = maxProblemExponent;
     main_json["interleavedRoundInterval"] = interval;
     
-    FitnessFunction * fit = new Trap(5);
+    FitnessFunction * fit = new Trap(5, maxEvaluations);
     main_json["fitnessFunction"] = fit->id();
     
     vector<GA*> gaList = {
@@ -188,6 +189,8 @@ int main(int argc, const char * argv[]) {
     
 //    NASBenchV2::greedyRunBackward();
 //    NASBenchV2::greedyRun();
+//    NASBenchV2::greedyBothWays();
+//    NASBenchV2::greedyInsideOut();
 //    for(int i = 0; i < 8; i++){
 //        NASBenchV2::findBest(i);
 //        cout << endl;

@@ -39,6 +39,7 @@ public:
     void roundPOVariationSelection();
     
     void evaluateAll(std::vector<Individual> &population);
+    void evaluateAll();
     bool isConverged();
     bool isDiverse();
     bool isOptimal();

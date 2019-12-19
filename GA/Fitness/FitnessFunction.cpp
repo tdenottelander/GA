@@ -11,20 +11,31 @@
 using namespace std;
 
 extern int totalEvaluations;
+extern int totalUniqueEvaluations;
 extern nlohmann::json convergence;
+extern UniqueSolutions uniqueSolutions;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(int optimum) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0) {
+FitnessFunction::FitnessFunction(float optimum, int maxEvaluations) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0), maxEvaluations(maxEvaluations) {
 }
 
-FitnessFunction::FitnessFunction() : bestIndividual(0), optimumFound(false), evaluations(0) {}
+FitnessFunction::FitnessFunction(int maxEvaluations) : bestIndividual(0), optimumFound(false), evaluations(0), maxEvaluations(maxEvaluations) {
+}
 
-void FitnessFunction::evaluation(Individual &ind){
+void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
     evaluations++;
     totalEvaluations++;
-    convergence[to_string(totalEvaluations)] = bestIndividual.fitness;
+    convergence["absolute"].push_back(bestIndividual.fitness);
+//    convergence["absolute"][to_string(totalEvaluations)] = bestIndividual.fitness;
+    
+    if(!uniqueSolutions.contains(ind.genotype)){
+        uniqueSolutions.put(ind.genotype);
+        totalUniqueEvaluations++;
+        convergence["unique"].push_back(bestIndividual.fitness);
+//        convergence["unique"][to_string(totalUniqueEvaluations)] = bestIndividual.fitness;
+    }
 }
 
 void FitnessFunction::display(){
@@ -34,10 +45,18 @@ void FitnessFunction::display(){
 void FitnessFunction::checkIfBestFound(Individual &ind){
     if(ind.fitness > bestIndividual.fitness){
         bestIndividual = ind.copy();
-        if(ind.fitness == optimum){
+        if(ind.fitness >= optimum){
             optimumFound = true;
         }
     }
+}
+
+int FitnessFunction::getTotalAmountOfEvaluations(){
+    return totalEvaluations;
+}
+
+bool FitnessFunction::maxEvaluationsExceeded(){
+    return totalEvaluations >= maxEvaluations && maxEvaluations != -1;
 }
 
 string FitnessFunction::id() {
@@ -56,14 +75,14 @@ void FitnessFunction::setLength(int length){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int length) : FitnessFunction(length) { setProblemType(); }
-OneMax::OneMax() : FitnessFunction() { setProblemType(); }
+OneMax::OneMax(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations) { setProblemType(); }
+OneMax::OneMax(int maxEvaluations) : FitnessFunction(maxEvaluations) { setProblemType(); }
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
     ind.fitness = result;
     
-    evaluation(ind);
+    evaluationProcedure(ind);
     
     return result;
 }
@@ -89,8 +108,8 @@ FitnessFunction* OneMax::clone() const {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int length) : FitnessFunction(length) { setProblemType(); }
-LeadingOnes::LeadingOnes() : FitnessFunction() { setProblemType(); }
+LeadingOnes::LeadingOnes(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations) { setProblemType(); }
+LeadingOnes::LeadingOnes(int maxEvaluations) : FitnessFunction(maxEvaluations) { setProblemType(); }
 
 void LeadingOnes::setProblemType(){
     FitnessFunction::setProblemType(new BinaryProblemType());
@@ -107,7 +126,7 @@ float LeadingOnes::evaluate(Individual &ind) {
     }
     ind.fitness = result;
     
-    evaluation(ind);
+    evaluationProcedure(ind);
     
     return result;
 }
@@ -129,7 +148,7 @@ string LeadingOnes::id() {
 
 /* ------------------------ Non-Binary Max Fitness Function ------------------------ */
 
-NonBinaryMax::NonBinaryMax() {
+NonBinaryMax::NonBinaryMax(int maxEvaluations) : FitnessFunction(maxEvaluations) {
     setProblemType();
 }
 
@@ -138,7 +157,7 @@ NonBinaryMax::NonBinaryMax() {
 float NonBinaryMax::evaluate(Individual &ind){
     float result = sum(ind.genotype);
     ind.fitness = result;
-    evaluation(ind);
+    evaluationProcedure(ind);
     return result;
 }
 

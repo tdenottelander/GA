@@ -16,8 +16,8 @@ class Trap : public FitnessFunction {
 public:
     int blocks;
     int blocksize;
-    Trap (int blocksize, int blocks);
-    Trap (int blocksize);
+    Trap (int blocksize, int blocks, int maxEvaluations);
+    Trap (int blocksize, int maxEvaluations);
     float evaluate(Individual &ind) override;
     float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;

@@ -12,10 +12,12 @@
 #include <stdio.h>
 #include <vector>
 #include <nlohmann/json.hpp>
+#include <unordered_set>
 #include "GA.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "Utility.hpp"
+#include "UniqueSolutions.hpp"
 
 class RoundSchedule {
 public:

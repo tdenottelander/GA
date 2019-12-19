@@ -14,9 +14,12 @@ using Utility::millis;
 
 extern bool printPopulationAfterRound;
 extern bool printPopulationOnOptimum;
+extern bool storeConvergence;
 
 int totalEvaluations = 0;
+int totalUniqueEvaluations = 0;
 nlohmann::json convergence;
+UniqueSolutions uniqueSolutions (0);
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -25,9 +28,7 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
     maxEvaluations(maxEvaluations),
     interval(interleavedRoundInterval),
     bestIndividualOverall(0)
-{
-    totalEvaluations = 0;
-}
+{}
 
 void RoundSchedule::initialize(GA *g, int problemSize) {
     gaList.reserve(maxPopSizeLevel);
@@ -52,7 +53,11 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
     whichShouldRun[0] = 1;
     
     totalEvaluations = 0;
+    totalUniqueEvaluations = 0;
     convergence.clear();
+    convergence["absolute"] = {};
+    convergence["unique"] = {};
+    uniqueSolutions = UniqueSolutions(g->fitFunc_ptr->problemType->alphabet.size());
 }
 
 json RoundSchedule::run() {
@@ -72,7 +77,7 @@ json RoundSchedule::run() {
 //            cout << "Did not found the optimum after " << maxSeconds * 1000 << " seconds" << endl;
             output["stoppingCondition"] = "maxTimeExceeded";
             break;
-        } else if (maxEvaluations != -1 && getAmountOfEvaluations() > maxEvaluations){
+        } else if (maxEvaluations != -1 && totalEvaluations > maxEvaluations){
             output["stoppingCondition"] = "maxEvaluationsExceeded";
             break;
         }
@@ -106,6 +111,9 @@ json RoundSchedule::run() {
                         if(i == 0){
                             bestIndividualOverall = ga->population[0].copy();
                         }
+                        ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
+                        ga->evaluateAll();
+                        bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
                     
                     ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
@@ -167,9 +175,10 @@ json RoundSchedule::run() {
     
     long stop = millis();
     output["timeTaken"] = stop - start;
-    output["evaluations"] = getAmountOfEvaluations();
-//    output["scaling"] = scalingJson;
-    output["convergence"] = convergence;
+    output["evaluations"] = totalEvaluations;
+    output["uniqueEvaluations"] = totalUniqueEvaluations;
+    if (storeConvergence)
+        output["convergence"] = convergence;
     
     return output;
 }
