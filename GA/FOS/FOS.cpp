@@ -225,3 +225,39 @@ void FOSStructures::printFOS(std::vector<arma::uvec> fos){
     }
     cout << endl;
 }
+
+vector<uvec> FOSStructures::sortFOSMeanAscending (vector<uvec> & fos){
+    sort( fos.begin(), fos.end(), []( const uvec& lhs, const uvec& rhs){
+        float mean_lhs = 0.0;
+        for (int i : lhs)
+            mean_lhs += 1.0 * i;
+        mean_lhs /= lhs.size();
+        
+        float mean_rhs = 0.0;
+        for (int i : rhs)
+            mean_rhs += 1.0 * i;
+        mean_rhs /= rhs.size();
+        
+        return mean_lhs < mean_rhs;
+    });
+    return fos;
+}
+
+vector<uvec> FOSStructures::sortFOSMeanDescending (vector<uvec> & fos){
+    vector<uvec> orderedFos = sortFOSMeanAscending(fos);
+    reverse(orderedFos.begin(), orderedFos.end());
+    return orderedFos;
+}
+
+vector<uvec> FOSStructures::boundFOS (vector<uvec> & fos, int bottomLevel, int topLevel){
+    vector<uvec> boundedFOS;
+    
+    for (int i = 0; i < fos.size(); i++){
+        if(fos[i].size() >= bottomLevel && fos[i].size() <= topLevel){
+            boundedFOS.push_back(fos[i]);
+        }
+    }
+    
+    return boundedFOS;
+}
+

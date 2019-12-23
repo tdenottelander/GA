@@ -94,6 +94,10 @@ namespace FOSStructures {
     std::vector<arma::uvec> getUnivariateReversed_FOS (int n);
     std::vector<arma::uvec> getRandomUnivariate_FOS (int n);
     void printFOS(std::vector<arma::uvec> fos);
+    std::vector<arma::uvec> sortFOSMeanAscending (std::vector<arma::uvec> & fos);
+    std::vector<arma::uvec> sortFOSMeanDescending (std::vector<arma::uvec> & fos);
+    std::vector<arma::uvec> boundFOS (std::vector<arma::uvec> & fos, int bottomLevel, int topLevel);
 };
+
 
 #endif /* FOS_hpp */
