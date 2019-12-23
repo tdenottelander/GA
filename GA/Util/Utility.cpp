@@ -20,9 +20,7 @@ vector<int> Utility::getRandomlyPermutedArray (int n){
 }
 
 vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
-    vector<int> arr;
-    arr.reserve(n);
-    for (int i = 0; i < n; i++) arr.push_back(i);
+    vector<int> arr = Utility::getAscendingArray(n);
     
     vector<int> result;
     result.reserve(n);
@@ -34,6 +32,22 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     }
     
     return result;
+}
+
+vector<int> Utility::getAscendingArray(int n){
+    vector<int> arr;
+    arr.reserve(n);
+    for(int i = 0; i < n; i++)
+        arr.push_back(i);
+    return arr;
+}
+
+vector<int> Utility::getDescendingArray(int n){
+    vector<int> arr;
+    arr.reserve(n);
+    for(int i = n-1; i >= 0; i--)
+        arr.push_back(i);
+    return arr;
 }
 
 double Utility::getRand(){

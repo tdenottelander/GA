@@ -96,7 +96,7 @@ void NASBenchV2::setLength (int length){
     totalProblemLength = length;
 }
 
-void NASBenchV2::greedyRun (){
+void GreedyAnalysis::greedyRun (){
     vector<int> architecture (7, -1);
     for (int i = 0; i < 7; i++){
         
@@ -114,7 +114,7 @@ void NASBenchV2::greedyRun (){
                 cout << temp[q] << ",";
             }
             
-            float result = query(temp);
+            float result = NASBenchV2::query(temp);
             cout << "  acc: " << result;
             if (result > bestAcc){
                 architecture[i] = j;
@@ -125,7 +125,7 @@ void NASBenchV2::greedyRun (){
     }
 }
 
-void NASBenchV2::greedyRunBackward(){
+void GreedyAnalysis::greedyRunBackward(){
     int len = 7;
     vector<int> architecture (len, -1);
     for (int i = len-1; i >= 0; i--){
@@ -144,7 +144,7 @@ void NASBenchV2::greedyRunBackward(){
                 cout << temp[q] << ",";
             }
             
-            float result = query(temp);
+            float result = NASBenchV2::query(temp);
             cout << "  acc: " << result;
             if (result > bestAcc){
                 architecture[i] = j;
@@ -155,7 +155,7 @@ void NASBenchV2::greedyRunBackward(){
     }
 }
 
-void NASBenchV2::greedyBothWays(){
+void GreedyAnalysis::greedyBothWays(){
     int len = 7;
     vector<int> architecture (20, 3);
     
@@ -171,9 +171,9 @@ void NASBenchV2::greedyBothWays(){
         //First check if we add something afterwards
         for (int j = 0; j < 3; j++){
             architecture[afterIdx] = j;
-            printArchitecture(architecture);
+            NASBenchV2::printArchitecture(architecture);
             
-            float result = query(architecture);
+            float result = NASBenchV2::query(architecture);
             cout << "  acc: " << result;
             if (result > bestAcc){
                 bestOp = j;
@@ -186,9 +186,9 @@ void NASBenchV2::greedyBothWays(){
         //Now check before
         for (int j = 0; j < 3; j++){
             architecture[beforeIdx] = j;
-            printArchitecture(architecture);
+            NASBenchV2::printArchitecture(architecture);
             
-            float result = query(architecture);
+            float result = NASBenchV2::query(architecture);
             cout << "  acc: " << result;
             if (result > bestAcc){
                 after = false;
@@ -210,7 +210,7 @@ void NASBenchV2::greedyBothWays(){
     }
 }
 
-void NASBenchV2::greedyInsideOut(){
+void GreedyAnalysis::greedyInsideOut(){
     int len = 7;
     vector<int> architecture (2, 3);
     for (int i = 0; i < len; i++){
@@ -223,9 +223,9 @@ void NASBenchV2::greedyInsideOut(){
         
         for (int j = 0; j < 3; j++){
             architecture[insertionpoint] = j;
-            printArchitecture(architecture);
+            NASBenchV2::printArchitecture(architecture);
             
-            float result = query(architecture);
+            float result = NASBenchV2::query(architecture);
             cout << "  acc: " << result;
             if (result > bestAcc){
                 bestOp = j;
@@ -252,14 +252,14 @@ void NASBenchV2::printArchitecture(vector<int> architecture){
 //    cout << endl;
 }
 
-void NASBenchV2::findBest (int length){
+void GreedyAnalysis::findBest (int length){
     vector<int> architecture (length, -1);
     findBestRecursion(length, architecture, 0);
 }
 
-void NASBenchV2::findBestRecursion(int length, vector<int> &temp, int idx){
+void GreedyAnalysis::findBestRecursion(int length, vector<int> &temp, int idx){
     if (idx == length){
-        float result = query (temp);
+        float result = NASBenchV2::query (temp);
         if (result > bestSoFar){
             bestSoFar = result;
             cout << "best so far: ";
@@ -274,4 +274,84 @@ void NASBenchV2::findBestRecursion(int length, vector<int> &temp, int idx){
             findBestRecursion(length, temp, idx+1);
         }
     }
+}
+
+bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessFunction* fitfunc){
+    int bestLayer = -1;
+    float bestFitness = -1.0;
+    int currentLayer = ind.genotype[index];
+    for(int layertype : fitfunc->problemType->alphabet){
+        ind.genotype[index] = layertype;
+        float fitness = fitfunc->evaluate(ind);
+        if(fitness > bestFitness){
+            bestLayer = layertype;
+            bestFitness = fitness;
+        }
+    }
+    ind.genotype[index] = bestLayer;
+    fitfunc->evaluate(ind);
+    return currentLayer != bestLayer;
+}
+
+int LocalSearchAnalysis::localSearch(Individual &ind, FitnessFunction* fitfunc){
+    int n = ind.genotype.size();
+    int evaluations = 0;
+    bool converged = false;
+    while(!converged){
+        converged = true;
+        //        vector<int> order = Utility::getRandomlyPermutedArrayV2(n);
+        //        vector<int> order = Utility::getAscendingArray(n);
+        vector<int> order = Utility::getDescendingArray(n);
+        for(int i = 0; i < n; i++){
+            bool changed = findBestLocalGene(ind, order[i], fitfunc);
+            evaluations += 2;
+            //            cout << ind.toString() << endl;
+            if(changed)
+                converged = false;
+        }
+    }
+    //    cout << endl;
+    return evaluations;
+}
+
+void LocalSearchAnalysis::localSearchTests(){
+    
+    int runs = 1000;
+    
+    int probSize = 7;
+    NASBenchV2 fitfunc(probSize, false, -1);
+    vector<int> alphabet = {0,1,2};
+    vector<int> evaluationsForSuccess;
+    vector<int> evaluationsForFail;
+    int optimumfound = 0;
+    
+    for(int i = 0; i < runs; i++){
+        Individual ind(probSize);
+        ind.initialize(alphabet);
+        
+        int evaluations = 1 + localSearch(ind, &fitfunc);
+        
+        //        cout << ind.toString() << endl;
+        if(ind.fitness > 89.13){
+            optimumfound++;
+            evaluationsForSuccess.push_back(evaluations);
+        } else
+            evaluationsForFail.push_back(evaluations);
+        
+        if (i % (runs/100) == 0){
+            if( i % (runs/10) == 0)
+                cout << (i / (runs/10));
+            else
+                cout << ".";
+        }
+    }
+    cout << endl;
+    
+    cout << "Optimum found " << optimumfound << "/" << runs << " times" << endl;
+    
+    double meanEvaluationsForSuccess = accumulate(evaluationsForSuccess.begin(), evaluationsForSuccess.end(), 0.0) / evaluationsForSuccess.size();
+    double meanEvaluationsForFail = accumulate(evaluationsForFail.begin(), evaluationsForFail.end(), 0.0) / evaluationsForFail.size();
+    
+    cout << "Mean evaluations for success: " << meanEvaluationsForSuccess << endl;
+    cout << "Mean evaluations for fail: " << meanEvaluationsForFail << endl;
 }

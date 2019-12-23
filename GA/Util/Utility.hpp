@@ -21,6 +21,8 @@ extern std::uniform_real_distribution<float> dist;
 namespace Utility{
     std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
+    std::vector<int> getAscendingArray (int n);
+    std::vector<int> getDescendingArray (int n);
     double getRand();
     int getRand(int start, int end);
     int getConditionalBit(int counter0, int counter1, int max);

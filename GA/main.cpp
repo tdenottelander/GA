@@ -200,17 +200,20 @@ void runNasbench(){
     }
 }
 
+
 int main(int argc, const char * argv[]) {
     
-    runNasbench();
+//    runNasbench();
 //    roundSchedule();
     
-//    NASBenchV2::greedyRunBackward();
-//    NASBenchV2::greedyRun();
-//    NASBenchV2::greedyBothWays();
-//    NASBenchV2::greedyInsideOut();
+    LocalSearchAnalysis::localSearchTests();
+    
+//    GreedyAnalysis::greedyRunBackward();
+//    GreedyAnalysis::greedyRun();
+//    GreedyAnalysis::greedyBothWays();
+//    GreedyAnalysis::greedyInsideOut();
 //    for(int i = 0; i < 8; i++){
-//        NASBenchV2::findBest(i);
+//        GreedyAnalysis::findBest(i);
 //        cout << endl;
 //    }
     
