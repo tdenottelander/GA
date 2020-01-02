@@ -10,6 +10,7 @@
 
 using namespace std;
 using namespace chrono;
+using namespace nlohmann;
 
 vector<int> Utility::getRandomlyPermutedArray (int n){
     vector<int> arr;
@@ -102,6 +103,13 @@ void Utility::write(string content, string dir, string suffix){
     file.close();
 }
 
+void Utility::writeJSON(json content, string filename){
+    ofstream file;
+    file.open("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/" + filename);
+    file << content.dump();
+    file.close();
+}
+
 void Utility::read(string filename){
     ifstream file;
     file.open(filename);
@@ -115,4 +123,11 @@ void Utility::read(string filename){
     }
     cout << endl;
     file.close();
+}
+
+string Utility::genotypeToString(arma::uvec &genotype){
+    string result = "";
+    for(int i : genotype)
+        result += to_string(i);
+    return result;
 }

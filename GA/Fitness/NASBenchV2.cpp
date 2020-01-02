@@ -277,10 +277,12 @@ void GreedyAnalysis::findBestRecursion(int length, vector<int> &temp, int idx){
 }
 
 bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessFunction* fitfunc){
-    int bestLayer = -1;
-    float bestFitness = -1.0;
+    int bestLayer = ind.genotype[index];
+    float bestFitness = ind.fitness;
     int currentLayer = ind.genotype[index];
     for(int layertype : fitfunc->problemType->alphabet){
+        if(layertype == currentLayer)
+            continue;
         ind.genotype[index] = layertype;
         float fitness = fitfunc->evaluate(ind);
         if(fitness > bestFitness){
@@ -289,35 +291,35 @@ bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessF
         }
     }
     ind.genotype[index] = bestLayer;
-    fitfunc->evaluate(ind);
+    ind.fitness = bestFitness;
     return currentLayer != bestLayer;
 }
 
-int LocalSearchAnalysis::localSearch(Individual &ind, FitnessFunction* fitfunc){
+int LocalSearchAnalysis::localSearch(Individual &ind, FitnessFunction* fitfunc, string localSearchType){
     int n = ind.genotype.size();
     int evaluations = 0;
     bool converged = false;
     while(!converged){
         converged = true;
-        //        vector<int> order = Utility::getRandomlyPermutedArrayV2(n);
-        //        vector<int> order = Utility::getAscendingArray(n);
-        vector<int> order = Utility::getDescendingArray(n);
+        vector<int> order;
+        if(localSearchType == "random"){
+            order = Utility::getRandomlyPermutedArrayV2(n);
+        } else if (localSearchType == "ascending"){
+            order = Utility::getAscendingArray(n);
+        } else if (localSearchType == "descending"){
+            order = Utility::getDescendingArray(n);
+        }
         for(int i = 0; i < n; i++){
             bool changed = findBestLocalGene(ind, order[i], fitfunc);
-            evaluations += 2;
-            //            cout << ind.toString() << endl;
+            evaluations += fitfunc->problemType->alphabet.size() - 1;
             if(changed)
                 converged = false;
         }
     }
-    //    cout << endl;
     return evaluations;
 }
 
-void LocalSearchAnalysis::localSearchTests(){
-    
-    int runs = 1000;
-    
+void LocalSearchAnalysis::localSearchTests(int runs, string localSearchType){
     int probSize = 7;
     NASBenchV2 fitfunc(probSize, false, -1);
     vector<int> alphabet = {0,1,2};
@@ -325,13 +327,17 @@ void LocalSearchAnalysis::localSearchTests(){
     vector<int> evaluationsForFail;
     int optimumfound = 0;
     
+    SolutionCounter initialSolutionSpace(alphabet.size());
+    SolutionCounter finalSolutionSpace(alphabet.size());
+    
     for(int i = 0; i < runs; i++){
         Individual ind(probSize);
         ind.initialize(alphabet);
         
-        int evaluations = 1 + localSearch(ind, &fitfunc);
+        initialSolutionSpace.put(ind.genotype);
         
-        //        cout << ind.toString() << endl;
+        int evaluations = 1 + localSearch(ind, &fitfunc, localSearchType);
+        
         if(ind.fitness > 89.13){
             optimumfound++;
             evaluationsForSuccess.push_back(evaluations);
@@ -344,6 +350,7 @@ void LocalSearchAnalysis::localSearchTests(){
             else
                 cout << ".";
         }
+        finalSolutionSpace.put(ind.genotype);
     }
     cout << endl;
     
@@ -354,4 +361,19 @@ void LocalSearchAnalysis::localSearchTests(){
     
     cout << "Mean evaluations for success: " << meanEvaluationsForSuccess << endl;
     cout << "Mean evaluations for fail: " << meanEvaluationsForFail << endl;
+    
+    json main;
+    main["finalSolutionSpace"] = finalSolutionSpace.toJson(false);
+    main["initialSolutionSpace"] = initialSolutionSpace.toJson(false);
+    
+    main["totalRuns"] = runs;
+    main["optimumHits"] = optimumfound;
+    main["relativeOptimumHit"] = optimumfound * 1.0 / runs;
+    main["meanEvaluationsSuccess"] = meanEvaluationsForSuccess;
+    main["meanEvaluationsFail"] = meanEvaluationsForFail;
+    main["localSearchType"] = localSearchType;
+    main["alphabet"] = alphabet;
+    main["problemSize"] = probSize;
+    
+    Utility::write(main.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/", "fitnesslandscape");
 }

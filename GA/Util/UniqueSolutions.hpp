@@ -12,15 +12,33 @@
 #include <stdio.h>
 #include <armadillo>
 #include <unordered_set>
+#include <unordered_map>
+#include <nlohmann/json.hpp>
+#include "Utility.hpp"
 
 class UniqueSolutions{
 public:
-    std::unordered_set<int> genotypes;
-    int alphabetSize;
     UniqueSolutions(int alphabetSize);
+    int alphabetSize;
+    std::unordered_set<int> genotypes;
     void put(arma::uvec &genotype);
     bool contains(arma::uvec &genotype);
-    int hash(arma::uvec &genotype);
+};
+
+class SolutionCounter {
+public:
+    SolutionCounter(int alphabetSize);
+    int alphabetSize;
+    std::unordered_map<int, int> counterMap;
+    void put(arma::uvec &genotype);
+    bool contains(arma::uvec &genotype);
+    int get(arma::uvec &genotype);
+    nlohmann::json toJson (bool asHash);
+};
+
+namespace HashingFunctions {
+    int hash(arma::uvec &genotype, int alphabetSize);
+    arma::uvec decode(int hash, int problemSize, int alphabetSize);
 };
 
 #endif /* UniqueSolutions_hpp */

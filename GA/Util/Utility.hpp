@@ -14,6 +14,7 @@
 #include <armadillo>
 #include <chrono>
 #include <string>
+#include <nlohmann/json.hpp>
 
 extern std::mt19937 rng;
 extern std::uniform_real_distribution<float> dist;
@@ -30,7 +31,9 @@ namespace Utility{
     std::string getDateString();
     std::string padFrontWith0(std::string target, int length);
     void write(std::string content, std::string filename, std::string suffix = "");
+    void writeJSON (nlohmann::json content, std::string filename);
     void read(std::string filename);
+    std::string genotypeToString(arma::uvec &genotype);
 }
 
 #endif /* Utility_hpp */

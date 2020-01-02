@@ -14,6 +14,7 @@
 #include <armadillo>
 #include <nlohmann/json.hpp>
 #include "FitnessFunction.hpp"
+#include <unordered_map>
 
 
 class NASBenchV2 : public FitnessFunction {
@@ -44,8 +45,8 @@ namespace GreedyAnalysis {
 
 namespace LocalSearchAnalysis {
     bool findBestLocalGene(Individual &ind, int index, FitnessFunction* fitfunc);
-    int localSearch(Individual &ind, FitnessFunction* fitfunc);
-    void localSearchTests();
+    int localSearch(Individual &ind, FitnessFunction* fitfunc, std::string localSearchType);
+    void localSearchTests(int runs, std::string localSearchType);
 }
 
 static float optima[] = {30.82, 55.36, 67.21, 78.0, 84.04, 86.15, 88.09, 89.14};

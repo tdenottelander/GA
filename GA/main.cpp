@@ -206,7 +206,12 @@ int main(int argc, const char * argv[]) {
 //    runNasbench();
 //    roundSchedule();
     
-    LocalSearchAnalysis::localSearchTests();
+//    LocalSearchAnalysis::localSearchTests(10000, "ascending");
+//    LocalSearchAnalysis::localSearchTests(10000, "descending");
+//    LocalSearchAnalysis::localSearchTests(10000, "random");
+    
+        LocalSearchAnalysis::localSearchTests(5, "random");
+    
     
 //    GreedyAnalysis::greedyRunBackward();
 //    GreedyAnalysis::greedyRun();
