@@ -6,6 +6,8 @@
 //  Copyright © 2019 Tom den Ottelander. All rights reserved.
 //
 
+#include "GreedyAnalysis.hpp"
+
 #include <random>
 #include <iostream>
 #include <armadillo>
@@ -15,7 +17,9 @@
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
-#include "NASBenchV2.hpp"
+#include "ARK.hpp"
+#include "ARK1.hpp"
+#include "ARK2.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -25,6 +29,8 @@
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
+
+#include "LocalSearchAnalysis.hpp"
 
 using namespace std;
 using namespace arma;
@@ -122,7 +128,7 @@ void roundSchedule(){
 
 void runNasbench(){
     
-    for (int problemSize = 6; problemSize < 8; problemSize++){
+    for (int problemSize = 7; problemSize < 8; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
         json main_json;
         
@@ -130,9 +136,10 @@ void runNasbench(){
         int maxRounds = -1;
         int maxSeconds = -1;
         int maxPopSizeLevel = 100;
-        int maxEvaluations = 3000;
+        int maxEvaluations = 10000;
         int interval = 4;
         int repetitions = 5;
+        
         
         main_json["maxPopSizeLevel"] = maxPopSizeLevel;
         main_json["maxRounds"] = maxRounds;
@@ -141,8 +148,8 @@ void runNasbench(){
         main_json["repetitions"] = repetitions;
         main_json["interleavedRoundInterval"] = interval;
         
-        bool allowIdentityLayers = false;
-        FitnessFunction * fit = new NASBenchV2(problemSize, allowIdentityLayers, maxEvaluations);
+//        bool allowIdentityLayers = false;
+        FitnessFunction * fit = new ARK2(problemSize, true, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
@@ -183,8 +190,8 @@ void runNasbench(){
                     break;
                 } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
                     cout << "Max evaluations exceeded, not starting anymore runs" << endl;
-//                    exceeded = true;
-//                    break;
+                    exceeded = true;
+                    break;
                 }
             }
             cout << endl;
@@ -206,19 +213,23 @@ int main(int argc, const char * argv[]) {
 //    runNasbench();
 //    roundSchedule();
     
-//    LocalSearchAnalysis::localSearchTests(10000, "ascending");
-//    LocalSearchAnalysis::localSearchTests(10000, "descending");
-//    LocalSearchAnalysis::localSearchTests(10000, "random");
+    ARK* fitfunc = new ARK2(13, false, -1);
+//    fitfunc->setLength(13);
     
-        LocalSearchAnalysis::localSearchTests(5, "random");
+    int runs = 10000;
+    LocalSearchAnalysis::localSearchTests(fitfunc, runs, "ascending");
+    LocalSearchAnalysis::localSearchTests(fitfunc, runs, "descending");
+    LocalSearchAnalysis::localSearchTests(fitfunc, runs, "random");
+    
+//    LocalSearchAnalysis::localSearchTests(1000, "random");
     
     
 //    GreedyAnalysis::greedyRunBackward();
 //    GreedyAnalysis::greedyRun();
 //    GreedyAnalysis::greedyBothWays();
 //    GreedyAnalysis::greedyInsideOut();
-//    for(int i = 0; i < 8; i++){
-//        GreedyAnalysis::findBest(i);
+//    for(int i = 13; i < 14; i++){
+//        GreedyAnalysis::findBest(i, 2);
 //        cout << endl;
 //    }
     

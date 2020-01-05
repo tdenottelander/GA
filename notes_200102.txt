@@ -1,0 +1,75 @@
+best so far:  with accuracy: 31.8
+
+best so far: 0, with accuracy: 47.51
+
+best so far: 0,0, with accuracy: 57.23
+
+best so far: 0,0,0, with accuracy: 66.84
+
+best so far: 0,0,0,0, with accuracy: 76.3
+
+best so far: 0,0,0,0,0, with accuracy: 81.01
+
+best so far: 0,0,0,0,0,0, with accuracy: 84.25
+best so far: 0,0,0,1,0,0, with accuracy: 85.19
+
+best so far: 0,0,0,0,0,0,0, with accuracy: 85.81
+best so far: 0,0,0,0,1,0,0, with accuracy: 86.95
+best so far: 0,0,0,1,0,0,0, with accuracy: 87.11
+
+best so far: 0,0,0,0,0,0,0,0, with accuracy: 87.71
+best so far: 0,0,0,0,0,1,0,0, with accuracy: 88.59
+best so far: 0,0,0,1,0,0,0,0, with accuracy: 88.63
+
+best so far: 0,0,0,0,0,0,1,0,0, with accuracy: 88.99
+best so far: 0,0,0,0,0,1,0,0,0, with accuracy: 89.93
+best so far: 0,0,0,0,1,0,0,0,0, with accuracy: 90.03
+
+best so far: 0,0,0,0,0,0,1,0,1,0, with accuracy: 90.28
+best so far: 0,0,0,0,0,1,0,1,0,0, with accuracy: 90.98
+
+best so far: 0,0,0,0,1,0,0,0,1,1,0, with accuracy: 91.04
+best so far: 0,0,0,0,1,0,0,1,1,0,0, with accuracy: 91.06
+
+best so far: 0,0,0,0,0,1,0,1,1,0,1,0, with accuracy: 91.1
+best so far: 0,0,0,0,1,0,0,0,1,1,1,0, with accuracy: 91.21
+best so far: 0,0,0,0,1,0,0,1,0,1,1,0, with accuracy: 91.44
+
+
+
+Identity layers allowed
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 81/10000 times
+Mean evaluations for success: 58.7778
+Mean evaluations for fail: 76.6828
+Mean fitness after local search: 90.8152
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 20/10000 times
+Mean evaluations for success: 101.1
+Mean evaluations for fail: 93.5475
+Mean fitness after local search: 90.8672
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 115/10000 times
+Mean evaluations for success: 71.7652
+Mean evaluations for fail: 74.1393
+Mean fitness after local search: 90.8411
+Program ended with exit code: 0
+
+
+No identity layers allowed
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 27/10000 times
+Mean evaluations for success: 35.6667
+Mean evaluations for fail: 40.9711
+Mean fitness after local search: 89.7089
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 79/10000 times
+Mean evaluations for success: 38.0253
+Mean evaluations for fail: 48.6798
+Mean fitness after local search: 89.8648
+0.........1.........2.........3.........4.........5.........6.........7.........8.........9.........
+Optimum found 188/10000 times
+Mean evaluations for success: 38.5479
+Mean evaluations for fail: 39.0699
+Mean fitness after local search: 89.8874
+Program ended with exit code: 0

@@ -27,7 +27,8 @@ public:
 
 class SolutionCounter {
 public:
-    SolutionCounter(int alphabetSize);
+    SolutionCounter(int alphabetSize, int problemSize);
+    int problemSize;
     int alphabetSize;
     std::unordered_map<int, int> counterMap;
     void put(arma::uvec &genotype);

@@ -27,7 +27,7 @@ bool UniqueSolutions::contains(uvec &genotype){
 }
 
 
-SolutionCounter::SolutionCounter (int alphabetSize) : alphabetSize(alphabetSize) {}
+SolutionCounter::SolutionCounter (int alphabetSize, int problemSize) : alphabetSize(alphabetSize), problemSize(problemSize) {}
 
 void SolutionCounter::put(arma::uvec &genotype){
     int hash = HashingFunctions::hash(genotype, alphabetSize);
@@ -58,7 +58,7 @@ json SolutionCounter::toJson (bool asHash){
         if(asHash)
             result[to_string(it->first)] = it->second;
         else {
-            uvec genotype = HashingFunctions::decode(it->first, 7, alphabetSize);
+            uvec genotype = HashingFunctions::decode(it->first, problemSize , alphabetSize);
             result[Utility::genotypeToString(genotype)] = it->second;
         }
     }
