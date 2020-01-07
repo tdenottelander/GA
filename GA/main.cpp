@@ -80,7 +80,7 @@ void roundSchedule(){
         new GOM(fit, new Univariate_FOS(), true),
         new GOM(fit, new UnivariateOrdered_FOS(), true),
         new GOM(fit, new IncrementalLT_FOS(), true),
-        new GOM(fit, new IncrementalLT_Univariate_FOS(), true)
+        new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), true)
     };
     
     json experiments;
@@ -148,12 +148,12 @@ void runNasbench(){
         main_json["repetitions"] = repetitions;
         main_json["interleavedRoundInterval"] = interval;
         
-//        bool allowIdentityLayers = false;
-        FitnessFunction * fit = new ARK2(problemSize, true, maxEvaluations);
+        bool allowIdentityLayers = true;
+        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
-        bool forcedImprovement = false;
+        bool forcedImprovement = true;
         vector<GA*> gaList = {
             new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
             new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
@@ -165,7 +165,7 @@ void runNasbench(){
             new GOM(fit, new Univariate_FOS(), forcedImprovement),
             new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
             new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
-            new GOM(fit, new IncrementalLT_Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
             new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement)
         };
         

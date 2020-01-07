@@ -24,7 +24,7 @@ vector<uvec> LearnedLT_FOS::getFOS(vector<Individual> &population){
 //    fos = FOSStructures::sortFOSMeanAscending(fos);
 //    fos = FOSStructures::boundFOS(fos, 1, 3);
     
-    FOSStructures::printFOS(fos);
+//    FOSStructures::printFOS(fos);
     
     return fos;
 }
