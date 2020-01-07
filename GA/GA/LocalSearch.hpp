@@ -10,5 +10,21 @@
 #define LocalSearch_hpp
 
 #include <stdio.h>
+#include "GA.hpp"
+
+enum class LocalSearchType {
+    RANDOM, ASCENDING, DESCENDING
+};
+
+class LocalSearch : public GA {
+public:
+    LocalSearch ();
+    LocalSearch (FitnessFunction * fitFunc, LocalSearchType localSearchType);
+    LocalSearchType localSearchType;
+    void round() override;
+    GA* clone() const override;
+    std::string id() override;
+};
 
 #endif /* LocalSearch_hpp */
+
