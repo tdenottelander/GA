@@ -43,6 +43,8 @@ public:
     virtual FitnessFunction* clone() const = 0;
     
     virtual void setLength (int length);
+    
+    virtual arma::uvec transform(arma::uvec &genotype);
 };
 
 class OneMax : public FitnessFunction {

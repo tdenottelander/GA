@@ -12,9 +12,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK2::ARK2() : ARK(13, -1, ark2_optima[13]) {}
+ARK2::ARK2() : ARK(13, true, -1, ark2_optima[13]) {}
 
-ARK2::ARK2(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, maxEvaluations, ark2_optima[problemSize]) {
+ARK2::ARK2(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, ark2_optima[problemSize]) {
     setProblemType(allowIdentityLayers);
 }
 
@@ -23,7 +23,10 @@ void ARK2::display(){
 }
 
 string ARK2::id(){
-    return("ARK-2");
+    if(allowIdentityLayers)
+        return("ARK-2_inclID");
+    else
+        return("ARK-2_exclID");
 }
 
 FitnessFunction* ARK2::clone() const {
@@ -84,4 +87,8 @@ void ARK2::setProblemType(bool allowIdentityLayers){
 
 void ARK2::setLength (int length) {
     totalProblemLength = length;
+}
+
+uvec ARK2::transform(uvec &genotype){
+    return removeIdentities(genotype, 2);
 }

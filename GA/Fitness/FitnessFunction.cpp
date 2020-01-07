@@ -9,11 +9,16 @@
 #include "FitnessFunction.hpp"
 
 using namespace std;
+using namespace arma;
 
 extern int totalEvaluations;
 extern int totalUniqueEvaluations;
+extern int totalTransformedUniqueEvaluations;
+extern bool storeUniqueConvergence;
+extern bool storeTransformedUniqueConvergence;
 extern nlohmann::json convergence;
 extern UniqueSolutions uniqueSolutions;
+extern UniqueSolutions transformedUniqueSolutions;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
@@ -28,14 +33,25 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
     evaluations++;
     totalEvaluations++;
-    convergence["absolute"].push_back(bestIndividual.fitness);
+//    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
+    float roundedFitness = bestIndividual.fitness;
+    convergence["absolute"].push_back(roundedFitness);
 //    convergence["absolute"][to_string(totalEvaluations)] = bestIndividual.fitness;
     
-    if(!uniqueSolutions.contains(ind.genotype)){
+    if(storeUniqueConvergence && !uniqueSolutions.contains(ind.genotype)){
         uniqueSolutions.put(ind.genotype);
         totalUniqueEvaluations++;
-        convergence["unique"].push_back(bestIndividual.fitness);
+        convergence["unique"].push_back(roundedFitness);
 //        convergence["unique"][to_string(totalUniqueEvaluations)] = bestIndividual.fitness;
+    }
+    
+    if(storeTransformedUniqueConvergence){
+        uvec transformedGenotype = transform(ind.genotype);
+        if (!transformedUniqueSolutions.contains(transformedGenotype)){
+            transformedUniqueSolutions.put(transformedGenotype);
+            totalTransformedUniqueEvaluations++;
+            convergence["transformedUnique"].push_back(roundedFitness);
+        }
     }
 }
 
@@ -79,6 +95,12 @@ void FitnessFunction::setProblemType(ProblemType* problemType){
 void FitnessFunction::setLength(int length){
     totalProblemLength = length;
     optimum = length;
+}
+
+// Transforms the genotype (e.g. remove identity layers in ARK)
+// Should be overridden in derived classes
+uvec FitnessFunction::transform(uvec &genotype){
+    return genotype;
 }
 
 

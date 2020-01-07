@@ -18,8 +18,10 @@ extern bool storeConvergence;
 
 int totalEvaluations = 0;
 int totalUniqueEvaluations = 0;
+int totalTransformedUniqueEvaluations = 0;
 nlohmann::json convergence;
 UniqueSolutions uniqueSolutions (0);
+UniqueSolutions transformedUniqueSolutions (0);
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -54,10 +56,12 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
     
     totalEvaluations = 0;
     totalUniqueEvaluations = 0;
+    totalTransformedUniqueEvaluations = 0;
     convergence.clear();
     convergence["absolute"] = {};
     convergence["unique"] = {};
     uniqueSolutions = UniqueSolutions(g->fitFunc_ptr->problemType->alphabet.size());
+    transformedUniqueSolutions = UniqueSolutions(g->fitFunc_ptr->problemType->alphabet.size());
 }
 
 json RoundSchedule::run() {
@@ -123,7 +127,7 @@ json RoundSchedule::run() {
                         bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
                     
-                    if (totalEvaluations > maxEvaluations){
+                    if (maxEvaluations != -1 && totalEvaluations > maxEvaluations){
                         break;
                     }
                     
@@ -172,6 +176,7 @@ json RoundSchedule::run() {
     output["timeTaken"] = stop - start;
     output["evaluations"] = totalEvaluations;
     output["uniqueEvaluations"] = totalUniqueEvaluations;
+    output["transformedUniqueEvaluations"] = totalTransformedUniqueEvaluations;
     if (storeConvergence)
         output["convergence"] = convergence;
     

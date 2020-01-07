@@ -16,7 +16,7 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-ARK::ARK(int problemSize, int maxEvaluations, float optimum) : FitnessFunction(optimum, maxEvaluations) {
+ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum) : FitnessFunction(optimum, maxEvaluations), allowIdentityLayers(allowIdentityLayers) {
     totalProblemLength = problemSize;
 //    setProblemType(allowIdentityLayers);
 }
@@ -112,4 +112,16 @@ void ARK::printArchitecture(vector<int> architecture){
         }
     }
 //    cout << endl;
+}
+
+uvec ARK::removeIdentities(uvec &genotype, int identityLayerIndex){
+    uvec newGenotype (genotype.size());
+    int j = 0;
+    for (int i = 0; i < genotype.size(); i++){
+        if (genotype[i] != identityLayerIndex){
+            newGenotype[j] = genotype[i];
+            j++;
+        }
+    }
+    return newGenotype.head(j);
 }

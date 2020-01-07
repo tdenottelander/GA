@@ -19,7 +19,8 @@
 
 class ARK : public FitnessFunction {
 public:
-    ARK(int problemSize, int maxEvaluations, float optimum);
+    bool allowIdentityLayers;
+    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum);
     float evaluate(Individual &ind) override;
     virtual float query(arma::uvec encoding);
     virtual float query(std::vector<int> encoding);
@@ -30,6 +31,8 @@ public:
 //    FitnessFunction* clone() const override;
     void setLength (int length) override;
     float getOptimum(int problemLength);
+    
+    arma::uvec removeIdentities (arma::uvec &genotype, int identityLayerIndex);
     
     static void printArchitecture(std::vector<int> architecture);
 };

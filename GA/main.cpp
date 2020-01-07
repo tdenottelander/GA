@@ -49,6 +49,8 @@ bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
 bool storeConvergence = false;
+bool storeUniqueConvergence = true;
+bool storeTransformedUniqueConvergence = true;
 
 void roundSchedule(){
     json main_json;
@@ -128,17 +130,19 @@ void roundSchedule(){
 
 void runNasbench(){
     
-    for (int problemSize = 7; problemSize < 8; problemSize++){
+    for (int problemSize = 2; problemSize < 12; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
         json main_json;
         
         // Set to -1 if it should not be a stopping condition
         int maxRounds = -1;
         int maxSeconds = -1;
-        int maxPopSizeLevel = 100;
-        int maxEvaluations = 10000;
+        int maxPopSizeLevel = 500;
+        int maxEvaluations = -1; //10000
         int interval = 4;
-        int repetitions = 5;
+        int repetitions = 100; //100
+        
+        bool scalabilityExperiment = true;
         
         
         main_json["maxPopSizeLevel"] = maxPopSizeLevel;
@@ -184,18 +188,26 @@ void runNasbench(){
                 << " l=" << problemSize
                 << " success=" << result.at("success")
                 << " time=" << result.at("timeTaken")
-                << " evaluations=" << result.at("evaluations") << endl;
+                << " evals=" << result.at("evaluations")
+                << " uniqEvals=" << result.at("uniqueEvaluations")
+                << " trUniqEvals=" << result.at("transformedUniqueEvaluations") << endl;
                 if(result.at("stoppingCondition") == "maxTimeExceeded"){
                     cout << "Max time exceeded, not starting anymore runs" << endl;
                     break;
                 } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
-                    cout << "Max evaluations exceeded, not starting anymore runs" << endl;
                     exceeded = true;
-                    break;
+                    cout << "Max evaluations exceeded";
+                    if (scalabilityExperiment){
+                        cout << ", not starting anymore runs" << endl;;
+                        break;
+                    } else
+                        cout << endl;
                 }
             }
             cout << endl;
-            if(!exceeded){
+            if(scalabilityExperiment && exceeded){
+                continue;
+            } else {
                 json prob_json;
                 prob_json[to_string(problemSize)] = setting;
                 experiments[ga->id()] = prob_json;

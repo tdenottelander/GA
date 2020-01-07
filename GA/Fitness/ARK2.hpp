@@ -26,6 +26,8 @@ public:
     void setProblemType() override;
     void setProblemType(bool allowIdentityLayers);
     void setLength (int length) override;
+    
+    arma::uvec transform (arma::uvec &genotype) override;
 };
 
 static float ark2_optima[] = {31.8, 47.51, 57.23, 66.84, 76.3, 81.01, 85.19, 87.11, 88.63, 90.03, 90.98, 91.06, 91.44, 91.44};
