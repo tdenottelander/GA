@@ -175,3 +175,18 @@ void GreedyAnalysis::findBestRecursion(int length, int alphabetSize, vector<int>
         }
     }
 }
+
+pair<int, int> GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(int length, int alphabetSize, float threshold){
+    int sum = 0;
+    int total = pow(alphabetSize, length);
+    for (int i = 0; i < total; i++){
+        float result = ARK2().query(HashingFunctions::decode(i, length, alphabetSize));
+        if(result >= threshold){
+            sum++;
+        }
+        if(i % (total/10) == 0){
+            cout << ".";
+        }
+    }
+    return pair<int, int>(sum, total);
+}
