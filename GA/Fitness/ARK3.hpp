@@ -10,5 +10,25 @@
 #define ARK3_hpp
 
 #include <stdio.h>
+#include "ARK.hpp"
+
+class ARK3 : public ARK {
+public:
+    ARK3();
+    ARK3(int maxEvaluations);
+    void display() override;
+    std::string id() override;
+    FitnessFunction* clone() const override;
+    
+    float query(arma::uvec encoding) override;
+    float query(std::vector<int> encoding) override;
+    
+    void setProblemType() override;
+    void setLength (int length) override;
+    
+    arma::uvec transform (arma::uvec &genotype) override;
+};
+
+static float ark3_optimum = 92.25;
 
 #endif /* ARK3_hpp */

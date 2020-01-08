@@ -144,6 +144,32 @@ string Univariate_FOS::id() { return "UniUnord"; }
 string Univariate_FOS::toString(){ return "Unordered Univariate FOS"; }
 
 
+/* ------------------------ Triplet FOS ------------------------------------- */
+
+Triplet_FOS::Triplet_FOS(Utility::Order order) : order(order){
+    reinitializeOnNewRound = false;
+}
+
+vector<uvec> Triplet_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getTriplet_FOS(population[0].genotype.size(), order);
+}
+
+string Triplet_FOS::id() { return "Triplet-" + Utility::orderToID(order); }
+string Triplet_FOS::toString(){ return "Triplet FOS"; }
+
+
+/* ------------------------ Triplet Tree FOS ------------------------------------- */
+
+TripletTree_FOS::TripletTree_FOS(Utility::Order order) : order(order){
+    reinitializeOnNewRound = false;
+}
+
+vector<uvec> TripletTree_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getTripletTree_FOS(population[0].genotype.size(), order);
+}
+
+string TripletTree_FOS::id() { return "TripletTree-" + Utility::orderToID(order); }
+string TripletTree_FOS::toString(){ return "Triplet Tree FOS"; }
 
 /* ------------------------ Namespace FOS Structures ------------------------ */
 
@@ -207,9 +233,52 @@ vector<uvec> FOSStructures::getRandomUnivariate_FOS(int n){
     return fos;
 }
 
+vector<uvec> FOSStructures::getTriplet_FOS(int n, Utility::Order order){
+    vector<uvec> fos;
+    fos.reserve(n/3);
+    
+    vector<int> orderArray = Utility::getOrderedArray(n, order);
+    
+    for (int i = 0; i < n/3; i++){
+        uvec subset(3);
+        subset[0] = orderArray[i * 3];
+        subset[1] = orderArray[i * 3 + 1];
+        subset[2] = orderArray[i * 3 + 2];
+        fos.push_back(subset);
+    }
+    return fos;
+}
+
+vector<uvec> FOSStructures::getTripletTree_FOS(int n, Utility::Order order){
+    vector<uvec> fos = getTriplet_FOS(n, order);
+    //Easy hardcoded way
+    for (int i = 0; i < 2; i++){
+        uvec subset (6);
+        for (int j = 0; j < 2; j++){
+            for (int k = 0; k < 3; k++){
+                subset[j*3 + k] = fos[i*2 + j][k];
+            }
+        }
+        fos.push_back(subset);
+    }
+    
+    //Complex modular way, not complete
+//    int currentSize = fos.size();
+//    int count = 10;
+//    do {
+//        for (int i = 0; i < currentSize/2; i++){
+//            uvec subset (fos[i].size() + fos[i+1].size());
+//        }
+//    } while (count >= 2);
+    return fos;
+}
+
 void FOSStructures::printFOS(std::vector<arma::uvec> fos){
     cout << "Learned LT: ";
     for (int i = 0; i < fos.size(); i++){
+        // Uncomment below to display only subsets of a certain length
+//        if (fos[i].size() != 3)
+//            continue;
         cout << "[";
         uvec subset = fos[i];
         for (int j = 0; j < subset.size(); j++){

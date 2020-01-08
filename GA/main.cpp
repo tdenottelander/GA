@@ -20,6 +20,7 @@
 #include "ARK.hpp"
 #include "ARK1.hpp"
 #include "ARK2.hpp"
+#include "ARK3.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -131,7 +132,7 @@ void roundSchedule(){
 
 void runNasbench(){
     
-    for (int problemSize = 2; problemSize < 12; problemSize++){
+    for (int problemSize = 12; problemSize <= 12; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
         json main_json;
         
@@ -153,26 +154,35 @@ void runNasbench(){
         main_json["repetitions"] = repetitions;
         main_json["interleavedRoundInterval"] = interval;
         
-        bool allowIdentityLayers = true;
-        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
+        bool allowIdentityLayers = false;
+//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
+        FitnessFunction * fit = new ARK3(maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
         bool forcedImprovement = true;
         vector<GA*> gaList = {
-            //            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
-            //            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
-            //            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-            //            new RandomSearch(fit),
-            //            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
-            //            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-            //            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
-            //            new GOM(fit, new Univariate_FOS(), forcedImprovement),
-            //            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
-            //            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
-            //            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
-            //            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
-            new LocalSearch(fit, LocalSearchType::RANDOM)
+//            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
+//            new RandomSearch(fit),
+//            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
+//            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
+//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+//            new GOM(fit, new Univariate_FOS(), forcedImprovement),
+//            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
+//            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
+            new LocalSearch(fit, Utility::Order::RANDOM),
+            new LocalSearch(fit, Utility::Order::ASCENDING),
+            new LocalSearch(fit, Utility::Order::DESCENDING),
+//            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
+//            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
+//            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
+//            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
+//            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
+//            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
         };
         
         
@@ -240,14 +250,14 @@ int main(int argc, const char * argv[]) {
 //    GreedyAnalysis::greedyRun();
 //    GreedyAnalysis::greedyBothWays();
 //    GreedyAnalysis::greedyInsideOut();
-//    for(int i = 13; i < 14; i++){
+//    for(int i = 12; i <= 12; i++){
 //        GreedyAnalysis::findBest(i, 2);
 //        cout << endl;
 //    }
 //    pair<int,int> values12 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(12, 3, (91.44-0.001));
 //    cout << values12.first << "/" << values12.second << endl;
 //
-//    pair<int,int> values13 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(13, 3, (91.44-0.001));
+//    pair<int,int> values13 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(12, 2, (92.25-0.001));
 //    cout << values13.first << "/" << values13.second << endl;
     
     return 0;

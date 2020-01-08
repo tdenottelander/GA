@@ -14,6 +14,7 @@
 #include "ARK.hpp"
 #include "ARK1.hpp"
 #include "ARK2.hpp"
+#include "ARK3.hpp"
 
 namespace GreedyAnalysis {
     void greedyRun();

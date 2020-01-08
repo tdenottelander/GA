@@ -12,6 +12,28 @@ using namespace std;
 using namespace chrono;
 using namespace nlohmann;
 
+vector<int> Utility::getOrderedArray(int n, Order order){
+    switch (order) {
+        case Order::RANDOM:
+            return getRandomlyPermutedArrayV2(n);
+        case Order::ASCENDING:
+            return getAscendingArray(n);
+        case Order::DESCENDING:
+            return getDescendingArray(n);
+    }
+}
+
+string Utility::orderToID(Order order){
+    switch (order) {
+        case Order::RANDOM:
+            return "rand";
+        case Order::ASCENDING:
+            return "asc";
+        case Order::DESCENDING:
+            return "desc";
+    }
+}
+
 vector<int> Utility::getRandomlyPermutedArray (int n){
     vector<int> arr;
     arr.reserve(n);

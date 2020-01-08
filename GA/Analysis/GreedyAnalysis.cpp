@@ -159,7 +159,7 @@ void GreedyAnalysis::findBest (int length, int alphabetSize){
 
 void GreedyAnalysis::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int idx){
     if (idx == length){
-        float result = ARK2().query (temp);
+        float result = ARK3().query (temp);
         if (result > bestSoFar){
             bestSoFar = result;
             cout << "best so far: ";
@@ -180,7 +180,7 @@ pair<int, int> GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshol
     int sum = 0;
     int total = pow(alphabetSize, length);
     for (int i = 0; i < total; i++){
-        float result = ARK2().query(HashingFunctions::decode(i, length, alphabetSize));
+        float result = ARK3().query(HashingFunctions::decode(i, length, alphabetSize));
         if(result >= threshold){
             sum++;
         }

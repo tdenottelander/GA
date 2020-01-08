@@ -19,7 +19,11 @@
 extern std::mt19937 rng;
 extern std::uniform_real_distribution<float> dist;
 
+
 namespace Utility{
+    enum class Order {RANDOM, ASCENDING, DESCENDING};
+    std::string orderToID (Order order);
+    std::vector<int> getOrderedArray (int n, Order order);
     std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     std::vector<int> getAscendingArray (int n);

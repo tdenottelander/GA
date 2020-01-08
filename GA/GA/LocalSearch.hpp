@@ -11,16 +11,13 @@
 
 #include <stdio.h>
 #include "GA.hpp"
-
-enum class LocalSearchType {
-    RANDOM, ASCENDING, DESCENDING
-};
+#include "Utility.hpp"
 
 class LocalSearch : public GA {
 public:
     LocalSearch ();
-    LocalSearch (FitnessFunction * fitFunc, LocalSearchType localSearchType);
-    LocalSearchType localSearchType;
+    LocalSearch (FitnessFunction * fitFunc, Utility::Order localSearchOrder);
+    Utility::Order localSearchOrder;
     void round() override;
     GA* clone() const override;
     std::string id() override;

@@ -12,7 +12,7 @@ using namespace std;
 
 LocalSearch::LocalSearch(){}
 
-LocalSearch::LocalSearch (FitnessFunction * fitFunc, LocalSearchType localSearchType) : localSearchType(localSearchType){
+LocalSearch::LocalSearch (FitnessFunction * fitFunc, Utility::Order localSearchOrder) : localSearchOrder(localSearchOrder){
     fitFunc_ptr = fitFunc;
 }
 
@@ -25,15 +25,8 @@ void LocalSearch::round(){
         while(!converged){
             converged = true;
             
-            vector<int> order;
             int probSize = fitFunc_ptr->totalProblemLength;
-            if(localSearchType == LocalSearchType::RANDOM){
-                order = Utility::getRandomlyPermutedArrayV2(probSize);
-            } else if (localSearchType == LocalSearchType::ASCENDING){
-                order = Utility::getAscendingArray(probSize);
-            } else if (localSearchType == LocalSearchType::DESCENDING){
-                order = Utility::getDescendingArray(probSize);
-            }
+            vector<int> order = Utility::getOrderedArray(probSize, localSearchOrder);
             
             for(int index : order){
 
@@ -72,13 +65,5 @@ GA* LocalSearch::clone() const {
 }
 
 string LocalSearch::id() {
-    string main = "LocalSearch-";
-    switch(localSearchType){
-        case LocalSearchType::RANDOM:
-            return main + "rand";
-        case LocalSearchType::ASCENDING:
-            return main + "asc";
-        case LocalSearchType::DESCENDING:
-            return main + "desc";
-    }
+    return ("LocalSearch-" + Utility::orderToID(localSearchOrder));
 }
