@@ -25,6 +25,7 @@
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
 #include "GOM.hpp"
+#include "GOM_LS.hpp"
 #include "SimpleGA.hpp"
 #include "RandomSearch.hpp"
 #include "LocalSearch.hpp"
@@ -131,22 +132,25 @@ void roundSchedule(){
 }
 
 void runNasbench(){
+
+    // Set to -1 if it should not be a stopping condition
+    int maxRounds = -1;
+    int maxSeconds = -1;
+    int maxPopSizeLevel = 500;
+    int maxEvaluations = -1; //10000
+    int interval = 4;
+    int repetitions = 100; //100
     
-    for (int problemSize = 12; problemSize <= 12; problemSize++){
+    //Determines whether convergence data should be saved (which results in increased output file sizes)
+    bool scalabilityExperiment = true;
+    
+    int minProblemSize = 2;
+    int maxProblemSize = 12;
+    
+    for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
+        
         json main_json;
-        
-        // Set to -1 if it should not be a stopping condition
-        int maxRounds = -1;
-        int maxSeconds = -1;
-        int maxPopSizeLevel = 500;
-        int maxEvaluations = -1; //10000
-        int interval = 4;
-        int repetitions = 100; //100
-        
-        bool scalabilityExperiment = true;
-        
-        
         main_json["maxPopSizeLevel"] = maxPopSizeLevel;
         main_json["maxRounds"] = maxRounds;
         main_json["maxSeconds"] = maxSeconds;
@@ -154,9 +158,9 @@ void runNasbench(){
         main_json["repetitions"] = repetitions;
         main_json["interleavedRoundInterval"] = interval;
         
-        bool allowIdentityLayers = false;
-//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
-        FitnessFunction * fit = new ARK3(maxEvaluations);
+        bool allowIdentityLayers = true;
+        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
+//        FitnessFunction * fit = new ARK3(maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
@@ -174,15 +178,17 @@ void runNasbench(){
 //            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
 //            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
 //            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
-            new LocalSearch(fit, Utility::Order::RANDOM),
-            new LocalSearch(fit, Utility::Order::ASCENDING),
-            new LocalSearch(fit, Utility::Order::DESCENDING),
+//            new LocalSearch(fit, Utility::Order::RANDOM),
+//            new LocalSearch(fit, Utility::Order::ASCENDING),
+//            new LocalSearch(fit, Utility::Order::DESCENDING),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
+            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
         };
         
         
