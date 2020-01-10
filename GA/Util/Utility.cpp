@@ -117,6 +117,23 @@ string Utility:: padFrontWith0(string target, int length){
     return target;
 }
 
+string Utility::removeTrailingZeros(string target){
+    int lastNonZero = target.size();
+    for (int i = target.size() - 1; i >= 0; i--){
+        if(target.at(i) != '0'){
+            lastNonZero = i;
+            break;
+        }
+    }
+    return target.substr(0, lastNonZero + 1);
+}
+
+string Utility::padWithSpacesAfter(string target, int length){
+    for (int i = 0; i < length - target.size(); i++)
+        target = target + " ";
+    return target;
+}
+
 void Utility::write(string content, string dir, string suffix){
     ofstream file;
     if(suffix != "") suffix = "_" + suffix;

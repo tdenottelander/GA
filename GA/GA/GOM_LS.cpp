@@ -10,7 +10,7 @@
 
 using namespace std;
 
-GOM_LS::GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearch * ls, bool forcedImprovement = false) : GOM(fitfunc, fos, forcedImprovement), ls(ls) {
+GOM_LS::GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearchBase * ls, bool forcedImprovement = false) : GOM(fitfunc, fos, forcedImprovement), ls(ls) {
     fitFunc_ptr = fitfunc;
 }
 

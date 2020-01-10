@@ -2,7 +2,7 @@
 //  LocalSearch.hpp
 //  GA
 //
-//  Created by Tom den Ottelander on 07/01/2020.
+//  Created by Tom den Ottelander on 10/01/2020.
 //  Copyright © 2020 Tom den Ottelander. All rights reserved.
 //
 
@@ -10,16 +10,12 @@
 #define LocalSearch_hpp
 
 #include <stdio.h>
-#include "GA.hpp"
-#include "Utility.hpp"
+#include "LocalSearchBase.hpp"
 
-class LocalSearch : public GA {
+class LocalSearch : public LocalSearchBase {
 public:
     LocalSearch ();
     LocalSearch (FitnessFunction * fitFunc, Utility::Order localSearchOrder);
-    Utility::Order localSearchOrder;
-    void round() override;
-    void doLocalSearch(Individual &ind, FitnessFunction * fitfunc);
     GA* clone() const override;
     std::string id() override;
 };

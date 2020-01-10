@@ -29,6 +29,7 @@
 #include "SimpleGA.hpp"
 #include "RandomSearch.hpp"
 #include "LocalSearch.hpp"
+#include "LocalSearchStochastic.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -145,7 +146,7 @@ void runNasbench(){
     bool scalabilityExperiment = true;
     
     int minProblemSize = 2;
-    int maxProblemSize = 12;
+    int maxProblemSize = 11;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -187,8 +188,12 @@ void runNasbench(){
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
-            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.1),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.2),
         };
         
         
@@ -201,14 +206,14 @@ void runNasbench(){
                 rs.initialize(ga, problemSize);
                 json result = rs.run();
                 setting[to_string(rep)] = result;
-                cout << "rep" << rep
+                cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
                 << " ga=" << ga->id()
                 << " l=" << problemSize
-                << " success=" << result.at("success")
-                << " time=" << result.at("timeTaken")
-                << " evals=" << result.at("evaluations")
-                << " uniqEvals=" << result.at("uniqueEvaluations")
-                << " trUniqEvals=" << result.at("transformedUniqueEvaluations") << endl;
+                << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
+                << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 6)
+                << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 7)
+                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 7)
+                << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 6) << endl;
                 if(result.at("stoppingCondition") == "maxTimeExceeded"){
                     cout << "Max time exceeded, not starting anymore runs" << endl;
                     break;

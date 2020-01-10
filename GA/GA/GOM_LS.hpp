@@ -11,13 +11,13 @@
 
 #include <stdio.h>
 #include "GOM.hpp"
-#include "LocalSearch.hpp"
+#include "LocalSearchBase.hpp"
 
 class GOM_LS : public GOM {
 public:
-    GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearch * ls, bool forcedImprovement);
+    GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearchBase * ls, bool forcedImprovement);
     
-    LocalSearch *ls;
+    LocalSearchBase *ls;
     
     void round() override;
     

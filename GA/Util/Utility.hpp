@@ -34,6 +34,8 @@ namespace Utility{
     long millis();
     std::string getDateString();
     std::string padFrontWith0(std::string target, int length);
+    std::string removeTrailingZeros(std::string target);
+    std::string padWithSpacesAfter(std::string target, int length);
     void write(std::string content, std::string filename, std::string suffix = "");
     void writeJSON (nlohmann::json content, std::string filename);
     void read(std::string filename);
