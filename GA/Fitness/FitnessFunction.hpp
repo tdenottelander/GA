@@ -20,7 +20,6 @@ public:
     Individual bestIndividual;
     float optimum;
     bool optimumFound;
-    int evaluations;
     int maxEvaluations;
     ProblemType *problemType;
     int totalProblemLength;

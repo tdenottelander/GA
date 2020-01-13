@@ -33,7 +33,10 @@ public:
     
     virtual void initialize();
     
+    void run();
     virtual void round();
+    
+    int findMinimallyNeededPopulationSize(int repetitions, int successesNeeded);
     
     void roundReplacementVariationSelection();
     void roundPOVariationSelection();

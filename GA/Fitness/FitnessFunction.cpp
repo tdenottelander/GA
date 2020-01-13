@@ -21,7 +21,6 @@ FitnessFunction::FitnessFunction(float optimum, int maxEvaluations, ProblemType 
     bestIndividual(0),
     optimum(optimum),
     optimumFound(false),
-    evaluations(0),
     maxEvaluations(maxEvaluations),
     problemType(problemType),
     totalEvaluations(0),
@@ -35,7 +34,6 @@ FitnessFunction::FitnessFunction(float optimum, int maxEvaluations, ProblemType 
 FitnessFunction::FitnessFunction(int maxEvaluations, ProblemType *problemType) :
     bestIndividual(0),
     optimumFound(false),
-    evaluations(0),
     maxEvaluations(maxEvaluations),
     problemType(problemType),
     totalEvaluations(0),
@@ -49,7 +47,6 @@ FitnessFunction::FitnessFunction(int maxEvaluations, ProblemType *problemType) :
 void FitnessFunction::clear(){
     bestIndividual = 0;
     optimumFound = false;
-    evaluations = 0;
     totalEvaluations = 0;
     totalUniqueEvaluations = 0;
     totalTransformedUniqueEvaluations = 0;
@@ -60,7 +57,6 @@ void FitnessFunction::clear(){
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
 void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
-    evaluations++;
     totalEvaluations++;
 //    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
     float roundedFitness = bestIndividual.fitness;

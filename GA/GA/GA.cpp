@@ -23,13 +23,73 @@ GA::GA(FitnessFunction * fitfunc) :
 void GA::initialize(){
     initializeTrueRandomPopulation();
 //    initializeSolvablePopulation();
-    
+    terminated = false;
+    roundsCount = 0;
     initialized = true;
+}
+
+void GA::run(){
+    while(!isConverged()){
+        round();
+    }
 }
 
 void GA::round(){
     roundPOVariationSelection();
     roundsCount++;
+}
+
+int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
+    int left = -1;
+    int right = 2;
+    int populationSize = right;
+    bool doublingPhase = true;
+    while(populationSize != left){
+        int fails = 0;
+        for (int i = 0; i < repetitions; i++){
+            fitFunc_ptr->clear();
+            setPopulationSize(populationSize);
+            initialize();
+            evaluateAll();
+            
+            run();
+            
+            if(!isOptimal()){
+//                cout << "x";
+                fails += 1;
+                if(fails > repetitions - successesNeeded){
+                    break;
+                }
+            } else {
+//                cout << ".";
+            }
+        }
+        
+//        cout << endl;
+        
+        if(fails > repetitions - successesNeeded){
+            if(doublingPhase){
+                left = populationSize;
+                populationSize *= 2;
+                right = populationSize;
+//                cout << "fail(d), now l=" << left << " p=" << populationSize << " r=" << right << endl;
+            } else {
+                left = populationSize;
+                populationSize = left + floor((right - left) / 2);
+//                cout << "fail,    now l=" << left << " p=" << populationSize << " r=" << right << endl;
+            }
+        } else {
+            doublingPhase = false;
+            right = populationSize;
+            populationSize = left + floor((right - left) / 2);
+//            cout << "success, now l=" << left << " p=" << populationSize << " r=" << right << endl;
+        }
+    }
+    
+//    cout << "                                              ";
+    cout << "PROBLEMSIZE = " << fitFunc_ptr->totalProblemLength << "   NEEDED POPULATION SIZE = " << populationSize + 1 << endl;
+//    cout << endl;
+    return populationSize + 1;
 }
 
 void GA::roundReplacementVariationSelection(){
@@ -96,10 +156,11 @@ bool GA::isOptimal(){
 }
 
 int GA::getTotalAmountOfEvaluations(){
-    return fitFunc_ptr->evaluations;
+    return fitFunc_ptr->totalEvaluations;
 }
 
 void GA::initializeTrueRandomPopulation(){
+    population = vector<Individual>();
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
         Individual ind (fitFunc_ptr->totalProblemLength);
@@ -124,6 +185,7 @@ void GA::initializeSolvablePopulation(){
 }
 
 void GA::initializeUninitializedPopulation(){
+    population = vector<Individual>();
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
         Individual ind (fitFunc_ptr->totalProblemLength);
