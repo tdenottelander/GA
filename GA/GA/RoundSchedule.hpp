@@ -33,7 +33,7 @@ public:
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
     RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval);
-    void initialize(GA *ga, int problemSize);
+    void initialize(GA *ga, int problemSize, bool nonIMSmode = false, int nonIMSpopsize = 0);
     nlohmann::json run();
     void terminateGAs(int n);
     int getAmountOfEvaluations();

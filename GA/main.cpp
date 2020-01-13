@@ -141,13 +141,14 @@ void runNasbench(){
     int maxPopSizeLevel = 500;
     int maxEvaluations = -1; //10000
     int interval = 4;
-    int repetitions = 100; //100
+    int repetitions = 2; //100
+    bool nonIMS = false;
     
     //Determines whether convergence data should be saved (which results in increased output file sizes)
     bool scalabilityExperiment = true;
     
-    int minProblemSize = 2;
-    int maxProblemSize = 11;
+    int minProblemSize = 12;
+    int maxProblemSize = 12;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -200,16 +201,24 @@ void runNasbench(){
         
         json experiments;
         for(GA* ga : gaList){
+            string gaID = ga->id();
+            int populationSize = -1;
+            if (nonIMS){
+                populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
+                cout << "Needed popsize = " << populationSize << endl;
+                gaID += ("_FixedPop");
+            }
+            
             bool exceeded = false;
             json setting;
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
                 ga->fitFunc_ptr->clear();
-                rs.initialize(ga, problemSize);
+                rs.initialize(ga, problemSize, nonIMS, populationSize);
                 json result = rs.run();
                 setting[to_string(rep)] = result;
                 cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
-                << " ga=" << ga->id()
+                << " ga=" << gaID
                 << " l=" << problemSize
                 << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
                 << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 6)
@@ -235,7 +244,7 @@ void runNasbench(){
             } else {
                 json prob_json;
                 prob_json[to_string(problemSize)] = setting;
-                experiments[ga->id()] = prob_json;
+                experiments[gaID] = prob_json;
             }
         }
         

@@ -40,6 +40,7 @@ void GA::round(){
 }
 
 int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
+    GA* ga = clone();
     int left = -1;
     int right = 2;
     int populationSize = right;
@@ -47,14 +48,14 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
     while(populationSize != left){
         int fails = 0;
         for (int i = 0; i < repetitions; i++){
-            fitFunc_ptr->clear();
-            setPopulationSize(populationSize);
-            initialize();
-            evaluateAll();
+            ga->fitFunc_ptr->clear();
+            ga->setPopulationSize(populationSize);
+            ga->initialize();
+            ga->evaluateAll();
             
-            run();
+            ga->run();
             
-            if(!isOptimal()){
+            if(!ga->isOptimal()){
 //                cout << "x";
                 fails += 1;
                 if(fails > repetitions - successesNeeded){
@@ -89,6 +90,7 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
 //    cout << "                                              ";
     cout << "PROBLEMSIZE = " << fitFunc_ptr->totalProblemLength << "   NEEDED POPULATION SIZE = " << populationSize + 1 << endl;
 //    cout << endl;
+    ga->fitFunc_ptr->clear();
     return populationSize + 1;
 }
 

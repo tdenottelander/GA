@@ -26,7 +26,12 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
     interval(interleavedRoundInterval)
 {}
 
-void RoundSchedule::initialize(GA *g, int problemSize) {
+void RoundSchedule::initialize(GA *g, int problemSize, bool nonIMSmode, int nonIMSpopsize) {
+    int beginPopSize = 2;
+    if(nonIMSmode){
+        maxPopSizeLevel = 1;
+        beginPopSize = nonIMSpopsize;
+    }
     gaList.reserve(maxPopSizeLevel);
 
     output["fitness"] = g->fitFunc_ptr->id();
@@ -41,7 +46,7 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);
-        int popSize = pow(2, i + 1);
+        int popSize = pow(beginPopSize, i + 1);
         GA* newGA = g->clone();
         newGA->setPopulationSize(popSize);
         gaList.push_back(newGA);
@@ -126,6 +131,11 @@ json RoundSchedule::run() {
                         // Set all previous GA's to terminated
                         terminateGAs(i);
                         lowestActiveGAIdx = i + 1;
+                        // Break out, because the GA with highest popSize has converged
+                        if(lowestActiveGAIdx == maxPopSizeLevel){
+                            done = true;
+                            break;
+                        }
                         continue;
 
                         // Else if it has a higher fitness than the previous GA, terminate all before this one
