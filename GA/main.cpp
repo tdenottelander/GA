@@ -21,6 +21,7 @@
 #include "ARK1.hpp"
 #include "ARK2.hpp"
 #include "ARK3.hpp"
+#include "ARK4.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -170,30 +171,30 @@ void runNasbench(){
 //            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
 //            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
 //            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-//            new RandomSearch(fit),
 //            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
-//            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
 //            new GOM(fit, new Univariate_FOS(), forcedImprovement),
 //            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
 //            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
 //            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
-//            new LocalSearch(fit, Utility::Order::RANDOM),
-//            new LocalSearch(fit, Utility::Order::ASCENDING),
-//            new LocalSearch(fit, Utility::Order::DESCENDING),
+            new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
-//            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
 //            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+            new RandomSearch(fit),
+            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
+//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+            new LocalSearch(fit, Utility::Order::RANDOM),
+//            new LocalSearch(fit, Utility::Order::ASCENDING),
+//            new LocalSearch(fit, Utility::Order::DESCENDING),
             new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
-            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
-            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.1),
-            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.2),
+//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.1),
+//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.2),
         };
         
         
@@ -271,6 +272,9 @@ int main(int argc, const char * argv[]) {
 //
 //    pair<int,int> values13 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(12, 2, (92.25-0.001));
 //    cout << values13.first << "/" << values13.second << endl;
+    
+//    pair<int,int> values10 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(5, 3, (89.26-0.001));
+//    cout << values10.first << "/" << values10.second << endl;
     
     return 0;
 }

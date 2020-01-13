@@ -10,5 +10,26 @@
 #define ARK4_hpp
 
 #include <stdio.h>
+#include "ARK.hpp"
+
+class ARK4 : public ARK {
+public:
+    ARK4();
+    ARK4(int problemSize, bool allowIdentityLayers, int maxEvaluations);
+    void display() override;
+    std::string id() override;
+    FitnessFunction* clone() const override;
+    
+    float query(arma::uvec encoding) override;
+    float query(std::vector<int> encoding) override;
+    int getNumParams(std::vector<int> encoding);
+
+    ProblemType* getProblemType(bool allowIdentityLayers);
+    void setLength (int length) override;
+    
+    arma::uvec transform (arma::uvec &genotype) override;
+};
+
+static float ark4_optima[] = {54.51, 75.01, 83.53, 86.21, 87.87, 87.87, 89.26, 90.18, 90.83, 91.51, 91.81, 92.17};
 
 #endif /* ARK4_hpp */
