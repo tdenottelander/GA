@@ -10,8 +10,6 @@
 
 using namespace std;
 
-LocalSearchStochastic::LocalSearchStochastic(){}
-
 LocalSearchStochastic::LocalSearchStochastic (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity) : LocalSearchBase(fitFunc, localSearchOrder, stochasticity) {}
 
 GA* LocalSearchStochastic::clone() const {

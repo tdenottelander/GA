@@ -16,7 +16,7 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum) : FitnessFunction(optimum, maxEvaluations), allowIdentityLayers(allowIdentityLayers) {
+ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType) : FitnessFunction(optimum, maxEvaluations, problemType), allowIdentityLayers(allowIdentityLayers) {
     totalProblemLength = problemSize;
 //    setProblemType(allowIdentityLayers);
 }

@@ -16,20 +16,14 @@ extern bool printPopulationAfterRound;
 extern bool printPopulationOnOptimum;
 extern bool storeConvergence;
 
-int totalEvaluations = 0;
-int totalUniqueEvaluations = 0;
-int totalTransformedUniqueEvaluations = 0;
 nlohmann::json convergence;
-UniqueSolutions uniqueSolutions (0);
-UniqueSolutions transformedUniqueSolutions (0);
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
     maxPopSizeLevel(maxPopSizeLevel),
     maxSeconds(maxSeconds),
     maxEvaluations(maxEvaluations),
-    interval(interleavedRoundInterval),
-    bestIndividualOverall(0)
+    interval(interleavedRoundInterval)
 {}
 
 void RoundSchedule::initialize(GA *g, int problemSize) {
@@ -41,27 +35,22 @@ void RoundSchedule::initialize(GA *g, int problemSize) {
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
+    g->fitFunc_ptr->setLength(problemSize);
+    
     //TODO: Refactor as armadillo uvec
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);
         int popSize = pow(2, i + 1);
         GA* newGA = g->clone();
-        newGA->fitFunc_ptr = g->fitFunc_ptr->clone();
-        newGA->fitFunc_ptr->setLength(problemSize);
         newGA->setPopulationSize(popSize);
         gaList.push_back(newGA);
     }
     whichShouldRun[0] = 1;
     
-    totalEvaluations = 0;
-    totalUniqueEvaluations = 0;
-    totalTransformedUniqueEvaluations = 0;
     convergence.clear();
     convergence["absolute"] = {};
     convergence["unique"] = {};
-    uniqueSolutions = UniqueSolutions(g->fitFunc_ptr->problemType->alphabet.size());
-    transformedUniqueSolutions = UniqueSolutions(g->fitFunc_ptr->problemType->alphabet.size());
 }
 
 json RoundSchedule::run() {
@@ -79,7 +68,7 @@ json RoundSchedule::run() {
         } else if (maxSeconds != -1 && millis() - start > maxSeconds * 1000) {
             output["stoppingCondition"] = "maxTimeExceeded";
             break;
-        } else if (maxEvaluations != -1 && totalEvaluations > maxEvaluations){
+        } else if (maxEvaluations != -1 && gaList[0]->fitFunc_ptr->totalEvaluations > maxEvaluations){
             output["stoppingCondition"] = "maxEvaluationsExceeded";
             break;
         }
@@ -110,24 +99,16 @@ json RoundSchedule::run() {
                         ga->initialize();
                         // Define the first ever individual as bestIndividualOverall
                         if(i == 0){
-                            bestIndividualOverall = ga->population[0].copy();
+                            ga->fitFunc_ptr->bestIndividual = ga->population[0].copy();
                         }
-                        ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
                         ga->evaluateAll();
-                        bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
                     }
                     
-                    ga->fitFunc_ptr->bestIndividual = bestIndividualOverall.copy();
-
                     // Do the round on this GA
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
-                    if(ga->fitFunc_ptr->bestIndividual.fitness > bestIndividualOverall.fitness){
-                        bestIndividualOverall = ga->fitFunc_ptr->bestIndividual.copy();
-                    }
-                    
-                    if (maxEvaluations != -1 && totalEvaluations > maxEvaluations){
+                    if (maxEvaluations != -1 && ga->fitFunc_ptr->totalEvaluations > maxEvaluations){
                         break;
                     }
                     
@@ -174,9 +155,9 @@ json RoundSchedule::run() {
     
     long stop = millis();
     output["timeTaken"] = stop - start;
-    output["evaluations"] = totalEvaluations;
-    output["uniqueEvaluations"] = totalUniqueEvaluations;
-    output["transformedUniqueEvaluations"] = totalTransformedUniqueEvaluations;
+    output["evaluations"] = gaList[0]->fitFunc_ptr->totalEvaluations;
+    output["uniqueEvaluations"] = gaList[0]->fitFunc_ptr->totalUniqueEvaluations;
+    output["transformedUniqueEvaluations"] = gaList[0]->fitFunc_ptr->totalTransformedUniqueEvaluations;
     if (storeConvergence)
         output["convergence"] = convergence;
     

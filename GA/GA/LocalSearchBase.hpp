@@ -15,7 +15,6 @@
 
 class LocalSearchBase : public GA {
 protected:
-    LocalSearchBase ();
     LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity);
     float stochasticity;
 public:

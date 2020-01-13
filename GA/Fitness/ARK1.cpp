@@ -12,11 +12,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK1::ARK1() : ARK(7, true, -1, ark1_optima[7]) {}
+ARK1::ARK1() : ARK(7, true, -1, ark1_optima[7], getProblemType(true)) {}
 
-ARK1::ARK1(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, ark1_optima[problemSize]) {
-    setProblemType(allowIdentityLayers);
-}
+ARK1::ARK1(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, ark1_optima[problemSize], getProblemType(allowIdentityLayers)) {}
 
 void ARK1::display(){
     std::cout << "ARK-1 fitness function" << std::endl;
@@ -69,9 +67,7 @@ float ARK1::query(vector<int> encoding){
     return query(uvecEncoding);
 }
 
-void ARK1::setProblemType(){}
-
-void ARK1::setProblemType(bool allowIdentityLayers){
+ProblemType* ARK1::getProblemType(bool allowIdentityLayers){
     // 0 = 3x3 convolution
     // 1 = 3x3 convolution with stride 2
     // 2 = 5x5 convolution
@@ -81,7 +77,7 @@ void ARK1::setProblemType(bool allowIdentityLayers){
         alphabet = {0,1,2,3};
     else
         alphabet = {0,1,2};
-    FitnessFunction::setProblemType(new AlphabetProblemType(alphabet));
+    return new AlphabetProblemType(alphabet);
 }
 
 void ARK1::setLength (int length) {

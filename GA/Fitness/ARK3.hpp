@@ -23,7 +23,7 @@ public:
     float query(arma::uvec encoding) override;
     float query(std::vector<int> encoding) override;
     
-    void setProblemType() override;
+    ProblemType* getProblemType();
     void setLength (int length) override;
     
     arma::uvec transform (arma::uvec &genotype) override;

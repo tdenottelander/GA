@@ -29,7 +29,7 @@ public:
     bool initialized;
     int roundsCount;
     
-    GA();
+    GA(FitnessFunction * fitfunc);
     
     virtual void initialize();
     

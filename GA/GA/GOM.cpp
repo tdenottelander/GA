@@ -10,8 +10,7 @@
 
 using namespace std;
 
-GOM::GOM(FitnessFunction * fitfunc, FOS *fos, bool forcedImprovement = false) : GA(), fos(fos), gom_variation(*new GOM_Variation(forcedImprovement)) {
-    fitFunc_ptr = fitfunc;
+GOM::GOM(FitnessFunction * fitfunc, FOS *fos, bool forcedImprovement = false) : GA(fitfunc), fos(fos), gom_variation(*new GOM_Variation(forcedImprovement)) {
 }
 
 void GOM::initialize() {

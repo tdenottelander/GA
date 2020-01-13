@@ -32,7 +32,6 @@ public:
     nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
-    Individual bestIndividualOverall;
     RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval);
     void initialize(GA *ga, int problemSize);
     nlohmann::json run();

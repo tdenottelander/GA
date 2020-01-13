@@ -14,7 +14,6 @@
 
 class LocalSearch : public LocalSearchBase {
 public:
-    LocalSearch ();
     LocalSearch (FitnessFunction * fitFunc, Utility::Order localSearchOrder);
     GA* clone() const override;
     std::string id() override;

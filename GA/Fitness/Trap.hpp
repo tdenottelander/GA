@@ -22,7 +22,7 @@ public:
     float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;
     std::string id() override;
-    void setProblemType() override;
+    ProblemType* getProblemType();
     FitnessFunction* clone() const override;
     void setLength (int length) override;
 };

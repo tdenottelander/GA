@@ -14,7 +14,6 @@
 
 class LocalSearchStochastic : public LocalSearchBase {
 public:
-    LocalSearchStochastic ();
     LocalSearchStochastic (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity);
     GA* clone() const override;
     std::string id() override;

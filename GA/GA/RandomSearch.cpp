@@ -10,11 +10,7 @@
 
 using namespace std;
 
-RandomSearch::RandomSearch(){}
-
-RandomSearch::RandomSearch (FitnessFunction * fitFunc){
-    fitFunc_ptr = fitFunc;
-}
+RandomSearch::RandomSearch (FitnessFunction * fitFunc) : GA(fitFunc){}
 
 void RandomSearch::round(){
     GA::initializeTrueRandomPopulation();

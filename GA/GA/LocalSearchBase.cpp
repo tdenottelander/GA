@@ -10,11 +10,7 @@
 
 using namespace std;
 
-LocalSearchBase::LocalSearchBase(){}
-
-LocalSearchBase::LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity) : localSearchOrder(localSearchOrder), stochasticity(stochasticity){
-    fitFunc_ptr = fitFunc;
-}
+LocalSearchBase::LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity) : GA(fitFunc),  localSearchOrder(localSearchOrder), stochasticity(stochasticity){}
 
 void LocalSearchBase::round(){
     

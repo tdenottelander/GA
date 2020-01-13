@@ -20,7 +20,7 @@
 class ARK : public FitnessFunction {
 public:
     bool allowIdentityLayers;
-    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum);
+    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType);
     float evaluate(Individual &ind) override;
     virtual float query(arma::uvec encoding);
     virtual float query(std::vector<int> encoding);

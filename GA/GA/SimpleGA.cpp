@@ -9,13 +9,7 @@
 #include "SimpleGA.hpp"
 using namespace std;
 
-SimpleGA::SimpleGA(Variation * variation, Selection * selection) : GA() {
-}
-
-SimpleGA::SimpleGA() : GA() {}
-
-SimpleGA::SimpleGA (FitnessFunction * fitFunc, Variation * var, Selection * sel){
-    fitFunc_ptr = fitFunc;
+SimpleGA::SimpleGA (FitnessFunction * fitFunc, Variation * var, Selection * sel) : GA(fitFunc) {
     variation_ptr = var;
     selection_ptr = sel;
 }

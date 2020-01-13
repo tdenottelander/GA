@@ -10,9 +10,7 @@
 
 using namespace std;
 
-GOM_LS::GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearchBase * ls, bool forcedImprovement = false) : GOM(fitfunc, fos, forcedImprovement), ls(ls) {
-    fitFunc_ptr = fitfunc;
-}
+GOM_LS::GOM_LS(FitnessFunction * fitfunc, FOS *fos, LocalSearchBase * ls, bool forcedImprovement = false) : GOM(fitfunc, fos, forcedImprovement), ls(ls) {}
 
 void GOM_LS::round() {
     vector<Individual> offspring = gom_variation.variate(population);

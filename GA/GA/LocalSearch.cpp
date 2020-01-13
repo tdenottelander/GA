@@ -10,8 +10,6 @@
 
 using namespace std;
 
-LocalSearch::LocalSearch(){}
-
 LocalSearch::LocalSearch (FitnessFunction * fitFunc, Utility::Order localSearchOrder) : LocalSearchBase(fitFunc, localSearchOrder, 0) {}
 
 GA* LocalSearch::clone() const {

@@ -25,14 +25,21 @@ public:
     ProblemType *problemType;
     int totalProblemLength;
     
-    FitnessFunction(float optimum, int maxEvaluations);
-    FitnessFunction(int maxEvaluations);
+    int totalEvaluations;
+    int totalUniqueEvaluations;
+    int totalTransformedUniqueEvaluations;
+    UniqueSolutions uniqueSolutions;
+    UniqueSolutions transformedUniqueSolutions;
+    
+    FitnessFunction(float optimum, int maxEvaluations, ProblemType *problemType);
+    FitnessFunction(int maxEvaluations, ProblemType *problemType);
+    
+    void clear();
     
     virtual float evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);
     virtual void display();
     virtual std::string id();
-    virtual void setProblemType() = 0;
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
@@ -54,7 +61,7 @@ public:
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
-    void setProblemType() override;
+    ProblemType* getProblemType();
     FitnessFunction* clone() const override;
 };
 
@@ -66,7 +73,7 @@ public:
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
-    void setProblemType() override;
+    ProblemType* getProblemType();
     FitnessFunction* clone() const override;
 };
 
@@ -76,7 +83,7 @@ public:
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
-    void setProblemType() override;
+    ProblemType* getProblemType();
     FitnessFunction* clone() const override;
     void setLength (int length) override;
 };

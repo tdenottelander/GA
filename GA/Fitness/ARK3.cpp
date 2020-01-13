@@ -12,11 +12,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK3::ARK3() : ARK(12, false, -1, ark3_optimum) {}
+ARK3::ARK3() : ARK(12, false, -1, ark3_optimum, getProblemType()) {}
 
-ARK3::ARK3(int maxEvaluations) : ARK(12, false, maxEvaluations, ark3_optimum) {
-    setProblemType();
-}
+ARK3::ARK3(int maxEvaluations) : ARK(12, false, maxEvaluations, ark3_optimum, getProblemType()) {}
 
 void ARK3::display(){
     cout << "ARK-3 fitness function" << endl;
@@ -67,10 +65,10 @@ float ARK3::query(vector<int> encoding){
     return query(uvecEncoding);
 }
 
-void ARK3::setProblemType(){
+ProblemType* ARK3::getProblemType(){
     // 0 = 3x3 convolution
     // 1 = 2x2 max pooling
-    FitnessFunction::setProblemType(new AlphabetProblemType({0,1}));
+    return new AlphabetProblemType({0,1});
 }
 
 void ARK3::setLength (int length) {

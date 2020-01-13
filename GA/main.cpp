@@ -203,6 +203,7 @@ void runNasbench(){
             json setting;
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
+                ga->fitFunc_ptr->clear();
                 rs.initialize(ga, problemSize);
                 json result = rs.run();
                 setting[to_string(rep)] = result;

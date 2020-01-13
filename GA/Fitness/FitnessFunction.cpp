@@ -11,21 +11,50 @@
 using namespace std;
 using namespace arma;
 
-extern int totalEvaluations;
-extern int totalUniqueEvaluations;
-extern int totalTransformedUniqueEvaluations;
 extern bool storeUniqueConvergence;
 extern bool storeTransformedUniqueConvergence;
 extern nlohmann::json convergence;
-extern UniqueSolutions uniqueSolutions;
-extern UniqueSolutions transformedUniqueSolutions;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(float optimum, int maxEvaluations) : bestIndividual(0), optimum(optimum), optimumFound(false), evaluations(0), maxEvaluations(maxEvaluations) {
+FitnessFunction::FitnessFunction(float optimum, int maxEvaluations, ProblemType *problemType) :
+    bestIndividual(0),
+    optimum(optimum),
+    optimumFound(false),
+    evaluations(0),
+    maxEvaluations(maxEvaluations),
+    problemType(problemType),
+    totalEvaluations(0),
+    totalUniqueEvaluations(0),
+    totalTransformedUniqueEvaluations(0),
+    uniqueSolutions(problemType->alphabet.size()),
+    transformedUniqueSolutions(problemType->alphabet.size())
+{
 }
 
-FitnessFunction::FitnessFunction(int maxEvaluations) : bestIndividual(0), optimumFound(false), evaluations(0), maxEvaluations(maxEvaluations) {
+FitnessFunction::FitnessFunction(int maxEvaluations, ProblemType *problemType) :
+    bestIndividual(0),
+    optimumFound(false),
+    evaluations(0),
+    maxEvaluations(maxEvaluations),
+    problemType(problemType),
+    totalEvaluations(0),
+    totalUniqueEvaluations(0),
+    totalTransformedUniqueEvaluations(0),
+    uniqueSolutions(problemType->alphabet.size()),
+    transformedUniqueSolutions(problemType->alphabet.size())
+{
+}
+
+void FitnessFunction::clear(){
+    bestIndividual = 0;
+    optimumFound = false;
+    evaluations = 0;
+    totalEvaluations = 0;
+    totalUniqueEvaluations = 0;
+    totalTransformedUniqueEvaluations = 0;
+    uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
+    transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
 }
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
@@ -86,11 +115,6 @@ string FitnessFunction::id() {
     return "base";
 }
 
-// Sets the problem type
-void FitnessFunction::setProblemType(ProblemType* problemType){
-    this->problemType = problemType;
-}
-
 // Sets the length and the optimum
 void FitnessFunction::setLength(int length){
     totalProblemLength = length;
@@ -106,8 +130,8 @@ uvec FitnessFunction::transform(uvec &genotype){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations) { setProblemType(); }
-OneMax::OneMax(int maxEvaluations) : FitnessFunction(maxEvaluations) { setProblemType(); }
+OneMax::OneMax(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations, getProblemType()) {}
+OneMax::OneMax(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -126,8 +150,8 @@ string OneMax::id() {
     return "OM";
 }
 
-void OneMax::setProblemType(){
-    FitnessFunction::setProblemType(new BinaryProblemType());
+ProblemType* OneMax::getProblemType(){
+    return new BinaryProblemType();
 }
 
 FitnessFunction* OneMax::clone() const {
@@ -139,11 +163,11 @@ FitnessFunction* OneMax::clone() const {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations) { setProblemType(); }
-LeadingOnes::LeadingOnes(int maxEvaluations) : FitnessFunction(maxEvaluations) { setProblemType(); }
+LeadingOnes::LeadingOnes(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations, getProblemType()) {}
+LeadingOnes::LeadingOnes(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
 
-void LeadingOnes::setProblemType(){
-    FitnessFunction::setProblemType(new BinaryProblemType());
+ProblemType* LeadingOnes::getProblemType(){
+    return new BinaryProblemType();
 }
 
 float LeadingOnes::evaluate(Individual &ind) {
@@ -179,9 +203,7 @@ string LeadingOnes::id() {
 
 /* ------------------------ Non-Binary Max Fitness Function ------------------------ */
 
-NonBinaryMax::NonBinaryMax(int maxEvaluations) : FitnessFunction(maxEvaluations) {
-    setProblemType();
-}
+NonBinaryMax::NonBinaryMax(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
 
 //TODO: FINISH IMPLEMENTATION OF NONBINARY MAX FITNESS FUNCTION
 
@@ -204,9 +226,9 @@ string NonBinaryMax::id() {
     return "NBMax";
 }
 
-void NonBinaryMax::setProblemType() {
+ProblemType* NonBinaryMax::getProblemType(){
     vector<int> vec = {0, 1, 2, 3, 4, 5};
-    FitnessFunction::setProblemType(new AlphabetProblemType(vec));
+    return new AlphabetProblemType(vec);
 }
 
 void NonBinaryMax::setLength(int length){

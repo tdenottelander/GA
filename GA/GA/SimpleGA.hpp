@@ -15,8 +15,6 @@
 
 class SimpleGA : public GA {
 public:
-    SimpleGA (Variation * variation, Selection * selection);
-    SimpleGA ();
     SimpleGA (FitnessFunction * fitFunc, Variation * var, Selection * sel);
     
     void round() override;

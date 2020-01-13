@@ -14,7 +14,6 @@
 
 class RandomSearch : public GA {
 public:
-    RandomSearch ();
     RandomSearch (FitnessFunction * fitFunc);
     void round() override;
     GA* clone() const override;

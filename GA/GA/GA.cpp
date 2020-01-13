@@ -13,10 +13,11 @@ using namespace std;
 
 /* ------------------------ Genetic Algorithm ------------------------ */
 
-GA::GA() :
+GA::GA(FitnessFunction * fitfunc) :
     terminated(false),
     initialized(false),
-    roundsCount(0)
+    roundsCount(0),
+    fitFunc_ptr(fitfunc)
 {}
 
 void GA::initialize(){
@@ -102,8 +103,7 @@ void GA::initializeTrueRandomPopulation(){
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
         Individual ind (fitFunc_ptr->totalProblemLength);
-        ProblemType* problemtype = fitFunc_ptr->problemType;
-        vector<int> alphabet = problemtype->alphabet;
+        vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
         ind.initialize(fitFunc_ptr->problemType->alphabet);
         population.push_back(ind);
     }
