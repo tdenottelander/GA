@@ -20,19 +20,21 @@
 class ARK : public FitnessFunction {
 public:
     bool allowIdentityLayers;
-    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType);
+    int identityLayer;
+    int jsonAccuracyIndex;
+    std::string folder;
+    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
     float evaluate(Individual &ind) override;
-    virtual float query(arma::uvec encoding);
-    virtual float query(std::vector<int> encoding);
+    float query(arma::uvec encoding);
+    float query(std::vector<int> encoding);
+    int getNumParams(std::vector<int> encoding);
     void display() override;
     std::string id() override;
-//    void setProblemType() override;
-//    void setProblemType(bool allowIdentityLayers);
-//    FitnessFunction* clone() const override;
     void setLength (int length) override;
     float getOptimum(int problemLength);
     
     arma::uvec removeIdentities (arma::uvec &genotype, int identityLayerIndex);
+    arma::uvec transform(arma::uvec &genotype) override;
     
     static void printArchitecture(std::vector<int> architecture);
 };

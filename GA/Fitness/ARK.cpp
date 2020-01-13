@@ -16,7 +16,7 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType) : FitnessFunction(optimum, maxEvaluations, problemType), allowIdentityLayers(allowIdentityLayers) {
+ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) : FitnessFunction(optimum, maxEvaluations, problemType), allowIdentityLayers(allowIdentityLayers), identityLayer(identity), jsonAccuracyIndex(jsonAccuracyIndex), folder(folder) {
     totalProblemLength = problemSize;
 //    setProblemType(allowIdentityLayers);
 }
@@ -32,31 +32,28 @@ float ARK::evaluate(Individual &ind){
 
 //// Returns the fitness of the architecture passed by its encoding by querying the benchmark
 float ARK::query(uvec encoding){
-//    //TODO: Implement this
-//    //Transform encoding into string
-//    string layers;
-//    for (int i : encoding){
-//        //3 is the identity layer
-//        if(i != 3){
-//            layers += to_string(i);
-//        }
-//    }
-//
-//    //Prepend "model_"
-//    //Append ".json"
-////    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/nas_res/model_" + layers + ".json";
-//    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/" + data_folder + "/model_" + layers + ".json";
-//
-//    //Load file
-//    ifstream ifs(layers);
-//    json rawdata = json::parse(ifs);
-//
-//    //Retrieve the correct value (validation accuracy at epoch 120)
-//    float result = rawdata["val_acc_ensemble"].at(7);
-//
-//    //return result
-//    return result;
-    return -1.0;
+    //Transform encoding into string
+    string layers;
+    for (int i : encoding){
+        //ignore identity layer
+        if(i != identityLayer){
+            layers += to_string(i);
+        }
+    }
+
+    //Prepend "model_"
+    //Append ".json"
+    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/" + folder + "/model_" + layers + ".json";
+
+    //Load file
+    ifstream ifs(layers);
+    json rawdata = json::parse(ifs);
+
+    //Retrieve the correct value (validation accuracy at epoch 120)
+    float result = rawdata["val_acc_ensemble"].at(jsonAccuracyIndex);
+
+    //return result
+    return result;
 }
 
 // Returns the fitness of the architecture passed by its encoding (in vector<int>)
@@ -66,7 +63,19 @@ float ARK::query(vector<int> encoding){
         uvecEncoding[i] = encoding[i];
     }
     return query(uvecEncoding);
-//    return -1.0;
+}
+
+int ARK::getNumParams(vector<int> encoding){
+    string layers;
+    for (int i : encoding){
+        if(i != identityLayer){
+            layers += to_string(i);
+        }
+    }
+    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/" + folder + "/model_" + layers + ".json";
+    ifstream ifs(layers);
+    json rawdata = json::parse(ifs);
+    return rawdata["number_of_parameters"];
 }
 
 void ARK::display(){
@@ -76,25 +85,6 @@ void ARK::display(){
 string ARK::id(){
     return ("ARK-base");
 }
-
-//void ARK::setProblemType(){}
-//
-//void ARK::setProblemType(bool allowIdentityLayers){
-//    // 0 = 3x3 convolution
-//    // 1 = 3x3 convolution with stride 2
-//    // 2 = 5x5 convolution
-//    // 3 = identity
-//    vector<int> alphabet;
-//    if(allowIdentityLayers)
-//        alphabet = {0,1,2,3};
-//    else
-//        alphabet = {0,1,2};
-//    FitnessFunction::setProblemType(new AlphabetProblemType(alphabet));
-//}
-
-//FitnessFunction* ARK::clone() const {
-//    return new ARK(static_cast<const ARK&>(*this));
-//}
 
 void ARK::setLength (int length){
     totalProblemLength = length;
@@ -124,4 +114,9 @@ uvec ARK::removeIdentities(uvec &genotype, int identityLayerIndex){
         }
     }
     return newGenotype.head(j);
+}
+
+
+uvec ARK::transform(uvec &genotype){
+    return removeIdentities(genotype, identityLayer);
 }

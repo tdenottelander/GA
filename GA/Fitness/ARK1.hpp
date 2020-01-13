@@ -20,9 +20,6 @@ public:
     std::string id() override;
     FitnessFunction* clone() const override;
     
-    float query(arma::uvec encoding) override;
-    float query(std::vector<int> encoding) override;
-    
     ProblemType* getProblemType(bool allowIdentityLayers);
     void setLength (int length) override;
     
