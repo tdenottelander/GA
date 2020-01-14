@@ -154,6 +154,17 @@ void Utility::writeJSON(json content, string filename){
     file.close();
 }
 
+json Utility::readJSON(string filename){
+    ifstream file;
+    file.open(filename);
+    if(!file){
+        cerr << "Unable to open file " + filename;
+        exit(1);   // call system to stop
+    }
+    json result = json::parse(file);
+    return result;
+}
+
 void Utility::read(string filename){
     ifstream file;
     file.open(filename);

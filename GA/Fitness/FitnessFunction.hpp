@@ -33,7 +33,7 @@ public:
     FitnessFunction(float optimum, int maxEvaluations, ProblemType *problemType);
     FitnessFunction(int maxEvaluations, ProblemType *problemType);
     
-    void clear();
+    virtual void clear();
     
     virtual float evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);

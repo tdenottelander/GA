@@ -167,7 +167,9 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers, maxEvaluations);
 //        FitnessFunction * fit = new ARK3(maxEvaluations);
-        FitnessFunction * fit = new NK(problemSize, 3, false, 3, maxEvaluations);
+        int blocksize = 3;
+        int alphabetsize = 3;
+        FitnessFunction * fit = new NK(problemSize, blocksize, false, alphabetsize, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
@@ -257,15 +259,31 @@ void runNasbench(){
     }
 }
 
-
 int main(int argc, const char * argv[]) {
     
+//    FitnessFunction * fit = new NK();
+//    FitnessFunction * fit = new OneMax(5);
+
+    
+//    for (int probsize = 2; probsize <= 10; probsize++){
+//        FitnessFunction *fit = new ARK4(probsize, true, -1);
+//        GA* ga = new GOM(fit, new UnivariateOrderedReversed_FOS(), true);
+//        ga->findMinimallyNeededPopulationSize(100, 99);
+//    }
+    
+//    void NK::generateTables(int maxProblemLength, int blocksize, bool wraparound, int alphabetSize){
+    
+//    NK::generateTables(10, 3, false, 3, 50);
+    
+    // RUN THIS WHEN I GET HOME
+//    NK::generateTables(15, 3, false, 3, 50);
+
+//
     runNasbench();
 //    roundSchedule();
     
 //    ARK* fitfunc = new ARK2(13, false, -1);
 //    fitfunc->setLength(13);
-    
 //    int runs = 100000;
 //    LocalSearchAnalysis::localSearchTests(fitfunc, runs, "ascending");
 //    LocalSearchAnalysis::localSearchTests(fitfunc, runs, "descending");

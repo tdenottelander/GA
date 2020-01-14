@@ -39,6 +39,7 @@ namespace Utility{
     void write(std::string content, std::string dir, std::string filename);
     void writeRawData(std::string content, std::string dir, std::string suffix = "");
     void writeJSON (nlohmann::json content, std::string filename);
+    nlohmann::json readJSON(std::string filename);
     void read(std::string filename);
     std::string genotypeToString(arma::uvec &genotype);
     arma::uvec vectorToUvec (std::vector<int> vec);
