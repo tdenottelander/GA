@@ -36,10 +36,13 @@ namespace Utility{
     std::string padFrontWith0(std::string target, int length);
     std::string removeTrailingZeros(std::string target);
     std::string padWithSpacesAfter(std::string target, int length);
-    void write(std::string content, std::string filename, std::string suffix = "");
+    void write(std::string content, std::string dir, std::string filename);
+    void writeRawData(std::string content, std::string dir, std::string suffix = "");
     void writeJSON (nlohmann::json content, std::string filename);
     void read(std::string filename);
     std::string genotypeToString(arma::uvec &genotype);
+    arma::uvec vectorToUvec (std::vector<int> vec);
+    std::vector<int> uvecToVector (arma::uvec vec);
 }
 
 #endif /* Utility_hpp */

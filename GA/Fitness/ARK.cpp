@@ -16,7 +16,12 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, float optimum, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) : FitnessFunction(optimum, maxEvaluations, problemType), allowIdentityLayers(allowIdentityLayers), identityLayer(identity), jsonAccuracyIndex(jsonAccuracyIndex), folder(folder) {
+ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
+    FitnessFunction(getOptimum(folder, problemSize, allowIdentityLayers), maxEvaluations, problemType),
+    allowIdentityLayers(allowIdentityLayers),
+    identityLayer(identity),
+    jsonAccuracyIndex(jsonAccuracyIndex),
+    folder(folder) {
     totalProblemLength = problemSize;
 //    setProblemType(allowIdentityLayers);
 }
@@ -43,7 +48,7 @@ float ARK::query(uvec encoding){
 
     //Prepend "model_"
     //Append ".json"
-    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/" + folder + "/model_" + layers + ".json";
+    layers = folderPrefix + folder + "/model_" + layers + ".json";
 
     //Load file
     ifstream ifs(layers);
@@ -72,7 +77,7 @@ int ARK::getNumParams(vector<int> encoding){
             layers += to_string(i);
         }
     }
-    layers = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/" + folder + "/model_" + layers + ".json";
+    layers = folderPrefix + folder + "/model_" + layers + ".json";
     ifstream ifs(layers);
     json rawdata = json::parse(ifs);
     return rawdata["number_of_parameters"];
@@ -119,4 +124,75 @@ uvec ARK::removeIdentities(uvec &genotype, int identityLayerIndex){
 
 uvec ARK::transform(uvec &genotype){
     return removeIdentities(genotype, identityLayer);
+}
+
+pair<float, vector<int>> ARK::findBest (){
+    vector<int> architecture (totalProblemLength, -1);
+    pair<float, vector<int>> opt = findBestRecursion(totalProblemLength, problemType->alphabet.size(), architecture, 0, -1.0);
+    cout << "Genotype with optimal fitness: ";
+    cout << Individual::toString(opt.second);
+    cout << "   accuracy: " << opt.first;
+    cout << "   #params: " << getNumParams(opt.second) << endl;
+    return opt;
+}
+
+pair<float, vector<int>> ARK::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int idx, float bestSoFar){
+    vector<int> bestGenotype(temp);
+    if (idx == length){
+        float result = query (temp);
+        if (result > bestSoFar){
+            bestSoFar = result;
+            bestGenotype = temp;
+        }
+    } else {
+        for (int i = 0; i < alphabetSize; i++){
+            temp [idx] = i;
+            pair<float, vector<int>> result = findBestRecursion(length, alphabetSize, temp, idx+1, bestSoFar);
+            if (result.first > bestSoFar){
+                bestSoFar = result.first;
+                bestGenotype = result.second;
+            }
+        }
+    }
+    return pair<float, vector<int>>(bestSoFar, bestGenotype);
+}
+
+pair<int, int> ARK::findAmountOfArchitecturesWithFitnessAboveThreshold(float threshold){
+    int sum = 0;
+    int total = pow(problemType->alphabet.size(), totalProblemLength);
+    for (int i = 0; i < total; i++){
+        uvec genotype = HashingFunctions::decode(i, totalProblemLength, problemType->alphabet.size());
+        float result = query(genotype);
+        if(result >= threshold){
+            cout << Individual::toString(genotype) << " f=" << result << endl;
+            sum++;
+        }
+    }
+    cout << sum << "/" << total << " genotypes have fitness >= " << threshold << endl;
+    return pair<int, int>(sum, total);
+}
+
+void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
+    json results;
+    json optima;
+    for (int i = minLayerSize; i <= maxLayerSize; i++){
+        totalProblemLength = i;
+        pair<float, vector<int>> res = findBest();
+        pair<float, string> opt(res.first, Individual::toString(res.second));
+        optima[to_string(i)] = opt;
+    }
+    results["optima"] = optima;
+    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis.json");
+}
+
+float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
+    if(true){
+        string filename = folderPrefix + folder + "/analysis.json";
+        ifstream ifs(filename);
+        cout << filename << endl;
+        json analysis = json::parse(ifs);
+        float result = analysis["optima"][to_string(layers)][0];
+        return result;
+    }
+    return 0.0;
 }

@@ -11,6 +11,7 @@
 using namespace std;
 using namespace chrono;
 using namespace nlohmann;
+using namespace arma;
 
 vector<int> Utility::getOrderedArray(int n, Order order){
     switch (order) {
@@ -134,12 +135,16 @@ string Utility::padWithSpacesAfter(string target, int length){
     return target;
 }
 
-void Utility::write(string content, string dir, string suffix){
+void Utility::write(string content, string dir, string filename){
     ofstream file;
-    if(suffix != "") suffix = "_" + suffix;
-    file.open (dir + getDateString() + "_rawdata" + suffix + ".json");
+    file.open (dir + filename);
     file << content;
     file.close();
+}
+
+void Utility::writeRawData(string content, string dir, string suffix){
+    if(suffix != "") suffix = "_" + suffix;
+    write(content, dir, getDateString() + "_rawdata" + suffix + ".json");
 }
 
 void Utility::writeJSON(json content, string filename){
@@ -168,5 +173,22 @@ string Utility::genotypeToString(arma::uvec &genotype){
     string result = "";
     for(int i : genotype)
         result += to_string(i);
+    return result;
+}
+
+uvec Utility::vectorToUvec (vector<int> vec){
+    uvec result(vec.size());
+    for(int i = 0; i < vec.size(); i++){
+        result[i] = vec[i];
+    }
+    return result;
+}
+
+vector<int> Utility::uvecToVector (uvec vec){
+    vector<int> result;
+    result.reserve(vec.size());
+    for(int i = 0; i < vec.size(); i++){
+        result.assign(i, vec[i]);
+    }
     return result;
 }

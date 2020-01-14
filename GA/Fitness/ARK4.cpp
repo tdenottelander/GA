@@ -12,9 +12,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK4::ARK4() : ARK(10, true, -1, ark4_optima[10], getProblemType(true), 2, 4, "ark4") {}
+ARK4::ARK4() : ARK(10, true, -1, getProblemType(true), 2, 4, "ark4") {}
 
-ARK4::ARK4(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, ark4_optima[problemSize], getProblemType(allowIdentityLayers), 2, 4, "ark4") {}
+ARK4::ARK4(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, getProblemType(allowIdentityLayers), 2, 4, "ark4") {}
 
 void ARK4::display(){
     cout << "ARK-4 fitness function" << endl;

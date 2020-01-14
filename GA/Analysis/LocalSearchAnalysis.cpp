@@ -120,5 +120,5 @@ void LocalSearchAnalysis::localSearchTests(ARK* fitfunc, int runs, string localS
     main["alphabet"] = alphabet;
     main["problemSize"] = probSize;
     
-    Utility::write(main.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/", "fitnesslandscape");
+    Utility::writeRawData(main.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/", "fitnesslandscape");
 }

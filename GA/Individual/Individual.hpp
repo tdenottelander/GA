@@ -28,6 +28,9 @@ public:
     std::string toString();
     std::string toStringBlocks(int blocksize);
     bool equals(Individual const& ind);
+    
+    static std::string toString(std::vector<int> genotype);
+    static std::string toString(arma::uvec genotype);
 };
 
 #endif /* Individual_hpp */

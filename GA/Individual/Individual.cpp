@@ -39,14 +39,8 @@ Individual Individual::copy(){
 }
 
 string Individual::toString(){
-    string result = "[";
-    for (unsigned long i = 0; i < genotype.size(); i++){
-        result += to_string(genotype[i]);
-        if(i != (genotype.size() - 1)){
-            result += " ";
-        }
-    }
-    result += "]  F: ";
+    string result = toString(genotype);
+    result += "  F: ";
     result += to_string(fitness);
     return result;
 }
@@ -77,4 +71,20 @@ bool Individual::equals(const Individual &ind) {
         }
     }
     return true;
+}
+
+string Individual::toString(vector<int> genotype){
+    string result = "[";
+    for (unsigned long i = 0; i < genotype.size(); i++){
+        result += to_string(genotype[i]);
+        if(i != (genotype.size() - 1)){
+            result += " ";
+        }
+    }
+    result += "]";
+    return result;
+}
+
+string Individual::toString(uvec genotype){
+    return toString(Utility::uvecToVector(genotype));
 }

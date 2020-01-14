@@ -22,12 +22,6 @@ namespace GreedyAnalysis {
     void greedyRunBackward();
     void greedyBothWays();
     void greedyInsideOut();
-    void findBest(int length, int alphabetSize);
-    void findBestRecursion(int length, int alphabetSize, std::vector<int> &temp, int idx);
-    std::pair<int, int> findAmountOfArchitecturesWithFitnessAboveThreshold (int length, int alphabetSize, float threshold);
 }
-
-static float bestSoFar = -1.0;
-//static std::string defaultFolder = "ark1";
 
 #endif /* GreedyAnalysis_hpp */

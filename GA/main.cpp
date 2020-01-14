@@ -130,7 +130,7 @@ void roundSchedule(){
     }
     
     main_json["experiments"] = experiments;
-    write(main_json.dump(), dataDir);
+    writeRawData(main_json.dump(), dataDir);
 }
 
 void runNasbench(){

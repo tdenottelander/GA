@@ -12,9 +12,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK3::ARK3() : ARK(12, false, -1, ark3_optimum, getProblemType(), -1, 4, "ark3") {}
+ARK3::ARK3() : ARK(12, false, -1, getProblemType(), -1, 4, "ark3") {}
 
-ARK3::ARK3(int maxEvaluations) : ARK(12, false, maxEvaluations, ark3_optimum, getProblemType(), -1, 4, "ark3") {}
+ARK3::ARK3(int maxEvaluations) : ARK(12, false, maxEvaluations, getProblemType(), -1, 4, "ark3") {}
 
 void ARK3::display(){
     cout << "ARK-3 fitness function" << endl;
