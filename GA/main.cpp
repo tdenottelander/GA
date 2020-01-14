@@ -17,6 +17,7 @@
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
+#include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
 #include "ARK2.hpp"
@@ -142,7 +143,7 @@ void runNasbench(){
     int maxPopSizeLevel = 500;
     int maxEvaluations = -1; //10000
     int interval = 4;
-    int repetitions = 2; //100
+    int repetitions = 100; //100
     bool nonIMS = false;
     
     //Determines whether convergence data should be saved (which results in increased output file sizes)
@@ -163,8 +164,10 @@ void runNasbench(){
         main_json["interleavedRoundInterval"] = interval;
         
         bool allowIdentityLayers = true;
-        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
+//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
+//        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers, maxEvaluations);
 //        FitnessFunction * fit = new ARK3(maxEvaluations);
+        FitnessFunction * fit = new NK(problemSize, 3, false, 3, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         

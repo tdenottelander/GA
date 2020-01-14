@@ -188,7 +188,7 @@ vector<int> Utility::uvecToVector (uvec vec){
     vector<int> result;
     result.reserve(vec.size());
     for(int i = 0; i < vec.size(); i++){
-        result.assign(i, vec[i]);
+        result.push_back(vec[i]);
     }
     return result;
 }
