@@ -22,6 +22,7 @@
 #include "ARK2.hpp"
 #include "ARK3.hpp"
 #include "ARK4.hpp"
+#include "ARK5.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -249,7 +250,7 @@ void runNasbench(){
         }
         
         main_json["experiments"] = experiments;
-        write(main_json.dump(), dataDir);
+        writeRawData(main_json.dump(), dataDir);
     }
 }
 
