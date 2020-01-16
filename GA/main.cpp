@@ -261,23 +261,11 @@ void runNasbench(){
 
 int main(int argc, const char * argv[]) {
     
-//    FitnessFunction * fit = new NK();
-//    FitnessFunction * fit = new OneMax(5);
-
+//    uvec g1 = {0, 1, 2, 3, 4, 5, 6, 7};
+//    uvec g2 = {0, 2, 3, 4, 5, 6, 7};
+//    cout << "hamming distance: " << Individual::hammingDistance(g1, g2) << endl;
+//    cout << "edit distance: " << Individual::editDistance(g1, g2) << endl;
     
-//    for (int probsize = 2; probsize <= 10; probsize++){
-//        FitnessFunction *fit = new ARK4(probsize, true, -1);
-//        GA* ga = new GOM(fit, new UnivariateOrderedReversed_FOS(), true);
-//        ga->findMinimallyNeededPopulationSize(100, 99);
-//    }
-    
-//    void NK::generateTables(int maxProblemLength, int blocksize, bool wraparound, int alphabetSize){
-    
-//    NK::generateTables(10, 3, false, 3, 50);
-    
-    // RUN THIS WHEN I GET HOME
-//    NK::generateTables(15, 3, false, 3, 50);
-
 //
     runNasbench();
 //    roundSchedule();
@@ -294,18 +282,12 @@ int main(int argc, const char * argv[]) {
 //    GreedyAnalysis::greedyRun();
 //    GreedyAnalysis::greedyBothWays();
 //    GreedyAnalysis::greedyInsideOut();
-//    for(int i = 12; i <= 12; i++){
+//    for(int i = 0; i <= 10; i++){
 //        GreedyAnalysis::findBest(i, 2);
 //        cout << endl;
 //    }
 //    pair<int,int> values12 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(12, 3, (91.44-0.001));
 //    cout << values12.first << "/" << values12.second << endl;
-//
-//    pair<int,int> values13 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(12, 2, (92.25-0.001));
-//    cout << values13.first << "/" << values13.second << endl;
-    
-//    pair<int,int> values10 = GreedyAnalysis::findAmountOfArchitecturesWithFitnessAboveThreshold(5, 3, (89.26-0.001));
-//    cout << values10.first << "/" << values10.second << endl;
     
     return 0;
 }

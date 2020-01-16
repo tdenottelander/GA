@@ -22,8 +22,6 @@ public:
     
     ProblemType* getProblemType();
     void setLength (int length) override;
-    
-    arma::uvec transform (arma::uvec &genotype) override;
 };
 
 static float ark3_optimum = 92.25;

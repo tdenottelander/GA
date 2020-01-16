@@ -109,21 +109,9 @@ void ARK::printArchitecture(vector<int> architecture){
 //    cout << endl;
 }
 
-uvec ARK::removeIdentities(uvec &genotype, int identityLayerIndex){
-    uvec newGenotype (genotype.size());
-    int j = 0;
-    for (int i = 0; i < genotype.size(); i++){
-        if (genotype[i] != identityLayerIndex){
-            newGenotype[j] = genotype[i];
-            j++;
-        }
-    }
-    return newGenotype.head(j);
-}
-
 
 uvec ARK::transform(uvec &genotype){
-    return removeIdentities(genotype, identityLayer);
+    return Individual::removeIdentities(genotype, identityLayer);
 }
 
 pair<float, vector<int>> ARK::findBest (){
@@ -186,13 +174,15 @@ void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
 }
 
 float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
-    if(true){
-        string filename = folderPrefix + folder + "/analysis.json";
-        ifstream ifs(filename);
-        cout << filename << endl;
-        json analysis = json::parse(ifs);
-        float result = analysis["optima"][to_string(layers)][0];
-        return result;
+    string filename = folderPrefix + folder + "/analysis.json";
+    ifstream ifs(filename);
+    if(!ifs.good()){
+        cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimum to 100.0 for now.";
+        return 100.0;
     }
+    cout << "Loading optima from " << filename << endl;
+    json analysis = json::parse(ifs);
+    float result = analysis["optima"][to_string(layers)][0];
+    return result;
     return 0.0;
 }

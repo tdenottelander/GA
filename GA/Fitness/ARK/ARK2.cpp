@@ -46,7 +46,3 @@ ProblemType* ARK2::getProblemType(bool allowidentityLayers){
 void ARK2::setLength (int length) {
     totalProblemLength = length;
 }
-
-uvec ARK2::transform(uvec &genotype){
-    return removeIdentities(genotype, 2);
-}

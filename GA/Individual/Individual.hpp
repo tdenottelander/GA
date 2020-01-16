@@ -31,6 +31,10 @@ public:
     
     static std::string toString(std::vector<int> genotype);
     static std::string toString(arma::uvec genotype);
+    static int hammingDistance(arma::uvec g1, arma::uvec g2);
+    static int editDistance(arma::uvec g1, arma::uvec g2);
+    static int editDistance(arma::uvec g1, arma::uvec g2, int i, int j);
+    static arma::uvec removeIdentities(arma::uvec &genotype, int identityLayerIndex);
 };
 
 #endif /* Individual_hpp */

@@ -40,7 +40,3 @@ ProblemType* ARK3::getProblemType(){
 void ARK3::setLength (int length) {
     totalProblemLength = length;
 }
-
-uvec ARK3::transform(uvec &genotype){
-    return removeIdentities(genotype, identityLayer);
-}

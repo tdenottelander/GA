@@ -35,7 +35,6 @@ public:
     
     static void printArchitecture(std::vector<int> architecture);
     
-    arma::uvec removeIdentities (arma::uvec &genotype, int identityLayerIndex);
     arma::uvec transform(arma::uvec &genotype) override;
     
     std::pair<float, std::vector<int>> findBest();
