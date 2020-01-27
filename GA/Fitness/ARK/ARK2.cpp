@@ -31,7 +31,7 @@ FitnessFunction* ARK2::clone() const {
     return new ARK2(static_cast<const ARK2&>(*this));
 }
 
-ProblemType* ARK2::getProblemType(bool allowidentityLayers){
+ProblemType* ARK2::getProblemType(bool allowIdentityLayers){
     // 0 = 3x3 convolution
     // 1 = 2x2 max pooling
     // 2 = identity
@@ -41,8 +41,4 @@ ProblemType* ARK2::getProblemType(bool allowidentityLayers){
     else
         alphabet = {0,1};
     return new AlphabetProblemType(alphabet);
-}
-
-void ARK2::setLength (int length) {
-    totalProblemLength = length;
 }

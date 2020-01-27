@@ -21,9 +21,8 @@ public:
     FitnessFunction* clone() const override;
     
     ProblemType* getProblemType();
-    void setLength (int length) override;
 };
 
-static float ark3_optimum = 92.25;
+//static float ark3_optimum = 92.25;
 
 #endif /* ARK3_hpp */

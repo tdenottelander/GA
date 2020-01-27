@@ -36,7 +36,3 @@ ProblemType* ARK3::getProblemType(){
     // 1 = 2x2 max pooling
     return new AlphabetProblemType({0,1});
 }
-
-void ARK3::setLength (int length) {
-    totalProblemLength = length;
-}

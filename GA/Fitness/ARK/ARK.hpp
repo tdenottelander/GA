@@ -25,7 +25,7 @@ public:
     std::string folder;
     ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
     float evaluate(Individual &ind) override;
-    float query(arma::uvec encoding);
+    virtual float query(arma::uvec encoding);
     float query(std::vector<int> encoding);
     int getNumParams(std::vector<int> encoding);
     void display() override;
@@ -37,8 +37,15 @@ public:
     
     arma::uvec transform(arma::uvec &genotype) override;
     
-    std::pair<float, std::vector<int>> findBest();
-    std::pair<float, std::vector<int>> findBestRecursion(int length, int alphabetSize, std::vector<int> &temp, int idx, float bestSoFar);
+    struct solution {
+        float fitness;
+        std::vector<std::vector<int>> genotypes;
+        int optCount;
+        int totalCount;
+    };
+    
+    solution findBest();
+    void findBestRecursion(int length, int alphabetSize, std::vector<int> &temp, int idx, solution &statistics);
     std::pair<int,int> findAmountOfArchitecturesWithFitnessAboveThreshold(float threshold);
     
     void doAnalysis(int minLayerSize, int maxLayerSize);

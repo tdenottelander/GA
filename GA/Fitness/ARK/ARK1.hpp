@@ -21,10 +21,9 @@ public:
     FitnessFunction* clone() const override;
     
     ProblemType* getProblemType(bool allowIdentityLayers);
-    void setLength (int length) override;
 };
 
-static float ark1_optima[] = {30.82, 55.36, 67.21, 78.0, 84.04, 86.15, 88.09, 89.14};
+//static float ark1_optima[] = {30.82, 55.36, 67.21, 78.0, 84.04, 86.15, 88.09, 89.14};
 
 
 #endif /* ARK1_hpp */

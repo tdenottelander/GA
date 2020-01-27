@@ -26,9 +26,9 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
     interval(interleavedRoundInterval)
 {}
 
-void RoundSchedule::initialize(GA *g, int problemSize, bool nonIMSmode, int nonIMSpopsize) {
+void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
     int beginPopSize = 2;
-    if(nonIMSmode){
+    if(!IMS){
         maxPopSizeLevel = 1;
         beginPopSize = nonIMSpopsize;
     }

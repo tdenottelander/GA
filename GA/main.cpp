@@ -24,6 +24,7 @@
 #include "ARK3.hpp"
 #include "ARK4.hpp"
 #include "ARK5.hpp"
+#include "ARK6.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -143,14 +144,11 @@ void runNasbench(){
     int maxPopSizeLevel = 500;
     int maxEvaluations = -1; //10000
     int interval = 4;
-    int repetitions = 100; //100
-    bool nonIMS = false;
+    int repetitions = 50; //100
+    bool IMS = true;
     
-    //Determines whether convergence data should be saved (which results in increased output file sizes)
-    bool scalabilityExperiment = true;
-    
-    int minProblemSize = 12;
-    int maxProblemSize = 12;
+    int minProblemSize = 11;
+    int maxProblemSize = 14;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -166,23 +164,24 @@ void runNasbench(){
         bool allowIdentityLayers = true;
 //        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, maxEvaluations);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers, maxEvaluations);
+        FitnessFunction * fit = new ARK6(problemSize, maxEvaluations);
 //        FitnessFunction * fit = new ARK3(maxEvaluations);
-        int blocksize = 3;
-        int alphabetsize = 3;
-        FitnessFunction * fit = new NK(problemSize, blocksize, false, alphabetsize, maxEvaluations);
+//        int blocksize = 5;
+//        int alphabetsize = 2;
+//        FitnessFunction * fit = new NK(problemSize, blocksize, false, alphabetsize, maxEvaluations);
         main_json["fitnessFunction"] = fit->id();
         main_json["optimum"] = fit->optimum;
         
         bool forcedImprovement = true;
         vector<GA*> gaList = {
-//            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
-//            new GOM(fit, new Univariate_FOS(), forcedImprovement),
-//            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
+            new GOM(fit, new Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
             new GOM(fit, new UnivariateOrderedReversed_FOS(), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
@@ -191,15 +190,15 @@ void runNasbench(){
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
             new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-//            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-            new RandomSearch(fit),
+            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//            new RandomSearch(fit),
             new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
             new LocalSearch(fit, Utility::Order::RANDOM),
-//            new LocalSearch(fit, Utility::Order::ASCENDING),
-//            new LocalSearch(fit, Utility::Order::DESCENDING),
+            new LocalSearch(fit, Utility::Order::ASCENDING),
+            new LocalSearch(fit, Utility::Order::DESCENDING),
             new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.1),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.2),
         };
@@ -209,7 +208,7 @@ void runNasbench(){
         for(GA* ga : gaList){
             string gaID = ga->id();
             int populationSize = -1;
-            if (nonIMS){
+            if (!IMS){
                 populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
                 cout << "Needed popsize = " << populationSize << endl;
                 gaID += ("_FixedPop");
@@ -220,24 +219,24 @@ void runNasbench(){
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, interval);
                 ga->fitFunc_ptr->clear();
-                rs.initialize(ga, problemSize, nonIMS, populationSize);
+                rs.initialize(ga, problemSize, IMS, populationSize);
                 json result = rs.run();
                 setting[to_string(rep)] = result;
                 cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
                 << " ga=" << gaID
                 << " l=" << problemSize
                 << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
-                << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 6)
-                << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 7)
-                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 7)
-                << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 6) << endl;
+                << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 8)
+                << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 10)
+                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 10)
+                << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 10) << endl;
                 if(result.at("stoppingCondition") == "maxTimeExceeded"){
                     cout << "Max time exceeded, not starting anymore runs" << endl;
                     break;
                 } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
                     exceeded = true;
                     cout << "Max evaluations exceeded";
-                    if (scalabilityExperiment){
+                    if (storeConvergence){
                         cout << ", not starting anymore runs" << endl;;
                         break;
                     } else
@@ -245,7 +244,7 @@ void runNasbench(){
                 }
             }
             cout << endl;
-            if(scalabilityExperiment && exceeded){
+            if(storeConvergence && exceeded){
                 continue;
             } else {
                 json prob_json;
@@ -265,8 +264,12 @@ int main(int argc, const char * argv[]) {
 //    uvec g2 = {0, 2, 3, 4, 5, 6, 7};
 //    cout << "hamming distance: " << Individual::hammingDistance(g1, g2) << endl;
 //    cout << "edit distance: " << Individual::editDistance(g1, g2) << endl;
-    
-//
+
+//    ARK * ark = new ARK6(14, -1);
+//    int maxLayers = 14;
+//    ARK * ark = new ARK6(maxLayers, -1);
+//    ark->doAnalysis(0, maxLayers);
+
     runNasbench();
 //    roundSchedule();
     

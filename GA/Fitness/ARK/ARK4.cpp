@@ -42,7 +42,3 @@ ProblemType* ARK4::getProblemType(bool allowIdentityLayers){
         alphabet = {0,1};
     return new AlphabetProblemType(alphabet);
 }
-
-void ARK4::setLength (int length) {
-    totalProblemLength = length;
-}

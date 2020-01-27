@@ -43,7 +43,3 @@ ProblemType* ARK5::getProblemType(bool allowIdentityLayers){
         alphabet = {0,1};
     return new AlphabetProblemType(alphabet);
 }
-
-void ARK5::setLength (int length) {
-    totalProblemLength = length;
-}
