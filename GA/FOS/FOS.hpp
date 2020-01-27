@@ -105,6 +105,15 @@ public:
     std::string toString() override;
 };
 
+class ARK6_FOS : public FOS {
+public:
+    ARK6_FOS(Utility::Order order);
+    Utility::Order order;
+    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
 namespace FOSStructures {
     std::vector<arma::uvec> getIncrementalLT_FOS (int n);
     std::vector<arma::uvec> getIncrementalLTReversed_FOS (int n);
@@ -113,6 +122,7 @@ namespace FOSStructures {
     std::vector<arma::uvec> getRandomUnivariate_FOS (int n);
     std::vector<arma::uvec> getTriplet_FOS (int n, Utility::Order order);
     std::vector<arma::uvec> getTripletTree_FOS (int n, Utility::Order order);
+    std::vector<arma::uvec> getARK6_FOS (int n, Utility::Order order);
     void printFOS(std::vector<arma::uvec> fos);
     std::vector<arma::uvec> sortFOSMeanAscending (std::vector<arma::uvec> & fos);
     std::vector<arma::uvec> sortFOSMeanDescending (std::vector<arma::uvec> & fos);

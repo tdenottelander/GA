@@ -171,6 +171,23 @@ vector<uvec> TripletTree_FOS::getFOS (vector<Individual> &population){
 string TripletTree_FOS::id() { return "TripletTree-" + Utility::orderToID(order); }
 string TripletTree_FOS::toString(){ return "Triplet Tree FOS"; }
 
+
+/* ------------------------ ARK6 FOS ------------------------------------- */
+// This FOS has subsets that denote the entire block between two pooling layers.
+// Pooling is done after 4th, 8th and 12th layer, so that's how the subsets are separated.
+
+ARK6_FOS::ARK6_FOS(Utility::Order order) : order(order){
+    reinitializeOnNewRound = false;
+}
+
+vector<uvec> ARK6_FOS::getFOS (vector<Individual> &population){
+    return FOSStructures::getTriplet_FOS(population[0].genotype.size(), order);
+}
+
+string ARK6_FOS::id() { return "ARK6-" + Utility::orderToID(order); }
+string ARK6_FOS::toString(){ return "ARK6 FOS"; }
+
+
 /* ------------------------ Namespace FOS Structures ------------------------ */
 
 vector<uvec> FOSStructures::getIncrementalLT_FOS(int n){
@@ -270,6 +287,28 @@ vector<uvec> FOSStructures::getTripletTree_FOS(int n, Utility::Order order){
 //            uvec subset (fos[i].size() + fos[i+1].size());
 //        }
 //    } while (count >= 2);
+    return fos;
+}
+
+vector<uvec> FOSStructures::getARK6_FOS(int n, Utility::Order order){
+    vector<uvec> temp;
+    temp.reserve(ceil(n / 4.0));
+    
+    for (int i = 0; i < n; i++){
+        if(i % 4 == 0){
+            int elementsLeft = min(n - i, 4);
+            temp.push_back(uvec (elementsLeft));
+        }
+        temp[floor(i/4)][i % 4] = i;
+    }
+    
+    vector<uvec> fos;
+    vector<int> orderArray = Utility::getOrderedArray(temp.size(), order);
+    
+    for (int i : orderArray){
+        fos.push_back(temp[i]);
+    }
+
     return fos;
 }
 

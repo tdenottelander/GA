@@ -53,6 +53,6 @@ public:
     float getOptimum(std::string folder, int layers, bool allowIdentityLayers);
 };
 
-static std::string folderPrefix = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/";
+static std::string folderPrefix = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/Benchmarks/";
 
 #endif /* ARK_hpp */
