@@ -7,8 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C423CC712000EC93F8 /* ARK4.cpp */; };
+		C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C723CDC41000EC93F8 /* ARK5.cpp */; };
+		C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246CA23CDDB0700EC93F8 /* NK.cpp */; };
+		C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */; };
+		C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */; };
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
-		C269FF1823952D0800B98092 /* Stuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF1623952D0800B98092 /* Stuff.cpp */; };
+		C293D6E223A787AE001E0636 /* ARK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E023A787AE001E0636 /* ARK.cpp */; };
+		C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */; };
+		C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */; };
+		C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C296F669239A66E300C36EBC /* ProblemType.cpp */; };
+		C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C296F66D239E714F00C36EBC /* LearnedLTFOS.cpp */; };
 		C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4CE23840C6700D6E774 /* main.cpp */; };
 		C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4D523840CEB00D6E774 /* Individual.cpp */; };
 		C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4DB23840FC000D6E774 /* Selection.cpp */; };
@@ -17,9 +26,17 @@
 		C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E42384113A00D6E774 /* GA.cpp */; };
 		C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E7238441A300D6E774 /* Utility.cpp */; };
 		C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */; };
-		C2BC66DD238EC888006BA6BF /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BC66D0238EBA10006BA6BF /* Python.framework */; };
+		C2B369D323BE2AED00E43633 /* ARK2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D123BE2AED00E43633 /* ARK2.cpp */; };
+		C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D423BE2CC200E43633 /* ARK1.cpp */; };
 		C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66DE238FE5BF006BA6BF /* FOS.cpp */; };
 		C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66E4238FF7DA006BA6BF /* GOM.cpp */; };
+		C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C0658523C4DDA30067B946 /* ARK3.cpp */; };
+		C2C0659023C7893D0067B946 /* GOM_LS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C0658E23C7893D0067B946 /* GOM_LS.cpp */; };
+		C2C0659323C8A3030067B946 /* LocalSearchStochastic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C0659123C8A3030067B946 /* LocalSearchStochastic.cpp */; };
+		C2C0659623C8AA0B0067B946 /* LocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C0659423C8AA0B0067B946 /* LocalSearch.cpp */; };
+		C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C57BB923C4BEA6008A5555 /* LocalSearchBase.cpp */; };
+		C2C6518E23D9A081007B567A /* ARK6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C6518C23D9A081007B567A /* ARK6.cpp */; };
+		C2E2734C23A1089D00D61D19 /* Trap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2E2734A23A1089D00D61D19 /* Trap.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,10 +52,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C22246C423CC712000EC93F8 /* ARK4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK4.cpp; sourceTree = "<group>"; };
+		C22246C523CC712000EC93F8 /* ARK4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK4.hpp; sourceTree = "<group>"; };
+		C22246C723CDC41000EC93F8 /* ARK5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK5.cpp; sourceTree = "<group>"; };
+		C22246C823CDC41000EC93F8 /* ARK5.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK5.hpp; sourceTree = "<group>"; };
+		C22246CA23CDDB0700EC93F8 /* NK.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NK.cpp; sourceTree = "<group>"; };
+		C22246CB23CDDB0800EC93F8 /* NK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NK.hpp; sourceTree = "<group>"; };
+		C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearchAnalysis.cpp; sourceTree = "<group>"; };
+		C2469EB623BE31450030E4B0 /* LocalSearchAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchAnalysis.hpp; sourceTree = "<group>"; };
+		C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GreedyAnalysis.cpp; sourceTree = "<group>"; };
+		C2469EB923BE325E0030E4B0 /* GreedyAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GreedyAnalysis.hpp; sourceTree = "<group>"; };
+		C267AC562396C3D3009A8DA9 /* libpython3.7m.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.7m.a; path = ../../../../../miniconda3/lib/libpython3.7m.a; sourceTree = "<group>"; };
 		C269FF132390090500B98092 /* SimpleGA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleGA.cpp; sourceTree = "<group>"; };
 		C269FF142390090500B98092 /* SimpleGA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleGA.hpp; sourceTree = "<group>"; };
-		C269FF1623952D0800B98092 /* Stuff.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Stuff.cpp; sourceTree = "<group>"; };
-		C269FF1723952D0800B98092 /* Stuff.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Stuff.hpp; sourceTree = "<group>"; };
+		C269FF192396ABAD00B98092 /* miniconda3 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = miniconda3; path = ../../../../../miniconda3; sourceTree = "<group>"; };
+		C269FF1B2396AE9100B98092 /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = python3.7; path = ../../../../../miniconda3/bin/python3.7; sourceTree = "<group>"; };
+		C269FF212396B5C400B98092 /* libpython3.7m.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.7m.a; path = ../../../../../miniconda3/envs/myenv/lib/libpython3.7m.a; sourceTree = "<group>"; };
+		C293D6E023A787AE001E0636 /* ARK.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK.cpp; sourceTree = "<group>"; };
+		C293D6E123A787AE001E0636 /* ARK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK.hpp; sourceTree = "<group>"; };
+		C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RandomSearch.cpp; sourceTree = "<group>"; };
+		C293D6E423A7AEE9001E0636 /* RandomSearch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RandomSearch.hpp; sourceTree = "<group>"; };
+		C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UniqueSolutions.cpp; sourceTree = "<group>"; };
+		C293D6E723AA48D7001E0636 /* UniqueSolutions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UniqueSolutions.hpp; sourceTree = "<group>"; };
+		C296F669239A66E300C36EBC /* ProblemType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ProblemType.cpp; sourceTree = "<group>"; };
+		C296F66A239A66E300C36EBC /* ProblemType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ProblemType.hpp; sourceTree = "<group>"; };
+		C296F66D239E714F00C36EBC /* LearnedLTFOS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LearnedLTFOS.cpp; sourceTree = "<group>"; };
+		C296F66E239E715000C36EBC /* LearnedLTFOS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LearnedLTFOS.hpp; sourceTree = "<group>"; };
 		C2ABE4CB23840C6700D6E774 /* GA */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GA; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2ABE4CE23840C6700D6E774 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C2ABE4D523840CEB00D6E774 /* Individual.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Individual.cpp; sourceTree = "<group>"; };
@@ -55,6 +94,10 @@
 		C2ABE4E8238441A300D6E774 /* Utility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Utility.hpp; sourceTree = "<group>"; };
 		C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RoundSchedule.cpp; sourceTree = "<group>"; };
 		C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RoundSchedule.hpp; sourceTree = "<group>"; };
+		C2B369D123BE2AED00E43633 /* ARK2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK2.cpp; sourceTree = "<group>"; };
+		C2B369D223BE2AED00E43633 /* ARK2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK2.hpp; sourceTree = "<group>"; };
+		C2B369D423BE2CC200E43633 /* ARK1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK1.cpp; sourceTree = "<group>"; };
+		C2B369D523BE2CC200E43633 /* ARK1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK1.hpp; sourceTree = "<group>"; };
 		C2BC66D0238EBA10006BA6BF /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
 		C2BC66D2238EC4F7006BA6BF /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = python3.7; path = ../../../../../miniconda3/envs/myenv/lib/python3.7; sourceTree = "<group>"; };
 		C2BC66D4238EC50D006BA6BF /* libpython.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpython.tbd; path = usr/lib/libpython.tbd; sourceTree = SDKROOT; };
@@ -65,6 +108,20 @@
 		C2BC66DF238FE5BF006BA6BF /* FOS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FOS.hpp; sourceTree = "<group>"; };
 		C2BC66E4238FF7DA006BA6BF /* GOM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GOM.cpp; sourceTree = "<group>"; };
 		C2BC66E5238FF7DA006BA6BF /* GOM.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GOM.hpp; sourceTree = "<group>"; };
+		C2C0658523C4DDA30067B946 /* ARK3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK3.cpp; sourceTree = "<group>"; };
+		C2C0658623C4DDA30067B946 /* ARK3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK3.hpp; sourceTree = "<group>"; };
+		C2C0658E23C7893D0067B946 /* GOM_LS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GOM_LS.cpp; sourceTree = "<group>"; };
+		C2C0658F23C7893D0067B946 /* GOM_LS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GOM_LS.hpp; sourceTree = "<group>"; };
+		C2C0659123C8A3030067B946 /* LocalSearchStochastic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearchStochastic.cpp; sourceTree = "<group>"; };
+		C2C0659223C8A3030067B946 /* LocalSearchStochastic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchStochastic.hpp; sourceTree = "<group>"; };
+		C2C0659423C8AA0B0067B946 /* LocalSearch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearch.cpp; sourceTree = "<group>"; };
+		C2C0659523C8AA0B0067B946 /* LocalSearch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearch.hpp; sourceTree = "<group>"; };
+		C2C57BB923C4BEA6008A5555 /* LocalSearchBase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearchBase.cpp; sourceTree = "<group>"; };
+		C2C57BBA23C4BEA6008A5555 /* LocalSearchBase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchBase.hpp; sourceTree = "<group>"; };
+		C2C6518C23D9A081007B567A /* ARK6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK6.cpp; sourceTree = "<group>"; };
+		C2C6518D23D9A081007B567A /* ARK6.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK6.hpp; sourceTree = "<group>"; };
+		C2E2734A23A1089D00D61D19 /* Trap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Trap.cpp; sourceTree = "<group>"; };
+		C2E2734B23A1089D00D61D19 /* Trap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Trap.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,13 +129,44 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2BC66DD238EC888006BA6BF /* Python.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C22246CD23CDFAB400EC93F8 /* ARK */ = {
+			isa = PBXGroup;
+			children = (
+				C293D6E023A787AE001E0636 /* ARK.cpp */,
+				C293D6E123A787AE001E0636 /* ARK.hpp */,
+				C2B369D123BE2AED00E43633 /* ARK2.cpp */,
+				C2B369D223BE2AED00E43633 /* ARK2.hpp */,
+				C2B369D423BE2CC200E43633 /* ARK1.cpp */,
+				C2B369D523BE2CC200E43633 /* ARK1.hpp */,
+				C2C0658523C4DDA30067B946 /* ARK3.cpp */,
+				C2C0658623C4DDA30067B946 /* ARK3.hpp */,
+				C22246C423CC712000EC93F8 /* ARK4.cpp */,
+				C22246C523CC712000EC93F8 /* ARK4.hpp */,
+				C22246C723CDC41000EC93F8 /* ARK5.cpp */,
+				C22246C823CDC41000EC93F8 /* ARK5.hpp */,
+				C2C6518C23D9A081007B567A /* ARK6.cpp */,
+				C2C6518D23D9A081007B567A /* ARK6.hpp */,
+			);
+			path = ARK;
+			sourceTree = "<group>";
+		};
+		C2469EB423BE311E0030E4B0 /* Analysis */ = {
+			isa = PBXGroup;
+			children = (
+				C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */,
+				C2469EB623BE31450030E4B0 /* LocalSearchAnalysis.hpp */,
+				C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */,
+				C2469EB923BE325E0030E4B0 /* GreedyAnalysis.hpp */,
+			);
+			path = Analysis;
+			sourceTree = "<group>";
+		};
 		C2ABE4C223840C6700D6E774 = {
 			isa = PBXGroup;
 			children = (
@@ -99,29 +187,15 @@
 		C2ABE4CD23840C6700D6E774 /* GA */ = {
 			isa = PBXGroup;
 			children = (
-				C269FF1623952D0800B98092 /* Stuff.cpp */,
-				C269FF1723952D0800B98092 /* Stuff.hpp */,
-				C269FF132390090500B98092 /* SimpleGA.cpp */,
-				C269FF142390090500B98092 /* SimpleGA.hpp */,
-				C2BC66DE238FE5BF006BA6BF /* FOS.cpp */,
-				C2BC66DF238FE5BF006BA6BF /* FOS.hpp */,
-				C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */,
-				C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */,
+				C2469EB423BE311E0030E4B0 /* Analysis */,
+				C2C42F7A23A11D1B00B83C3A /* Individual */,
+				C2C42F7823A11CB600B83C3A /* Util */,
+				C2C42F7723A11CA100B83C3A /* FOS */,
+				C2C42F7623A11C8900B83C3A /* Selection */,
+				C2C42F7523A11C7700B83C3A /* Variation */,
+				C2C42F7423A11C5F00B83C3A /* GA */,
+				C2C42F7323A11BD000B83C3A /* Fitness */,
 				C2ABE4CE23840C6700D6E774 /* main.cpp */,
-				C2ABE4E7238441A300D6E774 /* Utility.cpp */,
-				C2ABE4E8238441A300D6E774 /* Utility.hpp */,
-				C2ABE4E1238410BE00D6E774 /* FitnessFunction.cpp */,
-				C2ABE4E2238410BE00D6E774 /* FitnessFunction.hpp */,
-				C2ABE4E42384113A00D6E774 /* GA.cpp */,
-				C2ABE4E52384113A00D6E774 /* GA.hpp */,
-				C2ABE4DE2384106F00D6E774 /* Variation.cpp */,
-				C2ABE4DF2384106F00D6E774 /* Variation.hpp */,
-				C2ABE4DB23840FC000D6E774 /* Selection.cpp */,
-				C2ABE4DC23840FC000D6E774 /* Selection.hpp */,
-				C2ABE4D523840CEB00D6E774 /* Individual.cpp */,
-				C2ABE4D623840CEB00D6E774 /* Individual.hpp */,
-				C2BC66E4238FF7DA006BA6BF /* GOM.cpp */,
-				C2BC66E5238FF7DA006BA6BF /* GOM.hpp */,
 			);
 			path = GA;
 			sourceTree = "<group>";
@@ -129,6 +203,10 @@
 		C2BC66CF238EBA10006BA6BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C269FF212396B5C400B98092 /* libpython3.7m.a */,
+				C267AC562396C3D3009A8DA9 /* libpython3.7m.a */,
+				C269FF1B2396AE9100B98092 /* python3.7 */,
+				C269FF192396ABAD00B98092 /* miniconda3 */,
 				C2BC66DB238EC874006BA6BF /* python.app */,
 				C2BC66D9238EC71B006BA6BF /* python3.7 */,
 				C2BC66D7238EC556006BA6BF /* lib */,
@@ -137,6 +215,96 @@
 				C2BC66D0238EBA10006BA6BF /* Python.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C2C42F7323A11BD000B83C3A /* Fitness */ = {
+			isa = PBXGroup;
+			children = (
+				C22246CD23CDFAB400EC93F8 /* ARK */,
+				C22246CA23CDDB0700EC93F8 /* NK.cpp */,
+				C22246CB23CDDB0800EC93F8 /* NK.hpp */,
+				C296F669239A66E300C36EBC /* ProblemType.cpp */,
+				C296F66A239A66E300C36EBC /* ProblemType.hpp */,
+				C2E2734A23A1089D00D61D19 /* Trap.cpp */,
+				C2E2734B23A1089D00D61D19 /* Trap.hpp */,
+				C2ABE4E1238410BE00D6E774 /* FitnessFunction.cpp */,
+				C2ABE4E2238410BE00D6E774 /* FitnessFunction.hpp */,
+			);
+			path = Fitness;
+			sourceTree = "<group>";
+		};
+		C2C42F7423A11C5F00B83C3A /* GA */ = {
+			isa = PBXGroup;
+			children = (
+				C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */,
+				C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */,
+				C269FF132390090500B98092 /* SimpleGA.cpp */,
+				C269FF142390090500B98092 /* SimpleGA.hpp */,
+				C2ABE4E42384113A00D6E774 /* GA.cpp */,
+				C2ABE4E52384113A00D6E774 /* GA.hpp */,
+				C2BC66E4238FF7DA006BA6BF /* GOM.cpp */,
+				C2BC66E5238FF7DA006BA6BF /* GOM.hpp */,
+				C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */,
+				C293D6E423A7AEE9001E0636 /* RandomSearch.hpp */,
+				C2C57BB923C4BEA6008A5555 /* LocalSearchBase.cpp */,
+				C2C57BBA23C4BEA6008A5555 /* LocalSearchBase.hpp */,
+				C2C0658E23C7893D0067B946 /* GOM_LS.cpp */,
+				C2C0658F23C7893D0067B946 /* GOM_LS.hpp */,
+				C2C0659123C8A3030067B946 /* LocalSearchStochastic.cpp */,
+				C2C0659223C8A3030067B946 /* LocalSearchStochastic.hpp */,
+				C2C0659423C8AA0B0067B946 /* LocalSearch.cpp */,
+				C2C0659523C8AA0B0067B946 /* LocalSearch.hpp */,
+			);
+			path = GA;
+			sourceTree = "<group>";
+		};
+		C2C42F7523A11C7700B83C3A /* Variation */ = {
+			isa = PBXGroup;
+			children = (
+				C2ABE4DE2384106F00D6E774 /* Variation.cpp */,
+				C2ABE4DF2384106F00D6E774 /* Variation.hpp */,
+			);
+			path = Variation;
+			sourceTree = "<group>";
+		};
+		C2C42F7623A11C8900B83C3A /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				C2ABE4DB23840FC000D6E774 /* Selection.cpp */,
+				C2ABE4DC23840FC000D6E774 /* Selection.hpp */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		C2C42F7723A11CA100B83C3A /* FOS */ = {
+			isa = PBXGroup;
+			children = (
+				C296F66D239E714F00C36EBC /* LearnedLTFOS.cpp */,
+				C296F66E239E715000C36EBC /* LearnedLTFOS.hpp */,
+				C2BC66DE238FE5BF006BA6BF /* FOS.cpp */,
+				C2BC66DF238FE5BF006BA6BF /* FOS.hpp */,
+			);
+			path = FOS;
+			sourceTree = "<group>";
+		};
+		C2C42F7823A11CB600B83C3A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				C2ABE4E7238441A300D6E774 /* Utility.cpp */,
+				C2ABE4E8238441A300D6E774 /* Utility.hpp */,
+				C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */,
+				C293D6E723AA48D7001E0636 /* UniqueSolutions.hpp */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		C2C42F7A23A11D1B00B83C3A /* Individual */ = {
+			isa = PBXGroup;
+			children = (
+				C2ABE4D523840CEB00D6E774 /* Individual.cpp */,
+				C2ABE4D623840CEB00D6E774 /* Individual.hpp */,
+			);
+			path = Individual;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,6 +317,7 @@
 				C2ABE4C723840C6700D6E774 /* Sources */,
 				C2ABE4C823840C6700D6E774 /* Frameworks */,
 				C2ABE4C923840C6700D6E774 /* CopyFiles */,
+				C296F66C239E6E1300C36EBC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -190,22 +359,60 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C296F66C239E6E1300C36EBC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C2ABE4C723840C6700D6E774 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */,
+				C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */,
+				C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */,
+				C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */,
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
 				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
-				C269FF1823952D0800B98092 /* Stuff.cpp in Sources */,
 				C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */,
+				C2C0659623C8AA0B0067B946 /* LocalSearch.cpp in Sources */,
 				C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */,
+				C2C6518E23D9A081007B567A /* ARK6.cpp in Sources */,
 				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
+				C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */,
 				C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */,
+				C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */,
+				C2B369D323BE2AED00E43633 /* ARK2.cpp in Sources */,
+				C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */,
+				C2E2734C23A1089D00D61D19 /* Trap.cpp in Sources */,
+				C2C0659323C8A3030067B946 /* LocalSearchStochastic.cpp in Sources */,
+				C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */,
+				C293D6E223A787AE001E0636 /* ARK.cpp in Sources */,
+				C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */,
+				C2C0659023C7893D0067B946 /* GOM_LS.cpp in Sources */,
+				C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */,
 				C269FF152390090500B98092 /* SimpleGA.cpp in Sources */,
 				C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */,
+				C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */,
 				C2ABE4E02384106F00D6E774 /* Variation.cpp in Sources */,
+				C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */,
 				C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,6 +477,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-L/Users/tomdenottelander/miniconda3/lib/python3.7/config-3.7m-darwin";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -324,6 +532,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-L/Users/tomdenottelander/miniconda3/lib/python3.7/config-3.7m-darwin";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -334,7 +543,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -347,6 +557,8 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
