@@ -37,6 +37,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     output["fitness"] = g->fitFunc_ptr->id();
     output["successfulGAPopulation"] = -1;
     output["successfulGARoundCount"] = -1;
+    output["popsizereached"] = -1;
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
@@ -102,6 +103,8 @@ json RoundSchedule::run() {
                     // Initialize the GA if that has not been done yet
                     if(!ga->initialized){
                         ga->initialize();
+                        output["popsizereached"] = ga->populationSize;
+                        
                         // Define the first ever individual as bestIndividualOverall
                         if(i == 0){
                             ga->fitFunc_ptr->bestIndividual = ga->population[0].copy();
