@@ -10,6 +10,7 @@
 		C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C423CC712000EC93F8 /* ARK4.cpp */; };
 		C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C723CDC41000EC93F8 /* ARK5.cpp */; };
 		C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246CA23CDDB0700EC93F8 /* NK.cpp */; };
+		C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C235FB8A23E1E5760046B0CE /* ARK7.cpp */; };
 		C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */; };
 		C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */; };
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
@@ -58,6 +59,8 @@
 		C22246C823CDC41000EC93F8 /* ARK5.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK5.hpp; sourceTree = "<group>"; };
 		C22246CA23CDDB0700EC93F8 /* NK.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NK.cpp; sourceTree = "<group>"; };
 		C22246CB23CDDB0800EC93F8 /* NK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NK.hpp; sourceTree = "<group>"; };
+		C235FB8A23E1E5760046B0CE /* ARK7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK7.cpp; sourceTree = "<group>"; };
+		C235FB8B23E1E5760046B0CE /* ARK7.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK7.hpp; sourceTree = "<group>"; };
 		C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearchAnalysis.cpp; sourceTree = "<group>"; };
 		C2469EB623BE31450030E4B0 /* LocalSearchAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchAnalysis.hpp; sourceTree = "<group>"; };
 		C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GreedyAnalysis.cpp; sourceTree = "<group>"; };
@@ -152,6 +155,8 @@
 				C22246C823CDC41000EC93F8 /* ARK5.hpp */,
 				C2C6518C23D9A081007B567A /* ARK6.cpp */,
 				C2C6518D23D9A081007B567A /* ARK6.hpp */,
+				C235FB8A23E1E5760046B0CE /* ARK7.cpp */,
+				C235FB8B23E1E5760046B0CE /* ARK7.hpp */,
 			);
 			path = ARK;
 			sourceTree = "<group>";
@@ -387,6 +392,7 @@
 				C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */,
 				C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */,
 				C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */,
+				C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */,
 				C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */,
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
 				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
