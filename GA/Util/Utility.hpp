@@ -23,6 +23,7 @@ extern std::uniform_real_distribution<float> dist;
 namespace Utility{
     enum class Order {RANDOM, ASCENDING, DESCENDING};
     std::string orderToID (Order order);
+    std::string orderToString (Order order);
     std::vector<int> getOrderedArray (int n, Order order);
     std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
@@ -42,6 +43,7 @@ namespace Utility{
     nlohmann::json readJSON(std::string filename);
     void read(std::string filename);
     std::string genotypeToString(arma::uvec &genotype);
+    arma::uvec stringToGenotype(std::string &genotype);
     arma::uvec vectorToUvec (std::vector<int> vec);
     std::vector<int> uvecToVector (arma::uvec vec);
 }

@@ -35,6 +35,17 @@ string Utility::orderToID(Order order){
     }
 }
 
+string Utility::orderToString(Order order){
+    switch (order) {
+        case Order::RANDOM:
+            return "Random";
+        case Order::ASCENDING:
+            return "Ascending";
+        case Order::DESCENDING:
+            return "Descending";
+    }
+}
+
 vector<int> Utility::getRandomlyPermutedArray (int n){
     vector<int> arr;
     arr.reserve(n);
@@ -184,6 +195,15 @@ string Utility::genotypeToString(arma::uvec &genotype){
     string result = "";
     for(int i : genotype)
         result += to_string(i);
+    return result;
+}
+
+uvec Utility::stringToGenotype (string &genotype){
+    int n = genotype.size();
+    uvec result(n);
+    for (int i = 0; i < n; i++){
+        result[i] = std::stoi(genotype.substr(i,1));
+    }
     return result;
 }
 
