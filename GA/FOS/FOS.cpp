@@ -13,7 +13,6 @@ using namespace arma;
 
 /* ------------------------ Base class FOS ------------------------ */
 
-//vector<uvec> FOS::getFOS (int n){ vector<uvec> x; return x; }
 string FOS::id(){ return "base FOS"; }
 string FOS::toString() { return "baseFOS"; }
 
@@ -27,8 +26,8 @@ IncrementalLT_FOS::IncrementalLT_FOS(){
 vector<uvec> IncrementalLT_FOS::getFOS (vector<Individual> &population){
     return FOSStructures::getIncrementalLT_FOS(population[0].genotype.size());
 }
-string IncrementalLT_FOS::id(){ return "incrLT"; }
-string IncrementalLT_FOS::toString() { return "Incremental Linkage Tree FOS"; }
+string IncrementalLT_FOS::id(){ return "incrLT-asc"; }
+string IncrementalLT_FOS::toString() { return "Ascending Incremental Linkage Tree FOS"; }
 
 
 /* ------------------------ Incremental LT Reversed FOS ------------------------ */
@@ -40,34 +39,8 @@ IncrementalLTReversed_FOS::IncrementalLTReversed_FOS(){
 vector<uvec> IncrementalLTReversed_FOS::getFOS(std::vector<Individual> &population){
     return FOSStructures::getIncrementalLTReversed_FOS(population[0].genotype.size());
 }
-string IncrementalLTReversed_FOS::id(){ return "incrLTReversed"; }
-string IncrementalLTReversed_FOS::toString() { return "Reversed Incremental Linkage Tree FOS"; }
-
-
-/* ------------------------ Ordered Univariate FOS ------------------------ */
-
-UnivariateOrdered_FOS::UnivariateOrdered_FOS(){
-    reinitializeOnNewRound = false;
-}
-
-vector<uvec> UnivariateOrdered_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getOrderedUnivariate_FOS(population[0].genotype.size());
-}
-string UnivariateOrdered_FOS::id(){ return "UniOrd"; }
-string UnivariateOrdered_FOS::toString() { return "Univariate (ordered) FOS"; }
-
-
-/* ------------------------ Reversed Ordered Univariate FOS ------------------------ */
-
-UnivariateOrderedReversed_FOS::UnivariateOrderedReversed_FOS(){
-    reinitializeOnNewRound = false;
-}
-
-vector<uvec> UnivariateOrderedReversed_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getOrderedUnivariateReversed_FOS(population[0].genotype.size());
-}
-string UnivariateOrderedReversed_FOS::id(){ return "UniOrdReversed"; }
-string UnivariateOrderedReversed_FOS::toString() { return "Reversed Univariate (ordered) FOS"; }
+string IncrementalLTReversed_FOS::id(){ return "incrLT-desc"; }
+string IncrementalLTReversed_FOS::toString() { return "Descending Incremental Linkage Tree FOS"; }
 
 
 /* ------------------------ Incremental LT + Univariate FOS ------------------------ */
@@ -81,13 +54,13 @@ vector<uvec> IncrementalLT_UnivariateOrdered_FOS::getFOS (vector<Individual> &po
     vector<uvec> fos;
     fos.reserve(2 * n);
     vector<uvec> fixedLT = FOSStructures::getIncrementalLT_FOS(n);
-    vector<uvec> univariate = FOSStructures::getOrderedUnivariate_FOS(n);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
 }
-string IncrementalLT_UnivariateOrdered_FOS::id() { return "incrLT-UniOrd"; }
-string IncrementalLT_UnivariateOrdered_FOS::toString(){ return "Incremental Linkage Tree, followed by (ordered) Univariate FOS"; }
+string IncrementalLT_UnivariateOrdered_FOS::id() { return "incrLT_Uni-asc"; }
+string IncrementalLT_UnivariateOrdered_FOS::toString(){ return "Ascending Incremental Linkage Tree, followed by (ascending) Univariate FOS"; }
 
 
 /* ------------------------ Incremental LT Reversed + Ordered Univariate FOS ------------------------ */
@@ -101,13 +74,13 @@ vector<uvec> IncrementalLTReversed_UnivariateOrdered_FOS::getFOS (vector<Individ
     vector<uvec> fos;
     fos.reserve(2 * n);
     vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(n);
-    vector<uvec> univariate = FOSStructures::getOrderedUnivariate_FOS(n);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
 }
-string IncrementalLTReversed_UnivariateOrdered_FOS::id() { return "incrLTReversed-UniOrd"; }
-string IncrementalLTReversed_UnivariateOrdered_FOS::toString(){ return "Reversed Incremental Linkage Tree, followed by (ordered) Univariate FOS"; }
+string IncrementalLTReversed_UnivariateOrdered_FOS::id() { return "incrLT-desc_Uni-asc"; }
+string IncrementalLTReversed_UnivariateOrdered_FOS::toString(){ return "Descending Incremental Linkage Tree, followed by (ascending) Univariate FOS"; }
 
 
 /* ------------------------ Incremental LT Reversed + Univariate FOS ------------------------ */
@@ -121,27 +94,31 @@ vector<uvec> IncrementalLTReversed_Univariate_FOS::getFOS (vector<Individual> &p
     vector<uvec> fos;
     fos.reserve(2 * n);
     vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(n);
-    vector<uvec> univariate = FOSStructures::getRandomUnivariate_FOS(n);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::RANDOM);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
 }
-string IncrementalLTReversed_Univariate_FOS::id() { return "incrLTReversed-Uni"; }
-string IncrementalLTReversed_Univariate_FOS::toString(){ return "Reversed Incremental Linkage Tree, followed by (random) Univariate FOS"; }
+string IncrementalLTReversed_Univariate_FOS::id() { return "incrLT-desc_Uni-rand"; }
+string IncrementalLTReversed_Univariate_FOS::toString(){ return "Descending Incremental Linkage Tree, followed by (random) Univariate FOS"; }
 
 
 /* ------------------------ Unordered Univariate FOS ------------------------ */
 
-Univariate_FOS::Univariate_FOS(){
-    reinitializeOnNewRound = true;
+Univariate_FOS::Univariate_FOS(Utility::Order order) : order(order){
+    if (order == Utility::Order::RANDOM){
+        reinitializeOnNewRound = true;
+    } else {
+        reinitializeOnNewRound = false;
+    }
 }
 
 vector<uvec> Univariate_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getRandomUnivariate_FOS(population[0].genotype.size());
+    return FOSStructures::getUnivariate_FOS(population[0].genotype.size(), order);
 }
 
-string Univariate_FOS::id() { return "UniUnord"; }
-string Univariate_FOS::toString(){ return "Unordered Univariate FOS"; }
+string Univariate_FOS::id() { return "Uni-" + Utility::orderToID(order); }
+string Univariate_FOS::toString(){ return Utility::orderToString(order) + " Univariate FOS"; }
 
 
 /* ------------------------ Triplet FOS ------------------------------------- */
@@ -155,7 +132,7 @@ vector<uvec> Triplet_FOS::getFOS (vector<Individual> &population){
 }
 
 string Triplet_FOS::id() { return "Triplet-" + Utility::orderToID(order); }
-string Triplet_FOS::toString(){ return "Triplet FOS"; }
+string Triplet_FOS::toString(){ return Utility::orderToString(order) + " Triplet FOS"; }
 
 
 /* ------------------------ Triplet Tree FOS ------------------------------------- */
@@ -169,7 +146,7 @@ vector<uvec> TripletTree_FOS::getFOS (vector<Individual> &population){
 }
 
 string TripletTree_FOS::id() { return "TripletTree-" + Utility::orderToID(order); }
-string TripletTree_FOS::toString(){ return "Triplet Tree FOS"; }
+string TripletTree_FOS::toString(){ return Utility::orderToString(order) + " Triplet Tree FOS"; }
 
 
 /* ------------------------ ARK6 FOS ------------------------------------- */
@@ -181,11 +158,11 @@ ARK6_FOS::ARK6_FOS(Utility::Order order) : order(order){
 }
 
 vector<uvec> ARK6_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getTriplet_FOS(population[0].genotype.size(), order);
+    return FOSStructures::getARK6_FOS(population[0].genotype.size(), order);
 }
 
 string ARK6_FOS::id() { return "ARK6-" + Utility::orderToID(order); }
-string ARK6_FOS::toString(){ return "ARK6 FOS"; }
+string ARK6_FOS::toString(){ return Utility::orderToString(order) + " ARK6 FOS"; }
 
 
 /* ------------------------ Namespace FOS Structures ------------------------ */
@@ -216,35 +193,13 @@ vector<uvec> FOSStructures::getIncrementalLTReversed_FOS(int n){
     return fos;
 }
 
-vector<uvec> FOSStructures::getOrderedUnivariate_FOS(int n){
+vector<uvec> FOSStructures::getUnivariate_FOS(int n, Utility::Order order){
     vector<uvec> fos;
     fos.reserve(n);
+    vector<int> orderedArray = Utility::getOrderedArray(n, order);
     for(int i = 0; i < n; i++){
         uvec subset(1);
-        subset[0] = i;
-        fos.push_back(subset);
-    }
-    return fos;
-}
-
-vector<uvec> FOSStructures::getOrderedUnivariateReversed_FOS(int n){
-    vector<uvec> fos;
-    fos.reserve(n);
-    for(int i = n-1; i >= 0; i--){
-        uvec subset(1);
-        subset[0] = i;
-        fos.push_back(subset);
-    }
-    return fos;
-}
-
-vector<uvec> FOSStructures::getRandomUnivariate_FOS(int n){
-    vector<uvec> fos;
-    fos.reserve(n);
-    vector<int> randArray = Utility::getRandomlyPermutedArrayV2(n);
-    for (int i = 0; i < n; i++){
-        uvec subset(1);
-        subset[0] = randArray[i];
+        subset[0] = orderedArray[i];
         fos.push_back(subset);
     }
     return fos;
@@ -313,7 +268,7 @@ vector<uvec> FOSStructures::getARK6_FOS(int n, Utility::Order order){
 }
 
 void FOSStructures::printFOS(std::vector<arma::uvec> fos){
-    cout << "Learned LT: ";
+    cout << "FOS: ";
     for (int i = 0; i < fos.size(); i++){
         // Uncomment below to display only subsets of a certain length
 //        if (fos[i].size() != 3)

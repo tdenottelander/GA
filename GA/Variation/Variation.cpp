@@ -125,8 +125,8 @@ GOM_Variation::GOM_Variation(bool forcedImprovement) : forcedImprovement(forcedI
 };
 
 vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
-//    bestIndividual = &(fitfunc->bestIndividual);
     fos = fosObject->getFOS(population);
+//    FOSStructures::printFOS(fos);
     vector<Individual> offspring;
     if(printfos){ FOSStructures::printFOS(fos); }
     offspring.reserve(population.size());
