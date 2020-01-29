@@ -23,15 +23,17 @@ public:
     int identityLayer;
     int jsonAccuracyIndex;
     std::string folder;
-    ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
+    ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
     float evaluate(Individual &ind) override;
-    virtual float query(arma::uvec encoding);
+    float query(arma::uvec encoding);
     float query(std::vector<int> encoding);
+    virtual float getFitness(arma::uvec encoding);
     int getNumParams(std::vector<int> encoding);
     void display() override;
     std::string id() override;
     void setLength (int length) override;
     float getOptimum(int problemLength);
+    
     
     static void printArchitecture(std::vector<int> architecture);
     
@@ -51,8 +53,12 @@ public:
     void doAnalysis(int minLayerSize, int maxLayerSize);
     
     float getOptimum(std::string folder, int layers, bool allowIdentityLayers);
+    arma::uvec getOptimalGenotype();
+    void setGenotypeChecking();
+    int findMostDifferentGenotype(std::vector<arma::uvec> &genotypes);
 };
 
 static std::string folderPrefix = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/Benchmarks/";
+static nlohmann::json lookupTable;
 
 #endif /* ARK_hpp */

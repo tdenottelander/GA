@@ -11,14 +11,13 @@
 
 #include <stdio.h>
 #include "ARK.hpp"
+#include <algorithm>
 
 class ARK6 : public ARK {
 public:
-    nlohmann::json lookupTable;
-    
-    ARK6(int problemSize, int maxEvaluations);
-    
-    float query (arma::uvec encoding) override;
+    ARK6(int problemSize, bool genotypeChecking);
+        
+    float getFitness (arma::uvec encoding) override;
     
     void display() override;
     std::string id() override;

@@ -17,8 +17,8 @@ using namespace nlohmann;
 ////    createTable();
 //}
 
-NK::NK(int problemLength, int blocksize, bool wraparound, int alphabetsize, int maxEvaluations) :
-    FitnessFunction(-1, maxEvaluations, getProblemType(alphabetsize)),
+NK::NK(int problemLength, int blocksize, bool wraparound, int alphabetsize) :
+    FitnessFunction(-1, getProblemType(alphabetsize)),
     blocksize(blocksize),
     wraparound(wraparound),
     alphabetSize(alphabetsize),

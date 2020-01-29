@@ -28,5 +28,13 @@ AlphabetProblemType::AlphabetProblemType (vector<int> alphabet){
 }
 
 string AlphabetProblemType::id(){
-    return "Alphabet";
+    string result = "Alphabet[";
+    for (int i = 0; i < alphabet.size(); i++){
+        result += to_string(alphabet[i]);
+        if (i < alphabet.size()-1){
+            result += ",";
+        }
+    }
+    result += "]";
+    return result;
 }

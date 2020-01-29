@@ -18,11 +18,12 @@ extern bool storeConvergence;
 
 nlohmann::json convergence;
 
-RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval) :
+RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
     maxPopSizeLevel(maxPopSizeLevel),
     maxSeconds(maxSeconds),
     maxEvaluations(maxEvaluations),
+    maxUniqueEvaluations(maxUniqueEvaluations),
     interval(interleavedRoundInterval)
 {}
 
@@ -42,6 +43,8 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     output["stoppingCondition"] = "-1";
     
     g->fitFunc_ptr->setLength(problemSize);
+    g->fitFunc_ptr->maxEvaluations = maxEvaluations;
+    g->fitFunc_ptr->maxUniqueEvaluations = maxUniqueEvaluations;
     
     //TODO: Refactor as armadillo uvec
     whichShouldRun.reserve(maxPopSizeLevel);
@@ -74,8 +77,11 @@ json RoundSchedule::run() {
         } else if (maxSeconds != -1 && millis() - start > maxSeconds * 1000) {
             output["stoppingCondition"] = "maxTimeExceeded";
             break;
-        } else if (maxEvaluations != -1 && gaList[0]->fitFunc_ptr->totalEvaluations > maxEvaluations){
+        } else if (maxEvaluationsExceeded()){
             output["stoppingCondition"] = "maxEvaluationsExceeded";
+            break;
+        } else if (maxUniqueEvaluationsExceeded()){
+            output["stoppingCondition"] = "maxUniqueEvaluationsExceeded";
             break;
         }
 
@@ -116,7 +122,7 @@ json RoundSchedule::run() {
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
-                    if (maxEvaluations != -1 && ga->fitFunc_ptr->totalEvaluations > maxEvaluations){
+                    if (maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded()){
                         break;
                     }
                     
@@ -190,4 +196,12 @@ int RoundSchedule::getAmountOfEvaluations(){
         evaluations += ga->getTotalAmountOfEvaluations();
     }
     return evaluations;
+}
+
+bool RoundSchedule::maxEvaluationsExceeded() {
+    return maxEvaluations != -1 && gaList[0]->fitFunc_ptr->totalEvaluations > maxEvaluations;
+}
+
+bool RoundSchedule::maxUniqueEvaluationsExceeded() {
+    return maxUniqueEvaluations != -1 && gaList[0]->fitFunc_ptr->totalUniqueEvaluations > maxUniqueEvaluations;
 }

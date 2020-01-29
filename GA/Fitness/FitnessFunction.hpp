@@ -21,8 +21,11 @@ public:
     float optimum;
     bool optimumFound;
     int maxEvaluations;
+    int maxUniqueEvaluations;
     ProblemType *problemType;
     int totalProblemLength;
+    bool checkForGenotype = false;
+    arma::uvec optimalGenotype;
     
     int totalEvaluations;
     int totalUniqueEvaluations;
@@ -30,8 +33,8 @@ public:
     UniqueSolutions uniqueSolutions;
     UniqueSolutions transformedUniqueSolutions;
     
-    FitnessFunction(float optimum, int maxEvaluations, ProblemType *problemType);
-    FitnessFunction(int maxEvaluations, ProblemType *problemType);
+    FitnessFunction(float optimum, ProblemType *problemType);
+    FitnessFunction(ProblemType *problemType);
     
     virtual void clear();
     
@@ -42,9 +45,11 @@ public:
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
+    void setGenotypeChecking(arma::uvec genotype);
     
     int getTotalAmountOfEvaluations();
     bool maxEvaluationsExceeded();
+    bool maxUniqueEvaluationsExceeded();
     
     virtual FitnessFunction* clone() const = 0;
     
@@ -55,8 +60,8 @@ public:
 
 class OneMax : public FitnessFunction {
 public:
-    OneMax (int length, int maxEvaluations);
-    OneMax (int maxEvaluations);
+    OneMax (int length);
+    OneMax ();
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -67,8 +72,8 @@ public:
 
 class LeadingOnes : public FitnessFunction {
 public:
-    LeadingOnes (int length, int maxEvaluations);
-    LeadingOnes (int maxEvaluations);
+    LeadingOnes (int length);
+    LeadingOnes ();
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
@@ -78,7 +83,7 @@ public:
 
 class NonBinaryMax : public FitnessFunction {
 public:
-    NonBinaryMax (int maxEvaluations);
+    NonBinaryMax ();
     float evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;

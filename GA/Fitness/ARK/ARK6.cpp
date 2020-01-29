@@ -12,17 +12,23 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK6::ARK6(int problemSize, int maxEvaluations) : ARK(problemSize, false, maxEvaluations, getProblemType(), -1, 2, "ark6")
+ARK6::ARK6(int problemSize, bool genotypeChecking) : ARK(problemSize, false, genotypeChecking, getProblemType(), -1, 2, "ark6")
 {
-    cout << "Reading in ARK-6 results. This may take a while." << endl;
-    string filename = folderPrefix + folder + "/ark6.json";
-    ifstream ifs(filename);
-    lookupTable = json::parse(ifs);
-    cout << "Done loading ARK-6 results" << endl;
+    if(lookupTable.empty()){
+        cout << "Reading in ARK-6 results. This may take a while." << endl;
+        string filename = folderPrefix + folder + "/ark6_minimal.json";
+        ifstream ifs(filename);
+        if(!ifs.good()){
+            cout << "Error, cannot read results." << endl;
+        } else {
+            lookupTable = json::parse(ifs);
+            cout << "Done loading ARK-6 results" << endl;
+        }
+    }
 }
 
 
-float ARK6::query (uvec encoding){
+float ARK6::getFitness (uvec encoding){
     string layers;
     for (int i = 0; i < 14; i++){
         // Appends identity layers to the back of the architecture when we are dealing with problem lengths < 14.
@@ -38,7 +44,6 @@ float ARK6::query (uvec encoding){
     }
 
     float result = lookupTable[layers]["val_acc"][0];
-        
     return result;
 }
 

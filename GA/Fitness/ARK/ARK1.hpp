@@ -15,7 +15,7 @@
 class ARK1 : public ARK {
 public:
     ARK1();
-    ARK1(int problemSize, bool allowIdentityLayers, int maxEvaluations);
+    ARK1(int problemSize, bool allowIdentityLayers);
     void display() override;
     std::string id() override;
     FitnessFunction* clone() const override;

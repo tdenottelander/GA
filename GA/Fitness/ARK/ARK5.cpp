@@ -13,9 +13,9 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-ARK5::ARK5() : ARK(8, true, -1, getProblemType(true), 2, 2, "ark5") {}
+ARK5::ARK5() : ARK(8, true, false, getProblemType(true), 2, 2, "ark5") {}
 
-ARK5::ARK5(int problemSize, bool allowIdentityLayers, int maxEvaluations) : ARK(problemSize, allowIdentityLayers, maxEvaluations, getProblemType(allowIdentityLayers), 2, 2, "ark5") {}
+ARK5::ARK5(int problemSize, bool allowIdentityLayers) : ARK(problemSize, allowIdentityLayers, false, getProblemType(allowIdentityLayers), 2, 2, "ark5") {}
 
 void ARK5::display(){
     cout << "ARK-5 fitness function" << endl;

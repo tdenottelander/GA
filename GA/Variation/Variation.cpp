@@ -139,7 +139,7 @@ vector<Individual> GOM_Variation::variate(std::vector<Individual> &population){
             child.counterNotChanged++;
         }
         offspring.push_back(child);
-        if(fitfunc->optimumFound || fitfunc->maxEvaluationsExceeded()){
+        if(fitfunc->optimumFound || fitfunc->maxEvaluationsExceeded() || fitfunc->maxUniqueEvaluationsExceeded()){
             break;
         }
     }
@@ -176,7 +176,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
                 o.fitness = b.fitness;
             }
         }
-        if(fitfunc->optimumFound || fitfunc->maxEvaluationsExceeded()){
+        if(fitfunc->optimumFound || fitfunc->maxEvaluationsExceeded() || fitfunc->maxUniqueEvaluationsExceeded()){
             break;
         }
     }

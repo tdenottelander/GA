@@ -15,7 +15,6 @@
 class ARK3 : public ARK {
 public:
     ARK3();
-    ARK3(int maxEvaluations);
     void display() override;
     std::string id() override;
     FitnessFunction* clone() const override;

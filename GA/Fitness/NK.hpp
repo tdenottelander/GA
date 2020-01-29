@@ -22,7 +22,7 @@ public:
     int tableIndex;
     nlohmann::json table;
 //    NK();
-    NK(int problemLength, int blocksize, bool wraparound, int alphabetsize, int maxEvaluations);
+    NK(int problemLength, int blocksize, bool wraparound, int alphabetsize);
     void clear() override ;
     void createTable();
     float evaluate(Individual &ind) override;

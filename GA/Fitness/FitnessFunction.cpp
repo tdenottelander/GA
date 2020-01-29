@@ -11,17 +11,19 @@
 using namespace std;
 using namespace arma;
 
+extern bool storeAbsoluteConvergence;
 extern bool storeUniqueConvergence;
 extern bool storeTransformedUniqueConvergence;
 extern nlohmann::json convergence;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(float optimum, int maxEvaluations, ProblemType *problemType) :
+FitnessFunction::FitnessFunction(float optimum, ProblemType *problemType) :
     bestIndividual(0),
     optimum(optimum),
     optimumFound(false),
-    maxEvaluations(maxEvaluations),
+    maxEvaluations(-1),
+    maxUniqueEvaluations(-1),
     problemType(problemType),
     totalEvaluations(0),
     totalUniqueEvaluations(0),
@@ -31,10 +33,11 @@ FitnessFunction::FitnessFunction(float optimum, int maxEvaluations, ProblemType 
 {
 }
 
-FitnessFunction::FitnessFunction(int maxEvaluations, ProblemType *problemType) :
+FitnessFunction::FitnessFunction(ProblemType *problemType) :
     bestIndividual(0),
     optimumFound(false),
-    maxEvaluations(maxEvaluations),
+    maxEvaluations(-1),
+    maxUniqueEvaluations(-1),
     problemType(problemType),
     totalEvaluations(0),
     totalUniqueEvaluations(0),
@@ -60,14 +63,15 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     totalEvaluations++;
 //    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
     float roundedFitness = bestIndividual.fitness;
-    convergence["absolute"].push_back(roundedFitness);
-//    convergence["absolute"][to_string(totalEvaluations)] = bestIndividual.fitness;
+    
+    if(storeAbsoluteConvergence){
+        convergence["absolute"].push_back(roundedFitness);
+    }
     
     if(storeUniqueConvergence && !uniqueSolutions.contains(ind.genotype)){
         uniqueSolutions.put(ind.genotype);
         totalUniqueEvaluations++;
         convergence["unique"].push_back(roundedFitness);
-//        convergence["unique"][to_string(totalUniqueEvaluations)] = bestIndividual.fitness;
     }
     
     if(storeTransformedUniqueConvergence){
@@ -88,12 +92,23 @@ void FitnessFunction::display(){
 // Checks whether this individual is fitter than the best found individual so far.
 // Checks whether the individual is optimal.
 void FitnessFunction::checkIfBestFound(Individual &ind){
+    
+//    if(checkForGenotype && ind.genotypeEquals(optimalGenotype)){
+//        ind.fitness += 0.01;
+//    }
+    
     if(ind.fitness > bestIndividual.fitness){
         bestIndividual = ind.copy();
-        if(ind.fitness >= optimum){
+//        cout << "this genotype: " << Utility::genotypeToString(ind.genotype) << "  opt genotype: " << Utility::genotypeToString(optimalGenotype) << endl;
+        if((!checkForGenotype && ind.fitness >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
             optimumFound = true;
         }
     }
+}
+
+void FitnessFunction::setGenotypeChecking(uvec genotype){
+    checkForGenotype = true;
+    optimalGenotype = genotype;
 }
 
 // Returns the total amount of evaluations over all fitness functions.
@@ -104,6 +119,10 @@ int FitnessFunction::getTotalAmountOfEvaluations(){
 // Checks whether the maximum amount of evaluations is exceeded
 bool FitnessFunction::maxEvaluationsExceeded(){
     return totalEvaluations >= maxEvaluations && maxEvaluations != -1;
+}
+
+bool FitnessFunction::maxUniqueEvaluationsExceeded(){
+    return totalUniqueEvaluations >= maxUniqueEvaluations && maxUniqueEvaluations != -1;
 }
 
 // Returns the id of the fitness function
@@ -126,8 +145,8 @@ uvec FitnessFunction::transform(uvec &genotype){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations, getProblemType()) {}
-OneMax::OneMax(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
+OneMax::OneMax(int length) : FitnessFunction(length, getProblemType()) {}
+OneMax::OneMax() : FitnessFunction(getProblemType()) {}
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
@@ -159,8 +178,8 @@ FitnessFunction* OneMax::clone() const {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int length, int maxEvaluations) : FitnessFunction(length, maxEvaluations, getProblemType()) {}
-LeadingOnes::LeadingOnes(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
+LeadingOnes::LeadingOnes(int length) : FitnessFunction(length, getProblemType()) {}
+LeadingOnes::LeadingOnes() : FitnessFunction(getProblemType()) {}
 
 ProblemType* LeadingOnes::getProblemType(){
     return new BinaryProblemType();
@@ -199,7 +218,7 @@ string LeadingOnes::id() {
 
 /* ------------------------ Non-Binary Max Fitness Function ------------------------ */
 
-NonBinaryMax::NonBinaryMax(int maxEvaluations) : FitnessFunction(maxEvaluations, getProblemType()) {}
+NonBinaryMax::NonBinaryMax() : FitnessFunction(getProblemType()) {}
 
 //TODO: FINISH IMPLEMENTATION OF NONBINARY MAX FITNESS FUNCTION
 

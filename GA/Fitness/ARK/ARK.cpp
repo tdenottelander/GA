@@ -16,13 +16,18 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-ARK::ARK(int problemSize, bool allowIdentityLayers, int maxEvaluations, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
-    FitnessFunction(getOptimum(folder, problemSize, allowIdentityLayers), maxEvaluations, problemType),
+ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
+    FitnessFunction(getOptimum(folder, problemSize, allowIdentityLayers), problemType),
     allowIdentityLayers(allowIdentityLayers),
     identityLayer(identity),
     jsonAccuracyIndex(jsonAccuracyIndex),
     folder(folder) {
-    totalProblemLength = problemSize;
+        
+        totalProblemLength = problemSize;
+        if(genotypeChecking){
+            setGenotypeChecking();
+        }
+        
 //    setProblemType(allowIdentityLayers);
 }
 
@@ -37,27 +42,7 @@ float ARK::evaluate(Individual &ind){
 
 // Returns the fitness of the architecture passed by its encoding by querying the benchmark
 float ARK::query(uvec encoding){
-    //Transform encoding into string
-    string layers;
-    for (int i : encoding){
-        //ignore identity layer
-        if(i != identityLayer){
-            layers += to_string(i);
-        }
-    }
-
-    //Prepend "model_"
-    //Append ".json"
-    layers = folderPrefix + folder + "/model_" + layers + ".json";
-
-    //Load file
-    ifstream ifs(layers);
-    json rawdata = json::parse(ifs);
-
-    //Retrieve the correct value (validation accuracy at epoch 120)
-    float result = rawdata["val_acc_ensemble"].at(jsonAccuracyIndex);
-
-    //return result
+    float result = getFitness(encoding);
     return result;
 }
 
@@ -68,6 +53,29 @@ float ARK::query(vector<int> encoding){
         uvecEncoding[i] = encoding[i];
     }
     return query(uvecEncoding);
+}
+
+float ARK::getFitness(uvec encoding){
+    //Transform encoding into string
+    string layers;
+    for (int i : encoding){
+        //ignore identity layer
+        if(i != identityLayer){
+            layers += to_string(i);
+        }
+    }
+    
+    //Prepend "model_"
+    //Append ".json"
+    layers = folderPrefix + folder + "/model_" + layers + ".json";
+    
+    //Load file
+    ifstream ifs(layers);
+    json rawdata = json::parse(ifs);
+    
+    //Retrieve the correct value (validation accuracy at epoch 120)
+    float result = rawdata["val_acc_ensemble"].at(jsonAccuracyIndex);
+    return result;
 }
 
 int ARK::getNumParams(vector<int> encoding){
@@ -202,7 +210,72 @@ float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
     }
     cout << "Loading optima from " << filename << endl;
     json analysis = json::parse(ifs);
+//    auto optGenotypes = analysis["optima"][to_string(layers)]["genotypes"];
+//    vector<uvec> genotypes;
+//    for (string gen : optGenotypes){
+//        cout << gen << endl;
+//        genotypes.push_back(Utility::stringToGenotype(gen));
+//    }
+//    int selectedGenotypeIdx = findMostDifferentGenotype(genotypes);
+//    optimalGenotype = uvec(genotypes[selectedGenotypeIdx]);
+//    cout << "optimal Genotype: " << Utility::genotypeToString(optimalGenotype);
     float result = analysis["optima"][to_string(layers)]["optimum"];
     return result;
-    return 0.0;
+}
+
+uvec ARK::getOptimalGenotype(){
+    string filename = folderPrefix + folder + "/analysis.json";
+    ifstream ifs(filename);
+    if (!ifs.good()){
+        cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimal genotype to {0}." << endl;
+        return {0};
+    } else {
+        json analysis = json::parse(ifs);
+        auto optGenotypes = analysis["optima"][to_string(totalProblemLength)]["genotypes"];
+        vector<uvec> genotypes;
+        for (string gen : optGenotypes){
+            cout << gen << endl;
+            genotypes.push_back(Utility::stringToGenotype(gen));
+        }
+        int selectedGenotypeIdx = findMostDifferentGenotype(genotypes);
+        uvec optGen = uvec(genotypes[selectedGenotypeIdx]);
+        cout << "optimal Genotype: " << Utility::genotypeToString(optGen) << endl;
+        return optGen;
+    }
+}
+
+void ARK::setGenotypeChecking(){
+    uvec optGen = getOptimalGenotype();
+    FitnessFunction::setGenotypeChecking(optGen);
+}
+
+int ARK::findMostDifferentGenotype(vector<arma::uvec> &genotypes){
+    bool print = true;
+    vector<vector<int>> distances;
+    int n = genotypes.size();
+    distances.reserve(n);
+    for (int i = 0; i < n; i++){
+        vector<int> distancesInner;
+        distancesInner.reserve(n);
+        distances.push_back(distancesInner);
+    }
+    
+    int highestDist = -1;
+    int mostDifferentGenotypeIdx = -1;
+    for (int i = 0; i < genotypes.size(); i++){
+        if (print) cout << "[ ";
+        int total = 0;
+        for (int j = 0; j < genotypes.size(); j++){
+            int dist = Individual::hammingDistance(genotypes[i], genotypes[j]);
+            distances[i].push_back(dist);
+            if (print) cout << dist << " ";
+            total += dist;
+        }
+        if (total > highestDist){
+            highestDist = total;
+            mostDifferentGenotypeIdx = i;
+        }
+        if (print) cout << "] (" << total << ")\n";
+    }
+    return mostDifferentGenotypeIdx;
 }

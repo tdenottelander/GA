@@ -25,6 +25,7 @@ public:
     int maxPopSizeLevel;
     int maxSeconds;
     int maxEvaluations;
+    int maxUniqueEvaluations;
     int interval;
     Selection* selection;
     Variation* variation;
@@ -32,11 +33,13 @@ public:
     nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
-    RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int interleavedRoundInterval);
+    RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval);
     void initialize(GA *ga, int problemSize, bool nonIMSmode = false, int nonIMSpopsize = 0);
     nlohmann::json run();
     void terminateGAs(int n);
     int getAmountOfEvaluations();
+    bool maxEvaluationsExceeded();
+    bool maxUniqueEvaluationsExceeded();
 };
 
 #endif /* RoundSchedule_hpp */
