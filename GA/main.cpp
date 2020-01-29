@@ -25,6 +25,7 @@
 #include "ARK4.hpp"
 #include "ARK5.hpp"
 #include "ARK6.hpp"
+#include "ARK7.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -93,6 +94,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
+//        FitnessFunction * fit = new ARK7(problemSize, genotypeChecking);
         
 //        FitnessFunction * fit = new ARK3();
         
