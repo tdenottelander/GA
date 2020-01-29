@@ -73,7 +73,11 @@ bool Individual::equals(const Individual &ind) {
     return true;
 }
 
-string Individual::toString(vector<int> genotype){
+bool Individual::genotypeEquals(uvec &g){
+    return genotypeEquals(g, genotype);
+}
+
+string Individual::toString(vector<int> &genotype){
     string result = "[";
     for (unsigned long i = 0; i < genotype.size(); i++){
         result += to_string(genotype[i]);
@@ -85,11 +89,12 @@ string Individual::toString(vector<int> genotype){
     return result;
 }
 
-string Individual::toString(uvec genotype){
-    return toString(Utility::uvecToVector(genotype));
+string Individual::toString(uvec &genotype){
+    vector<int> gen = Utility::uvecToVector(genotype);
+    return toString(gen);
 }
 
-int Individual::hammingDistance(uvec g1, uvec g2){
+int Individual::hammingDistance(uvec &g1, uvec &g2){
     if (g1.size() != g2.size()){
         cout << "Error: Cannot compare hamming distance between two genotypes of different length" << endl;
         return -1;
@@ -102,11 +107,11 @@ int Individual::hammingDistance(uvec g1, uvec g2){
     return distance;
 }
 
-int Individual::editDistance(uvec g1, uvec g2){
+int Individual::editDistance(uvec &g1, uvec &g2){
     return editDistance(g1, g2, g1.size(), g2.size());
 }
 
-int Individual::editDistance(uvec g1, uvec g2, int i, int j){
+int Individual::editDistance(uvec &g1, uvec &g2, int i, int j){
     if(i == 0 || j == 0){
         return max(i, j);
     } else {
@@ -130,4 +135,16 @@ uvec Individual::removeIdentities(uvec &genotype, int identityLayerIndex){
         }
     }
     return newGenotype.head(j);
+}
+
+bool Individual::genotypeEquals(uvec &g1, uvec &g2){
+    if(g1.size() != g2.size()){
+        return false;
+    }
+    for (int i = 0; i < g1.size(); i++){
+        if (g1[i] != g2[i]){
+            return false;
+        }
+    }
+    return true;
 }
