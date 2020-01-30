@@ -164,10 +164,10 @@ int GA::getTotalAmountOfEvaluations(){
 void GA::initializeTrueRandomPopulation(){
     population = vector<Individual>();
     population.reserve(populationSize);
+    vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
     for(int i = 0; i < populationSize; i++){
         Individual ind (fitFunc_ptr->totalProblemLength);
-        vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
-        ind.initialize(fitFunc_ptr->problemType->alphabet);
+        ind.initialize(alphabet);
         population.push_back(ind);
     }
 }

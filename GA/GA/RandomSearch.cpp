@@ -13,7 +13,15 @@ using namespace std;
 RandomSearch::RandomSearch (FitnessFunction * fitFunc) : GA(fitFunc){}
 
 void RandomSearch::round(){
-    GA::initializeTrueRandomPopulation();
+    int n = fitFunc_ptr->totalProblemLength;
+    vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
+    int alphLength = alphabet.size();
+    for (int i = 0; i < population.size(); i++){
+        for (int j = 0; j < n; j++){
+            population[i].genotype[j] = alphabet[floor(Utility::getRand() * alphLength)];
+        }
+    }
+    evaluateAll();
     roundsCount++;
 }
 
