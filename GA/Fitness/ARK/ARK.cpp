@@ -16,6 +16,8 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
+extern std::string ARK_Analysis_suffix;
+
 ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
     FitnessFunction(getOptimum(folder, problemSize, allowIdentityLayers), problemType),
     allowIdentityLayers(allowIdentityLayers),
@@ -145,7 +147,7 @@ ARK::solution ARK::findBest (){
 void ARK::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int idx, solution &statistics){
     if (idx == length){
         float result = query (temp);
-        if (abs(result - statistics.fitness) < 0.01){
+        if (abs(result - statistics.fitness) < 0.001){
             statistics.genotypes.push_back(temp);
             statistics.optCount = statistics.optCount + 1;
         } else if (result > statistics.fitness){
@@ -198,11 +200,11 @@ void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
         optima[to_string(i)]["possibleGenotypes"] = statistics.totalCount;
     }
     results["optima"] = optima;
-    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis.json");
+    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis" + ARK_Analysis_suffix + ".json");
 }
 
 float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
-    string filename = folderPrefix + folder + "/analysis.json";
+    string filename = folderPrefix + folder + "/analysis" + ARK_Analysis_suffix + ".json";
     ifstream ifs(filename);
     if(!ifs.good()){
         cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimum to 100.0 for now." << endl;
@@ -224,7 +226,7 @@ float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
 }
 
 uvec ARK::getOptimalGenotype(){
-    string filename = folderPrefix + folder + "/analysis.json";
+    string filename = folderPrefix + folder + "/analysis" + ARK_Analysis_suffix + ".json";
     ifstream ifs(filename);
     if (!ifs.good()){
         cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimal genotype to {0}." << endl;

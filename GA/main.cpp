@@ -57,10 +57,11 @@ const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/proj
 bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
-bool storeConvergence = true;
+bool storeConvergence = false;
 bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
 bool storeTransformedUniqueConvergence = false;
+std::string ARK_Analysis_suffix = "";
 
 void runNasbench(){
 

@@ -12,17 +12,19 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
+extern std::string ARK_Analysis_suffix;
+
 ARK7::ARK7(int problemSize, bool genotypeChecking) : ARK(problemSize, false, genotypeChecking, getProblemType(), -1, 2, "ark7")
 {
     if(lookupTable.empty()){
-        cout << "Reading in ARK-7 results. This may take a while." << endl;
-        string filename = folderPrefix + folder + "/ark7.json";
+        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " results. This may take a while." << endl;
+        string filename = folderPrefix + folder + "/ark7" + ARK_Analysis_suffix + ".json";
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "Error, cannot read results." << endl;
         } else {
             lookupTable = json::parse(ifs);
-            cout << "Done loading ARK-7 results" << endl;
+            cout << "Done loading ARK-7" + ARK_Analysis_suffix + " results" << endl;
         }
     }
 }
