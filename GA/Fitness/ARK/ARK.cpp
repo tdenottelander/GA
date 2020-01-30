@@ -36,6 +36,12 @@ ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, Probl
 // Returns the fitness of an individual
 float ARK::evaluate(Individual &ind){
     float fitness = query(ind.genotype);
+    if(noisy) {
+        std::normal_distribution<> dist (0, noisePercentage * fitness);
+        float noise = dist(rng);
+//        cout << "Fitness: " << fitness << " noise: " << noise << endl;
+        fitness += noise;
+    }
     ind.fitness = fitness;
     
     evaluationProcedure(ind);
@@ -280,4 +286,9 @@ int ARK::findMostDifferentGenotype(vector<arma::uvec> &genotypes){
         if (print) cout << "] (" << total << ")\n";
     }
     return mostDifferentGenotypeIdx;
+}
+
+void ARK::setNoisy (float percentage){
+    noisy = true;
+    noisePercentage = percentage;
 }

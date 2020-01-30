@@ -91,11 +91,12 @@ void runNasbench(){
         
         bool allowIdentityLayers = true;
         bool genotypeChecking = true;
-        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
+//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-//        FitnessFunction * fit = new ARK7(problemSize, genotypeChecking);
+        ARK * fit = new ARK7(problemSize, genotypeChecking);
+        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK3();
         

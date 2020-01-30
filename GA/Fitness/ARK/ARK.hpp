@@ -56,6 +56,10 @@ public:
     arma::uvec getOptimalGenotype();
     void setGenotypeChecking();
     int findMostDifferentGenotype(std::vector<arma::uvec> &genotypes);
+    
+    void setNoisy(float percentage);
+    bool noisy = false;
+    float noisePercentage = -1;
 };
 
 static std::string folderPrefix = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/Benchmarks/";
