@@ -97,12 +97,13 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 //        ind.fitness += 0.01;
 //    }
     
+    if((!checkForGenotype && ind.fitness >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
+        optimumFound = true;
+    }
+    
     if(ind.fitness > bestIndividual.fitness){
         bestIndividual = ind.copy();
 //        cout << "this genotype: " << Utility::genotypeToString(ind.genotype) << "  opt genotype: " << Utility::genotypeToString(optimalGenotype) << endl;
-        if((!checkForGenotype && ind.fitness >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
-            optimumFound = true;
-        }
     }
 }
 
