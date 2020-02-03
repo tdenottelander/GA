@@ -128,12 +128,17 @@ void GA::evaluateAll(){
     evaluateAll(population);
 }
 
-double GA::getAvgFitness(){
-    double result = 0;
+vector<float> GA::getAvgFitness(){
+    vector<float> result (population[0].fitness.size(), 0);
     for(Individual ind: population){
-        result += ind.fitness;
+        for (int obj = 0; obj < ind.fitness.size(); obj++){
+            result[obj] += ind.fitness[obj];
+        }
     }
-    return result / population.size();
+    for (int obj = 0; obj < population[0].fitness.size(); obj++){
+        result[obj] = result[obj] / population.size();
+    }
+    return result;
 }
 
 bool GA::isConverged(){
@@ -166,7 +171,7 @@ void GA::initializeTrueRandomPopulation(){
     population.reserve(populationSize);
     vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
     for(int i = 0; i < populationSize; i++){
-        Individual ind (fitFunc_ptr->totalProblemLength);
+        Individual ind (fitFunc_ptr->totalProblemLength, fitFunc_ptr->numObjectives);
         ind.initialize(alphabet);
         population.push_back(ind);
     }
@@ -190,7 +195,7 @@ void GA::initializeUninitializedPopulation(){
     population = vector<Individual>();
     population.reserve(populationSize);
     for(int i = 0; i < populationSize; i++){
-        Individual ind (fitFunc_ptr->totalProblemLength);
+        Individual ind (fitFunc_ptr->totalProblemLength, fitFunc_ptr->numObjectives);
         population.push_back(ind);
     }
 }

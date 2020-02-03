@@ -148,7 +148,7 @@ json RoundSchedule::run() {
                         continue;
 
                         // Else if it has a higher fitness than the previous GA, terminate all before this one
-                    } else if (i != 0 && !gaList[i-1]->terminated && ga->getAvgFitness() > gaList[i-1]->getAvgFitness()){
+                    } else if (i != 0 && !gaList[i-1]->terminated && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
                         terminateGAs(i - 1);
                         lowestActiveGAIdx = i;
                         continue;

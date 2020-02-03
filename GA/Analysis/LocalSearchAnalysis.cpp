@@ -13,7 +13,7 @@ using namespace nlohmann;
 
 bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessFunction* fitfunc){
     int bestLayer = ind.genotype[index];
-    float bestFitness = ind.fitness;
+    float bestFitness = ind.fitness[0];
     int currentLayer = ind.genotype[index];
     for(int layertype : fitfunc->problemType->alphabet){
         if(layertype == currentLayer)
@@ -26,7 +26,7 @@ bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessF
         }
     }
     ind.genotype[index] = bestLayer;
-    ind.fitness = bestFitness;
+    ind.fitness[0] = bestFitness;
     return currentLayer != bestLayer;
 }
 
@@ -68,7 +68,7 @@ void LocalSearchAnalysis::localSearchTests(ARK* fitfunc, int runs, string localS
     SolutionCounter finalSolutionSpace(alphabet.size(), probSize);
     
     for(int i = 0; i < runs; i++){
-        Individual ind(probSize);
+        Individual ind(probSize, fitfunc->numObjectives);
         ind.initialize(alphabet);
 //        int j = 16383;
 //        ind.genotype = HashingFunctions::decode(j, 7, 4);
@@ -77,9 +77,9 @@ void LocalSearchAnalysis::localSearchTests(ARK* fitfunc, int runs, string localS
         
         int evaluations = 1 + localSearch(ind, fitfunc, localSearchType);
         
-        resultingFitness.push_back(ind.fitness);
+        resultingFitness.push_back(ind.fitness[0]);
         
-        if(ind.fitness >= fitfunc->optimum - 0.01){
+        if(ind.fitness[0] >= fitfunc->optimum - 0.01){
             optimumfound++;
             evaluationsForSuccess.push_back(evaluations);
         } else

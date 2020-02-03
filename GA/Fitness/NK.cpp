@@ -95,7 +95,7 @@ float NK::evaluate(Individual &ind){
         fitness += evaluateBlock(blockIndex, block);
     }
     
-    ind.fitness = fitness;
+    ind.fitness[0] = fitness;
     evaluationProcedure(ind);
     
     return fitness;

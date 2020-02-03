@@ -46,7 +46,7 @@ public:
     bool isConverged();
     bool isDiverse();
     bool isOptimal();
-    double getAvgFitness();
+    std::vector<float> getAvgFitness();
     int getTotalAmountOfEvaluations();
     
     void initializeTrueRandomPopulation();

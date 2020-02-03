@@ -42,7 +42,7 @@ float ARK::evaluate(Individual &ind){
 //        cout << "Fitness: " << fitness << " noise: " << noise << endl;
         fitness += noise;
     }
-    ind.fitness = fitness;
+    ind.fitness[0] = fitness;
     
     evaluationProcedure(ind);
     return fitness;

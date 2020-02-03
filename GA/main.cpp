@@ -75,7 +75,7 @@ void runNasbench(){
     int repetitions = 50; //100
     bool IMS = true;
     
-    int minProblemSize = 10;
+    int minProblemSize = 2;
     int maxProblemSize = 14;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
@@ -91,14 +91,16 @@ void runNasbench(){
         
         bool allowIdentityLayers = true;
         bool genotypeChecking = true;
-//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
+        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-        ARK * fit = new ARK7(problemSize, genotypeChecking);
-        fit->setNoisy(0.01);
+//        ARK * fit = new ARK7(problemSize, genotypeChecking);
+//        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK3();
+        
+//        FitnessFunction * fit = new Trap(5, 5);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -112,39 +114,39 @@ void runNasbench(){
         vector<GA*> gaList = {
             new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
             new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
-//
-//            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
-//
+            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
+
+            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
+            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+
 //            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
-//
-//            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
+
+            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
+            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
             new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
-//
+
             new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
-//
+
             new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-//            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
 //
 //            new RandomSearch(fit),
 //
             new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
             new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
-//
+////
             new LocalSearch(fit, Utility::Order::RANDOM),
-//            new LocalSearch(fit, Utility::Order::ASCENDING),
+            new LocalSearch(fit, Utility::Order::ASCENDING),
             new LocalSearch(fit, Utility::Order::DESCENDING),
-//
+////
             new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
             new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
         };
@@ -153,6 +155,7 @@ void runNasbench(){
         json experiments;
         for(GA* ga : gaList){
             string gaID = ga->id();
+//            cout << gaID << endl;
             int populationSize = -1;
             if (!IMS){
                 populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
@@ -198,8 +201,8 @@ void runNasbench(){
                 experiments[gaID] = prob_json;
                 
                 // Extra write inbetween algorithms
-                main_json["experiments"] = experiments;
-                writeRawData(main_json.dump(), dataDir);
+//                main_json["experiments"] = experiments;
+//                writeRawData(main_json.dump(), dataDir);
             }
         }
         

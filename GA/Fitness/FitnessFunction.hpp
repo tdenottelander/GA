@@ -24,6 +24,7 @@ public:
     int maxUniqueEvaluations;
     ProblemType *problemType;
     int totalProblemLength;
+    int numObjectives = 1;
     bool checkForGenotype = false;
     arma::uvec optimalGenotype;
     
@@ -54,6 +55,7 @@ public:
     virtual FitnessFunction* clone() const = 0;
     
     virtual void setLength (int length);
+    virtual void setNumObjectives (int numObjectives);
     
     virtual arma::uvec transform(arma::uvec &genotype);
 };

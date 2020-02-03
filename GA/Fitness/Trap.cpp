@@ -22,7 +22,7 @@ float Trap::evaluate(Individual &ind) {
         result += subfunc(ind, i * blocksize, i * blocksize + blocksize);
     }
     
-    ind.fitness = result;
+    ind.fitness[0] = result;
     evaluationProcedure(ind);
     return result;
 }

@@ -15,9 +15,9 @@ using namespace Utility;
 
 /* ------------------------ Individual ------------------------ */
 
-Individual::Individual() : fitness(-1), counterNotChanged(0){}
+Individual::Individual() : fitness(1, -1), counterNotChanged(0){}
 
-Individual::Individual(int length) : fitness(-1), counterNotChanged(0){
+Individual::Individual(int length, int objectives) : fitness(objectives, -1), counterNotChanged(0){
     genotype = uvec (length);
 }
 
@@ -30,18 +30,26 @@ void Individual::initialize(vector<int> alphabet){
 
 Individual Individual::copy(){
     int l = genotype.size();
-    Individual ind(l);
+    int o = fitness.size();
+    Individual ind(l, o);
     for(int i = 0; i < l; i++){
         ind.genotype[i] = genotype[i];
     }
-    ind.fitness = fitness;
+    for(int i = 0; i < o; i++){
+        ind.fitness[i] = fitness[i];
+    }
     return ind;
 }
 
 string Individual::toString(){
     string result = toString(genotype);
-    result += "  F: ";
-    result += to_string(fitness);
+    result += "  F: [";
+    for (int i = 0; i < fitness.size(); i++){
+        result += to_string(fitness[i]);
+        if (i < fitness.size() - 1)
+            result += ", ";
+    }
+    result += "]";
     return result;
 }
 
@@ -57,13 +65,15 @@ string Individual::toStringBlocks(int blocksize){
         }
     }
     result += "]  F: ";
-    result += to_string(fitness);
+    result += to_string(fitness[0]);
     return result;
 }
 
 bool Individual::equals(const Individual &ind) {
-    if(fitness != ind.fitness){
-        return false;
+    for (int i = 0; i < fitness.size(); i++){
+        if (fitness[i] != ind.fitness[i]){
+            return false;
+        }
     }
     for (unsigned long i = 0; i < genotype.size(); i++){
         if(genotype[i] != ind.genotype[i]){

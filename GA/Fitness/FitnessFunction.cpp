@@ -19,7 +19,7 @@ extern nlohmann::json convergence;
 /* ------------------------ Base Fitness Function ------------------------ */
 
 FitnessFunction::FitnessFunction(float optimum, ProblemType *problemType) :
-    bestIndividual(0),
+    bestIndividual(),
     optimum(optimum),
     optimumFound(false),
     maxEvaluations(-1),
@@ -34,7 +34,7 @@ FitnessFunction::FitnessFunction(float optimum, ProblemType *problemType) :
 }
 
 FitnessFunction::FitnessFunction(ProblemType *problemType) :
-    bestIndividual(0),
+    bestIndividual(),
     optimumFound(false),
     maxEvaluations(-1),
     maxUniqueEvaluations(-1),
@@ -48,7 +48,7 @@ FitnessFunction::FitnessFunction(ProblemType *problemType) :
 }
 
 void FitnessFunction::clear(){
-    bestIndividual = 0;
+    bestIndividual = Individual();
     optimumFound = false;
     totalEvaluations = 0;
     totalUniqueEvaluations = 0;
@@ -62,7 +62,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
     totalEvaluations++;
 //    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
-    float roundedFitness = bestIndividual.fitness;
+    float roundedFitness = bestIndividual.fitness[0];
     
     if(storeAbsoluteConvergence){
         convergence["absolute"].push_back(roundedFitness);
@@ -97,7 +97,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 //        ind.fitness += 0.01;
 //    }
     
-    if((!checkForGenotype && ind.fitness >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
+    if((!checkForGenotype && ind.fitness[0] >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
         optimumFound = true;
     }
     
@@ -137,6 +137,10 @@ void FitnessFunction::setLength(int length){
     optimum = length;
 }
 
+void FitnessFunction::setNumObjectives(int numObj){
+    numObjectives = numObj;
+}
+
 // Transforms the genotype (e.g. remove identity layers in ARK)
 // Should be overridden in derived classes
 uvec FitnessFunction::transform(uvec &genotype){
@@ -151,7 +155,7 @@ OneMax::OneMax() : FitnessFunction(getProblemType()) {}
 
 float OneMax::evaluate(Individual &ind) {
     int result = sum(ind.genotype);
-    ind.fitness = result;
+    ind.fitness[0] = result;
     
     evaluationProcedure(ind);
     
@@ -195,7 +199,7 @@ float LeadingOnes::evaluate(Individual &ind) {
             result++;
         }
     }
-    ind.fitness = result;
+    ind.fitness[0] = result;
     
     evaluationProcedure(ind);
     
@@ -225,7 +229,7 @@ NonBinaryMax::NonBinaryMax() : FitnessFunction(getProblemType()) {}
 
 float NonBinaryMax::evaluate(Individual &ind){
     float result = sum(ind.genotype);
-    ind.fitness = result;
+    ind.fitness[0] = result;
     evaluationProcedure(ind);
     return result;
 }

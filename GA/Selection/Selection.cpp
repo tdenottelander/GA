@@ -59,14 +59,14 @@ vector<float> ProportionateSelection::getProportions(vector<Individual> &populat
     int cumulativeFitness = 0;
     
     for(Individual ind: population){
-        cumulativeFitness += ind.fitness;
+        cumulativeFitness += ind.fitness[0];
     }
     
     for(int i = 0; i < n; i++){
         if(i == 0) {
-            proportions[i] = (float)population[i].fitness / cumulativeFitness;
+            proportions[i] = (float)population[i].fitness[0] / cumulativeFitness;
         } else {
-            proportions[i] = proportions[i-1] + (float)population[i].fitness / cumulativeFitness;
+            proportions[i] = proportions[i-1] + (float)population[i].fitness[0] / cumulativeFitness;
         }
     }
     
@@ -109,11 +109,11 @@ vector<Individual> TournamentSelection::select(vector<Individual> &population, i
 Individual* TournamentSelection::tournament(vector<Individual *> selectedIndividuals){
     int n = selectedIndividuals.size();
     int bestIndIdx = 0;
-    int bestFitness = selectedIndividuals[0]->fitness;
+    int bestFitness = selectedIndividuals[0]->fitness[0];
     for(int i = 1; i < n; i++){
-        if (selectedIndividuals[i]->fitness > bestFitness){
+        if (selectedIndividuals[i]->fitness[0] > bestFitness){
             bestIndIdx = i;
-            bestFitness = selectedIndividuals[i]->fitness;
+            bestFitness = selectedIndividuals[i]->fitness[0];
         }
     }
 //    cout << "Winner is " << bestIndIdx << " with fitness " << bestFitness << "\n" << endl;

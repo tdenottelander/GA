@@ -47,7 +47,7 @@ void LocalSearchBase::doLocalSearch(Individual &ind, FitnessFunction * fitfunc, 
                 randomFlips += 1;
             } else {
             
-                float bestFitness = ind.fitness;
+                float bestFitness = ind.fitness[0];
                 
                 for(int layertype : alphabet){
                     if(layertype != originalLayer) {
@@ -61,7 +61,7 @@ void LocalSearchBase::doLocalSearch(Individual &ind, FitnessFunction * fitfunc, 
                 }
                 
                 ind.genotype[index] = newLayer;
-                ind.fitness = bestFitness;
+                ind.fitness[0] = bestFitness;
             }
             
             if (newLayer != originalLayer){

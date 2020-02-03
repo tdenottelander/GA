@@ -18,11 +18,11 @@
 class Individual {
 public:
     arma::uvec genotype;
-    float fitness;
+    std::vector<float> fitness;
     int counterNotChanged;
     
     Individual();
-    Individual(int length);
+    Individual(int length, int objectives);
     void initialize(std::vector<int> alphabet);
     Individual copy();
     std::string toString();
