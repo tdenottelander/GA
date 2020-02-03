@@ -146,9 +146,7 @@ void runNasbench(){
             new LocalSearch(fit, Utility::Order::DESCENDING),
 //
             new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.1),
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.2),
+            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
         };
         
         
@@ -214,9 +212,8 @@ int main(int argc, const char * argv[]) {
     
     runNasbench();
 
-//    int layers = 13;
-//    ARK * ark = new ARK6(layers, -1);
-//    ark->doAnalysis(layers, layers);
+//    ARK * ark = new ARK6(0, -1);
+//    ark->doAnalysis(0, 14);
     
     return 0;
 }
