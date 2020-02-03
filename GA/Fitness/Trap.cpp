@@ -16,13 +16,13 @@ Trap::Trap(int blocksize, int blocks) : FitnessFunction(blocks * blocksize, getP
 Trap::Trap(int blocksize) : FitnessFunction(getProblemType()), blocksize(blocksize) {}
 
 // Returns the fitness of an individual
-float Trap::evaluate(Individual &ind) {
-    float result = 0.0;
+vector<float> Trap::evaluate(Individual &ind) {
+    vector<float> result (1, 0.0);
     for (int i = 0; i < blocks; i++) {
-        result += subfunc(ind, i * blocksize, i * blocksize + blocksize);
+        result[0] += subfunc(ind, i * blocksize, i * blocksize + blocksize);
     }
     
-    ind.fitness[0] = result;
+    ind.fitness[0] = result[0];
     evaluationProcedure(ind);
     return result;
 }

@@ -34,15 +34,15 @@ ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, Probl
 }
 
 // Returns the fitness of an individual
-float ARK::evaluate(Individual &ind){
-    float fitness = query(ind.genotype);
+vector<float> ARK::evaluate(Individual &ind){
+    vector<float> fitness (1, query(ind.genotype));
     if(noisy) {
-        std::normal_distribution<> dist (0, noisePercentage * fitness);
+        std::normal_distribution<> dist (0, noisePercentage * fitness[0]);
         float noise = dist(rng);
 //        cout << "Fitness: " << fitness << " noise: " << noise << endl;
-        fitness += noise;
+        fitness[0] += noise;
     }
-    ind.fitness[0] = fitness;
+    ind.fitness[0] = fitness[0];
     
     evaluationProcedure(ind);
     return fitness;

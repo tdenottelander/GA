@@ -153,9 +153,9 @@ uvec FitnessFunction::transform(uvec &genotype){
 OneMax::OneMax(int length) : FitnessFunction(length, getProblemType()) {}
 OneMax::OneMax() : FitnessFunction(getProblemType()) {}
 
-float OneMax::evaluate(Individual &ind) {
-    int result = sum(ind.genotype);
-    ind.fitness[0] = result;
+vector<float> OneMax::evaluate(Individual &ind) {
+    vector<float> result(1, sum(ind.genotype));
+    ind.fitness[0] = result[0];
     
     evaluationProcedure(ind);
     
@@ -190,16 +190,16 @@ ProblemType* LeadingOnes::getProblemType(){
     return new BinaryProblemType();
 }
 
-float LeadingOnes::evaluate(Individual &ind) {
-    float result = 0;
+vector<float> LeadingOnes::evaluate(Individual &ind) {
+    vector<float> result (1, 0);
     for (unsigned long i = 0; i < ind.genotype.size(); i++){
         if (ind.genotype[i] == 0){
             break;
         } else {
-            result++;
+            result[0]++;
         }
     }
-    ind.fitness[0] = result;
+    ind.fitness[0] = result[0];
     
     evaluationProcedure(ind);
     
@@ -227,9 +227,9 @@ NonBinaryMax::NonBinaryMax() : FitnessFunction(getProblemType()) {}
 
 //TODO: FINISH IMPLEMENTATION OF NONBINARY MAX FITNESS FUNCTION
 
-float NonBinaryMax::evaluate(Individual &ind){
-    float result = sum(ind.genotype);
-    ind.fitness[0] = result;
+vector<float> NonBinaryMax::evaluate(Individual &ind){
+    vector<float> result (1, sum(ind.genotype));
+    ind.fitness[0] = result[0];
     evaluationProcedure(ind);
     return result;
 }

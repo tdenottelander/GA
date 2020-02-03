@@ -19,10 +19,10 @@ bool LocalSearchAnalysis::findBestLocalGene(Individual &ind, int index, FitnessF
         if(layertype == currentLayer)
             continue;
         ind.genotype[index] = layertype;
-        float fitness = fitfunc->evaluate(ind);
-        if(fitness > bestFitness){
+        vector<float> fitness = fitfunc->evaluate(ind);
+        if(fitness[0] > bestFitness){
             bestLayer = layertype;
-            bestFitness = fitness;
+            bestFitness = fitness[0];
         }
     }
     ind.genotype[index] = bestLayer;

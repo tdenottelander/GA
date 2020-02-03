@@ -52,10 +52,10 @@ void LocalSearchBase::doLocalSearch(Individual &ind, FitnessFunction * fitfunc, 
                 for(int layertype : alphabet){
                     if(layertype != originalLayer) {
                         ind.genotype[index] = layertype;
-                        float fitness = fitfunc->evaluate(ind);
-                        if(fitness > bestFitness){
+                        vector<float> fitness = fitfunc->evaluate(ind);
+                        if(fitness[0] > bestFitness){
                             newLayer = layertype;
-                            bestFitness = fitness;
+                            bestFitness = fitness[0];
                         }
                     }
                 }

@@ -73,9 +73,10 @@ void runNasbench(){
     int maxUniqueEvaluations = -1;
     int interval = 4;
     int repetitions = 50; //100
-    bool IMS = true;
+    bool IMS = false;
+    int populationSize = 10;
     
-    int minProblemSize = 2;
+    int minProblemSize = 6;
     int maxProblemSize = 14;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
@@ -156,9 +157,10 @@ void runNasbench(){
         for(GA* ga : gaList){
             string gaID = ga->id();
 //            cout << gaID << endl;
-            int populationSize = -1;
             if (!IMS){
-                populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
+                if (populationSize < 0){
+                    populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
+                }
                 cout << "Needed popsize = " << populationSize << endl;
                 gaID += ("_FixedPop");
             }

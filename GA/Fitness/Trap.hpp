@@ -18,7 +18,7 @@ public:
     int blocksize;
     Trap (int blocksize, int blocks);
     Trap (int blocksize);
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     float subfunc (Individual &ind, int startIdx, int endIdx);
     void display() override;
     std::string id() override;

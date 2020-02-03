@@ -24,7 +24,7 @@ public:
     int jsonAccuracyIndex;
     std::string folder;
     ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     float query(arma::uvec encoding);
     float query(std::vector<int> encoding);
     virtual float getFitness(arma::uvec encoding);

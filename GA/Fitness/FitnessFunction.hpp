@@ -39,7 +39,7 @@ public:
     
     virtual void clear();
     
-    virtual float evaluate(Individual &ind) = 0;
+    virtual std::vector<float> evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);
     virtual void display();
     virtual std::string id();
@@ -64,7 +64,7 @@ class OneMax : public FitnessFunction {
 public:
     OneMax (int length);
     OneMax ();
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
     ProblemType* getProblemType();
@@ -76,7 +76,7 @@ class LeadingOnes : public FitnessFunction {
 public:
     LeadingOnes (int length);
     LeadingOnes ();
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
     ProblemType* getProblemType();
@@ -86,7 +86,7 @@ public:
 class NonBinaryMax : public FitnessFunction {
 public:
     NonBinaryMax ();
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     void display() override;
     std::string id() override;
     ProblemType* getProblemType();

@@ -25,7 +25,7 @@ public:
     NK(int problemLength, int blocksize, bool wraparound, int alphabetsize);
     void clear() override ;
     void createTable();
-    float evaluate(Individual &ind) override;
+    std::vector<float> evaluate(Individual &ind) override;
     float evaluateBlock(int blockIndex, arma::uvec block);
     ProblemType* getProblemType(int alphabetsize);
     

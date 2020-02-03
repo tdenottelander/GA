@@ -88,14 +88,14 @@ void NK::clear(){
 //    cout << "\nOptimum is " << opt << endl;
 //}
 
-float NK::evaluate(Individual &ind){
-    float fitness = 0;
+vector<float> NK::evaluate(Individual &ind){
+    vector<float> fitness (1, 0);
     for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++){
         uvec block = ind.genotype.subvec(blockIndex, blockIndex + blocksize - 1);
-        fitness += evaluateBlock(blockIndex, block);
+        fitness[0] += evaluateBlock(blockIndex, block);
     }
     
-    ind.fitness[0] = fitness;
+    ind.fitness[0] = fitness[0];
     evaluationProcedure(ind);
     
     return fitness;
