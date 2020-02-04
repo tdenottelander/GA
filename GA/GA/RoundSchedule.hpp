@@ -41,6 +41,7 @@ public:
     int getAmountOfEvaluations();
     bool maxEvaluationsExceeded();
     bool maxUniqueEvaluationsExceeded();
+    void writeOutputGenerationCSV(std::string filename);
 };
 
 #endif /* RoundSchedule_hpp */

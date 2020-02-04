@@ -15,7 +15,8 @@
 
 class NSGA_II : public SimpleGA {
 public:
-    NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel);
+    NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bool visualize = false);
+    bool visualize = false;
     void round() override;
     
     struct Candidate {
@@ -30,7 +31,7 @@ public:
     std::vector<std::vector<Candidate*>> sortedCandidates;
     
     void createCandidateStructure ();
-    void nonDominatedSorting ();
+    void nonDominatedSorting (int n);
     int dominates(Individual *ind1, Individual *ind2);
     void CrowdingDistanceSorting (std::vector<Candidate*> &front);
     
@@ -42,7 +43,7 @@ public:
         }
         int idx;
     };
-    
+        
     GA* clone() const override;
     std::string id() override;
     

@@ -19,6 +19,9 @@
 #include "Trap.hpp"
 #include "SimpleMOProblem.hpp"
 #include "CountingOnesMO.hpp"
+#include "SchaffersStudy.hpp"
+#include "ZDT2.hpp"
+#include "ZerosOnes.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -72,15 +75,15 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = -1; //10000
+    int maxEvaluations = 25000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 50; //100
+    int repetitions = 1; //100
     bool IMS = false;
     int populationSize = 1024;
     
-    int minProblemSize = 32;
-    int maxProblemSize = 50;
+    int minProblemSize = 15;
+    int maxProblemSize = 15;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -108,7 +111,9 @@ void runNasbench(){
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
-        FitnessFunction * fit = new CountingOnesMO(16,2);
+        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
+//        FitnessFunction * fit = new ZDT2();
+//        FitnessFunction * fit = new ZerosOnes(problemSize);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -158,7 +163,7 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
             
-            new NSGA_II(fit, new OnePointCrossover(), new TournamentSelection(2)),
+            new NSGA_II(fit, new OnePointCrossover(), new TournamentSelection(2), true),
         };
         
         
@@ -181,6 +186,7 @@ void runNasbench(){
                 ga->fitFunc_ptr->clear();
                 rs.initialize(ga, problemSize, IMS, populationSize);
                 json result = rs.run();
+                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
                 setting[to_string(rep)] = result;
                 cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
                 << " ga=" << gaID

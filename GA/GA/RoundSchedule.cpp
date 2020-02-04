@@ -42,7 +42,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
-    g->fitFunc_ptr->setLength(problemSize);
+//    g->fitFunc_ptr->setLength(problemSize);
     g->fitFunc_ptr->maxEvaluations = maxEvaluations;
     g->fitFunc_ptr->maxUniqueEvaluations = maxUniqueEvaluations;
     
@@ -104,7 +104,7 @@ json RoundSchedule::run() {
                     }
 
                     // Create a pointer to the current GA
-                    GA* ga = gaList[i];
+                    ga = gaList[i];
 
                     // Initialize the GA if that has not been done yet
                     if(!ga->initialized){
@@ -205,4 +205,17 @@ bool RoundSchedule::maxEvaluationsExceeded() {
 
 bool RoundSchedule::maxUniqueEvaluationsExceeded() {
     return maxUniqueEvaluations != -1 && gaList[0]->fitFunc_ptr->totalUniqueEvaluations > maxUniqueEvaluations;
+}
+
+void RoundSchedule::writeOutputGenerationCSV(string filename){
+    std::ofstream myfile;
+    myfile.open(filename);
+    for (int i = 0; i < ga->population.size(); i++){
+        myfile << ga->population[i].toString(ga->population[i].genotype);
+        for (int j = 0; j < ga->fitFunc_ptr->numObjectives; j++){
+            myfile << "," << to_string(ga->population[i].fitness[j]);
+        }
+        myfile << "\n";
+    }
+    myfile.close();
 }

@@ -10,12 +10,12 @@
 
 using namespace std;
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel) : SimpleGA(fitFunc, var, sel) {
+NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bool visualize) : SimpleGA(fitFunc, var, sel), visualize(visualize) {
 }
 
 void NSGA_II::round() {
     createCandidateStructure();
-    nonDominatedSorting();
+    nonDominatedSorting(populationSize/2);
     
     vector<Individual> newPopulation;
     newPopulation.reserve(populationSize);
@@ -37,7 +37,9 @@ void NSGA_II::round() {
         }
     }
     
-//    draw2DVisualization(16, 16);
+    if(visualize){
+        draw2DVisualization(fitFunc_ptr->totalProblemLength / 2, fitFunc_ptr->totalProblemLength / 2);
+    }
     
     if (populationSize % 4 != 0){
         cout << "Consider setting the population size to a multiple of 4.";
@@ -68,6 +70,7 @@ void NSGA_II::round() {
     cout << "Avg Fitness = " << Utility::wrapWithBrackets(Utility::vecOfFloatsToString(averageFitness, ", ")) << endl;
 }
 
+// Creates a candidate struct for every individual, which stores the dominationcount, frontrank, crowdingdistance and whether it can reproduce.
 void NSGA_II::createCandidateStructure() {
     candidates.clear();
     candidates.reserve(populationSize);
@@ -83,7 +86,9 @@ void NSGA_II::createCandidateStructure() {
     }
 }
 
-void NSGA_II::nonDominatedSorting (){
+// Sorts the candidates into fronts. If n is not -1, then there process of sorting into fronts stops when
+// finding all the solutions of a front is done and the total amount of solutions is at least n.
+void NSGA_II::nonDominatedSorting (int n){
     
     for (vector<Candidate>::iterator it1 = candidates.begin(); it1 != candidates.end(); it1++){
         for (vector<Candidate>::iterator it2 = (it1 + 1); it2 != candidates.end(); it2++){
@@ -109,6 +114,7 @@ void NSGA_II::nonDominatedSorting (){
     
     sortedCandidates.clear();
     int frontIdx = 0;
+    int candidateCount = 0;
     while (!pool.empty()) {
         vector<Candidate*> front;
         for (list<Candidate*>::iterator it = pool.begin(); it != pool.end(); it++){
@@ -116,6 +122,7 @@ void NSGA_II::nonDominatedSorting (){
                 (*it)->front = frontIdx;
                 front.push_back(*it);
                 pool.erase(it);
+                candidateCount++;
             }
         }
         
@@ -127,6 +134,9 @@ void NSGA_II::nonDominatedSorting (){
         
         sortedCandidates.push_back(front);
         frontIdx++;
+        if(n != -1 && candidateCount > n){
+            break;
+        }
     }
 }
 
@@ -202,10 +212,8 @@ string NSGA_II::id(){
 void NSGA_II::draw2DVisualization(int maxX, int maxY){
     vector<Candidate*> drawList;
     drawList.reserve(candidates.size());
-    for (vector<Candidate*> &front : sortedCandidates){
-        for (Candidate* can : front){
-            drawList.push_back(can);
-        }
+    for (int i = 0; i < candidates.size(); i++){
+        drawList.push_back(&candidates[i]);
     }
     sort(drawList.begin(), drawList.end(), [](const Candidate* lhs, const Candidate* rhs){
         if (lhs->ind->fitness[1] != rhs->ind->fitness[1]){
@@ -221,7 +229,8 @@ void NSGA_II::draw2DVisualization(int maxX, int maxY){
         for (int x = 0; x < maxX; x++){
             if (upNext->ind->fitness[0] == x && upNext->ind->fitness[1] == y){
                 string reproduce = upNext->canReproduce ? "+" : "";
-                result += Utility::padWithSpacesAfter(to_string(upNext->front) + reproduce, 3);
+                string frontNr = upNext->front == -1 ? "?" : to_string(upNext->front);
+                result += Utility::padWithSpacesAfter(frontNr + reproduce, 3);
             } else {
                 result += " . ";
             }
