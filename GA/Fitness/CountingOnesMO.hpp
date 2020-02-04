@@ -1,24 +1,24 @@
 //
-//  SimpleMOProblem.hpp
+//  CountingOnesMO.hpp
 //  GA
 //
-//  Created by Tom den Ottelander on 03/02/2020.
+//  Created by Tom den Ottelander on 04/02/2020.
 //  Copyright © 2020 Tom den Ottelander. All rights reserved.
 //
 
-#ifndef SimpleMOProblem_hpp
-#define SimpleMOProblem_hpp
+#ifndef CountingOnesMO_hpp
+#define CountingOnesMO_hpp
 
 #include <stdio.h>
 #include "FitnessFunction.hpp"
 
-class SimpleMOProblem : public FitnessFunction {
+class CountingOnesMO : public FitnessFunction {
 public:
-    SimpleMOProblem(int blocksize, int numObjectives);
+    CountingOnesMO(int blocksize, int numObjectives);
     int blocksize;
     std::vector<float> evaluate (Individual &ind) override;
     
     FitnessFunction* clone() const override;
 };
 
-#endif /* SimpleMOProblem_hpp */
+#endif /* CountingOnesMO_hpp */

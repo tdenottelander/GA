@@ -141,7 +141,8 @@ string Utility::removeTrailingZeros(string target){
 }
 
 string Utility::padWithSpacesAfter(string target, int length){
-    for (int i = 0; i < length - target.size(); i++)
+    int n = target.size();
+    for (int i = 0; i < length - n; i++)
         target = target + " ";
     return target;
 }
@@ -222,4 +223,19 @@ vector<int> Utility::uvecToVector (uvec vec){
         result.push_back(vec[i]);
     }
     return result;
+}
+
+string Utility::vecOfFloatsToString (vector<float> vec, string separator){
+    string result = "";
+    for (int i = 0; i < vec.size(); i++){
+        result += to_string(vec[i]);
+        if (i < vec.size()-1){
+            result += separator;
+        }
+    }
+    return result;
+}
+
+string Utility::wrapWithBrackets (string str){
+    return ("[" + str + "]");
 }

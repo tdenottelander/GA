@@ -14,6 +14,7 @@
 #include <nlohmann/json.hpp>
 #include <unordered_set>
 #include "GA.hpp"
+#include "NSGA_II.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "Utility.hpp"

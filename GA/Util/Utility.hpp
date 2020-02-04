@@ -46,6 +46,8 @@ namespace Utility{
     arma::uvec stringToGenotype(std::string &genotype);
     arma::uvec vectorToUvec (std::vector<int> vec);
     std::vector<int> uvecToVector (arma::uvec vec);
+    std::string vecOfFloatsToString (std::vector<float> vec, std::string separator);
+    std::string wrapWithBrackets (std::string str);
 }
 
 #endif /* Utility_hpp */

@@ -29,6 +29,9 @@
 		C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */; };
 		C2B369D323BE2AED00E43633 /* ARK2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D123BE2AED00E43633 /* ARK2.cpp */; };
 		C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D423BE2CC200E43633 /* ARK1.cpp */; };
+		C2B6B47123E83455003C60C8 /* NSGA_II.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B6B46F23E83455003C60C8 /* NSGA_II.cpp */; };
+		C2B6B47423E840BF003C60C8 /* SimpleMOProblem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B6B47223E840BF003C60C8 /* SimpleMOProblem.cpp */; };
+		C2B6B47723E972C3003C60C8 /* CountingOnesMO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B6B47523E972C3003C60C8 /* CountingOnesMO.cpp */; };
 		C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66DE238FE5BF006BA6BF /* FOS.cpp */; };
 		C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2BC66E4238FF7DA006BA6BF /* GOM.cpp */; };
 		C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2C0658523C4DDA30067B946 /* ARK3.cpp */; };
@@ -101,6 +104,12 @@
 		C2B369D223BE2AED00E43633 /* ARK2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK2.hpp; sourceTree = "<group>"; };
 		C2B369D423BE2CC200E43633 /* ARK1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK1.cpp; sourceTree = "<group>"; };
 		C2B369D523BE2CC200E43633 /* ARK1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK1.hpp; sourceTree = "<group>"; };
+		C2B6B46F23E83455003C60C8 /* NSGA_II.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NSGA_II.cpp; sourceTree = "<group>"; };
+		C2B6B47023E83455003C60C8 /* NSGA_II.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NSGA_II.hpp; sourceTree = "<group>"; };
+		C2B6B47223E840BF003C60C8 /* SimpleMOProblem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleMOProblem.cpp; sourceTree = "<group>"; };
+		C2B6B47323E840BF003C60C8 /* SimpleMOProblem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleMOProblem.hpp; sourceTree = "<group>"; };
+		C2B6B47523E972C3003C60C8 /* CountingOnesMO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CountingOnesMO.cpp; sourceTree = "<group>"; };
+		C2B6B47623E972C3003C60C8 /* CountingOnesMO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CountingOnesMO.hpp; sourceTree = "<group>"; };
 		C2BC66D0238EBA10006BA6BF /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
 		C2BC66D2238EC4F7006BA6BF /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = python3.7; path = ../../../../../miniconda3/envs/myenv/lib/python3.7; sourceTree = "<group>"; };
 		C2BC66D4238EC50D006BA6BF /* libpython.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpython.tbd; path = usr/lib/libpython.tbd; sourceTree = SDKROOT; };
@@ -242,6 +251,10 @@
 				C2E2734B23A1089D00D61D19 /* Trap.hpp */,
 				C2ABE4E1238410BE00D6E774 /* FitnessFunction.cpp */,
 				C2ABE4E2238410BE00D6E774 /* FitnessFunction.hpp */,
+				C2B6B47223E840BF003C60C8 /* SimpleMOProblem.cpp */,
+				C2B6B47323E840BF003C60C8 /* SimpleMOProblem.hpp */,
+				C2B6B47523E972C3003C60C8 /* CountingOnesMO.cpp */,
+				C2B6B47623E972C3003C60C8 /* CountingOnesMO.hpp */,
 			);
 			path = Fitness;
 			sourceTree = "<group>";
@@ -267,6 +280,8 @@
 				C2C0659223C8A3030067B946 /* LocalSearchStochastic.hpp */,
 				C2C0659423C8AA0B0067B946 /* LocalSearch.cpp */,
 				C2C0659523C8AA0B0067B946 /* LocalSearch.hpp */,
+				C2B6B46F23E83455003C60C8 /* NSGA_II.cpp */,
+				C2B6B47023E83455003C60C8 /* NSGA_II.hpp */,
 			);
 			path = GA;
 			sourceTree = "<group>";
@@ -403,6 +418,7 @@
 				C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */,
 				C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */,
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
+				C2B6B47423E840BF003C60C8 /* SimpleMOProblem.cpp in Sources */,
 				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
 				C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */,
 				C2C0659623C8AA0B0067B946 /* LocalSearch.cpp in Sources */,
@@ -419,6 +435,7 @@
 				C2C0659323C8A3030067B946 /* LocalSearchStochastic.cpp in Sources */,
 				C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */,
 				C293D6E223A787AE001E0636 /* ARK.cpp in Sources */,
+				C2B6B47123E83455003C60C8 /* NSGA_II.cpp in Sources */,
 				C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */,
 				C2C0659023C7893D0067B946 /* GOM_LS.cpp in Sources */,
 				C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */,
@@ -428,6 +445,7 @@
 				C2ABE4E02384106F00D6E774 /* Variation.cpp in Sources */,
 				C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */,
 				C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */,
+				C2B6B47723E972C3003C60C8 /* CountingOnesMO.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

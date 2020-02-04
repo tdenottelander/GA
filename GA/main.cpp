@@ -17,6 +17,8 @@
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
+#include "SimpleMOProblem.hpp"
+#include "CountingOnesMO.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -35,6 +37,7 @@
 #include "RandomSearch.hpp"
 #include "LocalSearch.hpp"
 #include "LocalSearchStochastic.hpp"
+#include "NSGA_II.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -74,10 +77,10 @@ void runNasbench(){
     int interval = 4;
     int repetitions = 50; //100
     bool IMS = false;
-    int populationSize = 10;
+    int populationSize = 1024;
     
-    int minProblemSize = 6;
-    int maxProblemSize = 14;
+    int minProblemSize = 32;
+    int maxProblemSize = 50;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -92,7 +95,7 @@ void runNasbench(){
         
         bool allowIdentityLayers = true;
         bool genotypeChecking = true;
-        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
+//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
@@ -102,6 +105,10 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK3();
         
 //        FitnessFunction * fit = new Trap(5, 5);
+//        FitnessFunction * fit = new OneMax(20);
+//        FitnessFunction * fit = new LeadingOnes(20);
+//        FitnessFunction * fit = new SimpleMOProblem(4, 2);
+        FitnessFunction * fit = new CountingOnesMO(16,2);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -113,15 +120,15 @@ void runNasbench(){
         
         bool forcedImprovement = true;
         vector<GA*> gaList = {
-            new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
-            new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
-            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
+//            new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
+//            new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
+//            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
 
-            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
-            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
-            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
-            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
+//            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
 
 //            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
@@ -130,26 +137,28 @@ void runNasbench(){
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
 
-            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
-            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
-            new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
+//            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
+//            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
+//            new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
 
-            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
+//            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
 
-            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
 //
 //            new RandomSearch(fit),
+
+//            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
+//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
 //
-            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
-////
-            new LocalSearch(fit, Utility::Order::RANDOM),
-            new LocalSearch(fit, Utility::Order::ASCENDING),
-            new LocalSearch(fit, Utility::Order::DESCENDING),
-////
-            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
-            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+//            new LocalSearch(fit, Utility::Order::RANDOM),
+//            new LocalSearch(fit, Utility::Order::ASCENDING),
+//            new LocalSearch(fit, Utility::Order::DESCENDING),
+
+//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
+//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+            
+            new NSGA_II(fit, new OnePointCrossover(), new TournamentSelection(2)),
         };
         
         
@@ -160,8 +169,8 @@ void runNasbench(){
             if (!IMS){
                 if (populationSize < 0){
                     populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
+                    cout << "Needed popsize = " << populationSize << endl;
                 }
-                cout << "Needed popsize = " << populationSize << endl;
                 gaID += ("_FixedPop");
             }
             

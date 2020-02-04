@@ -16,6 +16,12 @@ extern bool printfos;
 
 /* ------------------------ Base Variation ------------------------ */
 
+std::pair<Individual, Individual> Variation::crossover(Individual &ind1, Individual &ind2){
+    cout << "Not implemented. Returning same individuals" << endl;
+    pair<Individual, Individual> pair (ind1, ind2);
+    return pair;
+}
+
 void Variation::display(){
     cout << "Base variation" << endl;
 }
@@ -39,7 +45,7 @@ vector<Individual> UnivariateCrossover::variate(vector<Individual> &population){
         int idx1 = randomIndices[i * 2];
         int idx2 = randomIndices[i * 2 + 1];
         
-        pair<Individual, Individual> offspring = univariateCrossover(population[idx1], population[idx2]);
+        pair<Individual, Individual> offspring = crossover(population[idx1], population[idx2]);
         
         newPopulation.push_back(offspring.first);
         newPopulation.push_back(offspring.second);
@@ -48,7 +54,7 @@ vector<Individual> UnivariateCrossover::variate(vector<Individual> &population){
     return newPopulation;
 }
 
-pair<Individual, Individual> UnivariateCrossover::univariateCrossover (Individual &ind1, Individual &ind2){
+pair<Individual, Individual> UnivariateCrossover::crossover (Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
     
@@ -87,7 +93,7 @@ vector<Individual> OnePointCrossover::variate(std::vector<Individual> &populatio
         int idx2 = randomIndices[i * 2 + 1];
         
 //        cout << "Crossing over individual " << idx1 << " and " << idx2;
-        pair<Individual, Individual> offspring = onePointCrossover(population[idx1], population[idx2]);
+        pair<Individual, Individual> offspring = crossover(population[idx1], population[idx2]);
         
         newPopulation.push_back(offspring.first);
         newPopulation.push_back(offspring.second);
@@ -96,7 +102,7 @@ vector<Individual> OnePointCrossover::variate(std::vector<Individual> &populatio
     return newPopulation;
 }
 
-pair<Individual, Individual> OnePointCrossover::onePointCrossover(Individual &ind1, Individual &ind2){
+pair<Individual, Individual> OnePointCrossover::crossover(Individual &ind1, Individual &ind2){
     int genotypeLength = (int)ind1.genotype.size();
     int index = ceil(getRand() * genotypeLength);
 //    cout << " on index " << index << endl;

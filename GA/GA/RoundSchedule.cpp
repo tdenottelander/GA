@@ -119,6 +119,7 @@ json RoundSchedule::run() {
                     }
                     
                     // Do the round on this GA
+//                    ga->print();
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
