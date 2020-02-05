@@ -257,3 +257,31 @@ string GA::id(){
     return "Base GA";
 }
 
+void GA::printPopulationGenotypeStatistics(){
+    vector<vector<int>> counts;
+    for (int i = 0; i < fitFunc_ptr->problemType->alphabet.size(); i++){
+        vector<int> subvec (fitFunc_ptr->totalProblemLength, 0);
+        counts.push_back(subvec);
+    }
+    
+    for (int i = 0; i < population.size(); i++){
+        Individual *ind = &population[i];
+        for (int j = 0; j < fitFunc_ptr->totalProblemLength; j++){
+            counts[ind->genotype[j]][j] += 1;
+        }
+    }
+    
+    string result = "";
+    for (int i = 0; i < counts.size(); i++){
+        result += to_string(fitFunc_ptr->problemType->alphabet[i]);
+        result += ":  ";
+        for (int j = 0; j < counts[i].size(); j++){
+            result += Utility::padWithSpacesAfter(to_string(counts[i][j]), 5);
+            if (j < counts[i].size() - 1)
+                result += "|";
+        }
+        result += "\n";
+    }
+    
+    cout << result << endl;
+}

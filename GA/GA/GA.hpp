@@ -66,6 +66,8 @@ public:
     virtual GA* clone() const;
     
     virtual std::string id();
+    
+    void printPopulationGenotypeStatistics();
 };
 
 #endif /* GA_hpp */

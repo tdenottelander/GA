@@ -80,9 +80,9 @@ void runNasbench(){
     int interval = 4;
     int repetitions = 1; //100
     bool IMS = false;
-    int populationSize = 1024;
+    int populationSize = 8;
     
-    int minProblemSize = 15;
+    int minProblemSize = 5;
     int maxProblemSize = 15;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
