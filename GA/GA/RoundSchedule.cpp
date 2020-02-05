@@ -120,6 +120,7 @@ json RoundSchedule::run() {
                     
                     // Do the round on this GA
 //                    ga->print();
+                    cout << "Performing round with popsize " << ga->populationSize << endl;
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
@@ -135,7 +136,7 @@ json RoundSchedule::run() {
                         output["successfulGARoundCount"] = ga->roundsCount;
                         break;
 
-                        // Else if the GA is converged, terminate this GA and all before.
+                    // Else if the GA is converged, terminate this GA and all before.
                     } else if (ga->isConverged()){
                         // GA.termination is already set to true inside isConverged()-method
                         // Set all previous GA's to terminated
@@ -148,11 +149,24 @@ json RoundSchedule::run() {
                         }
                         continue;
 
-                        // Else if it has a higher fitness than the previous GA, terminate all before this one
-                    } else if (i != 0 && !gaList[i-1]->terminated && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
-                        terminateGAs(i - 1);
-                        lowestActiveGAIdx = i;
-                        continue;
+                    // Else if the previous GA has not terminated
+                    } else if (i != 0 && !gaList[i-1]->terminated){
+                        
+                        // If this is a SO problem, check if this GA has a higher fitness than the previous GA. If so, terminate previous GA and all before.
+                        if (ga->fitFunc_ptr->numObjectives == 1 && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
+                            terminateGAs(i - 1);
+                            lowestActiveGAIdx = i;
+                            continue;
+                        }
+                        
+                        // If this is a MO problem, check if this GA's first front dominates at least (X % + 1) solutions in the previous GA. If so, terminate previous GA and all before.
+                        float percentageRequired = 0.5;
+                        if (ga->fitFunc_ptr->numObjectives > 1 && MOterminationCondition(ga, gaList[i-1], percentageRequired)){
+                            cout << "GA with " << ga->populationSize << " popsize dominates GA with " << gaList[i-1]->populationSize << " popsize." << endl;
+                            terminateGAs(i - 1);
+                            lowestActiveGAIdx = i;
+                            continue;
+                        }
                     }
 
                     // If this GA has run 4 times, make sure the next GA also does a run
@@ -190,6 +204,41 @@ void RoundSchedule::terminateGAs(int n){
         (*gaList[i]).terminated = true;
     }
 }
+
+// Checks the conditions for termination. Terminate previous GA if either:
+// 1 - The amount of solutions in the best front of previous GA that are dominated by solutions in current GA is more than ([percentageRequired] * #solutionsInPreviousGABestFront + 1).
+// 2 - All solutions in the best front of previous GA are either dominated or appear in the best front of current GA.
+bool RoundSchedule::MOterminationCondition(GA* gaCurrent, GA* gaPrev, float percentageRequired){
+    
+    int dominationCount = 0;
+    int neededDominations = floor(percentageRequired * gaPrev->sortedPopulation[0].size()) + 1;
+    int subsetCount = 0;
+    
+    for (Individual* indPrev : gaPrev->sortedPopulation[0]){
+        for (Individual* indCur : gaCurrent->sortedPopulation[0]){
+            // The set of dominated solutions and the set of solutions that are also in current GA's best front are disjoint.
+            if (indCur->dominates(*indPrev)){
+                dominationCount++;
+                break;
+            }
+            
+            if (indCur->fitnessEquals(*indPrev)){
+                subsetCount++;
+                break;
+            }
+        }
+        // If the required amount of solutions is dominated, terminate previous GA.
+        if (dominationCount >= neededDominations){
+            return true;
+        }
+    }
+    // If all solutions in previous GA's best front are dominated or are in the best front of current GA, then terminate previous GA.
+    if (subsetCount + dominationCount == gaPrev->sortedPopulation[0].size()){
+        return true;
+    }
+    return false;
+}
+
 
 int RoundSchedule::getAmountOfEvaluations(){
     int evaluations = 0;

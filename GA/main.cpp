@@ -78,7 +78,7 @@ void runNasbench(){
     int maxUniqueEvaluations = -1;
     int interval = 4;
     int repetitions = 20; //100
-    bool IMS = false;
+    bool IMS = true;
     int populationSize = 20;
     
     int minProblemSize = 10;

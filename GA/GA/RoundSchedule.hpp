@@ -38,6 +38,7 @@ public:
     void initialize(GA *ga, int problemSize, bool nonIMSmode = false, int nonIMSpopsize = 0);
     nlohmann::json run();
     void terminateGAs(int n);
+    bool MOterminationCondition(GA* gaCurrent, GA* gaPrev, float percentageRequired);
     int getAmountOfEvaluations();
     bool maxEvaluationsExceeded();
     bool maxUniqueEvaluationsExceeded();

@@ -19,9 +19,7 @@ public:
     bool visualize = false;
     void round() override;
     bool initialRound = true;
-    
-    std::vector<std::vector<Individual*>> sortedPopulation;
-    
+        
     void clearMOinformation(std::vector<Individual> &population);
     std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
     void CrowdingDistanceSorting (std::vector<Individual*> &front);
