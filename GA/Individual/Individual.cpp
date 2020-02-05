@@ -15,9 +15,16 @@ using namespace Utility;
 
 /* ------------------------ Individual ------------------------ */
 
-Individual::Individual() : fitness(1, -1), counterNotChanged(0){}
+Individual::Individual() : Individual::Individual(0, 1) {}
 
-Individual::Individual(int length, int objectives) : fitness(objectives, -1), counterNotChanged(0){
+Individual::Individual(int length, int objectives) :
+    fitness(objectives, -1),
+    counterNotChanged(0),
+    dominationCount(0),
+    front(-1),
+    crowdingDistance(-1.0),
+    canReproduce(false)
+{
     genotype = uvec (length);
 }
 
@@ -85,6 +92,14 @@ bool Individual::equals(const Individual &ind) {
 
 bool Individual::genotypeEquals(uvec &g){
     return genotypeEquals(g, genotype);
+}
+
+void Individual::clearMOinformation(){
+    dominationCount = 0;
+    dominationList.clear();
+    front = -1;
+    crowdingDistance = -1;
+    canReproduce = false;
 }
 
 string Individual::toString(vector<int> &genotype){

@@ -18,37 +18,29 @@ public:
     NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bool visualize = false);
     bool visualize = false;
     void round() override;
+    bool initialRound = true;
     
-    struct Candidate {
-        Individual* ind;
-        int dominationCount;
-        std::vector<Candidate*> dominationList;
-        int front;
-        float crowdingDistance;
-        bool canReproduce;
-        std::string toString();
-        void print();
-    };
+    std::vector<std::vector<Individual*>> sortedPopulation;
     
-    std::vector<Candidate> createCandidateStructure (std::vector<Individual> &population);
-    std::vector<std::vector<Candidate*>> nonDominatedSorting (std::vector<Candidate> &candidates, int n = -1);
+    void clearMOinformation(std::vector<Individual> &population);
+    std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
     bool dominates(Individual *ind1, Individual *ind2);
-    void CrowdingDistanceSorting (std::vector<Candidate*> &front);
-    bool crowdComparisonOperator(const Candidate* lhs, const Candidate* rhs);
-    std::vector<Candidate*> selectPt (std::vector<std::vector<Candidate*>> sortedCandidates);
-    std::vector<Individual> createOffspring(std::vector<NSGA_II::Candidate*> Pt);
+    void CrowdingDistanceSorting (std::vector<Individual*> &front);
+    bool crowdComparisonOperator(const Individual* lhs, const Individual* rhs);
+    std::vector<Individual*> selectPt (std::vector<std::vector<Individual*>> sortedCandidates);
+    std::vector<Individual> createOffspring(std::vector<Individual*> Pt);
     
     
     GA* clone() const override;
     std::string id() override;
     
-    void draw2DVisualization(std::vector<Candidate> &candidates, int maxX, int maxY);
+    void draw2DVisualization(std::vector<Individual> &population, int maxX, int maxY);
     
     struct CandidateObjectiveComparator
     {
         CandidateObjectiveComparator(int idx) { this->idx = idx; }
-        bool operator()(const Candidate* lhs, const Candidate* rhs ) const {
-            return lhs->ind->fitness[idx] < rhs->ind->fitness[idx];
+        bool operator()(const Individual* lhs, const Individual* rhs ) const {
+            return lhs->fitness[idx] < rhs->fitness[idx];
         }
         int idx;
     };

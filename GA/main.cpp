@@ -22,6 +22,7 @@
 #include "SchaffersStudy.hpp"
 #include "ZDT2.hpp"
 #include "ZerosOnes.hpp"
+#include "LOTZ.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -78,12 +79,12 @@ void runNasbench(){
     int maxEvaluations = 25000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 1; //100
+    int repetitions = 20; //100
     bool IMS = false;
-    int populationSize = 8;
+    int populationSize = 20;
     
-    int minProblemSize = 5;
-    int maxProblemSize = 15;
+    int minProblemSize = 10;
+    int maxProblemSize = 10;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -111,9 +112,10 @@ void runNasbench(){
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
-        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
+//        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
 //        FitnessFunction * fit = new ZDT2();
 //        FitnessFunction * fit = new ZerosOnes(problemSize);
+        FitnessFunction * fit = new LOTZ(problemSize);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;

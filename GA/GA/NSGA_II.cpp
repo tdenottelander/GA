@@ -14,18 +14,21 @@ NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bo
 }
 
 void NSGA_II::round() {
-    vector<Candidate> candidates = createCandidateStructure(population);
-    vector<vector<Candidate*>> sortedCandidates = nonDominatedSorting(candidates, populationSize);
-    vector<Candidate*> Pt = selectPt(sortedCandidates);
+    if(initialRound){
+        clearMOinformation(population);
+        sortedPopulation = nonDominatedSorting(population);
+        initialRound = false;
+    }
+    vector<Individual*> Pt = selectPt(sortedPopulation);
     vector<Individual> Qt = createOffspring(Pt);
 
     if(visualize){
-        draw2DVisualization(candidates, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
+        draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
     }
     
     vector<Individual> newPopulation;
     for (int i = 0; i < Pt.size(); i++){
-        newPopulation.push_back(Pt[i]->ind->copy());
+        newPopulation.push_back(Pt[i]->copy());
     }
     for (int i = 0; i < Qt.size(); i++){
         newPopulation.push_back(Qt[i]);
@@ -35,75 +38,68 @@ void NSGA_II::round() {
     
     vector<float> averageFitness = getAvgFitness();
 //    cout << "Avg Fitness = " << Utility::wrapWithBrackets(Utility::vecOfFloatsToString(averageFitness, ", ")) << endl;
-}
-
-// Creates a candidate struct for every individual, which stores the dominationcount, frontrank, crowdingdistance and whether it can reproduce.
-vector<NSGA_II::Candidate> NSGA_II::createCandidateStructure(vector<Individual> &population) {
-    vector<Candidate> candidates;
-    candidates.reserve(population.size());
-    for (int i = 0; i < population.size(); i++){
-        Candidate can;
-        can.ind = &population[i];
-        can.dominationCount = 0;
-        can.front = -1;
-        can.crowdingDistance = 0.0f;
-        can.canReproduce = false;
-        candidates.push_back(can);
-    }
-    return candidates;
-}
-
-// Sorts the candidates into fronts. If n is not -1, then there process of sorting into fronts stops when
-// finding all the solutions of a front is done and the total amount of solutions is at least n.
-vector<vector<NSGA_II::Candidate*>> NSGA_II::nonDominatedSorting (vector<Candidate> &candidates, int n){
     
-    // Loop over every candidate combination to see which candidates dominate which other candidates.
-    for (int i = 0; i < candidates.size(); i++){
-        for (int j = 0; j < candidates.size(); j++){
-            if (dominates(candidates[i].ind, candidates[j].ind)){
+    clearMOinformation(population);
+    sortedPopulation = nonDominatedSorting(population);
+}
+
+void NSGA_II::clearMOinformation(vector<Individual> &population){
+    for (Individual ind : population){
+        ind.clearMOinformation();
+    }
+}
+
+// Sorts the individuals into fronts. If n is not -1, then there process of sorting into fronts stops when
+// finding all the solutions of a front is done and the total amount of solutions is at least n.
+vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &population, int n){
+    
+    // Loop over every individual combination to see which individuals dominate which other individuals.
+    for (int i = 0; i < population.size(); i++){
+        for (int j = 0; j < population.size(); j++){
+            if (dominates(&population[i], &population[j])){
                 // Individual i dominates individual j
-                candidates[j].dominationCount += 1;
-                candidates[i].dominationList.push_back(&candidates[j]);
+                population[j].dominationCount += 1;
+                population[i].dominationList.push_back(&population[j]);
             }
         }
     }
     
-    // Put a pointer to every candidate in a pool that we can iterate over and modify.
-    list<Candidate*> pool;
-    for (int i = 0; i < candidates.size(); i++){
-        pool.push_back(&candidates[i]);
+    // Put a pointer to every individual in a pool that we can iterate over and modify.
+    list<Individual*> pool;
+    for (int i = 0; i < population.size(); i++){
+        pool.push_back(&population[i]);
     }
     
-    vector<vector<Candidate*>> sortedCandidates;
+    sortedPopulation.clear();
     int frontIdx = 0;
-    int candidateCount = 0;
-    // See which candidates have domination count 0. Put these in the same front.
+    int individualCount = 0;
+    // See which individuals have domination count 0. Put these in the same front.
     while (!pool.empty()) {
-        vector<Candidate*> front;
-        for (list<Candidate*>::iterator it = pool.begin(); it != pool.end(); it++){
+        vector<Individual*> front;
+        for (list<Individual*>::iterator it = pool.begin(); it != pool.end(); it++){
             if ((*it)->dominationCount == 0){
                 (*it)->front = frontIdx;
                 front.push_back(*it);
                 pool.erase(it);
-                candidateCount++;
+                individualCount++;
             }
         }
         
-        // Modify domination count of other candidates by subtracting the dominates of dominated solutions by solutions from this front.
-        for (Candidate* can : front){
-            for (Candidate *dominatedCandidate : can->dominationList){
-                dominatedCandidate->dominationCount -= 1;
+        // Modify domination count of other individuals by subtracting the dominates of dominated solutions by solutions from this front.
+        for (Individual* can : front){
+            for (Individual *dominatingIndividual : can->dominationList){
+                dominatingIndividual->dominationCount -= 1;
             }
         }
         
-        sortedCandidates.push_back(front);
+        sortedPopulation.push_back(front);
         frontIdx++;
-        // If we only need [n] candidates, we can stop assigning fronts.
-        if(n != -1 && candidateCount >= n){
+        // If we only need [n] individuals, we can stop assigning fronts.
+        if(n != -1 && individualCount >= n){
             break;
         }
     }
-    return sortedCandidates;
+    return sortedPopulation;
 }
 
 // Returns true if [ind1] dominates [ind2]
@@ -120,8 +116,8 @@ bool NSGA_II::dominates(Individual *ind1, Individual *ind2){
     return strictlyBetter;
 }
 
-// Sorts the candidates in a front based on the crowding distance.
-void NSGA_II::CrowdingDistanceSorting (vector<Candidate*> &front){
+// Sorts the individuals in a front based on the crowding distance.
+void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
     for (int obj = 0; obj < fitFunc_ptr->numObjectives; obj++){
         // Sort individuals in this front on fitness for objective [obj].
         sort(front.begin(), front.end(), CandidateObjectiveComparator(obj));
@@ -130,14 +126,14 @@ void NSGA_II::CrowdingDistanceSorting (vector<Candidate*> &front){
         front.back()->crowdingDistance = INFINITY;
         
         if (front.size() > 2){
-            float maxObjFitness = front.back()->ind->fitness[obj];
-            float minObjFitness = front.front()->ind->fitness[obj];
+            float maxObjFitness = front.back()->fitness[obj];
+            float minObjFitness = front.front()->fitness[obj];
             float normalizationValue = maxObjFitness - minObjFitness;
             
             for (int i = 1; i < front.size() - 1; i++){
                 if(front[i]->crowdingDistance != INFINITY){
-                    float prevObjFitness = front[i-1]->ind->fitness[obj];
-                    float nextObjFitness = front[i+1]->ind->fitness[obj];
+                    float prevObjFitness = front[i-1]->fitness[obj];
+                    float nextObjFitness = front[i+1]->fitness[obj];
                     float newCrowdingDistance;
                     if (normalizationValue == 0){
                         newCrowdingDistance = INFINITY;
@@ -150,28 +146,28 @@ void NSGA_II::CrowdingDistanceSorting (vector<Candidate*> &front){
         }
     }
     
-    sort(front.begin(), front.end(), [](const Candidate* rhs, const Candidate* lhs){
+    sort(front.begin(), front.end(), [](const Individual* rhs, const Individual* lhs){
         return lhs->crowdingDistance < rhs->crowdingDistance;
     });
 }
 
 // Returns true if can1 is favoured over can2
-bool NSGA_II::crowdComparisonOperator(const Candidate* can1, const Candidate* can2){
+bool NSGA_II::crowdComparisonOperator(const Individual* can1, const Individual* can2){
     if (can1->front < can2->front){
         return true;
-    } else if (can1-> front > can2->front){
+    } else if (can1->front > can2->front){
         return false;
     } else {
         return can1->crowdingDistance > can2->crowdingDistance;
     }
 }
 
-vector<NSGA_II::Candidate*> NSGA_II::selectPt(vector<vector<Candidate*>> sortedCandidates){
-    vector<Candidate*> Pt;
+vector<Individual*> NSGA_II::selectPt(vector<vector<Individual*>> sortedPopulation){
+    vector<Individual*> Pt;
     Pt.reserve(populationSize);
     int individualsAdded = 0;
     
-    for (vector<Candidate*> &front : sortedCandidates){
+    for (vector<Individual*> &front : sortedPopulation){
         CrowdingDistanceSorting(front);
         for (int i = 0; i < front.size(); i++){
             front[i]->canReproduce = true;
@@ -185,7 +181,7 @@ vector<NSGA_II::Candidate*> NSGA_II::selectPt(vector<vector<Candidate*>> sortedC
     return Pt;
 }
 
-vector<Individual> NSGA_II::createOffspring(vector<Candidate*> Pt){
+vector<Individual> NSGA_II::createOffspring(vector<Individual*> Pt){
     vector<Individual> Qt;
     Qt.reserve(populationSize);
 
@@ -197,13 +193,13 @@ vector<Individual> NSGA_II::createOffspring(vector<Candidate*> Pt){
         vector<int> randIdxArray = Utility::getRandomlyPermutedArrayV2(populationSize);
         
         for (int j = 0; j < populationSize/4; j++){
-            Candidate* parent1 = Pt[randIdxArray[j * 4 + 0]];
-            Candidate* parent2 = Pt[randIdxArray[j * 4 + 1]];
-            Candidate* parent3 = Pt[randIdxArray[j * 4 + 2]];
-            Candidate* parent4 = Pt[randIdxArray[j * 4 + 3]];
+            Individual* parent1 = Pt[randIdxArray[j * 4 + 0]];
+            Individual* parent2 = Pt[randIdxArray[j * 4 + 1]];
+            Individual* parent3 = Pt[randIdxArray[j * 4 + 2]];
+            Individual* parent4 = Pt[randIdxArray[j * 4 + 3]];
             
-            Candidate *firstParent;
-            Candidate *secondParent;
+            Individual *firstParent;
+            Individual *secondParent;
             if (crowdComparisonOperator(parent1, parent2)){
                 firstParent = parent1;
             } else {
@@ -216,7 +212,7 @@ vector<Individual> NSGA_II::createOffspring(vector<Candidate*> Pt){
                 secondParent = parent4;
             }
             
-            pair<Individual, Individual> offspring = variation_ptr->crossover(*firstParent->ind, *secondParent->ind);
+            pair<Individual, Individual> offspring = variation_ptr->crossover(*firstParent, *secondParent);
             
             fitFunc_ptr->evaluate(offspring.first);
             fitFunc_ptr->evaluate(offspring.second);
@@ -237,26 +233,26 @@ string NSGA_II::id(){
     return "NSGA-II";
 }
 
-void NSGA_II::draw2DVisualization(vector<Candidate> &candidates, int maxX, int maxY){
-    vector<Candidate*> drawList;
-    drawList.reserve(candidates.size());
-    for (int i = 0; i < candidates.size(); i++){
-        drawList.push_back(&candidates[i]);
+void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int maxY){
+    vector<Individual*> drawList;
+    drawList.reserve(population.size());
+    for (int i = 0; i < population.size(); i++){
+        drawList.push_back(&population[i]);
     }
-    sort(drawList.begin(), drawList.end(), [](const Candidate* lhs, const Candidate* rhs){
-        if (lhs->ind->fitness[1] < rhs->ind->fitness[1]){
+    sort(drawList.begin(), drawList.end(), [](const Individual* lhs, const Individual* rhs){
+        if (lhs->fitness[1] < rhs->fitness[1]){
             return true;
-        } else if (lhs->ind->fitness[1] > rhs->ind->fitness[1]){
+        } else if (lhs->fitness[1] > rhs->fitness[1]){
             return false;
         } else {
-            return lhs->ind->fitness[0] < rhs->ind->fitness[0];
+            return lhs->fitness[0] < rhs->fitness[0];
         }
     });
     int i = 0;
     string result = "";
     for (int y = 0; y < maxY; y++){
         for (int x = 0; x < maxX; x++){
-            if (drawList[i]->ind->fitness[0] == x && drawList[i]->ind->fitness[1] == y){
+            if (drawList[i]->fitness[0] == x && drawList[i]->fitness[1] == y){
 //                string reproduce = drawList[i]->canReproduce ? "+" : "";
                 string frontNr = drawList[i]->front == -1 ? "?" : to_string(drawList[i]->front);
                 result += Utility::padWithSpacesAfter(frontNr, 3);
@@ -264,7 +260,7 @@ void NSGA_II::draw2DVisualization(vector<Candidate> &candidates, int maxX, int m
                 result += " . ";
             }
             result += " ";
-            while (drawList[i]->ind->fitness[0] == x && drawList[i]->ind->fitness[1] == y && i < drawList.size()-1){
+            while (drawList[i]->fitness[0] == x && drawList[i]->fitness[1] == y && i < drawList.size()-1){
                 i++;
             }
         }
@@ -273,15 +269,15 @@ void NSGA_II::draw2DVisualization(vector<Candidate> &candidates, int maxX, int m
     cout << result << endl;
 }
 
-string NSGA_II::Candidate::toString(){
-    string result = ind->toString();
-    result += "  Front: ";
-    result += to_string(front);
-    result += "  CrowdingDist: ";
-    result += to_string(crowdingDistance);
-    return result;
-}
-
-void NSGA_II::Candidate::print(){
-    cout << toString() << endl;
-}
+//string NSGA_II::Candidate::toString(){
+//    string result = ind->toString();
+//    result += "  Front: ";
+//    result += to_string(front);
+//    result += "  CrowdingDist: ";
+//    result += to_string(crowdingDistance);
+//    return result;
+//}
+//
+//void NSGA_II::Candidate::print(){
+//    cout << toString() << endl;
+//}

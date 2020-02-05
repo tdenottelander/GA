@@ -21,6 +21,13 @@ public:
     std::vector<float> fitness;
     int counterNotChanged;
     
+    // MO-fields
+    int dominationCount;
+    std::vector<Individual*> dominationList;
+    int front;
+    float crowdingDistance;
+    bool canReproduce;
+    
     Individual();
     Individual(int length, int objectives);
     void initialize(std::vector<int> alphabet);
@@ -29,6 +36,7 @@ public:
     std::string toStringBlocks(int blocksize);
     bool equals(Individual const& ind);
     bool genotypeEquals(arma::uvec &genotype);
+    void clearMOinformation();
     
     static std::string toString(std::vector<int> &genotype);
     static std::string toString(arma::uvec &genotype);
