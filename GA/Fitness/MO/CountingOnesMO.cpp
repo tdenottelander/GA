@@ -11,8 +11,9 @@
 using namespace std;
 
 CountingOnesMO::CountingOnesMO (int blocksize, int numObjectives) : FitnessFunction(new BinaryProblemType()), blocksize(blocksize) {
-    setLength(blocksize * numObjectives);
     setNumObjectives(numObjectives);
+    setLength(blocksize * numObjectives);
+    setOptimum(vector<float>(numObjectives, blocksize));
 }
 
 vector<float> CountingOnesMO::evaluate(Individual &ind) {
@@ -25,6 +26,8 @@ vector<float> CountingOnesMO::evaluate(Individual &ind) {
     
     ind.fitness = result;
     
+    evaluationProcedure(ind);
+    
     return result;
 }
 
@@ -32,3 +35,6 @@ FitnessFunction* CountingOnesMO::clone() const {
     return new CountingOnesMO(static_cast<const CountingOnesMO&>(*this));
 }
 
+void CountingOnesMO::setLength(int length){
+    totalProblemLength = length * numObjectives;
+}

@@ -17,12 +17,10 @@
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
-//#include "SimpleMOProblem.hpp"
-//#include "CountingOnesMO.hpp"
-//#include "SchaffersStudy.hpp"
-//#include "ZDT2.hpp"
-//#include "ZerosOnes.hpp"
-//#include "LOTZ.hpp"
+#include "SimpleMOProblem.hpp"
+#include "CountingOnesMO.hpp"
+#include "ZerosOnes.hpp"
+#include "LOTZ.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -110,10 +108,9 @@ void runNasbench(){
         
 //        FitnessFunction * fit = new Trap(5, 5);
 //        FitnessFunction * fit = new OneMax(20);
-        FitnessFunction * fit = new LeadingOnes(20);
-//        FitnessFunction * fit = new SimpleMOProblem(4, 2);
+//        FitnessFunction * fit = new LeadingOnes(20);
+        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
-//        FitnessFunction * fit = new ZDT2();
 //        FitnessFunction * fit = new ZerosOnes(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
         

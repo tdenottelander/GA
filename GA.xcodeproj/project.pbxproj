@@ -13,6 +13,10 @@
 		C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C235FB8A23E1E5760046B0CE /* ARK7.cpp */; };
 		C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */; };
 		C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */; };
+		C25AFB8A23EB7461004FEC24 /* CountingOnesMO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8823EB7461004FEC24 /* CountingOnesMO.cpp */; };
+		C25AFB8D23EB7543004FEC24 /* LOTZ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8B23EB7543004FEC24 /* LOTZ.cpp */; };
+		C25AFB9023EB75A0004FEC24 /* ZerosOnes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8E23EB75A0004FEC24 /* ZerosOnes.cpp */; };
+		C25AFB9323EB75ED004FEC24 /* SimpleMOProblem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */; };
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
 		C293D6E223A787AE001E0636 /* ARK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E023A787AE001E0636 /* ARK.cpp */; };
 		C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */; };
@@ -66,6 +70,14 @@
 		C2469EB623BE31450030E4B0 /* LocalSearchAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchAnalysis.hpp; sourceTree = "<group>"; };
 		C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GreedyAnalysis.cpp; sourceTree = "<group>"; };
 		C2469EB923BE325E0030E4B0 /* GreedyAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GreedyAnalysis.hpp; sourceTree = "<group>"; };
+		C25AFB8823EB7461004FEC24 /* CountingOnesMO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CountingOnesMO.cpp; sourceTree = "<group>"; };
+		C25AFB8923EB7461004FEC24 /* CountingOnesMO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CountingOnesMO.hpp; sourceTree = "<group>"; };
+		C25AFB8B23EB7543004FEC24 /* LOTZ.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LOTZ.cpp; sourceTree = "<group>"; };
+		C25AFB8C23EB7543004FEC24 /* LOTZ.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LOTZ.hpp; sourceTree = "<group>"; };
+		C25AFB8E23EB75A0004FEC24 /* ZerosOnes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZerosOnes.cpp; sourceTree = "<group>"; };
+		C25AFB8F23EB75A0004FEC24 /* ZerosOnes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ZerosOnes.hpp; sourceTree = "<group>"; };
+		C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleMOProblem.cpp; sourceTree = "<group>"; };
+		C25AFB9223EB75EC004FEC24 /* SimpleMOProblem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleMOProblem.hpp; sourceTree = "<group>"; };
 		C267AC562396C3D3009A8DA9 /* libpython3.7m.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.7m.a; path = ../../../../../miniconda3/lib/libpython3.7m.a; sourceTree = "<group>"; };
 		C269FF132390090500B98092 /* SimpleGA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleGA.cpp; sourceTree = "<group>"; };
 		C269FF142390090500B98092 /* SimpleGA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleGA.hpp; sourceTree = "<group>"; };
@@ -175,6 +187,21 @@
 			path = Analysis;
 			sourceTree = "<group>";
 		};
+		C25AFB8723EB7442004FEC24 /* MO */ = {
+			isa = PBXGroup;
+			children = (
+				C25AFB8823EB7461004FEC24 /* CountingOnesMO.cpp */,
+				C25AFB8923EB7461004FEC24 /* CountingOnesMO.hpp */,
+				C25AFB8B23EB7543004FEC24 /* LOTZ.cpp */,
+				C25AFB8C23EB7543004FEC24 /* LOTZ.hpp */,
+				C25AFB8E23EB75A0004FEC24 /* ZerosOnes.cpp */,
+				C25AFB8F23EB75A0004FEC24 /* ZerosOnes.hpp */,
+				C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */,
+				C25AFB9223EB75EC004FEC24 /* SimpleMOProblem.hpp */,
+			);
+			path = MO;
+			sourceTree = "<group>";
+		};
 		C2ABE4C223840C6700D6E774 = {
 			isa = PBXGroup;
 			children = (
@@ -236,6 +263,7 @@
 		C2C42F7323A11BD000B83C3A /* Fitness */ = {
 			isa = PBXGroup;
 			children = (
+				C25AFB8723EB7442004FEC24 /* MO */,
 				C22246CD23CDFAB400EC93F8 /* ARK */,
 				C22246CA23CDDB0700EC93F8 /* NK.cpp */,
 				C22246CB23CDDB0800EC93F8 /* NK.hpp */,
@@ -402,6 +430,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C25AFB8D23EB7543004FEC24 /* LOTZ.cpp in Sources */,
 				C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */,
 				C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */,
 				C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */,
@@ -410,11 +439,13 @@
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
 				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
 				C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */,
+				C25AFB9023EB75A0004FEC24 /* ZerosOnes.cpp in Sources */,
 				C2C0659623C8AA0B0067B946 /* LocalSearch.cpp in Sources */,
 				C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */,
 				C2C6518E23D9A081007B567A /* ARK6.cpp in Sources */,
 				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
+				C25AFB9323EB75ED004FEC24 /* SimpleMOProblem.cpp in Sources */,
 				C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */,
 				C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */,
 				C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */,
@@ -428,6 +459,7 @@
 				C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */,
 				C2C0659023C7893D0067B946 /* GOM_LS.cpp in Sources */,
 				C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */,
+				C25AFB8A23EB7461004FEC24 /* CountingOnesMO.cpp in Sources */,
 				C269FF152390090500B98092 /* SimpleGA.cpp in Sources */,
 				C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */,
 				C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */,

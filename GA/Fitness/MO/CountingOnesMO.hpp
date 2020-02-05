@@ -19,6 +19,7 @@ public:
     std::vector<float> evaluate (Individual &ind) override;
     
     FitnessFunction* clone() const override;
+    void setLength(int length) override;
 };
 
 #endif /* CountingOnesMO_hpp */
