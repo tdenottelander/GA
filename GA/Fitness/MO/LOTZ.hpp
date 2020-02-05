@@ -10,5 +10,14 @@
 #define LOTZ_hpp
 
 #include <stdio.h>
+#include "FitnessFunction.hpp"
+
+class LOTZ : public FitnessFunction {
+public:
+    LOTZ(int problemSize);
+    std::vector<float> evaluate (Individual &ind) override;
+    
+    FitnessFunction* clone() const override;
+};
 
 #endif /* LOTZ_hpp */

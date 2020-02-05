@@ -7,3 +7,43 @@
 //
 
 #include "LOTZ.hpp"
+
+using namespace std;
+
+LOTZ::LOTZ (int problemSize) : FitnessFunction(new BinaryProblemType()) {
+    setLength(problemSize);
+    setNumObjectives(2);
+    setOptimum(vector<float>(2, problemSize));
+}
+
+vector<float> LOTZ::evaluate(Individual &ind) {
+    vector<float> result (numObjectives, 0);
+    
+    // First objective is to get the most leading ones
+    for (int i = 0; i < totalProblemLength; i++){
+        if (ind.genotype[i] == 1){
+            result[0] = i + 1;
+        } else {
+            break;
+        }
+    }
+    
+    // Second objective is to get the most trailing zeros
+    for (int i = totalProblemLength - 1; i >= 0; i--){
+        if (ind.genotype[i] == 0){
+            result[1] = totalProblemLength - i;
+        } else {
+            break;
+        }
+    }
+    
+    ind.fitness = result;
+    
+    evaluationProcedure(ind);
+    
+    return result;
+}
+
+FitnessFunction* LOTZ::clone() const {
+    return new LOTZ(static_cast<const LOTZ&>(*this));
+}
