@@ -30,7 +30,7 @@ Individual::Individual(int length, int objectives) :
 
 void Individual::initialize(vector<int> alphabet){
     int n = alphabet.size();
-    for(unsigned long long i = 0; i < genotype.size(); i++){
+    for(int i = 0; i < genotype.size(); i++){
         genotype[i] = alphabet[floor(getRand() * n)];
     }
 }
@@ -92,6 +92,19 @@ bool Individual::equals(const Individual &ind) {
 
 bool Individual::genotypeEquals(uvec &g){
     return genotypeEquals(g, genotype);
+}
+
+bool Individual::fitnessEquals(Individual &ind, float margin){
+    for (int i = 0; i < fitness.size(); i++){
+        if (abs(fitness[i] - ind.fitness[i]) > margin){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Individual::dominates(Individual &ind){
+    return dominates(*this, ind);
 }
 
 void Individual::clearMOinformation(){
@@ -172,4 +185,18 @@ bool Individual::genotypeEquals(uvec &g1, uvec &g2){
         }
     }
     return true;
+}
+
+// Returns true if [ind1] dominates [ind2]
+// Notion of domination used: When all objectives are equal or better and at least one objective is strictly better.
+bool Individual::dominates(Individual &ind1, Individual &ind2){
+    bool domination = false;
+    for (int obj = 0; obj < ind1.fitness.size(); obj++){
+        if (ind1.fitness[obj] > ind2.fitness[obj]){
+            domination = true;
+        } else if (ind1.fitness[obj] < ind2.fitness[obj]){
+            return false;
+        }
+    }
+    return domination;
 }

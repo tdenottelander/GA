@@ -17,14 +17,11 @@ void NSGA_II::round() {
     if(initialRound){
         clearMOinformation(population);
         sortedPopulation = nonDominatedSorting(population);
+        draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
         initialRound = false;
     }
     vector<Individual*> Pt = selectPt(sortedPopulation);
     vector<Individual> Qt = createOffspring(Pt);
-
-    if(visualize){
-        draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
-    }
     
     vector<Individual> newPopulation;
     for (int i = 0; i < Pt.size(); i++){
@@ -41,6 +38,9 @@ void NSGA_II::round() {
     
     clearMOinformation(population);
     sortedPopulation = nonDominatedSorting(population);
+    draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
+    
+    roundsCount++;
 }
 
 void NSGA_II::clearMOinformation(vector<Individual> &population){
@@ -56,7 +56,7 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
     // Loop over every individual combination to see which individuals dominate which other individuals.
     for (int i = 0; i < population.size(); i++){
         for (int j = 0; j < population.size(); j++){
-            if (dominates(&population[i], &population[j])){
+            if (population[i].dominates(population[j])){
                 // Individual i dominates individual j
                 population[j].dominationCount += 1;
                 population[i].dominationList.push_back(&population[j]);
@@ -100,20 +100,6 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
         }
     }
     return sortedPopulation;
-}
-
-// Returns true if [ind1] dominates [ind2]
-// Notion of domination used: When all objectives are equal or better and at least one objective is strictly better.
-bool NSGA_II::dominates(Individual *ind1, Individual *ind2){
-    bool strictlyBetter = false;
-    for (int obj = 0; obj < fitFunc_ptr->numObjectives; obj++){
-        if (ind1->fitness[obj] > ind2->fitness[obj]){
-            strictlyBetter = true;
-        } else if (ind1->fitness[obj] < ind2->fitness[obj]){
-            return false;
-        }
-    }
-    return strictlyBetter;
 }
 
 // Sorts the individuals in a front based on the crowding distance.
@@ -234,6 +220,9 @@ string NSGA_II::id(){
 }
 
 void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int maxY){
+    if(!visualize){
+        return;
+    }
     vector<Individual*> drawList;
     drawList.reserve(population.size());
     for (int i = 0; i < population.size(); i++){

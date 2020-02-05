@@ -93,6 +93,10 @@ void FitnessFunction::display(){
 // Checks whether the individual is optimal.
 void FitnessFunction::checkIfBestFound(Individual &ind){
     
+    if(optimumFound){
+        return;
+    }
+    
     if(!checkForGenotype){
         optimumFound = true;
         for (int obj = 0; obj < optimum.size(); obj++){

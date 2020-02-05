@@ -36,6 +36,8 @@ public:
     std::string toStringBlocks(int blocksize);
     bool equals(Individual const& ind);
     bool genotypeEquals(arma::uvec &genotype);
+    bool fitnessEquals(Individual &ind, float margin = 0.001);
+    bool dominates(Individual &ind2);
     void clearMOinformation();
     
     static std::string toString(std::vector<int> &genotype);
@@ -45,6 +47,7 @@ public:
     static int editDistance(arma::uvec &g1, arma::uvec &g2, int i, int j);
     static arma::uvec removeIdentities(arma::uvec &genotype, int identityLayerIndex);
     static bool genotypeEquals(arma::uvec &g1, arma::uvec &g2);
+    static bool dominates(Individual &ind1, Individual &ind2);
 };
 
 #endif /* Individual_hpp */

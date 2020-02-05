@@ -24,7 +24,6 @@ public:
     
     void clearMOinformation(std::vector<Individual> &population);
     std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
-    bool dominates(Individual *ind1, Individual *ind2);
     void CrowdingDistanceSorting (std::vector<Individual*> &front);
     bool crowdComparisonOperator(const Individual* lhs, const Individual* rhs);
     std::vector<Individual*> selectPt (std::vector<std::vector<Individual*>> sortedCandidates);

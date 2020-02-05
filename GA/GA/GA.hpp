@@ -25,6 +25,7 @@ public:
     Selection * selection_ptr;
     Variation * variation_ptr;
     std::vector<Individual> population;
+    std::vector<std::vector<Individual*>> sortedPopulation;
     bool terminated;
     bool initialized;
     int roundsCount;
