@@ -18,7 +18,7 @@ using namespace nlohmann;
 //}
 
 NK::NK(int problemLength, int blocksize, bool wraparound, int alphabetsize) :
-    FitnessFunction(-1, getProblemType(alphabetsize)),
+    FitnessFunction(getProblemType(alphabetsize)),
     blocksize(blocksize),
     wraparound(wraparound),
     alphabetSize(alphabetsize),
@@ -118,7 +118,8 @@ void NK::loadTable(int tableIndex){
     string filename = getFileName(blocksize, wraparound, alphabetSize, 50);
     json data = Utility::readJSON(folderprefix + filename);
     table = data["table" + to_string(tableIndex)];
-    optimum = table["optima"][to_string(totalProblemLength)];
+    float opt = table["optima"][to_string(totalProblemLength)];
+    setOptimum(opt);
 }
 
 void NK::display() {

@@ -19,7 +19,7 @@ using namespace nlohmann;
 extern std::string ARK_Analysis_suffix;
 
 ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
-    FitnessFunction(getOptimum(folder, problemSize, allowIdentityLayers), problemType),
+    FitnessFunction(vector<float>(1, getOptimum(folder, problemSize, allowIdentityLayers)), problemType),
     allowIdentityLayers(allowIdentityLayers),
     identityLayer(identity),
     jsonAccuracyIndex(jsonAccuracyIndex),

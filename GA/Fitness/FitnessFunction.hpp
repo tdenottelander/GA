@@ -18,7 +18,7 @@
 class FitnessFunction {
 public:
     Individual bestIndividual;
-    float optimum;
+    std::vector<float> optimum;
     bool optimumFound;
     int maxEvaluations;
     int maxUniqueEvaluations;
@@ -34,7 +34,7 @@ public:
     UniqueSolutions uniqueSolutions;
     UniqueSolutions transformedUniqueSolutions;
     
-    FitnessFunction(float optimum, ProblemType *problemType);
+    FitnessFunction(std::vector<float> optimum, ProblemType *problemType);
     FitnessFunction(ProblemType *problemType);
     
     virtual void clear();
@@ -56,6 +56,8 @@ public:
     
     virtual void setLength (int length);
     virtual void setNumObjectives (int numObjectives);
+    virtual void setOptimum (std::vector<float> optimum);
+    virtual void setOptimum (float optimum);
     
     virtual arma::uvec transform(arma::uvec &genotype);
 };

@@ -12,7 +12,7 @@ using namespace std;
 
 /* ------------------------ Trap Five Fitness Function ------------------------ */
 
-Trap::Trap(int blocksize, int blocks) : FitnessFunction(blocks * blocksize, getProblemType()), blocks(blocks), blocksize(blocksize) {}
+Trap::Trap(int blocksize, int blocks) : FitnessFunction(vector<float>(1, blocks * blocksize), getProblemType()), blocks(blocks), blocksize(blocksize) {}
 Trap::Trap(int blocksize) : FitnessFunction(getProblemType()), blocksize(blocksize) {}
 
 // Returns the fitness of an individual
@@ -60,5 +60,5 @@ ProblemType* Trap::getProblemType(){
 void Trap::setLength (int length) {
     totalProblemLength = blocksize * length;
     blocks = length;
-    optimum = length;
+    setOptimum(length);
 }

@@ -18,7 +18,7 @@ extern nlohmann::json convergence;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
-FitnessFunction::FitnessFunction(float optimum, ProblemType *problemType) :
+FitnessFunction::FitnessFunction(vector<float> optimum, ProblemType *problemType) :
     bestIndividual(),
     optimum(optimum),
     optimumFound(false),
@@ -93,15 +93,24 @@ void FitnessFunction::display(){
 // Checks whether the individual is optimal.
 void FitnessFunction::checkIfBestFound(Individual &ind){
     
-//    if(checkForGenotype && ind.genotypeEquals(optimalGenotype)){
-//        ind.fitness += 0.01;
-//    }
-    
-    if((!checkForGenotype && ind.fitness[0] >= optimum) || (checkForGenotype && ind.genotypeEquals(optimalGenotype))){
+    if(!checkForGenotype){
         optimumFound = true;
+        for (int obj = 0; obj < optimum.size(); obj++){
+            if (ind.fitness[obj] < optimum[obj]){
+                optimumFound = false;
+                break;
+            }
+        }
     }
     
-    if(ind.fitness > bestIndividual.fitness){
+    if (checkForGenotype){
+        if(ind.genotypeEquals(optimalGenotype)){
+            optimumFound = true;
+        };
+    }
+    
+    // Set bestIndividual only for SO-problems.
+    if(optimum.size() == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
         bestIndividual = ind.copy();
 //        cout << "this genotype: " << Utility::genotypeToString(ind.genotype) << "  opt genotype: " << Utility::genotypeToString(optimalGenotype) << endl;
     }
@@ -134,11 +143,23 @@ string FitnessFunction::id() {
 // Sets the length and the optimum
 void FitnessFunction::setLength(int length){
     totalProblemLength = length;
-    optimum = length;
+//    if (numObjectives == 1){
+//        optimum[0] = length;
+//    }
 }
 
 void FitnessFunction::setNumObjectives(int numObj){
     numObjectives = numObj;
+}
+
+// Sets the MO-problem optimum.
+void FitnessFunction::setOptimum(vector<float> opt){
+    optimum = opt;
+}
+
+// Sets the SO-problem optimum.
+void FitnessFunction::setOptimum(float opt){
+    optimum[0] = opt;
 }
 
 // Transforms the genotype (e.g. remove identity layers in ARK)
@@ -150,7 +171,7 @@ uvec FitnessFunction::transform(uvec &genotype){
 
 /* ------------------------ OneMax Fitness Function ------------------------ */
 
-OneMax::OneMax(int length) : FitnessFunction(length, getProblemType()) {}
+OneMax::OneMax(int length) : FitnessFunction(vector<float>(1, length), getProblemType()) {}
 OneMax::OneMax() : FitnessFunction(getProblemType()) {}
 
 vector<float> OneMax::evaluate(Individual &ind) {
@@ -183,7 +204,7 @@ FitnessFunction* OneMax::clone() const {
 
 /* ------------------------ Leading Ones Fitness Function ------------------------ */
 
-LeadingOnes::LeadingOnes(int length) : FitnessFunction(length, getProblemType()) {}
+LeadingOnes::LeadingOnes(int length) : FitnessFunction(vector<float>(1, length), getProblemType()) {}
 LeadingOnes::LeadingOnes() : FitnessFunction(getProblemType()) {}
 
 ProblemType* LeadingOnes::getProblemType(){
@@ -253,5 +274,5 @@ ProblemType* NonBinaryMax::getProblemType(){
 
 void NonBinaryMax::setLength(int length){
     totalProblemLength = length * 5;
-    optimum = length * 5;
+    setOptimum(vector<float>(1, totalProblemLength));
 }

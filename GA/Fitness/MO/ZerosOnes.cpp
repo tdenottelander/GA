@@ -13,12 +13,11 @@ using namespace std;
 ZerosOnes::ZerosOnes (int problemSize) : FitnessFunction(new BinaryProblemType()) {
     setLength(problemSize);
     setNumObjectives(2);
-    optimum = 1000;
+    setOptimum(vector<float>(2, problemSize));
 }
 
 vector<float> ZerosOnes::evaluate(Individual &ind) {
     vector<float> result (numObjectives, 0);
-    result[0] = ind.genotype[0];
     
     for (int i = 0; i < totalProblemLength; i++){
         if (ind.genotype[i] == 0){

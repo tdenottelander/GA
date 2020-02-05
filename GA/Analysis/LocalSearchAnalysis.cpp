@@ -79,7 +79,7 @@ void LocalSearchAnalysis::localSearchTests(ARK* fitfunc, int runs, string localS
         
         resultingFitness.push_back(ind.fitness[0]);
         
-        if(ind.fitness[0] >= fitfunc->optimum - 0.01){
+        if(ind.fitness[0] >= fitfunc->optimum[0] - 0.01){
             optimumfound++;
             evaluationsForSuccess.push_back(evaluations);
         } else

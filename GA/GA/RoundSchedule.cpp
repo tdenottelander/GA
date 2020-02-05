@@ -42,7 +42,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
-//    g->fitFunc_ptr->setLength(problemSize);
+    g->fitFunc_ptr->setLength(problemSize);
     g->fitFunc_ptr->maxEvaluations = maxEvaluations;
     g->fitFunc_ptr->maxUniqueEvaluations = maxUniqueEvaluations;
     

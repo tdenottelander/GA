@@ -15,12 +15,12 @@ NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bo
 
 void NSGA_II::round() {
     vector<Candidate> candidates = createCandidateStructure(population);
-    vector<vector<Candidate*>> sortedCandidates = nonDominatedSorting(candidates);
+    vector<vector<Candidate*>> sortedCandidates = nonDominatedSorting(candidates, populationSize);
     vector<Candidate*> Pt = selectPt(sortedCandidates);
     vector<Individual> Qt = createOffspring(Pt);
 
     if(visualize){
-        draw2DVisualization(candidates, fitFunc_ptr->totalProblemLength / 2 + 1, fitFunc_ptr->totalProblemLength / 2 + 1);
+        draw2DVisualization(candidates, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
     }
     
     vector<Individual> newPopulation;
@@ -34,7 +34,7 @@ void NSGA_II::round() {
     population = newPopulation;
     
     vector<float> averageFitness = getAvgFitness();
-    cout << "Avg Fitness = " << Utility::wrapWithBrackets(Utility::vecOfFloatsToString(averageFitness, ", ")) << endl;
+//    cout << "Avg Fitness = " << Utility::wrapWithBrackets(Utility::vecOfFloatsToString(averageFitness, ", ")) << endl;
 }
 
 // Creates a candidate struct for every individual, which stores the dominationcount, frontrank, crowdingdistance and whether it can reproduce.
