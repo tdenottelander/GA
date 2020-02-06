@@ -124,14 +124,12 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 
 // Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive.
 void FitnessFunction::updateElitistArchive(vector<Individual*> front){
-    
-    int elitistArchiveSize = elitistArchive.size();
-    
+        
     for (int i = front.size() - 1; i >= 0; i--){
         bool addToArchive = true;
         
         // Loop over every solution that is in the archive at the beginning of this method.
-        for (int j = elitistArchiveSize - 1; j >= 0; j--){
+        for (int j = elitistArchive.size() - 1; j >= 0; j--){
             
             // Delete every solution from the archive that is dominated by this solution.
             if(front[i]->dominates(elitistArchive[j])){
