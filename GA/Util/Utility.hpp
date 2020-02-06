@@ -48,6 +48,8 @@ namespace Utility{
     std::vector<int> uvecToVector (arma::uvec vec);
     std::string vecOfFloatsToString (std::vector<float> vec, std::string separator);
     std::string wrapWithBrackets (std::string str);
+    float getAverage(std::vector<float> &vec);
+    float getAverage(std::vector<int> &vec);
 }
 
 #endif /* Utility_hpp */

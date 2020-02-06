@@ -18,6 +18,7 @@ public:
     std::vector<float> evaluate (Individual &ind) override;
     
     FitnessFunction* clone() const override;
+    void setOptimum(std::vector<float> optimum) override;
     bool entireParetoFrontFound() override;
 };
 

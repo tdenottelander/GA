@@ -229,7 +229,14 @@ void runNasbench(){
 
 int main(int argc, const char * argv[]) {
     
-    runNasbench();
+//    runNasbench();
+    
+    int problemSize = 25;
+    FitnessFunction * fit = new ZerosOnes(problemSize);
+    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
+
+    int popsize = ga->findMinimallyNeededPopulationSize(100, 100, 4);
+    cout << popsize << endl;
 
 //    ARK * ark = new ARK6(0, -1);
 //    ark->doAnalysis(0, 14);

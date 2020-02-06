@@ -39,14 +39,18 @@ void GA::round(){
     roundsCount++;
 }
 
-int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
+int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded, int initialPopSize){
     GA* ga = clone();
     int left = -1;
-    int right = 2;
+    int right = initialPopSize;
     int populationSize = right;
+    int succesfulPopulationSize = -1;
     bool doublingPhase = true;
+    vector<int> evaluationsNeeded;
     while(populationSize != left){
         int fails = 0;
+        evaluationsNeeded.clear();
+        evaluationsNeeded.reserve(repetitions);
         for (int i = 0; i < repetitions; i++){
             ga->fitFunc_ptr->clear();
             ga->setPopulationSize(populationSize);
@@ -64,6 +68,7 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
             } else {
 //                cout << ".";
             }
+            evaluationsNeeded.push_back(ga->fitFunc_ptr->totalEvaluations);
         }
         
 //        cout << endl;
@@ -80,6 +85,10 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
 //                cout << "fail,    now l=" << left << " p=" << populationSize << " r=" << right << endl;
             }
         } else {
+            succesfulPopulationSize = populationSize;
+            if (populationSize == initialPopSize){
+                break;
+            }
             doublingPhase = false;
             right = populationSize;
             populationSize = left + floor((right - left) / 2);
@@ -88,10 +97,14 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded){
     }
     
 //    cout << "                                              ";
-    cout << "PROBLEMSIZE = " << fitFunc_ptr->totalProblemLength << "   NEEDED POPULATION SIZE = " << populationSize + 1 << endl;
+    cout << "PROBLEMSIZE = " << fitFunc_ptr->totalProblemLength << endl;
+    cout << "NEEDED POPULATION SIZE = " << succesfulPopulationSize << endl;
+    float avgEvaluationsNeeded = Utility::getAverage(evaluationsNeeded);
+    cout << "AVG EVALUATIONS = " << avgEvaluationsNeeded << endl;
+    
 //    cout << endl;
     ga->fitFunc_ptr->clear();
-    return populationSize + 1;
+    return succesfulPopulationSize;
 }
 
 void GA::roundReplacementVariationSelection(){
@@ -150,7 +163,7 @@ bool GA::isConverged(){
 }
 
 bool GA::isDiverse(){
-    for (unsigned long i = 1; i < population.size(); i++){
+    for (int i = 1; i < population.size(); i++){
         if (!population[i].equals(population[0])){
             return true;
         }

@@ -37,7 +37,7 @@ public:
     void run();
     virtual void round();
     
-    int findMinimallyNeededPopulationSize(int repetitions, int successesNeeded);
+    int findMinimallyNeededPopulationSize(int repetitions, int successesNeeded, int initialPopSize = 2);
     
     void roundReplacementVariationSelection();
     void roundPOVariationSelection();
@@ -45,7 +45,7 @@ public:
     void evaluateAll(std::vector<Individual> &population);
     void evaluateAll();
     bool isConverged();
-    bool isDiverse();
+    virtual bool isDiverse();
     bool isOptimal();
     std::vector<float> getAvgFitness();
     int getTotalAmountOfEvaluations();

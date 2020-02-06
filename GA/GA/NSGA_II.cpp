@@ -16,11 +16,10 @@ NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize,
 }
 
 void NSGA_II::round() {
-    if(initialRound){
+    if(roundsCount == 0){
         clearMOinformation(population);
         sortedPopulation = nonDominatedSorting(population);
         draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
-        initialRound = false;
     }
     vector<Individual*> Pt = selectPt(sortedPopulation);
     vector<Individual> Qt = createOffspring(Pt);
@@ -239,6 +238,14 @@ void NSGA_II::mutate(Individual &ind, float probability){
                 ind.genotype[gene] = 0;
             }
         }
+    }
+}
+
+bool NSGA_II::isDiverse() {
+    if (mutation){
+        return true;
+    } else {
+        return GA::isDiverse();
     }
 }
 

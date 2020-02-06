@@ -239,3 +239,11 @@ string Utility::vecOfFloatsToString (vector<float> vec, string separator){
 string Utility::wrapWithBrackets (string str){
     return ("[" + str + "]");
 }
+
+float Utility::getAverage(vector<float> &vec){
+    return accumulate(vec.begin(), vec.end(), 0.0) / vec.size();
+}
+
+float Utility::getAverage(vector<int> &vec){
+    return accumulate(vec.begin(), vec.end(), 0.0) / vec.size();
+}

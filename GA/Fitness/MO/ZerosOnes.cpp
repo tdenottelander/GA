@@ -37,6 +37,11 @@ FitnessFunction* ZerosOnes::clone() const {
     return new ZerosOnes(static_cast<const ZerosOnes&>(*this));
 }
 
+void ZerosOnes::setOptimum(vector<float> opt){
+    optimum = opt;
+    optimalParetoFrontSize = totalProblemLength + 1;
+}
+
 bool ZerosOnes::entireParetoFrontFound() {
     if (elitistArchive.size() == optimalParetoFrontSize){
         for (Individual &ind : elitistArchive){

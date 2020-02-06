@@ -22,7 +22,6 @@ public:
     bool mutation;
     bool visualize = false;
     void round() override;
-    bool initialRound = true;
         
     void clearMOinformation(std::vector<Individual> &population);
     std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
@@ -32,6 +31,7 @@ public:
     std::vector<Individual> createOffspring(std::vector<Individual*> Pt);
     void mutate(Individual &ind, float probability);
     
+    bool isDiverse() override;
     GA* clone() const override;
     std::string id() override;
     
