@@ -50,7 +50,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);
-        int popSize = pow(beginPopSize, i + 1);
+        int popSize = pow(beginPopSize, i + 2);
         GA* newGA = g->clone();
         newGA->setPopulationSize(popSize);
         gaList.push_back(newGA);

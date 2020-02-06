@@ -27,6 +27,8 @@ vector<float> SimpleMOProblem::evaluate(Individual &ind) {
     
     ind.fitness = result;
     
+    evaluationProcedure(ind);
+    
     return result;
 }
 

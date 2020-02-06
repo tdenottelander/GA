@@ -18,6 +18,7 @@
 class FitnessFunction {
 public:
     Individual bestIndividual;
+    std::vector<Individual> elitistArchive;
     std::vector<float> optimum;
     bool optimumFound;
     int maxEvaluations;
@@ -46,6 +47,7 @@ public:
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
+    void updateElitistArchive(std::vector<Individual*> front);
     void setGenotypeChecking(arma::uvec genotype);
     
     int getTotalAmountOfEvaluations();

@@ -328,7 +328,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/main.cpp"
-            timestampString = "602634765.3812079"
+            timestampString = "602677554.291695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "83"
@@ -344,7 +344,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/RoundSchedule.cpp"
-            timestampString = "602634765.381276"
+            timestampString = "602677554.2917711"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "195"
@@ -360,7 +360,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/RoundSchedule.cpp"
-            timestampString = "602634765.381323"
+            timestampString = "602677554.291853"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "173"
@@ -376,7 +376,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/RoundSchedule.cpp"
-            timestampString = "602634765.381362"
+            timestampString = "602677554.291929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
@@ -392,7 +392,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/RoundSchedule.cpp"
-            timestampString = "602634765.381399"
+            timestampString = "602677554.2920049"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "174"
@@ -440,7 +440,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/Individual/Individual.cpp"
-            timestampString = "602634765.3814681"
+            timestampString = "602677554.29214"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "25"
@@ -456,7 +456,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/Individual/Individual.cpp"
-            timestampString = "602634765.3815089"
+            timestampString = "602677554.2922159"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
@@ -600,28 +600,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/Individual/Individual.cpp"
-            timestampString = "602634765.381626"
+            timestampString = "602677554.292437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "138"
             endingLineNumber = "138"
             landmarkName = "Individual::hammingDistance(uvec &amp;g1, uvec &amp;g2)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GA/Fitness/FitnessFunction.cpp"
-            timestampString = "602634765.381668"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "FitnessFunction::checkIfBestFound(Individual &amp;ind)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -648,7 +632,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/Individual/Individual.cpp"
-            timestampString = "602634765.381723"
+            timestampString = "602677554.2925431"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "88"
@@ -695,24 +679,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GA/Fitness/FitnessFunction.cpp"
-            timestampString = "602634765.381789"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "FitnessFunction::checkIfBestFound(Individual &amp;ind)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "GA/GA/RoundSchedule.cpp"
-            timestampString = "602634765.381826"
+            timestampString = "602677554.292673"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
@@ -728,11 +696,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/Fitness/FitnessFunction.cpp"
-            timestampString = "602634765.381864"
+            timestampString = "602677554.2927541"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "FitnessFunction::evaluationProcedure(Individual &amp;ind)"
             landmarkType = "7">
          </BreakpointContent>
@@ -776,7 +744,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/NSGA_II.cpp"
-            timestampString = "602634765.381932"
+            timestampString = "602677554.2933429"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "18"
@@ -792,7 +760,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/NSGA_II.cpp"
-            timestampString = "602634765.382748"
+            timestampString = "602677554.2938859"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "21"
@@ -804,31 +772,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GA/GA/NSGA_II.cpp"
-            timestampString = "602634765.383499"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "NSGA_II::clearMOinformation(vector&lt;Individual&gt; &amp;population)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/NSGA_II.cpp"
-            timestampString = "602634765.384271"
+            timestampString = "602677554.294377"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
             landmarkName = "NSGA_II::nonDominatedSorting (vector&lt;Individual&gt; &amp;population, int n)"
             landmarkType = "7">
          </BreakpointContent>
@@ -840,11 +792,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GA/GA/NSGA_II.cpp"
-            timestampString = "602634765.385023"
+            timestampString = "602677554.2948641"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
             landmarkName = "NSGA_II::nonDominatedSorting (vector&lt;Individual&gt; &amp;population, int n)"
             landmarkType = "7">
          </BreakpointContent>
@@ -863,6 +815,86 @@
             endingLineNumber = "19"
             landmarkName = "CountingOnesMO::evaluate(Individual &amp;ind)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GA/GA/NSGA_II.cpp"
+            timestampString = "602677554.295383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "NSGA_II::round()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GA/Fitness/FitnessFunction.cpp"
+            timestampString = "602677554.295772"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "FitnessFunction::updateElitistArchive(vector&lt;Individual*&gt; front)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GA/Fitness/FitnessFunction.cpp"
+            timestampString = "602677554.296162"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
+            landmarkName = "FitnessFunction::updateElitistArchive(vector&lt;Individual*&gt; front)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FitnessFunction::updateElitistArchive(std::__1::vector&lt;Individual*, std::__1::allocator&lt;Individual*&gt; &gt;)"
+                  moduleName = "GA"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tomdenottelander/Stack/%23CS_MASTER/Afstuderen/projects/GA/GA/Fitness/FitnessFunction.cpp"
+                  timestampString = "602677555.0833271"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "152"
+                  endingLineNumber = "152"
+                  offsetFromSymbolStart = "784">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FitnessFunction::updateElitistArchive(std::__1::vector&lt;Individual*, std::__1::allocator&lt;Individual*&gt; &gt;)"
+                  moduleName = "GA"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tomdenottelander/Stack/%23CS_MASTER/Afstuderen/projects/GA/GA/Fitness/FitnessFunction.cpp"
+                  timestampString = "602677555.086741"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "152"
+                  endingLineNumber = "152"
+                  offsetFromSymbolStart = "864">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

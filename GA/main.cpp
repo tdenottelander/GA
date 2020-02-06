@@ -109,10 +109,10 @@ void runNasbench(){
 //        FitnessFunction * fit = new Trap(5, 5);
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
-        FitnessFunction * fit = new SimpleMOProblem(4, 2);
+//        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
 //        FitnessFunction * fit = new ZerosOnes(problemSize);
-//        FitnessFunction * fit = new LOTZ(problemSize);
+        FitnessFunction * fit = new LOTZ(problemSize);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
