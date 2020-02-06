@@ -15,7 +15,11 @@
 
 class NSGA_II : public SimpleGA {
 public:
-    NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bool visualize = false);
+    NSGA_II(FitnessFunction * fitFunc);
+    NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize = false);
+    int tournamentSize;
+    float crossoverProbability;
+    bool mutation;
     bool visualize = false;
     void round() override;
     bool initialRound = true;
@@ -26,7 +30,7 @@ public:
     bool crowdComparisonOperator(const Individual* lhs, const Individual* rhs);
     std::vector<Individual*> selectPt (std::vector<std::vector<Individual*>> sortedCandidates);
     std::vector<Individual> createOffspring(std::vector<Individual*> Pt);
-    
+    void mutate(Individual &ind, float probability);
     
     GA* clone() const override;
     std::string id() override;

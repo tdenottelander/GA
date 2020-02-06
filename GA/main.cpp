@@ -74,15 +74,15 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = 25000; //10000
+    int maxEvaluations = -1; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
     int repetitions = 20; //100
     bool IMS = true;
     int populationSize = 20;
     
-    int minProblemSize = 10;
-    int maxProblemSize = 10;
+    int minProblemSize = 5;
+    int maxProblemSize = 5;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -161,8 +161,8 @@ void runNasbench(){
 
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
-            
-            new NSGA_II(fit, new OnePointCrossover(), new TournamentSelection(2), true),
+
+            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, true),
         };
         
         

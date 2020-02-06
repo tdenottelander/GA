@@ -10,7 +10,9 @@
 
 using namespace std;
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, Selection * sel, bool visualize) : SimpleGA(fitFunc, var, sel), visualize(visualize) {
+NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 2, 0.9, true, false){}
+
+NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), tournamentSize(tournamentSize), crossoverProbability(crossoverProbability), mutation(mutation), visualize(visualize) {
 }
 
 void NSGA_II::round() {
@@ -200,16 +202,44 @@ vector<Individual> NSGA_II::createOffspring(vector<Individual*> Pt){
                 secondParent = parent4;
             }
             
-            pair<Individual, Individual> offspring = variation_ptr->crossover(*firstParent, *secondParent);
+            Individual newInd1;
+            Individual newInd2;
+            if (Utility::getRand() < crossoverProbability){
+                pair<Individual, Individual> offspring = variation_ptr->crossover(*firstParent, *secondParent);
+                newInd1 = offspring.first;
+                newInd2 = offspring.second;
+            } else {
+                newInd1 = firstParent->copy();
+                newInd2 = secondParent->copy();
+            }
             
-            fitFunc_ptr->evaluate(offspring.first);
-            fitFunc_ptr->evaluate(offspring.second);
+            if(mutation){
+                float mutationProbability = 1.0 / fitFunc_ptr->totalProblemLength;
+                mutate(newInd1, mutationProbability);
+                mutate(newInd2, mutationProbability);
+            }
             
-            Qt.push_back(offspring.first);
-            Qt.push_back(offspring.second);
+            fitFunc_ptr->evaluate(newInd1);
+            fitFunc_ptr->evaluate(newInd2);
+            
+            Qt.push_back(newInd1);
+            Qt.push_back(newInd2);
         }
     }
     return Qt;
+}
+
+void NSGA_II::mutate(Individual &ind, float probability){
+    for (int gene = 0; gene < ind.genotype.size(); gene++){
+        float rand = Utility::getRand();
+        if (rand < probability) {
+            if(ind.genotype[gene] == 0){
+                ind.genotype[gene] = 1;
+            } else {
+                ind.genotype[gene] = 0;
+            }
+        }
+    }
 }
 
 

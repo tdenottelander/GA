@@ -47,3 +47,20 @@ vector<float> LOTZ::evaluate(Individual &ind) {
 FitnessFunction* LOTZ::clone() const {
     return new LOTZ(static_cast<const LOTZ&>(*this));
 }
+
+void LOTZ::setOptimum(vector<float> opt){
+    optimum = opt;
+    optimalParetoFrontSize = totalProblemLength + 1;
+}
+
+bool LOTZ::entireParetoFrontFound() {
+    if (elitistArchive.size() == optimalParetoFrontSize){
+        for (Individual &ind : elitistArchive){
+            if ((ind.fitness[0] + ind.fitness[1]) != totalProblemLength){
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}

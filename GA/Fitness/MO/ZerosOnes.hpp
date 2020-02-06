@@ -18,6 +18,7 @@ public:
     std::vector<float> evaluate (Individual &ind) override;
     
     FitnessFunction* clone() const override;
+    bool entireParetoFrontFound() override;
 };
 
 #endif /* ZerosOnes_hpp */

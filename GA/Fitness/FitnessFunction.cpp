@@ -124,7 +124,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 
 // Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive.
 void FitnessFunction::updateElitistArchive(vector<Individual*> front){
-        
+    
     for (int i = front.size() - 1; i >= 0; i--){
         bool addToArchive = true;
         
@@ -147,6 +147,15 @@ void FitnessFunction::updateElitistArchive(vector<Individual*> front){
             elitistArchive.push_back(front[i]->copy());
         }
     }
+    
+    if (entireParetoFrontFound()){
+        optimumFound = true;
+    }
+}
+
+// Override this method in specific problems. For example, do an extra check on objective values.
+bool FitnessFunction::entireParetoFrontFound(){
+    return elitistArchive.size() == optimalParetoFrontSize;
 }
 
 void FitnessFunction::setGenotypeChecking(uvec genotype){

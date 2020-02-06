@@ -16,6 +16,25 @@ extern bool printfos;
 
 /* ------------------------ Base Variation ------------------------ */
 
+vector<Individual> Variation::variate(vector<Individual> &population){
+    int n = (int)population.size();
+    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
+    vector<Individual> newPopulation;
+    newPopulation.reserve(n);
+    
+    for(int i = 0; i < (n/2); i++){
+        int idx1 = randomIndices[i * 2];
+        int idx2 = randomIndices[i * 2 + 1];
+        
+        pair<Individual, Individual> offspring = crossover(population[idx1], population[idx2]);
+        
+        newPopulation.push_back(offspring.first);
+        newPopulation.push_back(offspring.second);
+    }
+    
+    return newPopulation;
+}
+
 std::pair<Individual, Individual> Variation::crossover(Individual &ind1, Individual &ind2){
     cout << "Not implemented. Returning same individuals" << endl;
     pair<Individual, Individual> pair (ind1, ind2);
@@ -34,25 +53,6 @@ string Variation::id(){
 /* ------------------------ Univariate Crossover Variation ------------------------ */
 
 UnivariateCrossover::UnivariateCrossover(){}
-
-vector<Individual> UnivariateCrossover::variate(vector<Individual> &population){
-    int n = (int)population.size();
-    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
-    vector<Individual> newPopulation;
-    newPopulation.reserve(n);
-    
-    for(int i = 0; i < (n/2); i++){
-        int idx1 = randomIndices[i * 2];
-        int idx2 = randomIndices[i * 2 + 1];
-        
-        pair<Individual, Individual> offspring = crossover(population[idx1], population[idx2]);
-        
-        newPopulation.push_back(offspring.first);
-        newPopulation.push_back(offspring.second);
-    }
-    
-    return newPopulation;
-}
 
 pair<Individual, Individual> UnivariateCrossover::crossover (Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
@@ -82,26 +82,6 @@ string UnivariateCrossover::id() {
 
 OnePointCrossover::OnePointCrossover(){}
 
-vector<Individual> OnePointCrossover::variate(std::vector<Individual> &population){
-    int n = (int)population.size();
-    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
-    vector<Individual> newPopulation;
-    newPopulation.reserve(n);
-    
-    for(int i = 0; i < (n/2); i++){
-        int idx1 = randomIndices[i * 2];
-        int idx2 = randomIndices[i * 2 + 1];
-        
-//        cout << "Crossing over individual " << idx1 << " and " << idx2;
-        pair<Individual, Individual> offspring = crossover(population[idx1], population[idx2]);
-        
-        newPopulation.push_back(offspring.first);
-        newPopulation.push_back(offspring.second);
-    }
-    
-    return newPopulation;
-}
-
 pair<Individual, Individual> OnePointCrossover::crossover(Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
@@ -123,6 +103,37 @@ void OnePointCrossover::display() {
 string OnePointCrossover::id() {
     return "op";
 }
+
+
+/* ------------------------ OnePoint Crossover Variation ------------------------ */
+
+TwoPointCrossover::TwoPointCrossover(){}
+
+pair<Individual, Individual> TwoPointCrossover::crossover(Individual &ind1, Individual &ind2){
+    Individual newInd1 = ind1.copy();
+    Individual newInd2 = ind2.copy();
+    
+    // It is possible that the indices are the same. In that case, no crossover happens.
+    // It is also possible for either index to be 0 or size()-1. In that case, it becomes one-point crossover.
+    int firstIndex = floor(getRand() * ind1.genotype.size());
+    int secondIndex = floor(getRand() * ind2.genotype.size());
+    for(int i = min(firstIndex, secondIndex); i < max(firstIndex, secondIndex); i++){
+        newInd1.genotype[i] = ind2.genotype[i];
+        newInd2.genotype[i] = ind1.genotype[i];
+    }
+    
+    pair<Individual, Individual> result(newInd1, newInd2);
+    return result;
+}
+
+void TwoPointCrossover::display() {
+    cout << "TwoPoint Crossover" << endl;
+}
+
+string TwoPointCrossover::id() {
+    return "tp";
+}
+
 
 
 /* ------------------------ GOM Variation ------------------------ */

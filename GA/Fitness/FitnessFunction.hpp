@@ -20,6 +20,7 @@ public:
     Individual bestIndividual;
     std::vector<Individual> elitistArchive;
     std::vector<float> optimum;
+    int optimalParetoFrontSize;
     bool optimumFound;
     int maxEvaluations;
     int maxUniqueEvaluations;
@@ -48,6 +49,7 @@ public:
     
     void checkIfBestFound(Individual &ind);
     void updateElitistArchive(std::vector<Individual*> front);
+    virtual bool entireParetoFrontFound ();
     void setGenotypeChecking(arma::uvec genotype);
     
     int getTotalAmountOfEvaluations();

@@ -36,3 +36,15 @@ vector<float> ZerosOnes::evaluate(Individual &ind) {
 FitnessFunction* ZerosOnes::clone() const {
     return new ZerosOnes(static_cast<const ZerosOnes&>(*this));
 }
+
+bool ZerosOnes::entireParetoFrontFound() {
+    if (elitistArchive.size() == optimalParetoFrontSize){
+        for (Individual &ind : elitistArchive){
+            if((ind.fitness[0] + ind.fitness[1]) != totalProblemLength){
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
