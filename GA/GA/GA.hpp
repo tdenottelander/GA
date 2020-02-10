@@ -29,6 +29,7 @@ public:
     bool terminated;
     bool initialized;
     int roundsCount;
+    bool isLocalSearchAlgorithm = false;
     
     GA(FitnessFunction * fitfunc);
     

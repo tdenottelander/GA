@@ -28,7 +28,7 @@ Individual::Individual(int length, int objectives) :
     genotype = uvec (length);
 }
 
-void Individual::initialize(vector<int> alphabet){
+void Individual::initialize(vector<int> &alphabet){
     int n = alphabet.size();
     for(int i = 0; i < genotype.size(); i++){
         genotype[i] = alphabet[floor(getRand() * n)];
@@ -50,13 +50,7 @@ Individual Individual::copy(){
 
 string Individual::toString(){
     string result = toString(genotype);
-    result += "  F: [";
-    for (int i = 0; i < fitness.size(); i++){
-        result += to_string(fitness[i]);
-        if (i < fitness.size() - 1)
-            result += ", ";
-    }
-    result += "]";
+    result += "  " + toStringFitness();
     return result;
 }
 
@@ -71,8 +65,19 @@ string Individual::toStringBlocks(int blocksize){
             }
         }
     }
-    result += "]  F: ";
-    result += to_string(fitness[0]);
+    result += "]  ";
+    result += toStringFitness();
+    return result;
+}
+
+string Individual::toStringFitness(){
+    string result = "F: ";
+    for (int i = 0; i < fitness.size(); i++){
+        result += to_string(fitness[i]);
+        if (i < fitness.size() - 1)
+            result += ", ";
+    }
+    result += "]";
     return result;
 }
 
@@ -103,8 +108,20 @@ bool Individual::fitnessEquals(Individual &ind, float margin){
     return true;
 }
 
-bool Individual::dominates(Individual &ind){
-    return dominates(*this, ind);
+bool Individual::dominates(Individual &indOther){
+    return dominates(*this, indOther);
+}
+
+bool Individual::dominates(Individual &indOther, vector<float> scalarization){
+    return dominates(*this, indOther, scalarization);
+}
+
+float Individual::scalarizeFitness(vector<float> scalarization){
+    float scalarizedFitness = 0.0;
+    for (int obj = 0; obj < fitness.size(); obj++){
+        scalarizedFitness += (scalarization[obj] * fitness[obj]);
+    }
+    return scalarizedFitness;
 }
 
 void Individual::clearMOinformation(){
@@ -199,4 +216,12 @@ bool Individual::dominates(Individual &ind1, Individual &ind2){
         }
     }
     return domination;
+}
+
+// Returns true if [ind1] dominates [ind2]
+// Domination is based on the difference between scalarized fitness of the individuals.
+bool Individual::dominates(Individual &ind1, Individual &ind2, vector<float> scalarization){
+    float scalarizedFitness1 = ind1.scalarizeFitness(scalarization);
+    float scalarizedFitness2 = ind2.scalarizeFitness(scalarization);
+    return scalarizedFitness1 > scalarizedFitness2;
 }

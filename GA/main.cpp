@@ -21,6 +21,7 @@
 #include "CountingOnesMO.hpp"
 #include "ZerosOnes.hpp"
 #include "LOTZ.hpp"
+#include "TrapInverseTrap.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -40,6 +41,7 @@
 #include "LocalSearch.hpp"
 #include "LocalSearchStochastic.hpp"
 #include "NSGA_II.hpp"
+#include "MO_LS.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -62,6 +64,7 @@ const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/proj
 bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
+bool printElitistArchiveOnUpdate = true;
 bool storeConvergence = false;
 bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
@@ -231,12 +234,19 @@ int main(int argc, const char * argv[]) {
     
 //    runNasbench();
     
-    int problemSize = 25;
+    int problemSize = 10;
     FitnessFunction * fit = new ZerosOnes(problemSize);
-    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
+//    FitnessFunction * fit = new TrapInverseTrap(5, problemSize, 2);
+//    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
+    GA* ga = new MO_LS(fit, Utility::Order::ASCENDING);
+    
+    ga->setPopulationSize(10);
+    ga->initialize();
+    ga->evaluateAll();
+    ga->run();
 
-    int popsize = ga->findMinimallyNeededPopulationSize(100, 100, 4);
-    cout << popsize << endl;
+//    int popsize = ga->findMinimallyNeededPopulationSize(100, 100, 1024);
+//    cout << popsize << endl;
 
 //    ARK * ark = new ARK6(0, -1);
 //    ark->doAnalysis(0, 14);

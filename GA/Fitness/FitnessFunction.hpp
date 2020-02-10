@@ -49,6 +49,7 @@ public:
     
     void checkIfBestFound(Individual &ind);
     void updateElitistArchive(std::vector<Individual*> front);
+    void updateElitistArchive(Individual &ind);
     virtual bool entireParetoFrontFound ();
     void setGenotypeChecking(arma::uvec genotype);
     
@@ -64,6 +65,9 @@ public:
     virtual void setOptimum (float optimum);
     
     virtual arma::uvec transform(arma::uvec &genotype);
+    
+    void draw2DVisualization(std::vector<Individual> &population, int maxX, int maxY);
+    void drawElitistArchive();
 };
 
 class OneMax : public FitnessFunction {

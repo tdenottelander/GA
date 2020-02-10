@@ -50,6 +50,8 @@ namespace Utility{
     std::string wrapWithBrackets (std::string str);
     float getAverage(std::vector<float> &vec);
     float getAverage(std::vector<int> &vec);
+    float EuclideanDistanceSquared(std::vector<float> vecA, std::vector<float> vecB);
+    float EuclideanDistance(std::vector<float> vecA, std::vector<float> vecB);
 }
 
 #endif /* Utility_hpp */

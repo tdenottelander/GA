@@ -14,6 +14,7 @@ using namespace arma;
 extern bool storeAbsoluteConvergence;
 extern bool storeUniqueConvergence;
 extern bool storeTransformedUniqueConvergence;
+extern bool printElitistArchiveOnUpdate;
 extern nlohmann::json convergence;
 
 /* ------------------------ Base Fitness Function ------------------------ */
@@ -125,6 +126,8 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 // Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive.
 void FitnessFunction::updateElitistArchive(vector<Individual*> front){
     
+    bool solutionsAdded = false;
+    
     for (int i = front.size() - 1; i >= 0; i--){
         bool addToArchive = true;
         
@@ -145,12 +148,21 @@ void FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
         if (addToArchive){
             elitistArchive.push_back(front[i]->copy());
+            solutionsAdded = true;
         }
     }
     
     if (entireParetoFrontFound()){
         optimumFound = true;
     }
+    
+    if (solutionsAdded && printElitistArchiveOnUpdate){
+        drawElitistArchive();
+    }
+}
+
+void FitnessFunction::updateElitistArchive(Individual &ind){
+    updateElitistArchive(vector<Individual*> {&ind});
 }
 
 // Override this method in specific problems. For example, do an extra check on objective values.
@@ -208,6 +220,44 @@ void FitnessFunction::setOptimum(float opt){
 // Should be overridden in derived classes
 uvec FitnessFunction::transform(uvec &genotype){
     return genotype;
+}
+
+void FitnessFunction::draw2DVisualization(vector<Individual> &population, int maxX, int maxY){
+    vector<Individual*> drawList;
+    drawList.reserve(population.size());
+    for (int i = 0; i < population.size(); i++){
+        drawList.push_back(&population[i]);
+    }
+    sort(drawList.begin(), drawList.end(), [](const Individual* lhs, const Individual* rhs){
+        if (lhs->fitness[1] < rhs->fitness[1]){
+            return true;
+        } else if (lhs->fitness[1] > rhs->fitness[1]){
+            return false;
+        } else {
+            return lhs->fitness[0] < rhs->fitness[0];
+        }
+    });
+    int i = 0;
+    string result = "";
+    for (int y = 0; y < maxY; y++){
+        for (int x = 0; x < maxX; x++){
+            if (drawList[i]->fitness[0] == x && drawList[i]->fitness[1] == y){
+                result += " o ";
+            } else {
+                result += " . ";
+            }
+            result += " ";
+            while (drawList[i]->fitness[0] == x && drawList[i]->fitness[1] == y && i < drawList.size()-1){
+                i++;
+            }
+        }
+        result += "\n";
+    }
+    cout << result << endl;
+}
+
+void FitnessFunction::drawElitistArchive(){
+    draw2DVisualization(elitistArchive, optimum[0]+1, optimum[1]+1);
 }
 
 

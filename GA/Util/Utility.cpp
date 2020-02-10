@@ -247,3 +247,15 @@ float Utility::getAverage(vector<float> &vec){
 float Utility::getAverage(vector<int> &vec){
     return accumulate(vec.begin(), vec.end(), 0.0) / vec.size();
 }
+
+float Utility::EuclideanDistanceSquared(vector<float> vecA, vector<float> vecB){
+    float result = 0.0;
+    for (int i = 0; i < vecA.size(); i++){
+        result += pow(vecA[i] - vecB[i], 2);
+    }
+    return result;
+}
+
+float Utility::EuclideanDistance(vector<float> vecA, vector<float> vecB){
+    return sqrt(EuclideanDistanceSquared(vecA, vecB));
+}

@@ -94,6 +94,8 @@ int GA::findMinimallyNeededPopulationSize(int repetitions, int successesNeeded, 
             populationSize = left + floor((right - left) / 2);
 //            cout << "success, now l=" << left << " p=" << populationSize << " r=" << right << endl;
         }
+        float avgEvaluationsNeeded = Utility::getAverage(evaluationsNeeded);
+        cout << "AVG EVALUATIONS = " << avgEvaluationsNeeded << endl;
     }
     
 //    cout << "                                              ";
@@ -155,7 +157,7 @@ vector<float> GA::getAvgFitness(){
 }
 
 bool GA::isConverged(){
-    if(isOptimal() || !isDiverse()){
+    if(isOptimal() || (!isDiverse() && !isLocalSearchAlgorithm)){
         terminated = true;
         return true;
     }
