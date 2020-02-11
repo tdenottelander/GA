@@ -30,7 +30,7 @@ ARK6::ARK6(int problemSize, bool genotypeChecking) : ARK(problemSize, false, gen
 }
 
 
-float ARK6::getFitness (uvec encoding){
+vector<float> ARK6::getFitness (uvec encoding){
     string layers;
     for (int i = 0; i < 14; i++){
         // Appends identity layers to the back of the architecture when we are dealing with problem lengths < 14.
@@ -46,7 +46,7 @@ float ARK6::getFitness (uvec encoding){
     }
 
     float result = lookupTable[layers]["val_acc"][0];
-    return result;
+    return vector<float>{result};
 }
 
 void ARK6::display(){

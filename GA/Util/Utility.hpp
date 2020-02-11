@@ -21,33 +21,49 @@ extern std::uniform_real_distribution<float> dist;
 
 
 namespace Utility{
+    
+    // Ordered array utility functions
     enum class Order {RANDOM, ASCENDING, DESCENDING};
     std::string orderToID (Order order);
     std::string orderToString (Order order);
     std::vector<int> getOrderedArray (int n, Order order);
-    std::vector<int> getRandomlyPermutedArray (int n);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     std::vector<int> getAscendingArray (int n);
     std::vector<int> getDescendingArray (int n);
+    
+    // Random utility functions
     double getRand();
     int getRand(int start, int end);
     int getConditionalBit(int counter0, int counter1, int max);
+    
+    // Time & Date utility functions
     long millis();
     std::string getDateString();
+    
+    // Write utility functions
+    void write(std::string content, std::string dir, std::string filename);
+    void writeRawData(std::string content, std::string dir, std::string suffix = "");
+    void writeRawData(std::string content);
+    void writeJSON (nlohmann::json content, std::string filename);
+    
+    // Read utility functions
+    nlohmann::json readJSON(std::string filename);
+    void read(std::string filename);
+    
+    // String utility functions
+    std::string genotypeToString(arma::uvec &genotype);
+    arma::uvec stringToGenotype(std::string &genotype);
+    std::string vecOfFloatsToString (std::vector<float> vec, std::string separator);
+    std::string wrapWithBrackets (std::string str);
     std::string padFrontWith0(std::string target, int length);
     std::string removeTrailingZeros(std::string target);
     std::string padWithSpacesAfter(std::string target, int length);
-    void write(std::string content, std::string dir, std::string filename);
-    void writeRawData(std::string content, std::string dir, std::string suffix = "");
-    void writeJSON (nlohmann::json content, std::string filename);
-    nlohmann::json readJSON(std::string filename);
-    void read(std::string filename);
-    std::string genotypeToString(arma::uvec &genotype);
-    arma::uvec stringToGenotype(std::string &genotype);
+    
+    // Type conversion utility functions
     arma::uvec vectorToUvec (std::vector<int> vec);
     std::vector<int> uvecToVector (arma::uvec vec);
-    std::string vecOfFloatsToString (std::vector<float> vec, std::string separator);
-    std::string wrapWithBrackets (std::string str);
+    
+    // Calculation utility functions
     float getAverage(std::vector<float> &vec);
     float getAverage(std::vector<int> &vec);
     float EuclideanDistanceSquared(std::vector<float> vecA, std::vector<float> vecB);

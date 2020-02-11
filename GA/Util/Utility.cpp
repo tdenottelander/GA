@@ -13,6 +13,9 @@ using namespace chrono;
 using namespace nlohmann;
 using namespace arma;
 
+
+/* ------------------------ Ordered array utility functions------------------------ */
+
 vector<int> Utility::getOrderedArray(int n, Order order){
     switch (order) {
         case Order::RANDOM:
@@ -46,14 +49,6 @@ string Utility::orderToString(Order order){
     }
 }
 
-vector<int> Utility::getRandomlyPermutedArray (int n){
-    vector<int> arr;
-    arr.reserve(n);
-    for (int i = 0; i < n; i++) arr.push_back(i);
-    shuffle(arr.begin(), arr.end(), default_random_engine());
-    return arr;
-}
-
 vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     vector<int> arr = Utility::getAscendingArray(n);
     
@@ -85,6 +80,9 @@ vector<int> Utility::getDescendingArray(int n){
     return arr;
 }
 
+
+/* ------------------------ Random utility functions------------------------ */
+
 double Utility::getRand(){
     return dist(rng);
 }
@@ -106,6 +104,9 @@ int Utility::getConditionalBit(int counter0, int counter1, int max){
     }
 }
 
+
+/* ------------------------ Time & Date utility functions------------------------ */
+
 long Utility::millis(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
@@ -120,32 +121,13 @@ string Utility::getDateString(){
     result += padFrontWith0(to_string(now->tm_hour), 2);
     result += padFrontWith0(to_string(now->tm_min), 2);
     result += padFrontWith0(to_string(now->tm_sec), 2);
+    result += "_";
+    result += to_string(millis());
     return result;
 }
 
-string Utility:: padFrontWith0(string target, int length){
-    int curLength = target.size();
-    for (int i = 0; i < (length - curLength); i++) target = "0" + target;
-    return target;
-}
 
-string Utility::removeTrailingZeros(string target){
-    int lastNonZero = target.size();
-    for (int i = target.size() - 1; i >= 0; i--){
-        if(target.at(i) != '0'){
-            lastNonZero = i;
-            break;
-        }
-    }
-    return target.substr(0, lastNonZero + 1);
-}
-
-string Utility::padWithSpacesAfter(string target, int length){
-    int n = target.size();
-    for (int i = 0; i < length - n; i++)
-        target = target + " ";
-    return target;
-}
+/* ------------------------ Write utility functions------------------------ */
 
 void Utility::write(string content, string dir, string filename){
     ofstream file;
@@ -159,12 +141,19 @@ void Utility::writeRawData(string content, string dir, string suffix){
     write(content, dir, getDateString() + "_rawdata" + suffix + ".json");
 }
 
+void Utility::writeRawData(string content){
+    writeRawData(content, "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/");
+}
+
 void Utility::writeJSON(json content, string filename){
     ofstream file;
     file.open("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/" + filename);
     file << content.dump();
     file.close();
 }
+
+
+/* ------------------------ Read utility functions------------------------ */
 
 json Utility::readJSON(string filename){
     ifstream file;
@@ -192,6 +181,9 @@ void Utility::read(string filename){
     file.close();
 }
 
+
+/* ------------------------ String utility functions------------------------ */
+
 string Utility::genotypeToString(arma::uvec &genotype){
     string result = "";
     for(int i : genotype)
@@ -204,23 +196,6 @@ uvec Utility::stringToGenotype (string &genotype){
     uvec result(n);
     for (int i = 0; i < n; i++){
         result[i] = std::stoi(genotype.substr(i,1));
-    }
-    return result;
-}
-
-uvec Utility::vectorToUvec (vector<int> vec){
-    uvec result(vec.size());
-    for(int i = 0; i < vec.size(); i++){
-        result[i] = vec[i];
-    }
-    return result;
-}
-
-vector<int> Utility::uvecToVector (uvec vec){
-    vector<int> result;
-    result.reserve(vec.size());
-    for(int i = 0; i < vec.size(); i++){
-        result.push_back(vec[i]);
     }
     return result;
 }
@@ -239,6 +214,53 @@ string Utility::vecOfFloatsToString (vector<float> vec, string separator){
 string Utility::wrapWithBrackets (string str){
     return ("[" + str + "]");
 }
+
+string Utility:: padFrontWith0(string target, int length){
+    int curLength = target.size();
+    for (int i = 0; i < (length - curLength); i++) target = "0" + target;
+    return target;
+}
+
+string Utility::removeTrailingZeros(string target){
+    int lastNonZero = target.size();
+    for (int i = target.size() - 1; i >= 0; i--){
+        if(target.at(i) != '0'){
+            lastNonZero = i;
+            break;
+        }
+    }
+    return target.substr(0, lastNonZero + 1);
+}
+
+string Utility::padWithSpacesAfter(string target, int length){
+    int n = target.size();
+    for (int i = 0; i < length - n; i++)
+        target = target + " ";
+    return target;
+}
+
+
+/* ------------------------ Type conversion utility functions------------------------ */
+
+uvec Utility::vectorToUvec (vector<int> vec){
+    uvec result(vec.size());
+    for(int i = 0; i < vec.size(); i++){
+        result[i] = vec[i];
+    }
+    return result;
+}
+
+vector<int> Utility::uvecToVector (uvec vec){
+    vector<int> result;
+    result.reserve(vec.size());
+    for(int i = 0; i < vec.size(); i++){
+        result.push_back(vec[i]);
+    }
+    return result;
+}
+
+
+/* ------------------------ Calculation utility functions------------------------ */
 
 float Utility::getAverage(vector<float> &vec){
     return accumulate(vec.begin(), vec.end(), 0.0) / vec.size();

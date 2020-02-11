@@ -68,6 +68,8 @@ public:
     
     void draw2DVisualization(std::vector<Individual> &population, int maxX, int maxY);
     void drawElitistArchive();
+    
+    void saveElitistArchiveToJSON();
 };
 
 class OneMax : public FitnessFunction {

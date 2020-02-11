@@ -64,7 +64,7 @@ const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/proj
 bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
-bool printElitistArchiveOnUpdate = true;
+bool printElitistArchiveOnUpdate = false;
 bool storeConvergence = false;
 bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
@@ -78,14 +78,14 @@ void runNasbench(){
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
     int maxEvaluations = -1; //10000
-    int maxUniqueEvaluations = -1;
+    int maxUniqueEvaluations = 50000;
     int interval = 4;
     int repetitions = 20; //100
     bool IMS = true;
-    int populationSize = 20;
+    int populationSize = 1;
     
-    int minProblemSize = 5;
-    int maxProblemSize = 5;
+    int minProblemSize = 14;
+    int maxProblemSize = 14;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -99,12 +99,12 @@ void runNasbench(){
         main_json["interleavedRoundInterval"] = interval;
         
         bool allowIdentityLayers = true;
-        bool genotypeChecking = true;
+        bool genotypeChecking = false;
 //        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-//        ARK * fit = new ARK7(problemSize, genotypeChecking);
+        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK3();
@@ -115,7 +115,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
 //        FitnessFunction * fit = new ZerosOnes(problemSize);
-        FitnessFunction * fit = new LOTZ(problemSize);
+//        FitnessFunction * fit = new LOTZ(problemSize);
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -165,7 +165,8 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
-            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, true),
+//            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
+            new MO_LS(fit, Utility::Order::RANDOM, 10000)
         };
         
         
@@ -188,7 +189,8 @@ void runNasbench(){
                 ga->fitFunc_ptr->clear();
                 rs.initialize(ga, problemSize, IMS, populationSize);
                 json result = rs.run();
-                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
+//                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
+                fit->saveElitistArchiveToJSON();
                 setting[to_string(rep)] = result;
                 cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
                 << " ga=" << gaID
@@ -232,24 +234,25 @@ void runNasbench(){
 
 int main(int argc, const char * argv[]) {
     
-//    runNasbench();
+    runNasbench();
+//    cout << Utility::millis();
     
-    int problemSize = 10;
-    FitnessFunction * fit = new ZerosOnes(problemSize);
+//    int problemSize = 10;
+//    FitnessFunction * fit = new ZerosOnes(problemSize);
 //    FitnessFunction * fit = new TrapInverseTrap(5, problemSize, 2);
 //    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
-    GA* ga = new MO_LS(fit, Utility::Order::ASCENDING);
+//    GA* ga = new MO_LS(fit, Utility::Order::ASCENDING);
     
-    ga->setPopulationSize(10);
-    ga->initialize();
-    ga->evaluateAll();
-    ga->run();
+//    ga->setPopulationSize(10);
+//    ga->initialize();
+//    ga->evaluateAll();
+//    ga->run();
 
 //    int popsize = ga->findMinimallyNeededPopulationSize(100, 100, 1024);
 //    cout << popsize << endl;
 
-//    ARK * ark = new ARK6(0, -1);
-//    ark->doAnalysis(0, 14);
+//    ARK * ark = new ARK7(0, false, true);
+//    ark->doAnalysis(6, 13);
     
     return 0;
 }

@@ -10,6 +10,7 @@
 
 using namespace std;
 using namespace arma;
+using namespace nlohmann;
 
 extern bool storeAbsoluteConvergence;
 extern bool storeUniqueConvergence;
@@ -102,7 +103,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     if(!checkForGenotype){
         optimumFound = true;
         for (int obj = 0; obj < optimum.size(); obj++){
-            if (ind.fitness[obj] < optimum[obj]){
+            if (ind.fitness[obj] < optimum[obj] || optimum[obj] == -1){
                 optimumFound = false;
                 break;
             }
@@ -136,6 +137,7 @@ void FitnessFunction::updateElitistArchive(vector<Individual*> front){
             
             // Delete every solution from the archive that is dominated by this solution.
             if(front[i]->dominates(elitistArchive[j])){
+//                cout << "Remove " + elitistArchive[j].toString() + " from Elitist Archive\n" << endl;
                 elitistArchive.erase(elitistArchive.begin() + j);
             }
             
@@ -148,6 +150,7 @@ void FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
         if (addToArchive){
             elitistArchive.push_back(front[i]->copy());
+//            cout << "Add " + front[i]->toString() + " to Elitist Archive\n" << endl;
             solutionsAdded = true;
         }
     }
@@ -258,6 +261,21 @@ void FitnessFunction::draw2DVisualization(vector<Individual> &population, int ma
 
 void FitnessFunction::drawElitistArchive(){
     draw2DVisualization(elitistArchive, optimum[0]+1, optimum[1]+1);
+}
+
+void FitnessFunction::saveElitistArchiveToJSON(){
+    json result;
+    for (int i = 0; i < elitistArchive.size(); i++){
+        json solution;
+        solution["genotype"] = Utility::genotypeToString(elitistArchive[i].genotype);
+        json fitness;
+        for (int j = 0; j < numObjectives; j++){
+            fitness[j] = elitistArchive[i].fitness[j];
+        }
+        solution["fitness"] = fitness;
+        result[i] = solution;
+    }
+    Utility::writeRawData(result.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/elitistArchiveData/");
 }
 
 

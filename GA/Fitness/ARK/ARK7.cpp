@@ -14,11 +14,15 @@ using namespace nlohmann;
 
 extern std::string ARK_Analysis_suffix;
 
-ARK7::ARK7(int problemSize, bool genotypeChecking) : ARK(problemSize, false, genotypeChecking, getProblemType(), -1, 2, "ark7")
+ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, false, genotypeChecking, getProblemType(), -1, 2, "ark7"), MO(MO)
 {
     if(lookupTable.empty()){
-        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " results. This may take a while." << endl;
-        string filename = folderPrefix + folder + "/ark7" + ARK_Analysis_suffix + ".json";
+        string filename = folderPrefix + folder + "/ark7";
+        if (MO){
+            filename += "_MO";
+        }
+        filename += ARK_Analysis_suffix + ".json";
+        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " results from " + filename + ". This may take a while." << endl;
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "Error, cannot read results." << endl;
@@ -27,10 +31,15 @@ ARK7::ARK7(int problemSize, bool genotypeChecking) : ARK(problemSize, false, gen
             cout << "Done loading ARK-7" + ARK_Analysis_suffix + " results" << endl;
         }
     }
+    
+    if(MO){
+        setOptimum(vector<float>{-1, -1});
+        setNumObjectives(2);
+    }
 }
 
 
-float ARK7::getFitness (uvec encoding){
+vector<float> ARK7::getFitness (uvec encoding){
     string layers;
     for (int i = 0; i < 14; i++){
         // Appends identity layers to the back of the architecture when we are dealing with problem lengths < 14.
@@ -45,8 +54,13 @@ float ARK7::getFitness (uvec encoding){
         }
     }
     
-    float result = lookupTable[layers]["val_acc"];
-    return result;
+    if (MO){
+        float mmacs = lookupTable[layers]["MMACs"];
+        float acc = lookupTable[layers]["val_acc"];
+        return vector<float> {acc * normalization[0], 1.0f - (mmacs * normalization[1])};
+    } else {
+        return vector<float>{lookupTable[layers]["val_acc"]};
+    }
 }
 
 void ARK7::display(){

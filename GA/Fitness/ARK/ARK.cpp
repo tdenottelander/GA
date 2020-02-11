@@ -35,27 +35,27 @@ ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, Probl
 
 // Returns the fitness of an individual
 vector<float> ARK::evaluate(Individual &ind){
-    vector<float> fitness (1, query(ind.genotype));
+    vector<float> fitness = query(ind.genotype);
     if(noisy) {
         std::normal_distribution<> dist (0, noisePercentage * fitness[0]);
         float noise = dist(rng);
 //        cout << "Fitness: " << fitness << " noise: " << noise << endl;
         fitness[0] += noise;
     }
-    ind.fitness[0] = fitness[0];
+    ind.fitness = fitness;
     
     evaluationProcedure(ind);
     return fitness;
 }
 
 // Returns the fitness of the architecture passed by its encoding by querying the benchmark
-float ARK::query(uvec encoding){
-    float result = getFitness(encoding);
+vector<float> ARK::query(uvec encoding){
+    vector<float> result = getFitness(encoding);
     return result;
 }
 
 // Returns the fitness of the architecture passed by its encoding (in vector<int>)
-float ARK::query(vector<int> encoding){
+vector<float> ARK::query(vector<int> encoding){
     uvec uvecEncoding(encoding.size());
     for (int i = 0; i < encoding.size(); i++){
         uvecEncoding[i] = encoding[i];
@@ -63,7 +63,7 @@ float ARK::query(vector<int> encoding){
     return query(uvecEncoding);
 }
 
-float ARK::getFitness(uvec encoding){
+vector<float> ARK::getFitness(uvec encoding){
     //Transform encoding into string
     string layers;
     for (int i : encoding){
@@ -83,7 +83,7 @@ float ARK::getFitness(uvec encoding){
     
     //Retrieve the correct value (validation accuracy at epoch 120)
     float result = rawdata["val_acc_ensemble"].at(jsonAccuracyIndex);
-    return result;
+    return vector<float>{result};
 }
 
 int ARK::getNumParams(vector<int> encoding){
@@ -137,6 +137,7 @@ ARK::solution ARK::findBest (){
     statistics.genotypes = {};
     statistics.optCount = 0;
     statistics.totalCount = 0;
+    elitistArchive.clear();
     
     findBestRecursion(totalProblemLength, problemType->alphabet.size(), architecture, 0, statistics);
     
@@ -152,12 +153,17 @@ ARK::solution ARK::findBest (){
 
 void ARK::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int idx, solution &statistics){
     if (idx == length){
-        float result = query (temp);
-        if (abs(result - statistics.fitness) < 0.001){
+        vector<float> result = query (temp);
+        Individual ind;
+        ind.fitness = result;
+        uvec gen = Utility::vectorToUvec(temp);
+        ind.genotype = gen;
+        updateElitistArchive(ind);
+        if (abs(result[0] - statistics.fitness) < 0.001){
             statistics.genotypes.push_back(temp);
             statistics.optCount = statistics.optCount + 1;
-        } else if (result > statistics.fitness){
-            statistics.fitness = result;
+        } else if (result[0] > statistics.fitness){
+            statistics.fitness = result[0];
             statistics.genotypes = {temp};
             statistics.optCount = 1;
         }
@@ -175,9 +181,9 @@ pair<int, int> ARK::findAmountOfArchitecturesWithFitnessAboveThreshold(float thr
     int total = pow(problemType->alphabet.size(), totalProblemLength);
     for (int i = 0; i < total; i++){
         uvec genotype = HashingFunctions::decode(i, totalProblemLength, problemType->alphabet.size());
-        float result = query(genotype);
-        if(result >= threshold){
-            cout << Individual::toString(genotype) << " f=" << result << endl;
+        vector<float> result = query(genotype);
+        if(result[0] >= threshold){
+            cout << Individual::toString(genotype) << " f=" << result[0] << endl;
             sum++;
         }
     }
@@ -188,6 +194,8 @@ pair<int, int> ARK::findAmountOfArchitecturesWithFitnessAboveThreshold(float thr
 void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
     json results;
     json optima;
+    json paretoFronts;
+    
     for (int i = minLayerSize; i <= maxLayerSize; i++){
         totalProblemLength = i;
         solution statistics = findBest();
@@ -204,9 +212,29 @@ void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
         optima[to_string(i)]["genotypes"] = genotypes;
         optima[to_string(i)]["numGlobalOptima"] = statistics.optCount;
         optima[to_string(i)]["possibleGenotypes"] = statistics.totalCount;
+        json paretoFront;
+        json paretoFrontFitness;
+        json paretoFrontGenotypes;
+        sort(elitistArchive.begin(), elitistArchive.end(), [](const Individual lhs, const Individual rhs){
+            if (lhs.fitness[0] > rhs.fitness[0]){
+                return true;
+            } else if (lhs.fitness[0] < rhs.fitness[0]){
+                return false;
+            } else {
+                return lhs.fitness[1] > rhs.fitness[1];
+            }
+        });
+        for (int j = 0; j < elitistArchive.size(); j++){
+            paretoFrontFitness[j] = elitistArchive[j].fitness;
+            paretoFrontGenotypes[j] = Utility::genotypeToString(elitistArchive[j].genotype);
+        }
+        paretoFront["fitness"] = paretoFrontFitness;
+        paretoFront["genotypes"] = paretoFrontGenotypes;
+        paretoFronts[to_string(i)] = paretoFront;
     }
     results["optima"] = optima;
-    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis" + ARK_Analysis_suffix + ".json");
+    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis" + ARK_Analysis_suffix + "_" + Utility::getDateString() + ".json");
+    Utility::write(paretoFronts.dump(), folderPrefix + folder + "/", "paretofront_" + Utility::getDateString() + ".json");
 }
 
 float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){

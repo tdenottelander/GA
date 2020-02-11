@@ -28,11 +28,11 @@ void GreedyAnalysis::greedyRun (){
                 cout << temp[q] << ",";
             }
             
-            float result = ARK1().query(temp);
-            cout << "  acc: " << result;
-            if (result > bestAcc){
+            vector<float> result = ARK1().query(temp);
+            cout << "  acc: " << result[0];
+            if (result[0] > bestAcc){
                 architecture[i] = j;
-                bestAcc = result;
+                bestAcc = result[0];
             }
             cout << endl;
         }
@@ -58,11 +58,11 @@ void GreedyAnalysis::greedyRunBackward(){
                 cout << temp[q] << ",";
             }
             
-            float result = ARK1().query(temp);
-            cout << "  acc: " << result;
-            if (result > bestAcc){
+            vector<float> result = ARK1().query(temp);
+            cout << "  acc: " << result[0];
+            if (result[0] > bestAcc){
                 architecture[i] = j;
-                bestAcc = result;
+                bestAcc = result[0];
             }
             cout << endl;
         }
@@ -87,11 +87,11 @@ void GreedyAnalysis::greedyBothWays(){
             architecture[afterIdx] = j;
             ARK::printArchitecture(architecture);
             
-            float result = ARK1().query(architecture);
-            cout << "  acc: " << result;
-            if (result > bestAcc){
+            vector<float> result = ARK1().query(architecture);
+            cout << "  acc: " << result[0];
+            if (result[0] > bestAcc){
                 bestOp = j;
-                bestAcc = result;
+                bestAcc = result[0];
             }
             cout << endl;
         }
@@ -102,12 +102,12 @@ void GreedyAnalysis::greedyBothWays(){
             architecture[beforeIdx] = j;
             ARK::printArchitecture(architecture);
             
-            float result = ARK1().query(architecture);
-            cout << "  acc: " << result;
-            if (result > bestAcc){
+            vector<float> result = ARK1().query(architecture);
+            cout << "  acc: " << result[0];
+            if (result[0] > bestAcc){
                 after = false;
                 bestOp = j;
-                bestAcc = result;
+                bestAcc = result[0];
             }
             cout << endl;
         }
@@ -139,11 +139,11 @@ void GreedyAnalysis::greedyInsideOut(){
             architecture[insertionpoint] = j;
             ARK::printArchitecture(architecture);
             
-            float result = ARK1().query(architecture);
-            cout << "  acc: " << result;
-            if (result > bestAcc){
+            vector<float> result = ARK1().query(architecture);
+            cout << "  acc: " << result[0];
+            if (result[0] > bestAcc){
                 bestOp = j;
-                bestAcc = result;
+                bestAcc = result[0];
             }
             cout << endl;
         }

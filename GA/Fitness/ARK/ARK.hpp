@@ -25,9 +25,9 @@ public:
     std::string folder;
     ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
     std::vector<float> evaluate(Individual &ind) override;
-    float query(arma::uvec encoding);
-    float query(std::vector<int> encoding);
-    virtual float getFitness(arma::uvec encoding);
+    std::vector<float> query(arma::uvec encoding);
+    std::vector<float> query(std::vector<int> encoding);
+    virtual std::vector<float> getFitness(arma::uvec encoding);
     int getNumParams(std::vector<int> encoding);
     void display() override;
     std::string id() override;

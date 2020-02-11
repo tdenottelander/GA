@@ -19,10 +19,12 @@
 
 class ARK7 : public ARK {
 public:
-    ARK7(int problemSize, bool genotypeChecking);
+    ARK7(int problemSize, bool genotypeChecking, bool MO = false);
+    bool MO = false;
+    std::vector<float> normalization = {1.0f/100.0f, 1.0f/500.0f};
     
 //    float query (arma::uvec encoding) override;
-    float getFitness (arma::uvec encoding) override;
+    std::vector<float> getFitness (arma::uvec encoding) override;
     
     void display() override;
     std::string id() override;

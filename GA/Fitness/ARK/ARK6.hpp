@@ -17,7 +17,7 @@ class ARK6 : public ARK {
 public:
     ARK6(int problemSize, bool genotypeChecking);
         
-    float getFitness (arma::uvec encoding) override;
+    std::vector<float> getFitness (arma::uvec encoding) override;
     
     void display() override;
     std::string id() override;

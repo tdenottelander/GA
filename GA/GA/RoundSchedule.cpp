@@ -29,7 +29,7 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
 
 void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
     int beginPopSize = 2;
-    if(!IMS){
+    if(!IMS || g->isLocalSearchAlgorithm){
         maxPopSizeLevel = 1;
         beginPopSize = nonIMSpopsize;
     }
@@ -120,7 +120,7 @@ json RoundSchedule::run() {
                     
                     // Do the round on this GA
 //                    ga->print();
-                    cout << "Performing round with popsize " << ga->populationSize << endl;
+//                    cout << "Performing round with popsize " << ga->populationSize << endl;
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
@@ -167,6 +167,12 @@ json RoundSchedule::run() {
                             lowestActiveGAIdx = i;
                             continue;
                         }
+                        
+                    // Else if this GA had the highest population size and is terminated
+                    } else if (i == maxPopSizeLevel - 1 && ga->terminated){
+                        done = true;
+                        output["stoppingCondition"] = "terminated";
+                        break;
                     }
 
                     // If this GA has run 4 times, make sure the next GA also does a run
