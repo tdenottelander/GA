@@ -10,14 +10,14 @@
 
 using namespace std;
 
-MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order) : GA(fitfunc), LS_order(order) {
+MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, int targetAmountOfSolutions) : GA(fitfunc), LS_order(order), targetAmountOfSolutions(targetAmountOfSolutions) {
     isLocalSearchAlgorithm = true;
 }
 
 void MO_LS::round(){
     if(roundsCount == 0){
-        scalarizationTargets.push(0.0);
-        scalarizationTargets.push(1.0);
+        scalarizationTargets.push(0.0f);
+        scalarizationTargets.push(1.0f);
     }
 
     for (Individual &ind : population){
@@ -27,11 +27,17 @@ void MO_LS::round(){
         float scalarization = scalarizationTargets.front();
         scalarizationTargets.pop();
         ind.initialize(fitFunc_ptr->problemType->alphabet);
+        fitFunc_ptr->evaluate(ind);
+//        cout << "Performing LS in the direction of [" << scalarization << ", " << 1.0f - scalarization << "]" << endl;
         performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
         fitFunc_ptr->updateElitistArchive(ind);
         pair<float,float> sc {scalarization, 1.0f - scalarization};
         vector<float> fit (ind.fitness);
         LS_archive.push_back(pair<pair<float, float>, vector<float>> {sc, fit});
+        
+        if(targetAmountOfSolutions != -1 && LS_archive.size() >= targetAmountOfSolutions){
+            terminated = true;
+        }
     }
     
     roundsCount++;
@@ -40,6 +46,7 @@ void MO_LS::round(){
 void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
     vector<int> randIndexArray = Utility::getOrderedArray(ind.genotype.size(), LS_order);
     bool changed = true;
+//    cout << "Starting Individual: " << ind.toString() << endl;
     while (changed){
         changed = false;
         for (int i : randIndexArray){
@@ -51,6 +58,7 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
                 if (copiedIndividual.dominates(ind, scalarization)){
                     ind.genotype[i] = bit;
                     ind.fitness = copiedIndividual.fitness;
+//                    cout << "Improvement: " << ind.toString() << endl;
                     changed = true;
                 }
             }
