@@ -17,6 +17,8 @@
 		C25AFB8D23EB7543004FEC24 /* LOTZ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8B23EB7543004FEC24 /* LOTZ.cpp */; };
 		C25AFB9023EB75A0004FEC24 /* ZerosOnes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8E23EB75A0004FEC24 /* ZerosOnes.cpp */; };
 		C25AFB9323EB75ED004FEC24 /* SimpleMOProblem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */; };
+		C25AFB9623EC7FE6004FEC24 /* TrapInverseTrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9423EC7FE6004FEC24 /* TrapInverseTrap.cpp */; };
+		C25AFB9923ED8AE0004FEC24 /* MO_LS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9723ED8AE0004FEC24 /* MO_LS.cpp */; };
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
 		C293D6E223A787AE001E0636 /* ARK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E023A787AE001E0636 /* ARK.cpp */; };
 		C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */; };
@@ -78,6 +80,10 @@
 		C25AFB8F23EB75A0004FEC24 /* ZerosOnes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ZerosOnes.hpp; sourceTree = "<group>"; };
 		C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleMOProblem.cpp; sourceTree = "<group>"; };
 		C25AFB9223EB75EC004FEC24 /* SimpleMOProblem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleMOProblem.hpp; sourceTree = "<group>"; };
+		C25AFB9423EC7FE6004FEC24 /* TrapInverseTrap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TrapInverseTrap.cpp; sourceTree = "<group>"; };
+		C25AFB9523EC7FE6004FEC24 /* TrapInverseTrap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrapInverseTrap.hpp; sourceTree = "<group>"; };
+		C25AFB9723ED8AE0004FEC24 /* MO_LS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MO_LS.cpp; sourceTree = "<group>"; };
+		C25AFB9823ED8AE0004FEC24 /* MO_LS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MO_LS.hpp; sourceTree = "<group>"; };
 		C267AC562396C3D3009A8DA9 /* libpython3.7m.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.7m.a; path = ../../../../../miniconda3/lib/libpython3.7m.a; sourceTree = "<group>"; };
 		C269FF132390090500B98092 /* SimpleGA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleGA.cpp; sourceTree = "<group>"; };
 		C269FF142390090500B98092 /* SimpleGA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SimpleGA.hpp; sourceTree = "<group>"; };
@@ -198,6 +204,8 @@
 				C25AFB8F23EB75A0004FEC24 /* ZerosOnes.hpp */,
 				C25AFB9123EB75EC004FEC24 /* SimpleMOProblem.cpp */,
 				C25AFB9223EB75EC004FEC24 /* SimpleMOProblem.hpp */,
+				C25AFB9423EC7FE6004FEC24 /* TrapInverseTrap.cpp */,
+				C25AFB9523EC7FE6004FEC24 /* TrapInverseTrap.hpp */,
 			);
 			path = MO;
 			sourceTree = "<group>";
@@ -300,6 +308,8 @@
 				C2C0659523C8AA0B0067B946 /* LocalSearch.hpp */,
 				C2B6B46F23E83455003C60C8 /* NSGA_II.cpp */,
 				C2B6B47023E83455003C60C8 /* NSGA_II.hpp */,
+				C25AFB9723ED8AE0004FEC24 /* MO_LS.cpp */,
+				C25AFB9823ED8AE0004FEC24 /* MO_LS.hpp */,
 			);
 			path = GA;
 			sourceTree = "<group>";
@@ -436,6 +446,7 @@
 				C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */,
 				C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */,
 				C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */,
+				C25AFB9623EC7FE6004FEC24 /* TrapInverseTrap.cpp in Sources */,
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
 				C2BC66E6238FF7DA006BA6BF /* GOM.cpp in Sources */,
 				C2ABE4D723840CEB00D6E774 /* Individual.cpp in Sources */,
@@ -457,6 +468,7 @@
 				C293D6E223A787AE001E0636 /* ARK.cpp in Sources */,
 				C2B6B47123E83455003C60C8 /* NSGA_II.cpp in Sources */,
 				C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */,
+				C25AFB9923ED8AE0004FEC24 /* MO_LS.cpp in Sources */,
 				C2C0659023C7893D0067B946 /* GOM_LS.cpp in Sources */,
 				C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */,
 				C25AFB8A23EB7461004FEC24 /* CountingOnesMO.cpp in Sources */,
