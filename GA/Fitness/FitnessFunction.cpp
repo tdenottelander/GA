@@ -16,6 +16,7 @@ extern bool storeAbsoluteConvergence;
 extern bool storeUniqueConvergence;
 extern bool storeTransformedUniqueConvergence;
 extern bool printElitistArchiveOnUpdate;
+extern bool storeDistanceToParetoFrontOnElitistArchiveUpdate;
 extern nlohmann::json convergence;
 
 /* ------------------------ Base Fitness Function ------------------------ */
@@ -58,6 +59,7 @@ void FitnessFunction::clear(){
     totalTransformedUniqueEvaluations = 0;
     uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
+    distanceToParetoFrontData.clear();
 }
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
@@ -100,7 +102,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
         return;
     }
     
-    if(!checkForGenotype){
+    if(convergenceCriteria == ConvergenceCriteria::OPTIMAL_FITNESS){
         optimumFound = true;
         for (int obj = 0; obj < optimum.size(); obj++){
             if (ind.fitness[obj] < optimum[obj] || optimum[obj] == -1){
@@ -110,7 +112,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
         }
     }
     
-    if (checkForGenotype){
+    else if (convergenceCriteria == ConvergenceCriteria::GENOTYPE){
         if(ind.genotypeEquals(optimalGenotype)){
             optimumFound = true;
         };
@@ -124,8 +126,8 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 }
 
 
-// Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive.
-void FitnessFunction::updateElitistArchive(vector<Individual*> front){
+// Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive. Returns true if the supplied front adds any individuals to the elitist archive
+bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
     
     bool solutionsAdded = false;
     
@@ -155,18 +157,130 @@ void FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
     }
     
-    if (entireParetoFrontFound()){
-        optimumFound = true;
+    // Only check for convergence criteria if there are new solutions added to the elitist archive.
+    if (solutionsAdded){
+//        if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
+//            if(entireParetoFrontFo und()){
+//                optimumFound = true;
+//            }
+//        }
+        float distanceParetoToApproximation = -1;
+        if (storeDistanceToParetoFrontOnElitistArchiveUpdate){
+            distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+//            elitistArchiveHistory.push_back(elitistArchive);
+        }
+        
+        if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
+            if (trueParetoFront.size() == 0){
+                if(entireParetoFrontFound()){
+                    optimumFound = true;
+                }
+            } else {
+                if (distanceParetoToApproximation == -1)
+                    distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+                
+                if (distanceParetoToApproximation < 0.000001){
+                    optimumFound = true;
+                }
+            }
+        }
+        
+        else if (convergenceCriteria == ConvergenceCriteria::EPSILON_PARETO_DISTANCE){
+            if (distanceParetoToApproximation == -1)
+                distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+            
+            if (distanceParetoToApproximation <= epsilon){
+                optimumFound = true;
+            }
+        }
+        
+        else if (convergenceCriteria == ConvergenceCriteria::PERCENTAGE_PARETO_COVERAGE){
+            // Create method that finds intersection of elitist archive with pareto front.
+            // Then compare its size with the pareto front size
+            // To be implemented
+        }
+        
+        else if (convergenceCriteria == ConvergenceCriteria::ABSOLUTE_PARETO_COVERAGE){
+            // Create method that finds intersection of elitist archive with pareto front.
+            // Then compare with some number
+            // To be implemented
+        }
+        
+        if (printElitistArchiveOnUpdate){
+            drawElitistArchive();
+        }
     }
     
-    if (solutionsAdded && printElitistArchiveOnUpdate){
-        drawElitistArchive();
-    }
+    return solutionsAdded;
 }
 
-void FitnessFunction::updateElitistArchive(Individual &ind){
-    updateElitistArchive(vector<Individual*> {&ind});
+// Returns true if the given individual is added to the elitist archive
+bool FitnessFunction::updateElitistArchive(Individual &ind){
+    return updateElitistArchive(vector<Individual*> {&ind});
 }
+
+// The elitist archive is used as approximation
+float FitnessFunction::calculateDistanceParetoToApproximation(){
+    if (trueParetoFront.size() == 0){
+        cout << "ERROR: Wanted to calculate distance of pareto to approximation, but true Pareto front is unknown" << endl;
+        storeDistanceToParetoFrontOnElitistArchiveUpdate = false;
+        return -1.0f;
+    }
+    
+    if (elitistArchive.size() == 0){
+        return INFINITY;
+    }
+    
+    float sum = 0.0f;
+    
+    for (int i = 0; i < trueParetoFront.size(); i++){
+        float minimalDistance = INFINITY;
+        for (int j = 0; j < elitistArchive.size(); j++){
+            float distance = Utility::EuclideanDistance(trueParetoFront[i], elitistArchive[j].fitness);
+            if (distance < minimalDistance){
+                minimalDistance = distance;
+                if (distance == 0.0f){
+                    break;
+                }
+            }
+        }
+        sum += minimalDistance;
+    }
+    
+    float calculatedDistance = sum / trueParetoFront.size();
+    distanceToParetoFrontData.push_back(tuple<int, int, float>{totalEvaluations, totalUniqueEvaluations, calculatedDistance});
+    return calculatedDistance;
+}
+
+json FitnessFunction::paretoDistanceToJSON(){
+    json result;
+    for (int i = 0; i < distanceToParetoFrontData.size(); i++){
+        result["totalEvaluations"][i] = get<0>(distanceToParetoFrontData[i]);
+        result["totalUniqueEvaluations"][i] = get<1>(distanceToParetoFrontData[i]);
+        result["distance"][i] = get<2>(distanceToParetoFrontData[i]);
+    }
+    return result;
+}
+
+//json FitnessFunction::elitistArchiveHistoryToJSON(){
+//    json result;
+//    for (int i = 0; i < elitistArchiveHistory.size(); i++){
+//        for (int j = 0; j < elitistArchiveHistory[i].size(); i++){
+//
+//            result[i][0][j] = elitistArchiveHistory[i][j].fitness[0];
+//            result[i][1]
+//
+//
+//
+//            if (i == elitistArchiveHistory.size()){
+//                break;
+//            }
+//            result[i][j][0] = elitistArchiveHistory[i][j].fitness[0];
+//            result[i][j][1 ] = elitistArchiveHistory[i][j].fitness[1];
+//        }
+//    }
+//    return result;
+//}
 
 // Override this method in specific problems. For example, do an extra check on objective values.
 bool FitnessFunction::entireParetoFrontFound(){

@@ -69,6 +69,7 @@ bool storeConvergence = false;
 bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
 bool storeTransformedUniqueConvergence = false;
+bool storeDistanceToParetoFrontOnElitistArchiveUpdate = true;
 std::string ARK_Analysis_suffix = "";
 
 void runNasbench(){
@@ -78,14 +79,14 @@ void runNasbench(){
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
     int maxEvaluations = -1; //10000
-    int maxUniqueEvaluations = 50000;
+    int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 20; //100
-    bool IMS = true;
-    int populationSize = 1;
+    int repetitions = 100; //100
+    bool IMS = false;
+    int nonIMSPopsize = 4;
     
-    int minProblemSize = 14;
-    int maxProblemSize = 14;
+    int minProblemSize = 25;
+    int maxProblemSize = 25;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -104,7 +105,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
+//        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK3();
@@ -114,8 +115,11 @@ void runNasbench(){
 //        FitnessFunction * fit = new LeadingOnes(20);
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
-//        FitnessFunction * fit = new ZerosOnes(problemSize);
+        FitnessFunction * fit = new ZerosOnes(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
+//        FitnessFunction * fit = new TrapInverseTrap(5, 5, 2);
+//        fit->epsilon = 0.0005;
+        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -165,8 +169,8 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
-//            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
-            new MO_LS(fit, Utility::Order::RANDOM, 10000)
+            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
+//            new MO_LS(fit, Utility::Order::RANDOM, 10000)
         };
         
         
@@ -175,9 +179,9 @@ void runNasbench(){
             string gaID = ga->id();
 //            cout << gaID << endl;
             if (!IMS){
-                if (populationSize < 0){
-                    populationSize = ga->findMinimallyNeededPopulationSize(100, 99);
-                    cout << "Needed popsize = " << populationSize << endl;
+                if (nonIMSPopsize < 0){
+                    nonIMSPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
+                    cout << "Needed popsize = " << nonIMSPopsize << endl;
                 }
                 gaID += ("_FixedPop");
             }
@@ -187,7 +191,7 @@ void runNasbench(){
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, interval);
                 ga->fitFunc_ptr->clear();
-                rs.initialize(ga, problemSize, IMS, populationSize);
+                rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
                 json result = rs.run();
 //                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
                 fit->saveElitistArchiveToJSON();
@@ -222,8 +226,8 @@ void runNasbench(){
                 experiments[gaID] = prob_json;
                 
                 // Extra write inbetween algorithms
-//                main_json["experiments"] = experiments;
-//                writeRawData(main_json.dump(), dataDir);
+                main_json["experiments"] = experiments;
+                writeRawData(main_json.dump(), dataDir);
             }
         }
         

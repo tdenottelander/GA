@@ -27,9 +27,11 @@ public:
     std::vector<Individual> population;
     std::vector<std::vector<Individual*>> sortedPopulation;
     bool terminated;
+    bool converged = false;
     bool initialized;
     int roundsCount;
     bool isLocalSearchAlgorithm = false;
+    int noAdditionToElitistArchiveCount = 0;
     
     GA(FitnessFunction * fitfunc);
     

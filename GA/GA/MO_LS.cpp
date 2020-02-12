@@ -36,7 +36,7 @@ void MO_LS::round(){
         LS_archive.push_back(pair<pair<float, float>, vector<float>> {sc, fit});
         
         if(targetAmountOfSolutions != -1 && LS_archive.size() >= targetAmountOfSolutions){
-            terminated = true;
+            converged = true;
         }
     }
     

@@ -41,7 +41,15 @@ void NSGA_II::round() {
     sortedPopulation = nonDominatedSorting(population);
     draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
     
-    fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
+    bool updated = fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
+    if (updated){
+        noAdditionToElitistArchiveCount = 0;
+    } else {
+        noAdditionToElitistArchiveCount++;
+        if (noAdditionToElitistArchiveCount >= 10){
+            converged = true;
+        }
+    }
     
     roundsCount++;
 }

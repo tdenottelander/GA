@@ -24,7 +24,9 @@ void GA::initialize(){
     initializeTrueRandomPopulation();
 //    initializeSolvablePopulation();
     terminated = false;
+    converged = false;
     roundsCount = 0;
+    noAdditionToElitistArchiveCount = 0;
     initialized = true;
 }
 
@@ -157,7 +159,8 @@ vector<float> GA::getAvgFitness(){
 }
 
 bool GA::isConverged(){
-    if(isOptimal() || (!isDiverse() && !isLocalSearchAlgorithm)){
+    if(converged || isOptimal() || (!isDiverse() && !isLocalSearchAlgorithm)){
+        converged = true;
         terminated = true;
         return true;
     }

@@ -11,16 +11,22 @@
 
 #include <stdio.h>
 #include <nlohmann/json.hpp>
+#include <tuple>
 #include "Individual.hpp"
 #include "ProblemType.hpp"
 #include "UniqueSolutions.hpp"
 
 class FitnessFunction {
 public:
+    
+    enum class ConvergenceCriteria {OPTIMAL_FITNESS, EPSILON_FITNESS, GENOTYPE, ENTIRE_PARETO, EPSILON_PARETO_DISTANCE, PERCENTAGE_PARETO_COVERAGE, ABSOLUTE_PARETO_COVERAGE};
+    
+    ConvergenceCriteria convergenceCriteria;
     Individual bestIndividual;
     std::vector<Individual> elitistArchive;
     std::vector<float> optimum;
     int optimalParetoFrontSize;
+    std::vector<std::vector<float>> trueParetoFront;
     bool optimumFound;
     int maxEvaluations;
     int maxUniqueEvaluations;
@@ -29,12 +35,18 @@ public:
     int numObjectives = 1;
     bool checkForGenotype = false;
     arma::uvec optimalGenotype;
+    float epsilon = 0.0f;
     
     int totalEvaluations;
     int totalUniqueEvaluations;
     int totalTransformedUniqueEvaluations;
     UniqueSolutions uniqueSolutions;
     UniqueSolutions transformedUniqueSolutions;
+    
+    // Stored as TotalEvaluations, TotalUniqueEvaluations, Distance
+    std::vector<std::tuple<int, int, float>> distanceToParetoFrontData;
+    std::vector<std::vector<Individual>> elitistArchiveHistory;
+    nlohmann::json elitistArchiveHistoryJSON;
     
     FitnessFunction(std::vector<float> optimum, ProblemType *problemType);
     FitnessFunction(ProblemType *problemType);
@@ -48,9 +60,12 @@ public:
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
-    void updateElitistArchive(std::vector<Individual*> front);
-    void updateElitistArchive(Individual &ind);
+    bool updateElitistArchive(std::vector<Individual*> front);
+    bool updateElitistArchive(Individual &ind);
     virtual bool entireParetoFrontFound ();
+    float calculateDistanceParetoToApproximation ();
+    nlohmann::json paretoDistanceToJSON ();
+    nlohmann::json elitistArchiveHistoryToJSON();
     void setGenotypeChecking(arma::uvec genotype);
     
     int getTotalAmountOfEvaluations();

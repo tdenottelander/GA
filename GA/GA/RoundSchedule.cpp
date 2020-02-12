@@ -28,7 +28,7 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
 {}
 
 void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
-    int beginPopSize = 2;
+    int beginPopSize = 4;
     if(!IMS || g->isLocalSearchAlgorithm){
         maxPopSizeLevel = 1;
         beginPopSize = nonIMSpopsize;
@@ -50,7 +50,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);
-        int popSize = pow(beginPopSize, i + 2);
+        int popSize = pow(beginPopSize, i + 1);
         GA* newGA = g->clone();
         newGA->setPopulationSize(popSize);
         gaList.push_back(newGA);
@@ -65,6 +65,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
 json RoundSchedule::run() {
     int round = 0;
     int lowestActiveGAIdx = 0;
+    int highestActiveGAIdx = 0;
     bool optimumFound = false;
     bool done = false;
     long start = millis();
@@ -86,7 +87,7 @@ json RoundSchedule::run() {
         }
 
         //TODO: Loop only through active GA's, not until maxPopSizeLevel
-        for (int i = lowestActiveGAIdx; i < maxPopSizeLevel; i++) {
+        for (int i = lowestActiveGAIdx; i <= highestActiveGAIdx; i++) {
 
             //First check if GA is not terminated
             if (!gaList[i]->terminated) {
@@ -130,6 +131,7 @@ json RoundSchedule::run() {
                     
                     // If the current GA has found the optimum, break out of the loop
                     if (ga->isOptimal()){
+//                        cout << "ga " << ga->populationSize << " is optimal" << endl;
                         if(printPopulationOnOptimum) ga->print();
                         optimumFound = true;
                         output["successfulGAPopulation"] = ga->populationSize;
@@ -140,6 +142,7 @@ json RoundSchedule::run() {
                     } else if (ga->isConverged()){
                         // GA.termination is already set to true inside isConverged()-method
                         // Set all previous GA's to terminated
+//                        cout << "Terminate ga " << ga->populationSize << " due to convergence" << endl;
                         terminateGAs(i);
                         lowestActiveGAIdx = i + 1;
                         // Break out, because the GA with highest popSize has converged
@@ -156,16 +159,14 @@ json RoundSchedule::run() {
                         if (ga->fitFunc_ptr->numObjectives == 1 && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
                             terminateGAs(i - 1);
                             lowestActiveGAIdx = i;
-                            continue;
                         }
                         
                         // If this is a MO problem, check if this GA's first front dominates at least (X % + 1) solutions in the previous GA. If so, terminate previous GA and all before.
                         float percentageRequired = 0.5;
                         if (ga->fitFunc_ptr->numObjectives > 1 && MOterminationCondition(ga, gaList[i-1], percentageRequired)){
-                            cout << "GA with " << ga->populationSize << " popsize dominates GA with " << gaList[i-1]->populationSize << " popsize." << endl;
+//                            cout << "GA with " << ga->populationSize << " popsize dominates GA with " << gaList[i-1]->populationSize << " popsize." << endl;
                             terminateGAs(i - 1);
                             lowestActiveGAIdx = i;
-                            continue;
                         }
                         
                     // Else if this GA had the highest population size and is terminated
@@ -178,6 +179,7 @@ json RoundSchedule::run() {
                     // If this GA has run 4 times, make sure the next GA also does a run
                     if ((gaList[i]->roundsCount) % interval == 0){
                         whichShouldRun[i+1] = 1;
+                        highestActiveGAIdx = min(max(highestActiveGAIdx, i+1), maxPopSizeLevel - 1);
                     }
                 }
             }
@@ -195,9 +197,12 @@ json RoundSchedule::run() {
     
     long stop = millis();
     output["timeTaken"] = stop - start;
-    output["evaluations"] = gaList[0]->fitFunc_ptr->totalEvaluations;
-    output["uniqueEvaluations"] = gaList[0]->fitFunc_ptr->totalUniqueEvaluations;
-    output["transformedUniqueEvaluations"] = gaList[0]->fitFunc_ptr->totalTransformedUniqueEvaluations;
+    FitnessFunction *fit = gaList[0]->fitFunc_ptr;
+    output["evaluations"] = fit->totalEvaluations;
+    output["uniqueEvaluations"] =fit->totalUniqueEvaluations;
+    output["transformedUniqueEvaluations"] = fit->totalTransformedUniqueEvaluations;
+    output["paretoDistance"] = fit->paretoDistanceToJSON();
+//    output["elitistArchiveHistory"] = fit->elitistArchiveHistoryToJSON();  
     if (storeConvergence)
         output["convergence"] = convergence;
     
