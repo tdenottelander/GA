@@ -117,6 +117,11 @@ json RoundSchedule::run() {
                             ga->fitFunc_ptr->bestIndividual = ga->population[0].copy();
                         }
                         ga->evaluateAll();
+                        if(ga->fitFunc_ptr->isMO()){
+                            for (int i = 0; i < ga->population.size(); i++){
+                                ga->fitFunc_ptr->updateElitistArchive(ga->population[i]);
+                            }
+                        }
                     }
                     
                     // Do the round on this GA

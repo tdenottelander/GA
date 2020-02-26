@@ -57,6 +57,7 @@ public:
     virtual std::vector<float> evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);
     bool isDone();
+    bool isMO();
     virtual void display();
     virtual std::string id();
     void setProblemType(ProblemType* problemType);

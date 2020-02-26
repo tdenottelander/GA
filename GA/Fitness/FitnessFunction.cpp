@@ -101,6 +101,13 @@ bool FitnessFunction::isDone(){
     return done;
 }
 
+bool FitnessFunction::isMO(){
+    if(numObjectives > 1){
+        return true;
+    }
+    return false;
+}
+
 // Displays the description of the fitness function
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;
