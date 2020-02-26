@@ -48,6 +48,9 @@
 
 #include "LocalSearchAnalysis.hpp"
 
+// Include for the original NSGA-II implementation.
+#include "global.h"
+
 using namespace std;
 using namespace arma;
 using namespace Utility;
@@ -78,15 +81,15 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = -1; //10000
+    int maxEvaluations = 10000000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
     int repetitions = 100; //100
     bool IMS = false;
     int nonIMSPopsize = 4;
     
-    int minProblemSize = 25;
-    int maxProblemSize = 25;
+    int minProblemSize = 400;
+    int maxProblemSize = 400;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -188,6 +191,9 @@ void runNasbench(){
             
             bool exceeded = false;
             json setting;
+            vector<int> evals;
+            vector<int> uniqueEvals;
+            vector<int> times;
             for(int rep = 0; rep < repetitions; rep++){
                 RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, interval);
                 ga->fitFunc_ptr->clear();
@@ -216,8 +222,15 @@ void runNasbench(){
 //                    } else
 //                        cout << endl;
                 }
+                times.push_back(result.at("timeTaken"));
+                evals.push_back(result.at("evaluations"));
+                uniqueEvals.push_back(result.at("uniqueEvaluations"));
             }
             cout << endl;
+            
+            cout << "Avg Time: " << Utility::getAverage(times) << endl;
+            cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
+            cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
             if(storeConvergence && exceeded){
                 continue;
             } else {
@@ -226,8 +239,8 @@ void runNasbench(){
                 experiments[gaID] = prob_json;
                 
                 // Extra write inbetween algorithms
-                main_json["experiments"] = experiments;
-                writeRawData(main_json.dump(), dataDir);
+//                main_json["experiments"] = experiments;
+//                writeRawData(main_json.dump(), dataDir);
             }
         }
         
@@ -239,6 +252,12 @@ void runNasbench(){
 int main(int argc, const char * argv[]) {
     
     runNasbench();
+    
+//    rng = mt19937(millis());
+//    mainNSGA(5, 3, getRand());
+    
+//    test_problem(5, 5, 2, 5, 5);
+    
 //    cout << Utility::millis();
     
 //    int problemSize = 10;

@@ -19,17 +19,26 @@ public:
     NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize = false);
     int tournamentSize;
     float crossoverProbability;
-    bool mutation;
+    bool doMutation;
     bool visualize = false;
     void round() override;
+    
+    std::vector<Individual> parentPop;
         
     void clearMOinformation(std::vector<Individual> &population);
     std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
     void CrowdingDistanceSorting (std::vector<Individual*> &front);
-    bool crowdComparisonOperator(const Individual* lhs, const Individual* rhs);
-    std::vector<Individual*> selectPt (std::vector<std::vector<Individual*>> sortedCandidates);
-    std::vector<Individual> createOffspring(std::vector<Individual*> Pt);
+    void insertionSort(std::vector<Individual*> &front, int objectiveIdx);
+    void quickSort(std::vector<Individual*> &front, int objectiveIdx);
+    void quickSort(std::vector<Individual*> &front, int objectiveIdx, int left, int right);
+    bool crowdComparisonOperator(const Individual &lhs, const Individual &rhs);
+    Individual tournament (Individual &ind1, Individual &ind2);
+    std::vector<Individual> truncate (std::vector<std::vector<Individual*>> sortedCandidates);
+    std::vector<Individual> selection(std::vector<Individual> parentPop);
+    void mutation(std::vector<Individual> &children);
     void mutate(Individual &ind, float probability);
+    std::vector<Individual> merge (std::vector<Individual> &parentPop, std::vector<Individual> &childPop);
+    
     
     bool isDiverse() override;
     GA* clone() const override;
@@ -37,11 +46,17 @@ public:
     
     void draw2DVisualization(std::vector<Individual> &population, int maxX, int maxY);
     
+    // Candidate Objective Comparator is not used anymore. Quicksort is used instead
     struct CandidateObjectiveComparator
     {
         CandidateObjectiveComparator(int idx) { this->idx = idx; }
         bool operator()(const Individual* lhs, const Individual* rhs ) const {
-            return lhs->fitness[idx] < rhs->fitness[idx];
+            float fitlhs = lhs->fitness[idx];
+            float fitrhs = rhs->fitness[idx];
+            return fitlhs < fitrhs;
+            
+            // THIS LINE BELOW IS THE RIGHT ONE TO USE, BUT IT BREAKS THE SORT FUNCTION FOR POPULATIONS WITH >4 INDIVIDUALS
+//            return fitlhs <= fitrhs;
         }
         int idx;
     };

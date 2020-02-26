@@ -12,42 +12,45 @@ using namespace std;
 
 NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 2, 0.9, true, false){}
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), tournamentSize(tournamentSize), crossoverProbability(crossoverProbability), mutation(mutation), visualize(visualize) {
+NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), tournamentSize(tournamentSize), crossoverProbability(crossoverProbability), doMutation(mutation), visualize(visualize) {
 }
 
 void NSGA_II::round() {
+    // Do an initial non dominating sorting (rank assigning) and crowding distance assigning at the start of the first round
     if(roundsCount == 0){
-        clearMOinformation(population);
         sortedPopulation = nonDominatedSorting(population);
-        draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
+        fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
+        parentPop = truncate(sortedPopulation);
+        if(visualize) draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
     }
-    vector<Individual*> Pt = selectPt(sortedPopulation);
-    vector<Individual> Qt = createOffspring(Pt);
     
-    vector<Individual> newPopulation;
-    for (int i = 0; i < Pt.size(); i++){
-        newPopulation.push_back(Pt[i]->copy());
-    }
-    for (int i = 0; i < Qt.size(); i++){
-        newPopulation.push_back(Qt[i]);
-    }
-    population.clear();
-    population = newPopulation;
+    // Do tournament selection on the truncated parent population to create a child population
+    vector<Individual> childPop = selection(parentPop);
     
-    vector<float> averageFitness = getAvgFitness();
-//    cout << "Avg Fitness = " << Utility::wrapWithBrackets(Utility::vecOfFloatsToString(averageFitness, ", ")) << endl;
+    // Mutate the child population and evaluate all resulting individuals
+    mutation(childPop);
+    evaluateAll(childPop);
     
-    clearMOinformation(population);
-    sortedPopulation = nonDominatedSorting(population);
-    draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
+    // Merge Pt and Qt
+    vector<Individual> mergedPopulation = merge(parentPop, childPop);
+
+    // Sort the merged population on rank
+    sortedPopulation = nonDominatedSorting(mergedPopulation);
     
+    // Select Pt by truncating based on rank and crowding distance
+    parentPop = truncate(sortedPopulation);
+    population = parentPop;
+    
+    if(visualize) draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
+    
+    // Update elitist archive with the best front of the sorted population
     bool updated = fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
     if (updated){
         noAdditionToElitistArchiveCount = 0;
     } else {
         noAdditionToElitistArchiveCount++;
         if (noAdditionToElitistArchiveCount >= 10){
-            converged = true;
+//            converged = true;
         }
     }
     
@@ -55,8 +58,8 @@ void NSGA_II::round() {
 }
 
 void NSGA_II::clearMOinformation(vector<Individual> &population){
-    for (Individual ind : population){
-        ind.clearMOinformation();
+    for (int i = 0; i < population.size(); i++){
+        population[i].clearMOinformation();
     }
 }
 
@@ -64,6 +67,8 @@ void NSGA_II::clearMOinformation(vector<Individual> &population){
 // finding all the solutions of a front is done and the total amount of solutions is at least n.
 vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &population, int n){
     
+    // Clear the information like front and crowding distance from the population.
+    clearMOinformation(population);
     // Loop over every individual combination to see which individuals dominate which other individuals.
     for (int i = 0; i < population.size(); i++){
         for (int j = 0; j < population.size(); j++){
@@ -116,8 +121,13 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
 // Sorts the individuals in a front based on the crowding distance.
 void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
     for (int obj = 0; obj < fitFunc_ptr->numObjectives; obj++){
+//        cout << "UNSORTED FRONT: " << endl;
+//        for (int i = 0; i < front.size(); i++){
+//            cout << i << ": " << front[i]->toString() << endl;
+//        }
+
         // Sort individuals in this front on fitness for objective [obj].
-        sort(front.begin(), front.end(), CandidateObjectiveComparator(obj));
+        quickSort(front, obj);
         
         front.front()->crowdingDistance = INFINITY;
         front.back()->crowdingDistance = INFINITY;
@@ -141,6 +151,11 @@ void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
                 }
             }
         }
+        
+//        cout << "SORTED FRONT: " << endl;
+//        for (int i = 0; i < front.size(); i++){
+//            cout << i << ": " << front[i]->toString() << endl;
+//        }
     }
     
     sort(front.begin(), front.end(), [](const Individual* rhs, const Individual* lhs){
@@ -148,92 +163,129 @@ void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
     });
 }
 
-// Returns true if can1 is favoured over can2
-bool NSGA_II::crowdComparisonOperator(const Individual* can1, const Individual* can2){
-    if (can1->front < can2->front){
-        return true;
-    } else if (can1->front > can2->front){
-        return false;
-    } else {
-        return can1->crowdingDistance > can2->crowdingDistance;
+void NSGA_II::insertionSort(vector<Individual*> &front, int objectiveIdx){
+    for (int i = 0; i < front.size(); i++){
+        int moveIdx = i;
+        while (moveIdx != 0){
+            if (front[moveIdx]->fitness[objectiveIdx] <= front[moveIdx-1]->fitness[objectiveIdx]){
+                Individual* temp = front[moveIdx-1];
+                front[moveIdx-1] = front[moveIdx];
+                front[moveIdx] = temp;
+                moveIdx--;
+            } else {
+                break;
+            }
+        }
     }
 }
 
-vector<Individual*> NSGA_II::selectPt(vector<vector<Individual*>> sortedPopulation){
-    vector<Individual*> Pt;
-    Pt.reserve(populationSize);
+void NSGA_II::quickSort(vector<Individual*> &front, int objectiveIdx){
+    quickSort(front, objectiveIdx, 0, front.size() - 1);
+}
+
+void NSGA_II::quickSort(vector<Individual*> &front, int objectiveIdx, int left, int right){
+    if (left < right){
+        int index = Utility::getRand(left, right);
+        Individual* temp = front[right];
+        front[right] = front[index];
+        front[index] = temp;
+        float pivot = front[right]->fitness[objectiveIdx];
+        int i = left - 1;
+        for (int j = left; j < right; j++){
+            if (front[j]->fitness[objectiveIdx] <= pivot){
+                i += 1;
+                temp = front[j];
+                front[j] = front[i];
+                front[i] = temp;
+            }
+        }
+        index = i + 1;
+        temp = front[index];
+        front[index] = front[right];
+        front[right] = temp;
+        quickSort(front, objectiveIdx, left, index - 1);
+        quickSort(front, objectiveIdx, index + 1, right);
+    }
+}
+
+// Returns true if can1 is favoured over can2
+bool NSGA_II::crowdComparisonOperator(const Individual &lhs, const Individual &rhs){
+    if (lhs.front < rhs.front){
+        return true;
+    } else if (lhs.front > rhs.front){
+        return false;
+    } else if (lhs.crowdingDistance > rhs.crowdingDistance){
+        return true;
+    } else if (lhs.crowdingDistance < rhs.crowdingDistance){
+        return false;
+    } else if (Utility::getRand() < 0.5) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Individual NSGA_II::tournament(Individual &ind1, Individual &ind2){
+    if (crowdComparisonOperator(ind1, ind2)){
+        return ind1;
+    } else {
+        return ind2;
+    }
+}
+
+
+vector<Individual> NSGA_II::truncate(vector<vector<Individual*>> sortedPopulation){
+    vector<Individual> parentPop;
+    parentPop.reserve(populationSize);
     int individualsAdded = 0;
     
     for (vector<Individual*> &front : sortedPopulation){
         CrowdingDistanceSorting(front);
         for (int i = 0; i < front.size(); i++){
             front[i]->canReproduce = true;
-            Pt.push_back(front[i]);
+            parentPop.push_back(front[i]->copy());
 //            cout << individualsAdded << ":  front=" << front[i]->front << "  crDist=" << front[i]->crowdingDistance << endl;
             if (++individualsAdded == populationSize){
-                return Pt;
+                return parentPop;
             }
         }
     }
-    return Pt;
+    return parentPop;
 }
 
-vector<Individual> NSGA_II::createOffspring(vector<Individual*> Pt){
-    vector<Individual> Qt;
-    Qt.reserve(populationSize);
+vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
+    vector<Individual> childPop;
+    childPop.reserve(populationSize);
 
     if (populationSize % 4 != 0){
         cout << "Consider setting the population size to a multiple of 4.";
     }
     
-    for (int i = 0; i < 2; i++){
-        vector<int> randIdxArray = Utility::getRandomlyPermutedArrayV2(populationSize);
+    int index = 0;
+    vector<int> randIdxArray = Utility::getOrderedArray(populationSize, Utility::Order::RANDOM);
+    for (int i = 0; i < populationSize; i+=2){
+        if (index+3 >= populationSize){
+            randIdxArray = Utility::getOrderedArray(populationSize, Utility::Order::RANDOM);
+        }
+
+        Individual parent1 = tournament(parentPop[randIdxArray[index]], parentPop[randIdxArray[index+1]]);
+        Individual parent2 = tournament(parentPop[randIdxArray[index+2]], parentPop[randIdxArray[index+3]]);
+        pair<Individual, Individual> offspring = variation_ptr->crossover(parent1, parent2);
+        childPop.push_back(offspring.first);
         
-        for (int j = 0; j < populationSize/4; j++){
-            Individual* parent1 = Pt[randIdxArray[j * 4 + 0]];
-            Individual* parent2 = Pt[randIdxArray[j * 4 + 1]];
-            Individual* parent3 = Pt[randIdxArray[j * 4 + 2]];
-            Individual* parent4 = Pt[randIdxArray[j * 4 + 3]];
-            
-            Individual *firstParent;
-            Individual *secondParent;
-            if (crowdComparisonOperator(parent1, parent2)){
-                firstParent = parent1;
-            } else {
-                firstParent = parent2;
-            }
-            
-            if (crowdComparisonOperator(parent3, parent4)){
-                secondParent = parent3;
-            } else {
-                secondParent = parent4;
-            }
-            
-            Individual newInd1;
-            Individual newInd2;
-            if (Utility::getRand() < crossoverProbability){
-                pair<Individual, Individual> offspring = variation_ptr->crossover(*firstParent, *secondParent);
-                newInd1 = offspring.first;
-                newInd2 = offspring.second;
-            } else {
-                newInd1 = firstParent->copy();
-                newInd2 = secondParent->copy();
-            }
-            
-            if(mutation){
-                float mutationProbability = 1.0 / fitFunc_ptr->totalProblemLength;
-                mutate(newInd1, mutationProbability);
-                mutate(newInd2, mutationProbability);
-            }
-            
-            fitFunc_ptr->evaluate(newInd1);
-            fitFunc_ptr->evaluate(newInd2);
-            
-            Qt.push_back(newInd1);
-            Qt.push_back(newInd2);
+        if (i+1 < populationSize){
+            childPop.push_back(offspring.second);
         }
     }
-    return Qt;
+
+    return childPop;
+}
+
+void NSGA_II::mutation(vector<Individual> &children){
+    float mutationFactor = 1.0f / fitFunc_ptr->totalProblemLength;
+    for (int i = 0; i < children.size(); i++){
+        mutate(children[i], mutationFactor);
+    }
 }
 
 void NSGA_II::mutate(Individual &ind, float probability){
@@ -249,8 +301,19 @@ void NSGA_II::mutate(Individual &ind, float probability){
     }
 }
 
+vector<Individual> NSGA_II::merge(vector<Individual> &parentPop, vector<Individual> &childPop){
+    vector<Individual> mergedPop;
+    for (int i = 0; i < parentPop.size(); i++){
+        mergedPop.push_back(parentPop[i].copy());
+    }
+    for (int i = 0; i < childPop.size(); i++){
+        mergedPop.push_back(childPop[i].copy());
+    }
+    return mergedPop;
+}
+
 bool NSGA_II::isDiverse() {
-    if (mutation){
+    if (doMutation){
         return true;
     } else {
         return GA::isDiverse();
@@ -267,9 +330,6 @@ string NSGA_II::id(){
 }
 
 void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int maxY){
-    if(!visualize){
-        return;
-    }
     vector<Individual*> drawList;
     drawList.reserve(population.size());
     for (int i = 0; i < population.size(); i++){
@@ -304,16 +364,3 @@ void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int 
     }
     cout << result << endl;
 }
-
-//string NSGA_II::Candidate::toString(){
-//    string result = ind->toString();
-//    result += "  Front: ";
-//    result += to_string(front);
-//    result += "  CrowdingDist: ";
-//    result += to_string(crowdingDistance);
-//    return result;
-//}
-//
-//void NSGA_II::Candidate::print(){
-//    cout << toString() << endl;
-//}

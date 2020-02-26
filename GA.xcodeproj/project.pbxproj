@@ -33,6 +33,8 @@
 		C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E42384113A00D6E774 /* GA.cpp */; };
 		C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E7238441A300D6E774 /* Utility.cpp */; };
 		C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */; };
+		C2AC1A0923F455690054524C /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = C2AC19D823F455660054524C /* Makefile */; };
+		C2AC1A0C23F455690054524C /* nsga2r.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2AC19DB23F455660054524C /* nsga2r.cpp */; };
 		C2B369D323BE2AED00E43633 /* ARK2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D123BE2AED00E43633 /* ARK2.cpp */; };
 		C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B369D423BE2CC200E43633 /* ARK1.cpp */; };
 		C2B6B47123E83455003C60C8 /* NSGA_II.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2B6B46F23E83455003C60C8 /* NSGA_II.cpp */; };
@@ -116,6 +118,29 @@
 		C2ABE4E8238441A300D6E774 /* Utility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Utility.hpp; sourceTree = "<group>"; };
 		C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RoundSchedule.cpp; sourceTree = "<group>"; };
 		C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RoundSchedule.hpp; sourceTree = "<group>"; };
+		C2AC19BD23F455630054524C /* Revision */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Revision; sourceTree = "<group>"; };
+		C2AC19BF23F455630054524C /* params.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = params.out; sourceTree = "<group>"; };
+		C2AC19C123F455630054524C /* initial_pop.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = initial_pop.out; sourceTree = "<group>"; };
+		C2AC19C223F455630054524C /* check_nsga2_onemax.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = check_nsga2_onemax.sh; sourceTree = "<group>"; };
+		C2AC19C523F455630054524C /* statistics.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = statistics.dat; sourceTree = "<group>"; };
+		C2AC19C623F455630054524C /* run_stat.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_stat.sh; sourceTree = "<group>"; };
+		C2AC19C823F455630054524C /* #problemdef.c# */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "#problemdef.c#"; sourceTree = "<group>"; };
+		C2AC19C923F455630054524C /* k_statistics.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = k_statistics.dat; sourceTree = "<group>"; };
+		C2AC19CD23F455640054524C /* results */ = {isa = PBXFileReference; lastKnownFileType = folder; path = results; sourceTree = "<group>"; };
+		C2AC19CE23F455650054524C /* rand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rand.h; sourceTree = "<group>"; };
+		C2AC19D023F455650054524C /* all_pop.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = all_pop.out; sourceTree = "<group>"; };
+		C2AC19D523F455650054524C /* input_data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = input_data; sourceTree = "<group>"; };
+		C2AC19D623F455650054524C /* best_pop.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = best_pop.out; sourceTree = "<group>"; };
+		C2AC19D823F455660054524C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		C2AC19DB23F455660054524C /* nsga2r.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsga2r.cpp; sourceTree = "<group>"; };
+		C2AC19E023F455660054524C /* Notice */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Notice; sourceTree = "<group>"; };
+		C2AC19E123F455660054524C /* bisection_nsga_onemax.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = bisection_nsga_onemax.sh; sourceTree = "<group>"; };
+		C2AC19E223F455660054524C /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
+		C2AC19E323F455660054524C /* nsga2r */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = nsga2r; sourceTree = "<group>"; };
+		C2AC19E623F455670054524C /* final_pop.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = final_pop.out; sourceTree = "<group>"; };
+		C2AC19EC23F455670054524C /* nsga_onemax_statistics.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nsga_onemax_statistics.dat; sourceTree = "<group>"; };
+		C2AC19F123F455680054524C /* Readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme; sourceTree = "<group>"; };
+		C2AC19F823F455680054524C /* output_valgrind.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = output_valgrind.txt; sourceTree = "<group>"; };
 		C2B369D123BE2AED00E43633 /* ARK2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK2.cpp; sourceTree = "<group>"; };
 		C2B369D223BE2AED00E43633 /* ARK2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK2.hpp; sourceTree = "<group>"; };
 		C2B369D423BE2CC200E43633 /* ARK1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK1.cpp; sourceTree = "<group>"; };
@@ -247,6 +272,29 @@
 		C2B6B3BA23E82152003C60C8 /* NSGA-II */ = {
 			isa = PBXGroup;
 			children = (
+				C2AC19C823F455630054524C /* #problemdef.c# */,
+				C2AC19D023F455650054524C /* all_pop.out */,
+				C2AC19D623F455650054524C /* best_pop.out */,
+				C2AC19E123F455660054524C /* bisection_nsga_onemax.sh */,
+				C2AC19C223F455630054524C /* check_nsga2_onemax.sh */,
+				C2AC19E623F455670054524C /* final_pop.out */,
+				C2AC19E223F455660054524C /* global.h */,
+				C2AC19C123F455630054524C /* initial_pop.out */,
+				C2AC19D523F455650054524C /* input_data */,
+				C2AC19C923F455630054524C /* k_statistics.dat */,
+				C2AC19D823F455660054524C /* Makefile */,
+				C2AC19E023F455660054524C /* Notice */,
+				C2AC19EC23F455670054524C /* nsga_onemax_statistics.dat */,
+				C2AC19E323F455660054524C /* nsga2r */,
+				C2AC19DB23F455660054524C /* nsga2r.cpp */,
+				C2AC19F823F455680054524C /* output_valgrind.txt */,
+				C2AC19BF23F455630054524C /* params.out */,
+				C2AC19CE23F455650054524C /* rand.h */,
+				C2AC19F123F455680054524C /* Readme */,
+				C2AC19CD23F455640054524C /* results */,
+				C2AC19BD23F455630054524C /* Revision */,
+				C2AC19C623F455630054524C /* run_stat.sh */,
+				C2AC19C523F455630054524C /* statistics.dat */,
 			);
 			path = "NSGA-II";
 			sourceTree = "<group>";
@@ -445,6 +493,7 @@
 				C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */,
 				C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */,
 				C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */,
+				C2AC1A0923F455690054524C /* Makefile in Sources */,
 				C2C0658723C4DDA30067B946 /* ARK3.cpp in Sources */,
 				C25AFB9623EC7FE6004FEC24 /* TrapInverseTrap.cpp in Sources */,
 				C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */,
@@ -457,6 +506,7 @@
 				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
 				C25AFB9323EB75ED004FEC24 /* SimpleMOProblem.cpp in Sources */,
+				C2AC1A0C23F455690054524C /* nsga2r.cpp in Sources */,
 				C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */,
 				C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */,
 				C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */,
