@@ -1,20 +1,20 @@
 //
-//  ZerosOnes.hpp
+//  ZeroMaxOneMax.hpp
 //  GA
 //
 //  Created by Tom den Ottelander on 04/02/2020.
 //  Copyright © 2020 Tom den Ottelander. All rights reserved.
 //
 
-#ifndef ZerosOnes_hpp
-#define ZerosOnes_hpp
+#ifndef ZeroMaxOneMax_hpp
+#define ZeroMaxOneMax_hpp
 
 #include <stdio.h>
 #include "FitnessFunction.hpp"
 
-class ZerosOnes : public FitnessFunction {
+class ZeroMaxOneMax : public FitnessFunction {
 public:
-    ZerosOnes(int problemSize);
+    ZeroMaxOneMax(int problemSize);
     std::vector<float> evaluate (Individual &ind) override;
     
     FitnessFunction* clone() const override;
@@ -22,4 +22,4 @@ public:
     bool entireParetoFrontFound() override;
 };
 
-#endif /* ZerosOnes_hpp */
+#endif /* ZeroMaxOneMax_hpp */
