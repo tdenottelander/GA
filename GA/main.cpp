@@ -42,6 +42,7 @@
 #include "LocalSearchStochastic.hpp"
 #include "NSGA_II.hpp"
 #include "MO_LS.hpp"
+#include "MO_RS.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -88,8 +89,8 @@ void runNasbench(){
     bool IMS = false;
     int nonIMSPopsize = 4;
     
-    int minProblemSize = 400;
-    int maxProblemSize = 400;
+    int minProblemSize = 50;
+    int maxProblemSize = 50;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -173,7 +174,8 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
             new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
-//            new MO_LS(fit, Utility::Order::RANDOM, 10000)
+//            new MO_LS(fit, Utility::Order::RANDOM, 10000),
+//            new MO_RS(fit)
         };
         
         
@@ -254,7 +256,8 @@ int main(int argc, const char * argv[]) {
     runNasbench();
     
 //    rng = mt19937(millis());
-//    mainNSGA(5, 3, getRand());
+//    float seed = 0;
+//    mainNSGA(5, 4, seed);
     
 //    test_problem(5, 5, 2, 5, 5);
     
