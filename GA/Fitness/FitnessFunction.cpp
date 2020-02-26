@@ -190,10 +190,12 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
+            // If the true pareto front is not known, rely on enitreParetoFrontFound() functions that are implemented in child classes
             if (trueParetoFront.size() == 0){
                 if(entireParetoFrontFound()){
                     optimumFound = true;
                 }
+            // Else, compute the distance to the front approximation and check if it is 0. (in fact if it is < 0.000001).
             } else {
                 if (distanceParetoToApproximation == -1)
                     distanceParetoToApproximation = calculateDistanceParetoToApproximation();

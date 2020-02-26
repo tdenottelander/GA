@@ -10,9 +10,14 @@
 
 using namespace std;
 
-TrapInverseTrap::TrapInverseTrap(int blocksize, int blocks, int numObjectives) : FitnessFunction(vector<float>(numObjectives, blocks * blocksize), new BinaryProblemType()), blocks(blocks), blocksize(blocksize) {
-    setLength(blocks);
-    setNumObjectives(numObjectives);
+TrapInverseTrap::TrapInverseTrap(int length) : FitnessFunction(new BinaryProblemType()) {
+    if (length % blocksize != 0){
+        cout << "ERROR: TrapInverseTrap length is not a multiple of blocksize " << blocksize << endl;
+    }
+    blocks = length / blocksize;
+    totalProblemLength = length;
+    optimalParetoFrontSize = blocks + 1;
+    numObjectives = 2;
 }
 
 // Returns the fitness of an individual
@@ -55,18 +60,23 @@ string TrapInverseTrap::id() {
     return ("T" + to_string(blocksize));
 }
 
-
 FitnessFunction* TrapInverseTrap::clone() const {
     return new TrapInverseTrap(static_cast<const TrapInverseTrap&>(*this));
 }
 
-void TrapInverseTrap::setLength (int length) {
-    totalProblemLength = blocksize * length;
-    blocks = length;
-    setOptimum(vector<float>(numObjectives, totalProblemLength));
-}
-
-void TrapInverseTrap::setOptimum (vector<float> opt) {
-    optimum = opt;
-    optimalParetoFrontSize = blocks + 1;
+bool TrapInverseTrap::entireParetoFrontFound() {
+    if (elitistArchive.size() == optimalParetoFrontSize){
+        for (Individual &ind : elitistArchive){
+            // A pareto optimal solution consists of full blocks of 1's and/or 0's.
+            // So for two blocks, the optimal solutions are:
+            //  11111|11111,   00000|11111,   11111|00000,   00000|00000
+            // F:   8/10           9/9            9/9           10/8
+            // So summed optimal fitness = blocks * blocksize * 2 - blocks
+            if((ind.fitness[0] + ind.fitness[1]) != (blocks * blocksize * 2 - blocks)){
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }

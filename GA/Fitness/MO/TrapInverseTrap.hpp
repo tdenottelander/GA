@@ -15,15 +15,14 @@
 class TrapInverseTrap : public FitnessFunction {
 public:
     int blocks;
-    int blocksize;
-    TrapInverseTrap (int blocksize, int blocks, int numObjectives);
+    int blocksize = 5;
+    TrapInverseTrap (int length);
     std::vector<float> evaluate(Individual &ind) override;
     float subfunc (Individual &ind, int startIdx, int endIdx, int objective);
     void display() override;
     std::string id() override;
     FitnessFunction* clone() const override;
-    void setLength (int length) override;
-    void setOptimum (std::vector<float> optimum) override;
+    bool entireParetoFrontFound() override;
 };
 
 #endif /* TrapInverseTrap_hpp */

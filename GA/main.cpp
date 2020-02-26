@@ -121,7 +121,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
         FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
-//        FitnessFunction * fit = new TrapInverseTrap(5, 5, 2);
+//        FitnessFunction * fit = new TrapInverseTrap(problemSize);
 //        fit->epsilon = 0.0005;
         fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
         
