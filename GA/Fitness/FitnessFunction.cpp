@@ -89,6 +89,18 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     }
 }
 
+bool FitnessFunction::isDone(){
+    if(done) {
+        return true;
+    }
+    
+    if(optimumFound || maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded()){
+        done = true;
+    }
+    
+    return done;
+}
+
 // Displays the description of the fitness function
 void FitnessFunction::display(){
     cout << "Base fitness function" << endl;

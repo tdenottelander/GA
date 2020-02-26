@@ -19,7 +19,7 @@
 #include "Trap.hpp"
 #include "SimpleMOProblem.hpp"
 #include "CountingOnesMO.hpp"
-#include "ZerosOnes.hpp"
+#include "ZeroMaxOneMax.hpp"
 #include "LOTZ.hpp"
 #include "TrapInverseTrap.hpp"
 #include "NK.hpp"
@@ -118,7 +118,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new LeadingOnes(20);
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
-        FitnessFunction * fit = new ZerosOnes(problemSize);
+        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(5, 5, 2);
 //        fit->epsilon = 0.0005;
@@ -261,7 +261,7 @@ int main(int argc, const char * argv[]) {
 //    cout << Utility::millis();
     
 //    int problemSize = 10;
-//    FitnessFunction * fit = new ZerosOnes(problemSize);
+//    FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //    FitnessFunction * fit = new TrapInverseTrap(5, problemSize, 2);
 //    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
 //    GA* ga = new MO_LS(fit, Utility::Order::ASCENDING);

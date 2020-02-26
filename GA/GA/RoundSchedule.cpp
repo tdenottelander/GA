@@ -260,11 +260,11 @@ int RoundSchedule::getAmountOfEvaluations(){
 }
 
 bool RoundSchedule::maxEvaluationsExceeded() {
-    return maxEvaluations != -1 && gaList[0]->fitFunc_ptr->totalEvaluations > maxEvaluations;
+    return gaList[0]->fitFunc_ptr->maxEvaluationsExceeded();
 }
 
 bool RoundSchedule::maxUniqueEvaluationsExceeded() {
-    return maxUniqueEvaluations != -1 && gaList[0]->fitFunc_ptr->totalUniqueEvaluations > maxUniqueEvaluations;
+    return gaList[0]->fitFunc_ptr->maxUniqueEvaluationsExceeded();
 }
 
 void RoundSchedule::writeOutputGenerationCSV(string filename){

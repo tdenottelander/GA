@@ -36,6 +36,7 @@ public:
     bool checkForGenotype = false;
     arma::uvec optimalGenotype;
     float epsilon = 0.0f;
+    bool done = false;
     
     int totalEvaluations;
     int totalUniqueEvaluations;
@@ -55,6 +56,7 @@ public:
     
     virtual std::vector<float> evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);
+    bool isDone();
     virtual void display();
     virtual std::string id();
     void setProblemType(ProblemType* problemType);
