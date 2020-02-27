@@ -84,15 +84,15 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = 100000; //10000
+    int maxEvaluations = 1000000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 1; //100
+    int repetitions = 100; //100
     bool IMS = true;
     int nonIMSPopsize = 4;
     
-    int minProblemSize = 5;
-    int maxProblemSize = 5;
+    int minProblemSize = 15;
+    int maxProblemSize = 15;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -121,9 +121,9 @@ void runNasbench(){
 //        FitnessFunction * fit = new LeadingOnes(20);
 //        FitnessFunction * fit = new SimpleMOProblem(4, 2);
 //        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
-        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
+//        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
-//        FitnessFunction * fit = new TrapInverseTrap(problemSize);
+        FitnessFunction * fit = new TrapInverseTrap(problemSize);
         fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
 //        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
 //        fit->epsilon = 0.00001;
@@ -177,8 +177,8 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
 //            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
-//            new MO_LS(fit, Utility::Order::RANDOM, 10000),
-            new MO_RS(fit)
+            new MO_LS(fit, Utility::Order::RANDOM, 10000),
+//            new MO_RS(fit)
         };
         
         string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
@@ -214,8 +214,9 @@ void runNasbench(){
                 << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
                 << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 12)
                 << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 15)
-                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15)
-                << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15) << endl;
+                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15);
+                if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15);
+                cout << endl;
                 if(result.at("stoppingCondition") == "maxTimeExceeded"){
                     cout << "Max time exceeded, not starting anymore runs" << endl;
                     break;
@@ -237,6 +238,10 @@ void runNasbench(){
             cout << "Avg Time: " << Utility::getAverage(times) << endl;
             cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
             cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
+            cout << "Elitist archive:   (size=" << fit->elitistArchive.size() << ")" << endl;
+            for (int i = 0; i < fit->elitistArchive.size(); i++){
+                cout << i << ": " << fit->elitistArchive[i].toString() << endl;
+            }
             if(storeConvergence && exceeded){
                 continue;
             } else {

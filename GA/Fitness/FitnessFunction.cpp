@@ -69,6 +69,7 @@ void FitnessFunction::clear(){
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
 void FitnessFunction::evaluationProcedure(Individual &ind){
+//    cout << "Evaluating " << ind.toString() << "at eval=" << totalEvaluations << " and uniqEval=" << totalUniqueEvaluations << endl;
     checkIfBestFound(ind);
     totalEvaluations++;
 //    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
@@ -180,7 +181,7 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
         if (addToArchive){
             elitistArchive.push_back(front[i]->copy());
-//            cout << "Add " + front[i]->toString() + " to Elitist Archive\n" << endl;
+//            cout << "Add " + front[i]->toString() + " to Elitist Archive at eval=" << totalEvaluations << " and uniqEval=" << totalUniqueEvaluations << "\n" << endl;
             solutionsAdded = true;
         }
     }

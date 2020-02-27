@@ -31,9 +31,12 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
 
 void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
     int beginPopSize = 4;
-    if(!IMS || g->isLocalSearchAlgorithm){
+    if(!IMS || g->isLocalSearchAlgorithm || g->preventIMS){
         maxPopSizeLevel = 1;
         beginPopSize = nonIMSpopsize;
+        if(g->isLocalSearchAlgorithm){
+            beginPopSize = 1;
+        }
     }
     gaList.reserve(maxPopSizeLevel);
 
@@ -184,7 +187,7 @@ json RoundSchedule::run() {
                     }
 
                     // If this GA has run 4 times, make sure the next GA also does a run
-                    if (!ga->preventIMS && (gaList[i]->roundsCount) % interval == 0){
+                    if ((gaList[i]->roundsCount) % interval == 0){
                         whichShouldRun[i+1] = 1;
                         highestActiveGAIdx = min(max(highestActiveGAIdx, i+1), maxPopSizeLevel - 1);
                     }
