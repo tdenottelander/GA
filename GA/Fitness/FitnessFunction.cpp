@@ -18,6 +18,9 @@ extern bool storeTransformedUniqueConvergence;
 extern bool printElitistArchiveOnUpdate;
 extern bool storeDistanceToParetoFrontOnElitistArchiveUpdate;
 extern nlohmann::json convergence;
+extern nlohmann::json elitistArchiveJSON;
+extern bool storeElitistArchive;
+extern bool updateElitistArchiveOnEveryEvaluation;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
@@ -60,6 +63,8 @@ void FitnessFunction::clear(){
     uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     distanceToParetoFrontData.clear();
+    elitistArchiveJSON.clear();
+    storeElitistArchiveCount = 0;
 }
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
@@ -86,6 +91,10 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             totalTransformedUniqueEvaluations++;
             convergence["transformedUnique"].push_back(roundedFitness);
         }
+    }
+    
+    if(updateElitistArchiveOnEveryEvaluation){
+        updateElitistArchive(ind);
     }
 }
 
@@ -178,15 +187,17 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
     
     // Only check for convergence criteria if there are new solutions added to the elitist archive.
     if (solutionsAdded){
-//        if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
-//            if(entireParetoFrontFo und()){
-//                optimumFound = true;
-//            }
-//        }
+        if(storeElitistArchive){
+            elitistArchiveJSON["archive"][storeElitistArchiveCount] = elitistArchiveToJSON();
+            elitistArchiveJSON["totalEvaluations"][storeElitistArchiveCount] = totalEvaluations;
+            elitistArchiveJSON["uniqueEvaluations"][storeElitistArchiveCount] = totalUniqueEvaluations;
+            storeElitistArchiveCount++;
+        }
+        
+        
         float distanceParetoToApproximation = -1;
         if (storeDistanceToParetoFrontOnElitistArchiveUpdate){
             distanceParetoToApproximation = calculateDistanceParetoToApproximation();
-//            elitistArchiveHistory.push_back(elitistArchive);
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
@@ -233,6 +244,15 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
     }
     
     return solutionsAdded;
+}
+
+bool FitnessFunction::updateElitistArchive(vector<Individual> &front){
+    vector<Individual*> pointerFront;
+    pointerFront.reserve(front.size());
+    for (int i = 0; i < front.size(); i++){
+        pointerFront.push_back(&front[i]);
+    }
+    return updateElitistArchive(pointerFront);
 }
 
 // Returns true if the given individual is added to the elitist archive
@@ -283,25 +303,16 @@ json FitnessFunction::paretoDistanceToJSON(){
     return result;
 }
 
-//json FitnessFunction::elitistArchiveHistoryToJSON(){
-//    json result;
-//    for (int i = 0; i < elitistArchiveHistory.size(); i++){
-//        for (int j = 0; j < elitistArchiveHistory[i].size(); i++){
-//
-//            result[i][0][j] = elitistArchiveHistory[i][j].fitness[0];
-//            result[i][1]
-//
-//
-//
-//            if (i == elitistArchiveHistory.size()){
-//                break;
-//            }
-//            result[i][j][0] = elitistArchiveHistory[i][j].fitness[0];
-//            result[i][j][1 ] = elitistArchiveHistory[i][j].fitness[1];
-//        }
-//    }
-//    return result;
-//}
+json FitnessFunction::elitistArchiveToJSON(){
+    json result;
+    for (int i = 0; i < elitistArchive.size(); i++){
+        json array;
+        array[0] = elitistArchive[i].fitness[0];
+        array[1] = elitistArchive[i].fitness[1];
+        result[i] = array;
+    }
+    return result;
+}
 
 // Override this method in specific problems. For example, do an extra check on objective values.
 bool FitnessFunction::entireParetoFrontFound(){
@@ -410,7 +421,7 @@ void FitnessFunction::saveElitistArchiveToJSON(){
         solution["fitness"] = fitness;
         result[i] = solution;
     }
-    Utility::writeRawData(result.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/elitistArchiveData/");
+    Utility::writeRawData(result.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/elitistArchiveData/", "");
 }
 
 

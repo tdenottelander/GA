@@ -10,7 +10,9 @@
 
 using namespace std;
 
-MO_RS::MO_RS (FitnessFunction * fitFunc) : GA(fitFunc){}
+MO_RS::MO_RS (FitnessFunction * fitFunc) : GA(fitFunc){
+    preventIMS = true;
+}
 
 void MO_RS::round(){
     vector<int> alphabet = fitFunc_ptr->problemType->alphabet;

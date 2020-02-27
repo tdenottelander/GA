@@ -15,8 +15,10 @@ using Utility::millis;
 extern bool printPopulationAfterRound;
 extern bool printPopulationOnOptimum;
 extern bool storeConvergence;
+extern bool storeElitistArchive;
 
 nlohmann::json convergence;
+nlohmann::json elitistArchiveJSON;
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -60,6 +62,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     convergence.clear();
     convergence["absolute"] = {};
     convergence["unique"] = {};
+    elitistArchiveJSON.clear();
 }
 
 json RoundSchedule::run() {
@@ -116,12 +119,11 @@ json RoundSchedule::run() {
                         if(i == 0){
                             ga->fitFunc_ptr->bestIndividual = ga->population[0].copy();
                         }
+                        
                         ga->evaluateAll();
                         if(ga->fitFunc_ptr->isMO()){
-                            for (int i = 0; i < ga->population.size(); i++){
-                                ga->fitFunc_ptr->updateElitistArchive(ga->population[i]);
-                            }
-                        }
+                            ga->fitFunc_ptr->updateElitistArchive(ga->population);
+                        } 
                     }
                     
                     // Do the round on this GA
@@ -182,7 +184,7 @@ json RoundSchedule::run() {
                     }
 
                     // If this GA has run 4 times, make sure the next GA also does a run
-                    if ((gaList[i]->roundsCount) % interval == 0){
+                    if (!ga->preventIMS && (gaList[i]->roundsCount) % interval == 0){
                         whichShouldRun[i+1] = 1;
                         highestActiveGAIdx = min(max(highestActiveGAIdx, i+1), maxPopSizeLevel - 1);
                     }
@@ -210,6 +212,8 @@ json RoundSchedule::run() {
 //    output["elitistArchiveHistory"] = fit->elitistArchiveHistoryToJSON();  
     if (storeConvergence)
         output["convergence"] = convergence;
+    if (storeElitistArchive)
+        output["elitistArchive"] = elitistArchiveJSON;
     
     return output;
 }

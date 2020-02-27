@@ -142,7 +142,14 @@ void Utility::writeRawData(string content, string dir, string suffix){
 }
 
 void Utility::writeRawData(string content){
-    writeRawData(content, "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/");
+    writeRawData(content, "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/", "");
+}
+
+void Utility::writeRawData(string content, string filename){
+    ofstream file;
+    file.open (filename);
+    file << content;
+    file.close();
 }
 
 void Utility::writeJSON(json content, string filename){

@@ -30,6 +30,9 @@ void NSGA_II::round() {
     // Mutate the child population and evaluate all resulting individuals
     mutation(childPop);
     evaluateAll(childPop);
+    if(fitFunc_ptr->isDone()){
+        return;
+    }
     
     // Merge Pt and Qt
     vector<Individual> mergedPopulation = merge(parentPop, childPop);

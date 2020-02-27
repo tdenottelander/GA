@@ -42,8 +42,9 @@ namespace Utility{
     
     // Write utility functions
     void write(std::string content, std::string dir, std::string filename);
-    void writeRawData(std::string content, std::string dir, std::string suffix = "");
+    void writeRawData(std::string content, std::string dir, std::string suffix);
     void writeRawData(std::string content);
+    void writeRawData(std::string content, std::string filename);
     void writeJSON (nlohmann::json content, std::string filename);
     
     // Read utility functions

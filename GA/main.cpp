@@ -74,6 +74,8 @@ bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
 bool storeTransformedUniqueConvergence = false;
 bool storeDistanceToParetoFrontOnElitistArchiveUpdate = true;
+bool storeElitistArchive = true;
+bool updateElitistArchiveOnEveryEvaluation = true;
 std::string ARK_Analysis_suffix = "";
 
 void runNasbench(){
@@ -82,15 +84,15 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = 10000000; //10000
+    int maxEvaluations = 100000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 100; //100
-    bool IMS = false;
+    int repetitions = 1; //100
+    bool IMS = true;
     int nonIMSPopsize = 4;
     
-    int minProblemSize = 50;
-    int maxProblemSize = 50;
+    int minProblemSize = 5;
+    int maxProblemSize = 5;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -122,8 +124,9 @@ void runNasbench(){
         FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(problemSize);
-//        fit->epsilon = 0.0005;
         fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+//        fit->epsilon = 0.00001;
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -173,11 +176,12 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
-            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
+//            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
 //            new MO_LS(fit, Utility::Order::RANDOM, 10000),
-//            new MO_RS(fit)
+            new MO_RS(fit)
         };
         
+        string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
         
         json experiments;
         for(GA* ga : gaList){
@@ -241,13 +245,13 @@ void runNasbench(){
                 experiments[gaID] = prob_json;
                 
                 // Extra write inbetween algorithms
-//                main_json["experiments"] = experiments;
-//                writeRawData(main_json.dump(), dataDir);
+                main_json["experiments"] = experiments;
+                writeRawData(main_json.dump(), outputfileName);
             }
         }
         
         main_json["experiments"] = experiments;
-        writeRawData(main_json.dump(), dataDir);
+        writeRawData(main_json.dump(), outputfileName);
     }
 }
 

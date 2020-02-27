@@ -46,8 +46,8 @@ public:
     
     // Stored as TotalEvaluations, TotalUniqueEvaluations, Distance
     std::vector<std::tuple<int, int, float>> distanceToParetoFrontData;
-    std::vector<std::vector<Individual>> elitistArchiveHistory;
-    nlohmann::json elitistArchiveHistoryJSON;
+    
+    nlohmann::json elitistArchiveToJSON();
     
     FitnessFunction(std::vector<float> optimum, ProblemType *problemType);
     FitnessFunction(ProblemType *problemType);
@@ -64,6 +64,7 @@ public:
     
     void checkIfBestFound(Individual &ind);
     bool updateElitistArchive(std::vector<Individual*> front);
+    bool updateElitistArchive(std::vector<Individual> &front);
     bool updateElitistArchive(Individual &ind);
     virtual bool entireParetoFrontFound ();
     float calculateDistanceParetoToApproximation ();
@@ -88,6 +89,7 @@ public:
     void drawElitistArchive();
     
     void saveElitistArchiveToJSON();
+    int storeElitistArchiveCount = 0;
 };
 
 class OneMax : public FitnessFunction {

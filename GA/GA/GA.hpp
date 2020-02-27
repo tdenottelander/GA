@@ -32,6 +32,7 @@ public:
     int roundsCount;
     bool isLocalSearchAlgorithm = false;
     int noAdditionToElitistArchiveCount = 0;
+    bool preventIMS = false;
     
     GA(FitnessFunction * fitfunc);
     
