@@ -85,7 +85,7 @@ void writeGenerationalStatisticsWithoutDPFSMetric( void );
 void writeGenerationalStatistics( population *parent_pop );
 void writeGenerationalStatisticsWithDPFSMetric( population *parent_pop );
 
-bool debuglog = true;
+bool debuglog = false;
 
 void *Malloc( long size )
 {
@@ -940,6 +940,7 @@ int mainNSGA (int nbinary, int populationSize, float seedd)
 	  			updateElitistArchive (solution,(child_pop->ind[j]).obj,0);
 					free(solution);
 	 		 }
+        if(debuglog) printf("\n Elitist archive size = %d", elitist_archive_size);
 
 				/* */
         merge (parent_pop, child_pop, mixed_pop);

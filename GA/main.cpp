@@ -17,8 +17,6 @@
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
 #include "Trap.hpp"
-#include "SimpleMOProblem.hpp"
-#include "CountingOnesMO.hpp"
 #include "ZeroMaxOneMax.hpp"
 #include "LOTZ.hpp"
 #include "TrapInverseTrap.hpp"
@@ -88,11 +86,11 @@ void runNasbench(){
     int maxUniqueEvaluations = -1;
     int interval = 4;
     int repetitions = 100; //100
-    bool IMS = true;
+    bool IMS = false;
     int nonIMSPopsize = 4;
     
-    int minProblemSize = 15;
-    int maxProblemSize = 15;
+    int minProblemSize = 25;
+    int maxProblemSize = 25;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -119,11 +117,10 @@ void runNasbench(){
 //        FitnessFunction * fit = new Trap(5, 5);
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
-//        FitnessFunction * fit = new SimpleMOProblem(4, 2);
-//        FitnessFunction * fit = new CountingOnesMO(problemSize,2);
+        
 //        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
-//        FitnessFunction * fit = new LOTZ(problemSize);
-        FitnessFunction * fit = new TrapInverseTrap(problemSize);
+        FitnessFunction * fit = new LOTZ(problemSize);
+//        FitnessFunction * fit = new TrapInverseTrap(problemSize);
         fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
 //        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
 //        fit->epsilon = 0.00001;
@@ -176,8 +173,8 @@ void runNasbench(){
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
 
-//            new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false),
-            new MO_LS(fit, Utility::Order::RANDOM, 10000),
+            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true, false),
+//            new MO_LS(fit, Utility::Order::RANDOM, 10000),
 //            new MO_RS(fit)
         };
         
@@ -206,7 +203,7 @@ void runNasbench(){
                 rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
                 json result = rs.run();
 //                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
-                fit->saveElitistArchiveToJSON();
+//                fit->saveElitistArchiveToJSON();
                 setting[to_string(rep)] = result;
                 cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
                 << " ga=" << gaID

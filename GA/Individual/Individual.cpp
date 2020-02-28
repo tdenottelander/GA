@@ -22,8 +22,7 @@ Individual::Individual(int length, int objectives) :
     counterNotChanged(0),
     dominationCount(0),
     front(-1),
-    crowdingDistance(0.0),
-    canReproduce(false)
+    crowdingDistance(0.0)
 {
     genotype = uvec (length);
 }
@@ -45,7 +44,6 @@ Individual Individual::copy(){
     for(int i = 0; i < o; i++){
         ind.fitness[i] = fitness[i];
     }
-    ind.canReproduce = canReproduce;
     ind.crowdingDistance = crowdingDistance;
     ind.front = front;
     ind.counterNotChanged = counterNotChanged;
@@ -134,7 +132,6 @@ void Individual::clearMOinformation(){
     dominationList.clear();
     front = -1;
     crowdingDistance = 0.0;
-    canReproduce = false;
 }
 
 string Individual::toString(vector<int> &genotype){

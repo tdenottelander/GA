@@ -112,6 +112,7 @@ TwoPointCrossover::TwoPointCrossover(){}
 pair<Individual, Individual> TwoPointCrossover::crossover(Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
+    // Tested and confirmed: Makes no difference to create new individuals instead of copying.
     
     // It is possible that the indices are the same. In that case, no crossover happens.
     // It is also possible for either index to be 0 or size()-1. In that case, it becomes one-point crossover.

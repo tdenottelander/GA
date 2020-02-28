@@ -31,6 +31,8 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
 
 void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
     int beginPopSize = 4;
+    
+    // If IMS should not be used, or the algorithm doesn't require IMS (e.g. with LS or RS), then set the correct values.
     if(!IMS || g->isLocalSearchAlgorithm || g->preventIMS){
         maxPopSizeLevel = 1;
         beginPopSize = nonIMSpopsize;
@@ -51,7 +53,6 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     g->fitFunc_ptr->maxEvaluations = maxEvaluations;
     g->fitFunc_ptr->maxUniqueEvaluations = maxUniqueEvaluations;
     
-    //TODO: Refactor as armadillo uvec
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
         whichShouldRun.push_back(0);

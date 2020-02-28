@@ -16,8 +16,7 @@
 class NSGA_II : public SimpleGA {
 public:
     NSGA_II(FitnessFunction * fitFunc);
-    NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize = false);
-    int tournamentSize;
+    NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, bool mutation, bool visualize = false);
     float crossoverProbability;
     bool doMutation;
     bool visualize = false;
@@ -29,8 +28,8 @@ public:
     std::vector<std::vector<Individual*>> nonDominatedSorting (std::vector<Individual> &population, int n = -1);
     void CrowdingDistanceSorting (std::vector<Individual*> &front);
     void insertionSort(std::vector<Individual*> &front, int objectiveIdx);
-    void quickSort(std::vector<Individual*> &front, int objectiveIdx);
-    void quickSort(std::vector<Individual*> &front, int objectiveIdx, int left, int right);
+    std::vector<int> quickSort(std::vector<Individual*> &front, int objectiveIdx);
+    void quickSort(std::vector<Individual*> &front, std::vector<int> &indices, int objectiveIdx, int left, int right);
     bool crowdComparisonOperator(const Individual &lhs, const Individual &rhs);
     Individual tournament (Individual &ind1, Individual &ind2);
     std::vector<Individual> truncate (std::vector<std::vector<Individual*>> sortedCandidates);

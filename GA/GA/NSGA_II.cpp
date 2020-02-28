@@ -10,9 +10,9 @@
 
 using namespace std;
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 2, 0.9, true, false){}
+NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, true, false){}
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, int tournamentSize, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), tournamentSize(tournamentSize), crossoverProbability(crossoverProbability), doMutation(mutation), visualize(visualize) {
+NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), crossoverProbability(crossoverProbability), doMutation(mutation), visualize(visualize) {
 }
 
 void NSGA_II::round() {
@@ -123,43 +123,62 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
 
 // Sorts the individuals in a front based on the crowding distance.
 void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
+    
+    if(front.size() <= 2){
+        for (int i = 0; i < front.size(); i++){
+            front[i]->crowdingDistance = INFINITY;
+        }
+        return;
+    }
+    
     for (int obj = 0; obj < fitFunc_ptr->numObjectives; obj++){
+        
 //        cout << "UNSORTED FRONT: " << endl;
-//        for (int i = 0; i < front.size(); i++){
-//            cout << i << ": " << front[i]->toString() << endl;
-//        }
+//        for (int i = 0; i < front.size(); i++) cout << i << ": " << front[i]->toString() << endl;
 
         // Sort individuals in this front on fitness for objective [obj].
-        quickSort(front, obj);
+        vector<int> indices = quickSort(front, obj);
         
-        front.front()->crowdingDistance = INFINITY;
-        front.back()->crowdingDistance = INFINITY;
+//        cout << "INDICES SORTED: " << endl;
+//        for (int i = 0; i < front.size(); i++) cout << indices[i] << endl;
+        
+        //Comment this line below to match the original implementation by Deb.
+        front[indices[0]]->crowdingDistance = INFINITY;
+        front[indices[indices.size()-1]]->crowdingDistance = INFINITY;
         
         if (front.size() > 2){
-            float maxObjFitness = front.back()->fitness[obj];
-            float minObjFitness = front.front()->fitness[obj];
+            float maxObjFitness = front[indices[front.size()-1]]->fitness[obj];
+            float minObjFitness = front[indices[0]]->fitness[obj];
             float normalizationValue = maxObjFitness - minObjFitness;
             
             for (int i = 1; i < front.size() - 1; i++){
-                if(front[i]->crowdingDistance != INFINITY){
-                    float prevObjFitness = front[i-1]->fitness[obj];
-                    float nextObjFitness = front[i+1]->fitness[obj];
+                if(front[indices[i]]->crowdingDistance != INFINITY){
+                    float prevObjFitness = front[indices[i-1]]->fitness[obj];
+                    float nextObjFitness = front[indices[i+1]]->fitness[obj];
                     float newCrowdingDistance;
                     if (normalizationValue == 0){
                         newCrowdingDistance = INFINITY;
                     } else {
-                        newCrowdingDistance = front[i]->crowdingDistance + ((nextObjFitness - prevObjFitness) / normalizationValue);
+                        newCrowdingDistance = front[indices[i]]->crowdingDistance + ((nextObjFitness - prevObjFitness) / normalizationValue);
                     }
-                    front[i]->crowdingDistance = newCrowdingDistance;
+                    front[indices[i]]->crowdingDistance = newCrowdingDistance;
                 }
             }
         }
         
 //        cout << "SORTED FRONT: " << endl;
-//        for (int i = 0; i < front.size(); i++){
-//            cout << i << ": " << front[i]->toString() << endl;
-//        }
+//        for (int i = 0; i < front.size(); i++) cout << i << ": " << front[indices[i]]->toString() << endl
+        
     }
+    
+    for (int i = 0; i < front.size(); i++){
+        if(front[i]->crowdingDistance != INFINITY){
+            front[i]->crowdingDistance = front[i]->crowdingDistance / fitFunc_ptr->numObjectives;
+        }
+    }
+    
+//    cout << "FINAL FRONT: " << endl;
+//    for (int i = 0; i < front.size(); i++) cout << i << ": " << front[i]->toString() << endl;
     
     sort(front.begin(), front.end(), [](const Individual* rhs, const Individual* lhs){
         return lhs->crowdingDistance < rhs->crowdingDistance;
@@ -182,32 +201,38 @@ void NSGA_II::insertionSort(vector<Individual*> &front, int objectiveIdx){
     }
 }
 
-void NSGA_II::quickSort(vector<Individual*> &front, int objectiveIdx){
-    quickSort(front, objectiveIdx, 0, front.size() - 1);
+// Quicksort. Sorts the array of indices based on their correspondence with individuals in the front.
+vector<int> NSGA_II::quickSort(vector<Individual*> &front, int objectiveIdx){
+    vector<int> indices = Utility::getOrderedArray(front.size(), Utility::Order::ASCENDING);
+    quickSort(front, indices, objectiveIdx, 0, front.size() - 1);
+    return indices;
 }
 
-void NSGA_II::quickSort(vector<Individual*> &front, int objectiveIdx, int left, int right){
+// Subroutine for quicksort
+void NSGA_II::quickSort(vector<Individual*> &front, vector<int> &indices, int objectiveIdx, int left, int right){
     if (left < right){
         int index = Utility::getRand(left, right);
-        Individual* temp = front[right];
-        front[right] = front[index];
-        front[index] = temp;
-        float pivot = front[right]->fitness[objectiveIdx];
+        
+        int temp = indices[right];
+        indices[right] = indices[index];
+        indices[index] = temp;
+        
+        float pivot = front[indices[right]]->fitness[objectiveIdx];
         int i = left - 1;
         for (int j = left; j < right; j++){
-            if (front[j]->fitness[objectiveIdx] <= pivot){
+            if (front[indices[j]]->fitness[objectiveIdx] <= pivot){
                 i += 1;
-                temp = front[j];
-                front[j] = front[i];
-                front[i] = temp;
+                temp = indices[j];
+                indices[j] = indices[i];
+                indices[i] = temp;
             }
         }
         index = i + 1;
-        temp = front[index];
-        front[index] = front[right];
-        front[right] = temp;
-        quickSort(front, objectiveIdx, left, index - 1);
-        quickSort(front, objectiveIdx, index + 1, right);
+        temp = indices[index];
+        indices[index] = indices[right];
+        indices[right] = temp;
+        quickSort(front, indices, objectiveIdx, left, index - 1);
+        quickSort(front, indices, objectiveIdx, index + 1, right);
     }
 }
 
@@ -228,6 +253,7 @@ bool NSGA_II::crowdComparisonOperator(const Individual &lhs, const Individual &r
     }
 }
 
+// Tournament with size 2
 Individual NSGA_II::tournament(Individual &ind1, Individual &ind2){
     if (crowdComparisonOperator(ind1, ind2)){
         return ind1;
@@ -236,7 +262,7 @@ Individual NSGA_II::tournament(Individual &ind1, Individual &ind2){
     }
 }
 
-
+// Fill a new population by selecting from a population first based on front and then on crowding distance.
 vector<Individual> NSGA_II::truncate(vector<vector<Individual*>> sortedPopulation){
     vector<Individual> parentPop;
     parentPop.reserve(populationSize);
@@ -245,9 +271,7 @@ vector<Individual> NSGA_II::truncate(vector<vector<Individual*>> sortedPopulatio
     for (vector<Individual*> &front : sortedPopulation){
         CrowdingDistanceSorting(front);
         for (int i = 0; i < front.size(); i++){
-            front[i]->canReproduce = true;
             parentPop.push_back(front[i]->copy());
-//            cout << individualsAdded << ":  front=" << front[i]->front << "  crDist=" << front[i]->crowdingDistance << endl;
             if (++individualsAdded == populationSize){
                 return parentPop;
             }
@@ -271,8 +295,11 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
             randIdxArray = Utility::getOrderedArray(populationSize, Utility::Order::RANDOM);
         }
 
+        // Apply tournament selection with size 2
         Individual parent1 = tournament(parentPop[randIdxArray[index]], parentPop[randIdxArray[index+1]]);
         Individual parent2 = tournament(parentPop[randIdxArray[index+2]], parentPop[randIdxArray[index+3]]);
+        
+        // Combine winners of the tournament selections by doing crossover.
         pair<Individual, Individual> offspring = variation_ptr->crossover(parent1, parent2);
         childPop.push_back(offspring.first);
         
@@ -352,7 +379,6 @@ void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int 
     for (int y = 0; y < maxY; y++){
         for (int x = 0; x < maxX; x++){
             if (drawList[i]->fitness[0] == x && drawList[i]->fitness[1] == y){
-//                string reproduce = drawList[i]->canReproduce ? "+" : "";
                 string frontNr = drawList[i]->front == -1 ? "?" : to_string(drawList[i]->front);
                 result += Utility::padWithSpacesAfter(frontNr, 3);
             } else {

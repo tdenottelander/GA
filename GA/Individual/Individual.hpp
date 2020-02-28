@@ -26,7 +26,6 @@ public:
     std::vector<Individual*> dominationList;
     int front;
     float crowdingDistance;
-    bool canReproduce;
     
     Individual();
     Individual(int length, int objectives);

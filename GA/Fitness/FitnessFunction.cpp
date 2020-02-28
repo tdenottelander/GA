@@ -65,6 +65,7 @@ void FitnessFunction::clear(){
     distanceToParetoFrontData.clear();
     elitistArchiveJSON.clear();
     storeElitistArchiveCount = 0;
+    done = false;
 }
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
@@ -148,9 +149,8 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     }
     
     // Set bestIndividual only for SO-problems.
-    if(optimum.size() == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
+    if(numObjectives == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
         bestIndividual = ind.copy();
-//        cout << "this genotype: " << Utility::genotypeToString(ind.genotype) << "  opt genotype: " << Utility::genotypeToString(optimalGenotype) << endl;
     }
 }
 
@@ -168,7 +168,6 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
             
             // Delete every solution from the archive that is dominated by this solution.
             if(front[i]->dominates(elitistArchive[j])){
-//                cout << "Remove " + elitistArchive[j].toString() + " from Elitist Archive\n" << endl;
                 elitistArchive.erase(elitistArchive.begin() + j);
             }
             
@@ -181,24 +180,23 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
         if (addToArchive){
             elitistArchive.push_back(front[i]->copy());
-//            cout << "Add " + front[i]->toString() + " to Elitist Archive at eval=" << totalEvaluations << " and uniqEval=" << totalUniqueEvaluations << "\n" << endl;
             solutionsAdded = true;
         }
     }
     
     // Only check for convergence criteria if there are new solutions added to the elitist archive.
     if (solutionsAdded){
+        float distanceParetoToApproximation = -1;
+
         if(storeElitistArchive){
             elitistArchiveJSON["archive"][storeElitistArchiveCount] = elitistArchiveToJSON();
             elitistArchiveJSON["totalEvaluations"][storeElitistArchiveCount] = totalEvaluations;
             elitistArchiveJSON["uniqueEvaluations"][storeElitistArchiveCount] = totalUniqueEvaluations;
+            if(storeDistanceToParetoFrontOnElitistArchiveUpdate){
+                distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+                elitistArchiveJSON["distanceParetoToApproximation"][storeElitistArchiveCount] = distanceParetoToApproximation;
+            }
             storeElitistArchiveCount++;
-        }
-        
-        
-        float distanceParetoToApproximation = -1;
-        if (storeDistanceToParetoFrontOnElitistArchiveUpdate){
-            distanceParetoToApproximation = calculateDistanceParetoToApproximation();
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
