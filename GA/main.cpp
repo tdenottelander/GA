@@ -12,6 +12,7 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
+#include <Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
@@ -29,6 +30,7 @@
 #include "ARK5.hpp"
 #include "ARK6.hpp"
 #include "ARK7.hpp"
+#include "ARK_Online.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
@@ -112,6 +114,8 @@ void runNasbench(){
 //        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
+        FitnessFunction * fit = new ARK_Online();
+        
 //        FitnessFunction * fit = new ARK3();
         
 //        FitnessFunction * fit = new Trap(5, 5);
@@ -119,7 +123,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new LeadingOnes(20);
         
 //        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
-        FitnessFunction * fit = new LOTZ(problemSize);
+//        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(problemSize);
         fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
 //        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
@@ -258,6 +262,9 @@ void runNasbench(){
 }
 
 int main(int argc, const char * argv[]) {
+    
+    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
+    putenv( mypath );
     
     runNasbench();
     
