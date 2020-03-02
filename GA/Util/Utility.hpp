@@ -69,6 +69,7 @@ namespace Utility{
     float getAverage(std::vector<int> &vec);
     float EuclideanDistanceSquared(std::vector<float> vecA, std::vector<float> vecB);
     float EuclideanDistance(std::vector<float> vecA, std::vector<float> vecB);
+    bool isLogPoint(int value);
 }
 
 #endif /* Utility_hpp */

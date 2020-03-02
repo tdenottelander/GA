@@ -16,6 +16,7 @@ using namespace arma;
 
 /* ------------------------ Ordered array utility functions------------------------ */
 
+// Returns an specified ordered array of length n   (containing values [0, 1, ..., n-2, n-1])
 vector<int> Utility::getOrderedArray(int n, Order order){
     switch (order) {
         case Order::RANDOM:
@@ -49,6 +50,7 @@ string Utility::orderToString(Order order){
     }
 }
 
+// Returns a randomly permuted array of length n   (containing values [0, 1, ..., n-2, n-1])
 vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     vector<int> arr = Utility::getAscendingArray(n);
     
@@ -64,6 +66,7 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     return result;
 }
 
+// Returns an ascending array of length n   [0, 1, ..., n-2, n-1]
 vector<int> Utility::getAscendingArray(int n){
     vector<int> arr;
     arr.reserve(n);
@@ -72,6 +75,7 @@ vector<int> Utility::getAscendingArray(int n){
     return arr;
 }
 
+// Returns a descending array of length n   [n-1, n-2, ..., 1, 0]
 vector<int> Utility::getDescendingArray(int n){
     vector<int> arr;
     arr.reserve(n);
@@ -83,10 +87,12 @@ vector<int> Utility::getDescendingArray(int n){
 
 /* ------------------------ Random utility functions------------------------ */
 
+// Returns a uniformly random double between 0.0 and 1.0
 double Utility::getRand(){
     return dist(rng);
 }
 
+// Returns a uniformly random integer between begin (including) and end (excluding)
 int Utility::getRand(int begin, int end){
     return floor(begin + (end - begin) * getRand());
 }
@@ -191,6 +197,7 @@ void Utility::read(string filename){
 
 /* ------------------------ String utility functions------------------------ */
 
+// Converts a genotype in the form of an armadillo uvec to a string of concatenated integers
 string Utility::genotypeToString(arma::uvec &genotype){
     string result = "";
     for(int i : genotype)
@@ -198,6 +205,7 @@ string Utility::genotypeToString(arma::uvec &genotype){
     return result;
 }
 
+// Converts a string of integers to a genotype in the form of an armadillo uvec
 uvec Utility::stringToGenotype (string &genotype){
     int n = genotype.size();
     uvec result(n);
@@ -207,6 +215,7 @@ uvec Utility::stringToGenotype (string &genotype){
     return result;
 }
 
+// Converts a vector of floats to a string, seperating the floats by the specified [separator]
 string Utility::vecOfFloatsToString (vector<float> vec, string separator){
     string result = "";
     for (int i = 0; i < vec.size(); i++){
@@ -218,16 +227,19 @@ string Utility::vecOfFloatsToString (vector<float> vec, string separator){
     return result;
 }
 
+// Returns the target string with brackets around it
 string Utility::wrapWithBrackets (string str){
     return ("[" + str + "]");
 }
 
+// Returns the target string with zeros prepended, such that it is of length [length]
 string Utility:: padFrontWith0(string target, int length){
     int curLength = target.size();
     for (int i = 0; i < (length - curLength); i++) target = "0" + target;
     return target;
 }
 
+// Returns the target string with the last zeros removed
 string Utility::removeTrailingZeros(string target){
     int lastNonZero = target.size();
     for (int i = target.size() - 1; i >= 0; i--){
@@ -239,6 +251,7 @@ string Utility::removeTrailingZeros(string target){
     return target.substr(0, lastNonZero + 1);
 }
 
+// Returns the target string with spaces appended after it, such that it is of length [length]
 string Utility::padWithSpacesAfter(string target, int length){
     int n = target.size();
     for (int i = 0; i < length - n; i++)
@@ -287,4 +300,16 @@ float Utility::EuclideanDistanceSquared(vector<float> vecA, vector<float> vecB){
 
 float Utility::EuclideanDistance(vector<float> vecA, vector<float> vecB){
     return sqrt(EuclideanDistanceSquared(vecA, vecB));
+}
+
+// Returns true if evaluations is a point on a log10 scale.
+// (So return true if evaluations = 1, 2, 3, 10, 20, 30, 100, 200, 1000, 2000, ...
+//   and return false if evaluations = 11, 101, 1001, 10001, 10002, 10003, ...)
+bool Utility::isLogPoint(int value){
+    for (int i = 1; i < 15; i++){
+        if (value <= pow(10, i)){
+            return value % (int)pow(10, i-1) == 0;
+        }
+    }
+    return false;
 }
