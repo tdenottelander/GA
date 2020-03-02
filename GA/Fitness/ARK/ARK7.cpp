@@ -22,7 +22,7 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
             filename += "_MO";
         }
         filename += ARK_Analysis_suffix + ".json";
-        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " results from " + filename + ". This may take a while." << endl;
+        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " results from " + filename + ". This may take a while.... ";
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "ERROR: cannot read results." << endl;
@@ -37,7 +37,7 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
         setNumObjectives(2);
         
         string filename = folderPrefix + folder + "/pareto.json";
-        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " pareto results from " + filename + "." << endl;
+        cout << "Reading in ARK-7" + ARK_Analysis_suffix + " pareto results from " + filename + ".... ";
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "ERROR: cannot read pareto file." << endl;
@@ -47,6 +47,7 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
             for (int i = 0; i < paretoInformation.size(); i++){
                 trueParetoFront.push_back(paretoInformation[i]);
             }
+            cout << "Done loading ARK-7 Pareto results" << endl;
         }
         optimalParetoFrontSize = trueParetoFront.size();
     }

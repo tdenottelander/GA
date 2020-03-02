@@ -73,30 +73,53 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
 //    cout << "Evaluating " << ind.toString() << "at eval=" << totalEvaluations << " and uniqEval=" << totalUniqueEvaluations << endl;
     checkIfBestFound(ind);
     totalEvaluations++;
-//    float roundedFitness = roundf(bestIndividual.fitness * 10) / 10;  // Rounds to 3 decimal places
-    float roundedFitness = bestIndividual.fitness[0];
     
-    if(storeAbsoluteConvergence){
-        convergence["absolute"].push_back(roundedFitness);
-    }
-    
-    if(storeUniqueConvergence && !uniqueSolutions.contains(ind.genotype)){
-        uniqueSolutions.put(ind.genotype);
-        totalUniqueEvaluations++;
-        convergence["unique"].push_back(roundedFitness);
-    }
-    
-    if(storeTransformedUniqueConvergence){
-        uvec transformedGenotype = transform(ind.genotype);
-        if (!transformedUniqueSolutions.contains(transformedGenotype)){
-            transformedUniqueSolutions.put(transformedGenotype);
-            totalTransformedUniqueEvaluations++;
-            convergence["transformedUnique"].push_back(roundedFitness);
+    // Do this stuff only if it is a MO-problem.
+    if(numObjectives > 1){
+        
+        // Update the elitist archive
+        if(updateElitistArchiveOnEveryEvaluation){
+            updateElitistArchive(ind);
+        }
+        
+        // Store the distance of the front to the approximation on every log10 interval.
+        if(Utility::isLogPoint(totalEvaluations)){
+            elitistArchiveJSON["logIntervalEvaluationsDistance"].push_back(calculateDistanceParetoToApproximation());
         }
     }
     
-    if(updateElitistArchiveOnEveryEvaluation){
-        updateElitistArchive(ind);
+    // Do this stuff only if it is a SO-problem
+    if (numObjectives == 1){
+        
+        // Store the best fitness found so far
+        if(storeAbsoluteConvergence){
+            convergence["absolute"].push_back(bestIndividual.fitness[0]);
+        }
+        
+        if(storeTransformedUniqueConvergence){
+            uvec transformedGenotype = transform(ind.genotype);
+            if (!transformedUniqueSolutions.contains(transformedGenotype)){
+                transformedUniqueSolutions.put(transformedGenotype);
+                totalTransformedUniqueEvaluations++;
+                convergence["transformedUnique"].push_back(bestIndividual.fitness[0]);
+            }
+        }
+    }
+    
+    // Do stuff based on whether this is a new unique evaluation
+    if(!uniqueSolutions.contains(ind.genotype)){
+        uniqueSolutions.put(ind.genotype);
+        totalUniqueEvaluations++;
+        
+        // Store unique convergence only for SO-problems
+        if(numObjectives == 1 && storeUniqueConvergence){
+            convergence["unique"].push_back(bestIndividual.fitness[0]);
+        }
+        
+        // Store distance front to approximation only if MO-problem and if unique evaluations is on a log10 interval.
+        if(numObjectives > 1 && Utility::isLogPoint(totalUniqueEvaluations)){
+            elitistArchiveJSON["logIntervalUniqueEvaluationsDistance"].push_back(calculateDistanceParetoToApproximation());
+        }
     }
 }
 
@@ -186,15 +209,16 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
     
     // Only check for convergence criteria if there are new solutions added to the elitist archive.
     if (solutionsAdded){
-        float distanceParetoToApproximation = -1;
+        pair<float, float> avg_max_distance = {-1, -1};
 
         if(storeElitistArchive){
             elitistArchiveJSON["archive"][storeElitistArchiveCount] = elitistArchiveToJSON();
             elitistArchiveJSON["totalEvaluations"][storeElitistArchiveCount] = totalEvaluations;
             elitistArchiveJSON["uniqueEvaluations"][storeElitistArchiveCount] = totalUniqueEvaluations;
             if(storeDistanceToParetoFrontOnElitistArchiveUpdate){
-                distanceParetoToApproximation = calculateDistanceParetoToApproximation();
-                elitistArchiveJSON["distanceParetoToApproximation"][storeElitistArchiveCount] = distanceParetoToApproximation;
+                avg_max_distance = calculateDistanceParetoToApproximation();
+                elitistArchiveJSON["avgDistanceParetoToApproximation"][storeElitistArchiveCount] = avg_max_distance.first;
+                elitistArchiveJSON["maxDistanceParetoToApproximation"][storeElitistArchiveCount] = avg_max_distance.second;
             }
             storeElitistArchiveCount++;
         }
@@ -205,22 +229,22 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
                 if(entireParetoFrontFound()){
                     optimumFound = true;
                 }
-            // Else, compute the distance to the front approximation and check if it is 0. (in fact if it is < 0.000001).
+            // Else, compute the avg distance of front to approximation and check if it is 0. (in fact if it is < 0.000001).
             } else {
-                if (distanceParetoToApproximation == -1)
-                    distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+                if (avg_max_distance.first == -1)
+                    avg_max_distance = calculateDistanceParetoToApproximation();
                 
-                if (distanceParetoToApproximation < 0.000001){
+                if (avg_max_distance.first < 0.000001){
                     optimumFound = true;
                 }
             }
         }
         
         else if (convergenceCriteria == ConvergenceCriteria::EPSILON_PARETO_DISTANCE){
-            if (distanceParetoToApproximation == -1)
-                distanceParetoToApproximation = calculateDistanceParetoToApproximation();
+            if (avg_max_distance.first == -1)
+                avg_max_distance = calculateDistanceParetoToApproximation();
             
-            if (distanceParetoToApproximation <= epsilon){
+            if (avg_max_distance.first <= epsilon){
                 optimumFound = true;
             }
         }
@@ -260,18 +284,22 @@ bool FitnessFunction::updateElitistArchive(Individual &ind){
 }
 
 // The elitist archive is used as approximation
-float FitnessFunction::calculateDistanceParetoToApproximation(){
+// Returns two values in the pair:
+//  value 1:  the average of the distances from the points on the true pareto to the closest point in the elitist archive
+//  value 2:  the maximum of the distances from the points on the true pareto to the closest point in the elitist archive
+pair<float, float> FitnessFunction::calculateDistanceParetoToApproximation(){
     if (trueParetoFront.size() == 0){
         cout << "ERROR: Wanted to calculate distance of pareto to approximation, but true Pareto front is unknown" << endl;
         storeDistanceToParetoFrontOnElitistArchiveUpdate = false;
-        return -1.0f;
+        return {-1.0f, -1.0f};
     }
     
     if (elitistArchive.size() == 0){
-        return INFINITY;
+        return {INFINITY, INFINITY};
     }
     
-    float sum = 0.0f;
+    float summedDistance = 0.0f;
+    float maxDistance = 0.0f;
     
     for (int i = 0; i < trueParetoFront.size(); i++){
         float minimalDistance = INFINITY;
@@ -284,12 +312,13 @@ float FitnessFunction::calculateDistanceParetoToApproximation(){
                 }
             }
         }
-        sum += minimalDistance;
+        summedDistance += minimalDistance;
+        maxDistance = max(maxDistance, minimalDistance);
     }
     
-    float calculatedDistance = sum / trueParetoFront.size();
-    distanceToParetoFrontData.push_back(tuple<int, int, float>{totalEvaluations, totalUniqueEvaluations, calculatedDistance});
-    return calculatedDistance;
+    float avgDistance = summedDistance / trueParetoFront.size();
+    distanceToParetoFrontData.push_back(tuple<int, int, float>{totalEvaluations, totalUniqueEvaluations, avgDistance});
+    return {avgDistance, maxDistance};
 }
 
 json FitnessFunction::paretoDistanceToJSON(){

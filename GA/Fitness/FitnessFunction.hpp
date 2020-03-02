@@ -67,7 +67,7 @@ public:
     bool updateElitistArchive(std::vector<Individual> &front);
     bool updateElitistArchive(Individual &ind);
     virtual bool entireParetoFrontFound ();
-    float calculateDistanceParetoToApproximation ();
+    std::pair<float, float> calculateDistanceParetoToApproximation ();
     nlohmann::json paretoDistanceToJSON ();
     nlohmann::json elitistArchiveHistoryToJSON();
     void setGenotypeChecking(arma::uvec genotype);
