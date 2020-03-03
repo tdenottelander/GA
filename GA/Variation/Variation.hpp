@@ -50,6 +50,31 @@ public:
     std::string id() override;
 };
 
+class ThreePointCrossover : public Variation {
+public:
+    ThreePointCrossover();
+    std::pair<Individual, Individual> crossover(Individual &ind1, Individual &ind2) override;
+    void display() override;
+    std::string id() override;
+};
+
+class FOSCrossover : public Variation {
+public:
+    FOSCrossover(FOS &fos);
+    FOS *fosObject;
+    std::pair<Individual, Individual> crossover(Individual &ind1, Individual &ind2) override;
+    void display() override;
+    std::string id() override;
+};
+
+class ARK6_Crossover : public Variation {
+public:
+    ARK6_Crossover();
+    std::pair<Individual, Individual> crossover(Individual &ind1, Individual &ind2) override;
+    void display() override;
+    std::string id() override;
+};
+
 class GOM_Variation : public Variation {
 public:
     FitnessFunction *fitfunc;

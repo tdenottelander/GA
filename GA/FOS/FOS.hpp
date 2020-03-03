@@ -18,7 +18,8 @@
 class FOS {
 public:
     bool reinitializeOnNewRound;
-    virtual std::vector<arma::uvec> getFOS (std::vector<Individual> &population) = 0;
+    virtual std::vector<arma::uvec> getFOS (std::vector<Individual> &population);
+    virtual std::vector<arma::uvec> getFOS (int genotypeLength) = 0;
     virtual std::string id();
     virtual std::string toString();
 };
@@ -26,7 +27,7 @@ public:
 class IncrementalLT_FOS : public FOS {
 public:
     IncrementalLT_FOS();
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -34,7 +35,7 @@ public:
 class IncrementalLTReversed_FOS : public FOS {
 public:
     IncrementalLTReversed_FOS();
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -42,7 +43,7 @@ public:
 class IncrementalLT_UnivariateOrdered_FOS : public FOS {
 public:
     IncrementalLT_UnivariateOrdered_FOS();
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -50,7 +51,7 @@ public:
 class IncrementalLTReversed_UnivariateOrdered_FOS : public FOS {
 public:
     IncrementalLTReversed_UnivariateOrdered_FOS();
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -58,7 +59,7 @@ public:
 class IncrementalLTReversed_Univariate_FOS : public FOS {
 public:
     IncrementalLTReversed_Univariate_FOS();
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLengthn) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -67,7 +68,7 @@ class Univariate_FOS : public FOS {
 public:
     Univariate_FOS(Utility::Order order);
     Utility::Order order;
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -76,7 +77,7 @@ class Triplet_FOS : public FOS {
 public:
     Triplet_FOS(Utility::Order order);
     Utility::Order order;
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -85,7 +86,7 @@ class TripletTree_FOS : public FOS {
 public:
     TripletTree_FOS(Utility::Order order = Utility::Order::ASCENDING);
     Utility::Order order;
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };
@@ -94,7 +95,7 @@ class ARK6_FOS : public FOS {
 public:
     ARK6_FOS(Utility::Order order);
     Utility::Order order;
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
 };

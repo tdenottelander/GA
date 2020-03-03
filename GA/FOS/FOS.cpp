@@ -13,6 +13,9 @@ using namespace arma;
 
 /* ------------------------ Base class FOS ------------------------ */
 
+vector<uvec> FOS::getFOS (vector<Individual> &population){
+    return getFOS(population[0].genotype.size());
+}
 string FOS::id(){ return "base FOS"; }
 string FOS::toString() { return "baseFOS"; }
 
@@ -23,8 +26,8 @@ IncrementalLT_FOS::IncrementalLT_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getIncrementalLT_FOS(population[0].genotype.size());
+vector<uvec> IncrementalLT_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getIncrementalLT_FOS(genotypeLength);
 }
 string IncrementalLT_FOS::id(){ return "incrLT-asc"; }
 string IncrementalLT_FOS::toString() { return "Ascending Incremental Linkage Tree FOS"; }
@@ -36,8 +39,8 @@ IncrementalLTReversed_FOS::IncrementalLTReversed_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLTReversed_FOS::getFOS(std::vector<Individual> &population){
-    return FOSStructures::getIncrementalLTReversed_FOS(population[0].genotype.size());
+vector<uvec> IncrementalLTReversed_FOS::getFOS(int genotypeLength){
+    return FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
 }
 string IncrementalLTReversed_FOS::id(){ return "incrLT-desc"; }
 string IncrementalLTReversed_FOS::toString() { return "Descending Incremental Linkage Tree FOS"; }
@@ -49,12 +52,11 @@ IncrementalLT_UnivariateOrdered_FOS::IncrementalLT_UnivariateOrdered_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_UnivariateOrdered_FOS::getFOS (vector<Individual> &population){
-    int n = population[0].genotype.size();
+vector<uvec> IncrementalLT_UnivariateOrdered_FOS::getFOS (int genotypeLength){
     vector<uvec> fos;
-    fos.reserve(2 * n);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLT_FOS(n);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::ASCENDING);
+    fos.reserve(2 * genotypeLength);
+    vector<uvec> fixedLT = FOSStructures::getIncrementalLT_FOS(genotypeLength);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -69,12 +71,11 @@ IncrementalLTReversed_UnivariateOrdered_FOS::IncrementalLTReversed_UnivariateOrd
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLTReversed_UnivariateOrdered_FOS::getFOS (vector<Individual> &population){
-    int n = population[0].genotype.size();
+vector<uvec> IncrementalLTReversed_UnivariateOrdered_FOS::getFOS (int genotypeLength){
     vector<uvec> fos;
-    fos.reserve(2 * n);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(n);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::ASCENDING);
+    fos.reserve(2 * genotypeLength);
+    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -89,12 +90,11 @@ IncrementalLTReversed_Univariate_FOS::IncrementalLTReversed_Univariate_FOS(){
     reinitializeOnNewRound = true;
 }
 
-vector<uvec> IncrementalLTReversed_Univariate_FOS::getFOS (vector<Individual> &population){
-    int n = population[0].genotype.size();
+vector<uvec> IncrementalLTReversed_Univariate_FOS::getFOS (int genotypeLength){
     vector<uvec> fos;
-    fos.reserve(2 * n);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(n);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(n, Utility::Order::RANDOM);
+    fos.reserve(2 * genotypeLength);
+    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
+    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::RANDOM);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -113,8 +113,8 @@ Univariate_FOS::Univariate_FOS(Utility::Order order) : order(order){
     }
 }
 
-vector<uvec> Univariate_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getUnivariate_FOS(population[0].genotype.size(), order);
+vector<uvec> Univariate_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getUnivariate_FOS(genotypeLength, order);
 }
 
 string Univariate_FOS::id() { return "Uni-" + Utility::orderToID(order); }
@@ -127,8 +127,8 @@ Triplet_FOS::Triplet_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> Triplet_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getTriplet_FOS(population[0].genotype.size(), order);
+vector<uvec> Triplet_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getTriplet_FOS(genotypeLength, order);
 }
 
 string Triplet_FOS::id() { return "Triplet-" + Utility::orderToID(order); }
@@ -141,8 +141,8 @@ TripletTree_FOS::TripletTree_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> TripletTree_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getTripletTree_FOS(population[0].genotype.size(), order);
+vector<uvec> TripletTree_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getTripletTree_FOS(genotypeLength, order);
 }
 
 string TripletTree_FOS::id() { return "TripletTree-" + Utility::orderToID(order); }
@@ -157,8 +157,8 @@ ARK6_FOS::ARK6_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> ARK6_FOS::getFOS (vector<Individual> &population){
-    return FOSStructures::getARK6_FOS(population[0].genotype.size(), order);
+vector<uvec> ARK6_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getARK6_FOS(genotypeLength, order);
 }
 
 string ARK6_FOS::id() { return "ARK6-" + Utility::orderToID(order); }

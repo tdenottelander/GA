@@ -101,11 +101,11 @@ void OnePointCrossover::display() {
 }
 
 string OnePointCrossover::id() {
-    return "op";
+    return "1p";
 }
 
 
-/* ------------------------ OnePoint Crossover Variation ------------------------ */
+/* ------------------------ TwoPoint Crossover Variation ------------------------ */
 
 TwoPointCrossover::TwoPointCrossover(){}
 
@@ -132,7 +132,121 @@ void TwoPointCrossover::display() {
 }
 
 string TwoPointCrossover::id() {
-    return "tp";
+    return "2p";
+}
+
+
+/* ------------------------ TwoPoint Crossover Variation ------------------------ */
+
+ThreePointCrossover::ThreePointCrossover(){}
+
+pair<Individual, Individual> ThreePointCrossover::crossover(Individual &ind1, Individual &ind2){
+    Individual newInd1 = ind1.copy();
+    Individual newInd2 = ind2.copy();
+
+    int genotypeLength = ind1.genotype.size();
+    vector<int> indices;
+    for (int i = 0; i < 3; i++){
+        int index = floor(getRand() * genotypeLength);
+        indices.push_back(index);
+    }
+    
+    sort(indices.begin(), indices.end());
+    
+    bool swap = false;
+    int swapIdx = 0;
+    for (int i = 0; i < genotypeLength; i++){
+        while(indices[swapIdx] == i){
+            swap = !swap;
+            swapIdx++;
+        }
+        
+        if(swap){
+            newInd1.genotype[i] = ind2.genotype[i];
+            newInd2.genotype[i] = ind1.genotype[i];
+        }
+    }
+    
+    pair<Individual, Individual> result(newInd1, newInd2);
+    return result;
+}
+
+void ThreePointCrossover::display() {
+    cout << "ThreePoint Crossover" << endl;
+}
+
+string ThreePointCrossover::id() {
+    return "3p";
+}
+
+
+/* ------------------------ FOS Crossover ------------------------ */
+// This crossover loops through the FOS and exchanges the genes of each FOS-element by a 50/50 chance.
+// Therefore, overlapping FOS elements may cause genes to be exchanged twice, hence the genes returning to the original state
+
+FOSCrossover::FOSCrossover(FOS &fos) : fosObject(&fos){}
+
+pair<Individual, Individual> FOSCrossover::crossover(Individual &ind1, Individual &ind2){
+    Individual newInd1 = ind1.copy();
+    Individual newInd2 = ind2.copy();
+    
+    int genotypeLength = ind1.genotype.size();
+    vector<uvec> fos = fosObject->getFOS(genotypeLength);
+    
+    for (int i = 0; i < fos.size(); i++){
+        bool swap = getRand() > 0.5;
+        if (swap){
+            for (int j = 0; j < fos[i].size(); j++){
+                int swapIndex = fos[i][j];
+                int temp = newInd1.genotype[swapIndex];
+                newInd1.genotype[swapIndex] = newInd2.genotype[swapIndex];
+                newInd2.genotype[swapIndex] = temp;
+            }
+        }
+    }
+    
+    pair<Individual, Individual> result(newInd1, newInd2);
+    return result;
+}
+
+void FOSCrossover::display() {
+    cout << "FOS Crossover" << endl;
+}
+
+string FOSCrossover::id() {
+    return "fos";
+}
+
+
+/* ------------------------ ARk-6 Crossover ------------------------ */
+// Does one-point crossover, but the pivot is chosen to be one of the maxpooling positions.
+
+ARK6_Crossover::ARK6_Crossover(){}
+
+pair<Individual, Individual> ARK6_Crossover::crossover(Individual &ind1, Individual &ind2){
+    Individual newInd1 = ind1.copy();
+    Individual newInd2 = ind2.copy();
+    
+    vector<int> possibleSwapIndices = {4, 8, 12};
+    int randIdx = getRand(0, possibleSwapIndices.size());
+    int swapIndex = possibleSwapIndices[randIdx];
+    
+    for (int i = 0; i < swapIndex; i++){
+        newInd1.genotype[i] = ind2.genotype[i];
+        newInd2.genotype[i] = ind1.genotype[i];
+    }
+    
+    pair<Individual, Individual> result(newInd1, newInd2);
+    
+    return result;
+}
+
+void ARK6_Crossover::display() {
+    cout << "ARK-6 Crossover" << endl;
+}
+
+string ARK6_Crossover::id() {
+    return "ark6xo";
 }
 
 

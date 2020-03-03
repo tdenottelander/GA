@@ -142,7 +142,7 @@ void NSGA_II::CrowdingDistanceSorting (vector<Individual*> &front){
 //        cout << "INDICES SORTED: " << endl;
 //        for (int i = 0; i < front.size(); i++) cout << indices[i] << endl;
         
-        //Comment this line below to match the original implementation by Deb.
+        //Comment out this line below to match the original implementation by Deb.
         front[indices[0]]->crowdingDistance = INFINITY;
         front[indices[indices.size()-1]]->crowdingDistance = INFINITY;
         
@@ -285,7 +285,7 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
     childPop.reserve(populationSize);
 
     if (populationSize % 4 != 0){
-        cout << "Consider setting the population size to a multiple of 4.";
+//        cout << "Consider setting the population size to a multiple of 4." << endl;
     }
     
     int index = 0;
@@ -356,7 +356,7 @@ GA* NSGA_II::clone() const {
 }
 
 string NSGA_II::id(){
-    return "NSGA-II";
+    return "NSGA-II_xo=" + variation_ptr->id();
 }
 
 void NSGA_II::draw2DVisualization(vector<Individual> &population, int maxX, int maxY){
