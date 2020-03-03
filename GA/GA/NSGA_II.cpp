@@ -293,6 +293,7 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
     for (int i = 0; i < populationSize; i+=2){
         if (index+3 >= populationSize){
             randIdxArray = Utility::getOrderedArray(populationSize, Utility::Order::RANDOM);
+            index = 0;
         }
 
         // Apply tournament selection with size 2
@@ -306,6 +307,8 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
         if (i+1 < populationSize){
             childPop.push_back(offspring.second);
         }
+        
+        index += 4;
     }
 
     return childPop;
