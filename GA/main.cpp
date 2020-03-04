@@ -12,7 +12,6 @@
 #include <iostream>
 #include <armadillo>
 #include <nlohmann/json.hpp>
-#include <Python.h>
 #include "Individual.hpp"
 #include "Selection.hpp"
 #include "Variation.hpp"
@@ -51,7 +50,10 @@
 #include "LocalSearchAnalysis.hpp"
 
 // Include for the original NSGA-II implementation.
-#include "global.h"
+//#include "global.h"
+
+// Include for MO-GOMEA
+#include "MO_GOMEA.hpp"
 
 using namespace std;
 using namespace arma;
@@ -277,7 +279,9 @@ int main(int argc, const char * argv[]) {
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
     putenv( mypath );
     
-    runNasbench();
+//    runNasbench();
+    
+    MO_GOMEA().main_MO_GOMEA(argc, argv);
     
 //    rng = mt19937(millis());
 //    float seed = 0;
