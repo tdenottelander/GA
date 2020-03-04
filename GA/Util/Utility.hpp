@@ -70,6 +70,7 @@ namespace Utility{
     float EuclideanDistanceSquared(std::vector<float> vecA, std::vector<float> vecB);
     float EuclideanDistance(std::vector<float> vecA, std::vector<float> vecB);
     bool isLogPoint(int value);
+    bool isLinearPoint(int value, int interval);
 }
 
 #endif /* Utility_hpp */

@@ -21,6 +21,7 @@
 #include "ZeroMaxOneMax.hpp"
 #include "LOTZ.hpp"
 #include "TrapInverseTrap.hpp"
+#include "MAXCUT.hpp"
 #include "NK.hpp"
 #include "ARK.hpp"
 #include "ARK1.hpp"
@@ -76,6 +77,8 @@ bool storeTransformedUniqueConvergence = false;
 bool storeDistanceToParetoFrontOnElitistArchiveUpdate = true;
 bool storeElitistArchive = true;
 bool updateElitistArchiveOnEveryEvaluation = true;
+int storeParetoDistanceMode = 1; // 0 = on a log10 scale, 1 = linear scale
+int storeParetoDistanceLinearInterval = 5000;
 std::string ARK_Analysis_suffix = "";
 
 void runNasbench(){
@@ -84,12 +87,12 @@ void runNasbench(){
     int maxRounds = -1;
     int maxSeconds = -1;
     int maxPopSizeLevel = 500;
-    int maxEvaluations = 1000000; //10000
+    int maxEvaluations = 155000; //10000
     int maxUniqueEvaluations = -1;
     int interval = 4;
-    int repetitions = 100; //100
+    int repetitions = 20; //100
     bool IMS = false;
-    int nonIMSPopsize = 4;
+    int nonIMSPopsize = 40;
     
     int minProblemSize = 25;
     int maxProblemSize = 25;
@@ -114,7 +117,7 @@ void runNasbench(){
 //        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
-        FitnessFunction * fit = new ARK_Online();
+//        FitnessFunction * fit = new ARK_Online();
         
 //        FitnessFunction * fit = new ARK3();
         
@@ -125,9 +128,10 @@ void runNasbench(){
 //        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(problemSize);
-        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-//        fit->epsilon = 0.00001;
+        FitnessFunction * fit = new MAXCUT(problemSize);
+//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+        fit->epsilon = 0.00001;
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -139,6 +143,7 @@ void runNasbench(){
         
         bool forcedImprovement = true;
         vector<GA*> gaList = {
+            // ------------- SINGLE OBJECTIVE ALGORITHMS -------------
 //            new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
 //            new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
 //            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
@@ -176,10 +181,17 @@ void runNasbench(){
 
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
 //            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+            
 
-            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true, false),
-//            new MO_LS(fit, Utility::Order::RANDOM, 10000),
-//            new MO_RS(fit)
+            // ------------- MULTI OBJECTIVE ALGORITHMS -------------
+            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true),
+//            new MO_LS(fit, Utility::Order::RANDOM, 1000000),
+//            new MO_RS(fit),
+            
+//            new NSGA_II(fit, new ARK6_Crossover(), 0.9, true),
+//            new NSGA_II(fit, new UnivariateCrossover(), 0.9, true),
+//            new NSGA_II(fit, new ThreePointCrossover(), 0.9, true),
+//            new NSGA_II(fit, new OnePointCrossover(), 0.9, true)
         };
         
         string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
@@ -187,13 +199,12 @@ void runNasbench(){
         json experiments;
         for(GA* ga : gaList){
             string gaID = ga->id();
-//            cout << gaID << endl;
             if (!IMS){
                 if (nonIMSPopsize < 0){
                     nonIMSPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
                     cout << "Needed popsize = " << nonIMSPopsize << endl;
                 }
-                gaID += ("_FixedPop");
+                gaID += ("_pop=" + to_string(nonIMSPopsize));
             }
             
             bool exceeded = false;

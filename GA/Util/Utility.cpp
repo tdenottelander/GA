@@ -313,3 +313,10 @@ bool Utility::isLogPoint(int value){
     }
     return false;
 }
+
+// Returns true if evaluations is a point on the linear scale with intervals of size [interval].
+// (So return true if interval = 10 and evaluations = 0, 10, 20, 30, ..., 100, 110, 120, ..., 100000, 100010, ...
+//   and return false if interval = 10 and evaluations = 1, 2, ..., 11, 12, ..., 100001, 100002, ...
+bool Utility::isLinearPoint(int value, int interval){
+    return value % interval == 0;
+}
