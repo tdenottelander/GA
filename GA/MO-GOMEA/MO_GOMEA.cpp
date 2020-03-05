@@ -1,5 +1,10 @@
 #include "MO_GOMEA.hpp"
 
+using namespace std;
+using namespace arma;
+
+extern FitnessFunction* fit_global;
+
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 #define FALSE 0
 #define TRUE 1
@@ -14,6 +19,7 @@
 #define KNAPSACK 2
 #define LOTZ 3
 #define MAXCUTT 4
+#define ARK 5
 /*-=-=-=-=-=-=-=-=-=-=-=-= Section Utility Function -=-=-=-=-=-=-=-=-=-=-=-*/
 /**
  * Allocates memory and exits the program in case of a memory allocation failure.
@@ -296,7 +302,7 @@ void MO_GOMEA::parseParameters( int argc, const char **argv, int *index )
 {
     int noError;
 
-    if( (argc - *index) != 6 )
+    if( (argc - *index) < 6 )
     {
         printf("Number of parameters is incorrect, require 6 parameters (you provided %d).\n\n", (argc - *index));
         printUsage();
@@ -399,6 +405,7 @@ void MO_GOMEA::evaluateIndividual(char *solution, double *obj, double *con, int 
         case LOTZ: lotzProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         case KNAPSACK: knapsackProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         case MAXCUTT: maxcutProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
+        case ARK: arkProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         default:
             printf("Cannot evaluate this problem!\n");
             exit(1);
@@ -417,7 +424,8 @@ char *MO_GOMEA::installedProblemName( int index )
         case  TRAP5:            return( (char *) "Deceptive Trap 5 - Inverse Trap 5 - Tight Encoding" );
         case  KNAPSACK:         return( (char *) "Knapsack - 2 Objectives");
         case  LOTZ:             return( (char *) "Leading One Trailing Zero (LOTZ)");
-        case  MAXCUTT:           return( (char *) "Maxcut - 2 Objectives");
+        case  MAXCUTT:          return( (char *) "Maxcut - 2 Objectives");
+        case  ARK:              return( (char *) "ARK/Custom");
     }
     return( NULL );
 }
@@ -926,6 +934,32 @@ void MO_GOMEA::maxcutProblemEvaluation( char *solution, double *obj_values, doub
     }
 }
 
+void MO_GOMEA::arkLoadProblemData()
+{
+    optimization = (char*)Malloc(number_of_objectives*sizeof(char));
+    for(int k = 0; k < number_of_objectives; k++)
+        optimization[k] = MAXIMIZATION;
+}
+
+void MO_GOMEA::arkProblemEvaluation(char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster)
+{
+    *con_value = 0;
+    
+    // Create an individual and copy contents of solution to individual's genotype
+    Individual ind(number_of_parameters, number_of_objectives);
+    for(int i = 0; i < number_of_parameters; i++)
+        ind.genotype[i] = solution[i];
+    
+    // Evaluate the individual
+    vector<float> fitness = fit_global->evaluate(ind);
+//    cout << ind.toString() << endl;
+    
+    // Set the objective values from the evaluated fitness
+    for(int k = 0; k < number_of_objectives; k++)
+        obj_values[k] = fitness[k];
+}
+
+
 double **MO_GOMEA::getDefaultFrontOnemaxZeromax( int *default_front_size )
 {
     int  i;
@@ -1051,7 +1085,7 @@ double MO_GOMEA::computeDPFSMetric( double **default_front, int default_front_si
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=- Tracking Progress =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 /**
  * Writes (appends) statistics about the current generation to a
- * file named "statistics.dat".
+ * file named "statistics.txt".
  */
 void MO_GOMEA::writeGenerationalStatistics( void )
 {
@@ -1063,13 +1097,13 @@ void MO_GOMEA::writeGenerationalStatistics( void )
     if(( number_of_generations == 0 && population_id == 0) ||
         (number_of_generations == 0 && population_id == -1))
     {
-        file = fopen( "statistics.dat", "w" );
+        file = fopen( "statistics.txt", "w" );
 
         sprintf( string, "# Generation  Population  Evaluations   [ Cluster_Index ]\n");
         fputs( string, file );
     }
     else
-        file = fopen( "statistics.dat", "a" );
+        file = fopen( "statistics.txt", "a" );
 
     sprintf( string, "  %10d %10d %11d     [ ", number_of_generations, population_size, number_of_evaluations );
     fputs( string, file );
@@ -1100,9 +1134,9 @@ void MO_GOMEA::writeCurrentElitistArchive( char final )
 
     /* Elitist archive */
     if( final )
-        sprintf( string, "elitist_archive_generation_final.dat" );
+        sprintf( string, "elitist_archive_generation_final.txt" );
     else
-        sprintf( string, "elitist_archive_at_evaluation_%d.dat", number_of_evaluations );
+        sprintf( string, "elitist_archive_at_evaluation_%d.txt", number_of_evaluations );
     file = fopen( string, "w" );
 
     for( i = 0; i < elitist_archive_size; i++ )
@@ -1202,7 +1236,7 @@ void MO_GOMEA::logNumberOfEvaluationsAtVTR()
         default_front          = getDefaultFront( &default_front_size );
         metric_elitist_archive = computeDPFSMetric( default_front, default_front_size, elitist_archive_objective_values, elitist_archive_size );
 
-        sprintf(string, "number_of_evaluations_when_all_points_found_%d.dat", number_of_parameters);
+        sprintf(string, "number_of_evaluations_when_all_points_found_%d.txt", number_of_parameters);
         file = fopen(string, "a");
         if( metric_elitist_archive <= vtr )
         {
@@ -1860,6 +1894,32 @@ short MO_GOMEA::weaklyParetoDominates( double *objective_values_x, double *objec
     return( result );
 }
 /*-=-=-=-=-=-=-=-=-=-=-=-=-= Linkage Tree Learning -==-=-=-=-=-=-=-=-=-=-=*/
+
+/**
+ * Assigns the values of the fos elements to the correct variables used by MO-GOMEA
+ */
+void MO_GOMEA::assignLinkageTreeVariables(vector<uvec> fos, int cluster_index){
+    if( lt[cluster_index] != NULL )
+    {
+        for(int i = 0; i < lt_length[cluster_index]; i++ )
+            free( lt[cluster_index][i] );
+        free( lt[cluster_index] );
+        free( lt_number_of_indices[cluster_index] );
+    }
+    lt[cluster_index]                   = (int **) Malloc( (fos.size())*sizeof( int * ) );
+    lt_number_of_indices[cluster_index] = (int *) Malloc( (fos.size())*sizeof( int ) );
+    lt_length[cluster_index]            = fos.size();
+    
+    for (int i = 0; i < fos.size(); i++){
+        lt_number_of_indices[cluster_index][i] = fos[i].size();
+        lt[cluster_index][i] = (int *) Malloc( (fos.size())*sizeof( int) );
+        for(int j = 0; j < fos[i].size(); j++){
+            lt[cluster_index][i][j] = fos[i][j];
+        }
+    }
+}
+
+
 /**
  * Learn the linkage for a cluster (subpopulation).
  */
@@ -2216,8 +2276,9 @@ void MO_GOMEA::initializePopulationAndFitnessValues()
     int i, j;
     for( i = 0; i < population_size; i++ )
     {
-        for( j = 0; j < number_of_parameters; j++ )
-            population[i][j] = (randomInt( 2 ) == 1) ? TRUE : FALSE;
+        for( j = 0; j < number_of_parameters; j++ ){
+            population[i][j] = fit_global->problemType->alphabet[Utility::getRand(0, fit_global->problemType->alphabet.size())];
+        }
         evaluateIndividual( population[i], objective_values[i],  &(constraint_values[i]), NOT_EXTREME_CLUSTER );
         updateElitistArchive( population[i], objective_values[i], constraint_values[i]);    
     }
@@ -2250,7 +2311,8 @@ void MO_GOMEA::computeObjectiveRanges( void )
 
 void MO_GOMEA::learnLinkageOnCurrentPopulation()
 {
-    int i, j, k, size_of_one_cluster;
+    int cluster_index, j, k, g, size_of_one_cluster;
+    char *solution;
 
     initializeClusters();
 
@@ -2262,10 +2324,35 @@ void MO_GOMEA::learnLinkageOnCurrentPopulation()
 
     // find extreme-region clusters
     determineExtremeClusters();
+    
+    LearnedLT_FOS learnedLTFOS (fit_global->problemType);
 
     // learn linkage tree for every cluster
-    for( i = 0; i < number_of_mixing_components; i++ )
-        learnLinkageTree( i );
+    for( cluster_index = 0; cluster_index < number_of_mixing_components; cluster_index++ ){
+        
+        // Copy individuals in cluster to subpopulation
+        vector<Individual> subpopulation;
+        for ( j = 0; j < population_cluster_sizes[cluster_index]; j++){
+            Individual ind(fit_global->totalProblemLength, fit_global->numObjectives);
+            solution = population[population_indices_of_cluster_members[cluster_index][j]];
+            for ( g = 0; g < fit_global->totalProblemLength; g++){
+                ind.genotype[g] = solution[g];
+            }
+            subpopulation.push_back(ind);
+        }
+        
+        // Learn the linkage tree (using my code)
+        vector<uvec> fos = learnedLTFOS.GenerateLinkageTreeFOS(subpopulation);
+        // Copy the learned linkage tree into MO_GOMEA variables
+        assignLinkageTreeVariables(fos, cluster_index);
+        
+        // Learn the linkage tree (using MO_GOMEA code)
+//        learnLinkageTree( i );
+
+        // Print the learned linkage tree
+//        printLTStructure(cluster_index);
+    }
+    
 }
 
 int** MO_GOMEA::clustering(double **objective_values_pool, int pool_size, int number_of_dimensions,
@@ -2710,10 +2797,14 @@ void MO_GOMEA::mutateSolution(char *solution, int lt_factor_index, int cluster_i
         if(prob < mutation_rate)
         {
             parameter_index = lt[cluster_index][lt_factor_index][i];
-            if(solution[parameter_index] == 0) 
-                solution[parameter_index] = 1;
-            else
-                solution[parameter_index] = 0;
+            
+            // CHANGES
+            int currentValue = solution[parameter_index];
+            int newValue;
+            do {
+                newValue = Utility::getRand(0, 3);
+            } while (newValue == currentValue);
+            solution[parameter_index] = newValue;
         }
     }
     
@@ -3253,7 +3344,7 @@ void MO_GOMEA::ezilaitiniArrayOfParetoFronts()
     int i, j;
 
     FILE *file;
-    file = fopen("population_status.dat", "w");
+    file = fopen("population_status.txt", "w");
     for(i = 0; i < number_of_populations; i++)
     {
         fprintf(file, "Pop %d: %d\n", ((int)(pow(2,i)))*smallest_population_size, array_of_population_statuses[i]);
@@ -3442,7 +3533,8 @@ void MO_GOMEA::loadProblemData()
         case LOTZ: lotzLoadProblemData(); break;
         case KNAPSACK: knapsackLoadProblemData(); break;
         case MAXCUTT: maxcutLoadProblemData(); break;
-        default: 
+        case ARK: arkLoadProblemData(); break;
+        default:
             printf("Cannot load problem data!\n");
             exit(1);
     }

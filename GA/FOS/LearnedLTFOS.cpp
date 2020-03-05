@@ -29,6 +29,11 @@ vector<uvec> LearnedLT_FOS::getFOS(vector<Individual> &population){
     return fos;
 }
 
+vector<uvec> LearnedLT_FOS::getFOS (int genotypeLength){
+    cout << "Error, not implemented" << endl;
+    exit(0);
+}
+
 string LearnedLT_FOS::id() { return "LearnedLT"; }
 string LearnedLT_FOS::toString(){ return "Learned Linkage Tree FOS"; }
 

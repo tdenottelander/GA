@@ -87,10 +87,12 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         // Store the distance of the front to the approximation on every log10 interval.
         if((storeParetoDistanceMode == 0 && Utility::isLogPoint(totalEvaluations))
            || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalEvaluations, storeParetoDistanceLinearInterval))){
+//            cout << "log at eval " << totalEvaluations << endl;
+
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Total"]["avg"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Total"]["max"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Total"]["evals"].push_back(totalEvaluations);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["avg"].push_back(avg_max_distance.first);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["max"].push_back(avg_max_distance.second);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["evals"].push_back(totalEvaluations);
             
 //            cout << "Evaluations: " << totalEvaluations << "  distance: " << avg_max_distance.first << endl;
         }
@@ -130,9 +132,9 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, storeParetoDistanceLinearInterval)))
         ){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Unique"]["avg"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Unique"]["max"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["logIntervalEvaluationsDistance"]["Unique"]["evals"].push_back(totalUniqueEvaluations);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["avg"].push_back(avg_max_distance.first);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["max"].push_back(avg_max_distance.second);
+            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["evals"].push_back(totalUniqueEvaluations);
         }
     }
 }

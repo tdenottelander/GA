@@ -24,6 +24,7 @@ public:
     ProblemType *problemType;
     LearnedLT_FOS(ProblemType *problemType);
     std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
+    std::vector<arma::uvec> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
     std::vector<arma::uvec> GenerateLinkageTreeFOS(const std::vector<Individual>& population);

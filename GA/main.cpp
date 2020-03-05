@@ -68,6 +68,8 @@ uniform_real_distribution<float> dist(0.0, 0.9999);
 const string projectsDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/";
 const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/";
 
+extern json elitistArchiveJSON;
+
 bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
@@ -79,9 +81,10 @@ bool storeTransformedUniqueConvergence = false;
 bool storeDistanceToParetoFrontOnElitistArchiveUpdate = true;
 bool storeElitistArchive = true;
 bool updateElitistArchiveOnEveryEvaluation = true;
-int storeParetoDistanceMode = 1; // 0 = on a log10 scale, 1 = linear scale
-int storeParetoDistanceLinearInterval = 5000;
+int storeParetoDistanceMode = 0; // 0 = on a log10 scale, 1 = linear scale
+int storeParetoDistanceLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
+FitnessFunction *fit_global;
 
 void runNasbench(){
 
@@ -96,8 +99,8 @@ void runNasbench(){
     bool IMS = false;
     int nonIMSPopsize = 40;
     
-    int minProblemSize = 25;
-    int maxProblemSize = 25;
+    int minProblemSize = 3;
+    int maxProblemSize = 3;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -123,17 +126,17 @@ void runNasbench(){
         
 //        FitnessFunction * fit = new ARK3();
         
-//        FitnessFunction * fit = new Trap(5, 5);
+        FitnessFunction * fit = new Trap(5, 5);
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
         
 //        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(problemSize);
-        FitnessFunction * fit = new MAXCUT(problemSize);
+//        FitnessFunction * fit = new MAXCUT(problemSize);
 //        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-        fit->epsilon = 0.00001;
+//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+//        fit->epsilon = 0.00001;
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;
@@ -167,7 +170,7 @@ void runNasbench(){
 //            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
 //            new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
 
-//            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
+            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
 
 //            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
 //            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
@@ -186,7 +189,7 @@ void runNasbench(){
             
 
             // ------------- MULTI OBJECTIVE ALGORITHMS -------------
-            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true),
+//            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true),
 //            new MO_LS(fit, Utility::Order::RANDOM, 1000000),
 //            new MO_RS(fit),
             
@@ -274,6 +277,37 @@ void runNasbench(){
     }
 }
 
+void run_MO_GOMEA(int argc, const char * argv[]){
+    if (argc <= 6){
+        MO_GOMEA().main_MO_GOMEA(argc, argv);
+        exit(0);
+    }
+    
+    int problemsize = stoi(argv[3]);
+    
+    string problem = argv[7];
+    if (problem == "ark7"){
+        fit_global = new ARK7(problemsize, false, true);
+    } else if (problem == "zmom"){
+        fit_global = new ZeroMaxOneMax(problemsize);
+    } else if (problem == "tit"){
+        fit_global = new TrapInverseTrap(problemsize);
+    } else {
+        cout << "Problem not known. Exiting now" << endl;
+        exit(0);
+    }
+    
+    int repetitions = 10;
+    
+    json main;
+    for (int i = 0; i < repetitions; i++){
+        fit_global->clear();
+        MO_GOMEA().main_MO_GOMEA(argc, argv);
+        main.push_back(elitistArchiveJSON);
+    }
+    writeRawData(main.dump(), "elitistArchive.json");
+}
+
 int main(int argc, const char * argv[]) {
     
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
@@ -281,7 +315,7 @@ int main(int argc, const char * argv[]) {
     
 //    runNasbench();
     
-    MO_GOMEA().main_MO_GOMEA(argc, argv);
+    run_MO_GOMEA(argc, argv);
     
 //    rng = mt19937(millis());
 //    float seed = 0;

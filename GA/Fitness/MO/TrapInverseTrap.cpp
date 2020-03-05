@@ -18,6 +18,9 @@ TrapInverseTrap::TrapInverseTrap(int length) : FitnessFunction(new BinaryProblem
     totalProblemLength = length;
     optimalParetoFrontSize = blocks + 1;
     numObjectives = 2;
+    for (int i = 0; i < optimalParetoFrontSize; i++){
+        trueParetoFront.push_back({(float)totalProblemLength - i, (float)totalProblemLength - (optimalParetoFrontSize - i - 1)});
+    }
 }
 
 // Returns the fitness of an individual

@@ -54,7 +54,7 @@ Individual Individual::copy(){
 string Individual::toString(){
     string result = toString(genotype);
     result += "  " + toStringFitness();
-    result += "  Crowding Distance: " + to_string(crowdingDistance);
+    result += "  CD: " + to_string(crowdingDistance);
     return result;
 }
 

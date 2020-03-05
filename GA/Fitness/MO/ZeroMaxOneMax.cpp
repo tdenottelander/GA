@@ -40,6 +40,9 @@ FitnessFunction* ZeroMaxOneMax::clone() const {
 void ZeroMaxOneMax::setOptimum(vector<float> opt){
     optimum = opt;
     optimalParetoFrontSize = totalProblemLength + 1;
+    for (int i = 0; i < optimalParetoFrontSize; i++){
+        trueParetoFront.push_back({(float)i, (float)totalProblemLength - i});
+    }
 }
 
 bool ZeroMaxOneMax::entireParetoFrontFound() {
