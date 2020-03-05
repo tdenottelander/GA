@@ -55,6 +55,7 @@ public:
     int getTotalAmountOfEvaluations();
     
     void initializeTrueRandomPopulation();
+    void initializeARKPopulation();
     void initializeSolvablePopulation();
     void initializeUninitializedPopulation();
     

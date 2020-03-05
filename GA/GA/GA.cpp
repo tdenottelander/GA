@@ -10,6 +10,7 @@
 
 using namespace std;
 
+extern int populationInitializationMode;
 
 /* ------------------------ Genetic Algorithm ------------------------ */
 
@@ -21,8 +22,11 @@ GA::GA(FitnessFunction * fitfunc) :
 {}
 
 void GA::initialize(){
-    initializeTrueRandomPopulation();
-//    initializeSolvablePopulation();
+    switch (populationInitializationMode){
+        case 0: initializeTrueRandomPopulation(); break;
+        case 1: initializeARKPopulation(); break;
+        case 2: initializeSolvablePopulation(); break;
+    }
     terminated = false;
     converged = false;
     roundsCount = 0;
@@ -192,6 +196,13 @@ void GA::initializeTrueRandomPopulation(){
         Individual ind (fitFunc_ptr->totalProblemLength, fitFunc_ptr->numObjectives);
         ind.initialize(alphabet);
         population.push_back(ind);
+    }
+}
+
+void GA::initializeARKPopulation(){
+    initializeTrueRandomPopulation();
+    for (int i = 0; i < population[0].genotype.size(); i++){
+        population[0].genotype[i] = 0;
     }
 }
 

@@ -4,6 +4,7 @@ using namespace std;
 using namespace arma;
 
 extern FitnessFunction* fit_global;
+extern int populationInitializationMode;
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 #define FALSE 0
@@ -2277,7 +2278,11 @@ void MO_GOMEA::initializePopulationAndFitnessValues()
     for( i = 0; i < population_size; i++ )
     {
         for( j = 0; j < number_of_parameters; j++ ){
-            population[i][j] = fit_global->problemType->alphabet[Utility::getRand(0, fit_global->problemType->alphabet.size())];
+            if(populationInitializationMode == 1 && i == 0){
+                population[i][j] = 0;
+            } else {
+                population[i][j] = fit_global->problemType->alphabet[Utility::getRand(0, fit_global->problemType->alphabet.size())];
+            }
         }
         evaluateIndividual( population[i], objective_values[i],  &(constraint_values[i]), NOT_EXTREME_CLUSTER );
         updateElitistArchive( population[i], objective_values[i], constraint_values[i]);    
