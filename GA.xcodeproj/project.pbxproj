@@ -11,6 +11,7 @@
 		C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C723CDC41000EC93F8 /* ARK5.cpp */; };
 		C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246CA23CDDB0700EC93F8 /* NK.cpp */; };
 		C235FB8C23E1E5760046B0CE /* ARK7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C235FB8A23E1E5760046B0CE /* ARK7.cpp */; };
+		C2427E1024127AB600DC7BA1 /* MO_GOMEA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2427E0E24127AB600DC7BA1 /* MO_GOMEA.cpp */; };
 		C2469EB723BE31450030E4B0 /* LocalSearchAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */; };
 		C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */; };
 		C25AFB8D23EB7543004FEC24 /* LOTZ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB8B23EB7543004FEC24 /* LOTZ.cpp */; };
@@ -70,6 +71,8 @@
 		C22246CB23CDDB0800EC93F8 /* NK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NK.hpp; sourceTree = "<group>"; };
 		C235FB8A23E1E5760046B0CE /* ARK7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK7.cpp; sourceTree = "<group>"; };
 		C235FB8B23E1E5760046B0CE /* ARK7.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK7.hpp; sourceTree = "<group>"; };
+		C2427E0E24127AB600DC7BA1 /* MO_GOMEA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MO_GOMEA.cpp; sourceTree = "<group>"; };
+		C2427E0F24127AB600DC7BA1 /* MO_GOMEA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MO_GOMEA.hpp; sourceTree = "<group>"; };
 		C2469EB523BE31450030E4B0 /* LocalSearchAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalSearchAnalysis.cpp; sourceTree = "<group>"; };
 		C2469EB623BE31450030E4B0 /* LocalSearchAnalysis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalSearchAnalysis.hpp; sourceTree = "<group>"; };
 		C2469EB823BE325E0030E4B0 /* GreedyAnalysis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GreedyAnalysis.cpp; sourceTree = "<group>"; };
@@ -219,6 +222,8 @@
 		C286FF8A240FA9F100296E5C /* MO-GOMEA */ = {
 			isa = PBXGroup;
 			children = (
+				C2427E0E24127AB600DC7BA1 /* MO_GOMEA.cpp */,
+				C2427E0F24127AB600DC7BA1 /* MO_GOMEA.hpp */,
 			);
 			path = "MO-GOMEA";
 			sourceTree = "<group>";
@@ -226,7 +231,7 @@
 		C2ABE4C223840C6700D6E774 = {
 			isa = PBXGroup;
 			children = (
-				C2ABE4CD23840C6700D6E774 /* GA */,
+				C2ABE4CD23840C6700D6E774 /* src */,
 				C2ABE4CC23840C6700D6E774 /* Products */,
 				C2BC66CF238EBA10006BA6BF /* Frameworks */,
 			);
@@ -240,7 +245,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C2ABE4CD23840C6700D6E774 /* GA */ = {
+		C2ABE4CD23840C6700D6E774 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				C286FF8A240FA9F100296E5C /* MO-GOMEA */,
@@ -255,7 +260,7 @@
 				C2C42F7323A11BD000B83C3A /* Fitness */,
 				C2ABE4CE23840C6700D6E774 /* main.cpp */,
 			);
-			path = GA;
+			path = src;
 			sourceTree = "<group>";
 		};
 		C2B6B3BA23E82152003C60C8 /* NSGA-II */ = {
@@ -486,6 +491,7 @@
 				C2B369D323BE2AED00E43633 /* ARK2.cpp in Sources */,
 				C2469EBA23BE325E0030E4B0 /* GreedyAnalysis.cpp in Sources */,
 				C2E2734C23A1089D00D61D19 /* Trap.cpp in Sources */,
+				C2427E1024127AB600DC7BA1 /* MO_GOMEA.cpp in Sources */,
 				C2AFF54724095E5700152360 /* ARK_Online.cpp in Sources */,
 				C2C0659323C8A3030067B946 /* LocalSearchStochastic.cpp in Sources */,
 				C2B369D623BE2CC200E43633 /* ARK1.cpp in Sources */,
