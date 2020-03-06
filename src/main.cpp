@@ -314,34 +314,11 @@ int main(int argc, const char * argv[]) {
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
     putenv( mypath );
     
-//    runNasbench();
-    
-    run_MO_GOMEA(argc, argv);
-    
-//    rng = mt19937(millis());
-//    float seed = 0;
-//    mainNSGA(5, 4, seed);
-    
-//    test_problem(5, 5, 2, 5, 5);
-    
-//    cout << Utility::millis();
-    
-//    int problemSize = 10;
-//    FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
-//    FitnessFunction * fit = new TrapInverseTrap(5, problemSize, 2);
-//    GA* ga = new NSGA_II(fit, new TwoPointCrossover(), 2, 0.9, true, false);
-//    GA* ga = new MO_LS(fit, Utility::Order::ASCENDING);
-    
-//    ga->setPopulationSize(10);
-//    ga->initialize();
-//    ga->evaluateAll();
-//    ga->run();
-
-//    int popsize = ga->findMinimallyNeededPopulationSize(100, 100, 1024);
-//    cout << popsize << endl;
-
-//    ARK * ark = new ARK7(0, false, true);
-//    ark->doAnalysis(6, 13);
+    if (strcmp(argv[1], "nasbench") == 0){
+        runNasbench();
+    } else {
+        run_MO_GOMEA(argc, argv);
+    }
     
     return 0;
 }

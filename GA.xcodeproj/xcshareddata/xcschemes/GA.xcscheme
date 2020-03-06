@@ -64,6 +64,10 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "5 2 5 100 100 1000000 zmom"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "nasbench"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
