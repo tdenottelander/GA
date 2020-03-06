@@ -94,13 +94,15 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
     int individualCount = 0;
     // See which individuals have domination count 0. Put these in the same front.
     while (!pool.empty()) {
+        list<Individual*> remainder_pool;
         vector<Individual*> front;
-        for (list<Individual*>::iterator it = pool.begin(); it != pool.end(); it++){
-            if ((*it)->dominationCount == 0){
+        for (auto it = pool.begin(); it != pool.end(); it++){
+            if((*it)->dominationCount == 0){
                 (*it)->front = frontIdx;
                 front.push_back(*it);
-                pool.erase(it);
                 individualCount++;
+            } else {
+                remainder_pool.push_back(*it);
             }
         }
         
@@ -117,6 +119,7 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
         if(n != -1 && individualCount >= n){
             break;
         }
+        pool = remainder_pool;
     }
     return sortedPopulation;
 }
