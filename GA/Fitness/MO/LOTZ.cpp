@@ -64,3 +64,7 @@ bool LOTZ::entireParetoFrontFound() {
     }
     return false;
 }
+
+string LOTZ::id() {
+    return "lotz";
+}

@@ -56,3 +56,7 @@ bool ZeroMaxOneMax::entireParetoFrontFound() {
     }
     return false;
 }
+
+string ZeroMaxOneMax::id() {
+    return ("zmom");
+}

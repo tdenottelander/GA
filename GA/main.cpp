@@ -289,10 +289,14 @@ void run_MO_GOMEA(int argc, const char * argv[]){
     string problem = argv[7];
     if (problem == "ark7"){
         fit_global = new ARK7(problemsize, false, true);
+        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+        fit_global->epsilon = 0.0001;
     } else if (problem == "zmom"){
         fit_global = new ZeroMaxOneMax(problemsize);
+        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
     } else if (problem == "tit"){
         fit_global = new TrapInverseTrap(problemsize);
+        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
     } else {
         cout << "Problem not known. Exiting now" << endl;
         exit(0);

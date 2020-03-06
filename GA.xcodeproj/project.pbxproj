@@ -18,6 +18,7 @@
 		C25AFB9623EC7FE6004FEC24 /* TrapInverseTrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9423EC7FE6004FEC24 /* TrapInverseTrap.cpp */; };
 		C25AFB9923ED8AE0004FEC24 /* MO_LS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25AFB9723ED8AE0004FEC24 /* MO_LS.cpp */; };
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
+		C286FF8E240FB07C00296E5C /* MO_GOMEA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C286FF8D240FB07C00296E5C /* MO_GOMEA.cpp */; };
 		C293D6E223A787AE001E0636 /* ARK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E023A787AE001E0636 /* ARK.cpp */; };
 		C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */; };
 		C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */; };
@@ -31,7 +32,6 @@
 		C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E42384113A00D6E774 /* GA.cpp */; };
 		C2ABE4E9238441A300D6E774 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4E7238441A300D6E774 /* Utility.cpp */; };
 		C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */; };
-		C2AC1A0C23F455690054524C /* nsga2r.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2AC19DB23F455660054524C /* nsga2r.cpp */; };
 		C2AC1A252406837C0054524C /* MO_RS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2AC1A232406837C0054524C /* MO_RS.cpp */; };
 		C2AFF54724095E5700152360 /* ARK_Online.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2AFF54524095E5700152360 /* ARK_Online.cpp */; };
 		C2AFF54A240D783000152360 /* MAXCUT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2AFF548240D783000152360 /* MAXCUT.cpp */; };
@@ -87,6 +87,8 @@
 		C269FF192396ABAD00B98092 /* miniconda3 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = miniconda3; path = ../../../../../miniconda3; sourceTree = "<group>"; };
 		C269FF1B2396AE9100B98092 /* python3.7 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = python3.7; path = ../../../../../miniconda3/bin/python3.7; sourceTree = "<group>"; };
 		C269FF212396B5C400B98092 /* libpython3.7m.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.7m.a; path = ../../../../../miniconda3/envs/myenv/lib/libpython3.7m.a; sourceTree = "<group>"; };
+		C286FF8D240FB07C00296E5C /* MO_GOMEA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MO_GOMEA.cpp; sourceTree = "<group>"; };
+		C286FF8F240FB35E00296E5C /* MO_GOMEA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MO_GOMEA.hpp; sourceTree = "<group>"; };
 		C293D6E023A787AE001E0636 /* ARK.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK.cpp; sourceTree = "<group>"; };
 		C293D6E123A787AE001E0636 /* ARK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK.hpp; sourceTree = "<group>"; };
 		C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RandomSearch.cpp; sourceTree = "<group>"; };
@@ -113,10 +115,6 @@
 		C2ABE4E8238441A300D6E774 /* Utility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Utility.hpp; sourceTree = "<group>"; };
 		C2ABE4EA2387EF9500D6E774 /* RoundSchedule.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RoundSchedule.cpp; sourceTree = "<group>"; };
 		C2ABE4EB2387EF9500D6E774 /* RoundSchedule.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RoundSchedule.hpp; sourceTree = "<group>"; };
-		C2AC19CE23F455650054524C /* rand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rand.h; sourceTree = "<group>"; };
-		C2AC19D523F455650054524C /* input_data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = input_data; sourceTree = "<group>"; };
-		C2AC19DB23F455660054524C /* nsga2r.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsga2r.cpp; sourceTree = "<group>"; };
-		C2AC19E223F455660054524C /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
 		C2AC1A232406837C0054524C /* MO_RS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MO_RS.cpp; sourceTree = "<group>"; };
 		C2AC1A242406837C0054524C /* MO_RS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MO_RS.hpp; sourceTree = "<group>"; };
 		C2AC1A2624068B030054524C /* ZeroMaxOneMax.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ZeroMaxOneMax.hpp; sourceTree = "<group>"; };
@@ -219,6 +217,8 @@
 		C286FF8A240FA9F100296E5C /* MO-GOMEA */ = {
 			isa = PBXGroup;
 			children = (
+				C286FF8D240FB07C00296E5C /* MO_GOMEA.cpp */,
+				C286FF8F240FB35E00296E5C /* MO_GOMEA.hpp */,
 			);
 			path = "MO-GOMEA";
 			sourceTree = "<group>";
@@ -261,10 +261,6 @@
 		C2B6B3BA23E82152003C60C8 /* NSGA-II */ = {
 			isa = PBXGroup;
 			children = (
-				C2AC19E223F455660054524C /* global.h */,
-				C2AC19D523F455650054524C /* input_data */,
-				C2AC19DB23F455660054524C /* nsga2r.cpp */,
-				C2AC19CE23F455650054524C /* rand.h */,
 			);
 			path = "NSGA-II";
 			sourceTree = "<group>";
@@ -477,8 +473,8 @@
 				C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */,
 				C2C6518E23D9A081007B567A /* ARK6.cpp in Sources */,
 				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
+				C286FF8E240FB07C00296E5C /* MO_GOMEA.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
-				C2AC1A0C23F455690054524C /* nsga2r.cpp in Sources */,
 				C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */,
 				C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */,
 				C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */,
@@ -629,34 +625,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_NO_COMMON_BLOCKS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LD_RUNPATH_SEARCH_PATHS = "";
-				OTHER_CFLAGS = (
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m",
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m",
-					"-Wno-unused-result",
-					"-Wsign-compare",
-					"-Wunreachable-code",
-					"-DNDEBUG",
-					"-g",
-					"-fwrapv",
-					"-O3",
-					"-Wall",
-					"-Wstrict-prototypes",
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include",
-					"-arch",
-					x86_64,
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include",
-					"-arch",
-					x86_64,
-				);
-				OTHER_LDFLAGS = (
-					"-L/Users/tomdenottelander/miniconda3/envs/myenv/lib/python3.7/config-3.7m-darwin",
-					"-lpython3.7m",
-					"-ldl",
-					"-framework",
-					CoreFoundation,
-				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -666,35 +639,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_NO_COMMON_BLOCKS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = (
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m",
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include/python3.7m",
-					"-Wno-unused-result",
-					"-Wsign-compare",
-					"-Wunreachable-code",
-					"-DNDEBUG",
-					"-g",
-					"-fwrapv",
-					"-O3",
-					"-Wall",
-					"-Wstrict-prototypes",
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include",
-					"-arch",
-					x86_64,
-					"-I/Users/tomdenottelander/miniconda3/envs/myenv/include",
-					"-arch",
-					x86_64,
-				);
-				OTHER_LDFLAGS = (
-					"-L/Users/tomdenottelander/miniconda3/envs/myenv/lib/python3.7/config-3.7m-darwin",
-					"-lpython3.7m",
-					"-ldl",
-					"-framework",
-					CoreFoundation,
-				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
