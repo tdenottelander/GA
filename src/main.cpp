@@ -311,7 +311,7 @@ void run_MO_GOMEA(int argc, const char * argv[]){
         MO_GOMEA().main_MO_GOMEA(argc, argv);
         main.push_back(elitistArchiveJSON);
     }
-    writeRawData(main.dump(), "elitistArchive.json");
+    writeRawData(main.dump(), dataDir + "elitistArchive.json");
 }
 
 int main(int argc, const char * argv[]) {
