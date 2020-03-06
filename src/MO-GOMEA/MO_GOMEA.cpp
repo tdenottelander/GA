@@ -241,6 +241,7 @@ void MO_GOMEA::parseOptions( int argc, const char **argv, int *index )
     use_pre_adaptive_mutation     = 0;
     use_repair_mechanism          = 0;
     stop_population_when_front_is_covered = 0;
+//    stop_population_when_front_is_covered = 1;
 
     for( ; (*index) < argc; (*index)++ )
     {
@@ -940,6 +941,9 @@ void MO_GOMEA::arkLoadProblemData()
     optimization = (char*)Malloc(number_of_objectives*sizeof(char));
     for(int k = 0; k < number_of_objectives; k++)
         optimization[k] = MAXIMIZATION;
+    
+//    use_vtr = 1;
+//    vtr = 0;
 }
 
 void MO_GOMEA::arkProblemEvaluation(char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster)
@@ -953,7 +957,7 @@ void MO_GOMEA::arkProblemEvaluation(char *solution, double *obj_values, double *
     
     // Evaluate the individual
     vector<float> fitness = fit_global->evaluate(ind);
-//    cout << ind.toString() << endl;
+    cout << fit_global->totalEvaluations << ". " << ind.toString() << endl;
     
     // Set the objective values from the evaluated fitness
     for(int k = 0; k < number_of_objectives; k++)
@@ -1052,6 +1056,12 @@ double **MO_GOMEA::getDefaultFront( int *default_front_size )
         case ZEROMAX_ONEMAX: return( getDefaultFrontOnemaxZeromax( default_front_size ) );
         case TRAP5: return( getDefaultFrontTrap5InverseTrap5( default_front_size ) );
         case LOTZ: return( getDefaultFrontLeadingOneTrailingZero( default_front_size ) );
+//        case ARK:
+//            if (fit_global->id() == "zmom"){
+//                return( getDefaultFrontOnemaxZeromax( default_front_size ) );
+//            } else if (fit_global->id() == "lotz"){
+//                return( getDefaultFrontLeadingOneTrailingZero( default_front_size ) );
+//            }
     }
 
     *default_front_size = 0;
@@ -1172,6 +1182,7 @@ void MO_GOMEA::logElitistArchiveAtSpecificPoints()
  */
 char MO_GOMEA::checkTerminationCondition()
 {
+    cout << "Check termination condition. ";
     if( maximum_number_of_evaluations >= 0 )
     {
         if( checkNumberOfEvaluationsTerminationCondition() )
@@ -1183,7 +1194,12 @@ char MO_GOMEA::checkTerminationCondition()
         if( checkVTRTerminationCondition() )
             return( TRUE );
     }
+    
+    if (problem_index == ARK && fit_global->isDone()){
+        return ( TRUE );
+    }
 
+    cout << "Dont terminate" << endl;
     return( FALSE );
 }
 /**
@@ -3154,6 +3170,9 @@ void MO_GOMEA::freeAuxiliaryPopulations()
 void MO_GOMEA::initializeMemoryForArrayOfPopulations()
 {
     int i;
+    // SET THIS TO:
+    //  1 FOR NON-IMS
+    //  20 FOR IMS
     maximum_number_of_populations      = 20;
 
     array_of_populations                = (char***)Malloc(maximum_number_of_populations*sizeof(char**));
@@ -3247,6 +3266,9 @@ void MO_GOMEA::ezilaitiniArrayOfPopulation()
 void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
 {
     int i;
+    // SET THIS TO
+    //  8 FOR IMS
+    //  anything FOR NON-IMS
     smallest_population_size = 8;
 
     initializeMemoryForArrayOfPopulations();
@@ -3302,6 +3324,10 @@ void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
             if(use_print_progress_to_screen)
                 printf("%d ", array_of_number_of_generations[population_id]);
             population_id++;
+//            if(population_id + 1 < maximum_number_of_populations){
+//                population_id++;
+//                cout << "Increment population id" << endl;
+//            }
             if(checkTerminationCondition() == TRUE)
                 break;
         } while(array_of_number_of_generations[population_id-1] % generation_base == 0);

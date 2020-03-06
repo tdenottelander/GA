@@ -20,6 +20,7 @@ public:
     FitnessFunction* clone() const override;
     void setOptimum(std::vector<float> optimum) override;
     bool entireParetoFrontFound() override;
+    std::string id() override;
 };
 
 #endif /* ZeroMaxOneMax_hpp */

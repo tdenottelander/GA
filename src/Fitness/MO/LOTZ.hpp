@@ -21,6 +21,7 @@ public:
     
     void setOptimum(std::vector<float> optimum) override;
     bool entireParetoFrontFound() override;
+    std::string id() override;
 };
 
 #endif /* LOTZ_hpp */
