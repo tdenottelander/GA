@@ -79,3 +79,9 @@ DerivedData/
 
 ## Gcc Patch
 /*.gcno
+
+
+## Netbeans files
+dependencies/
+dist/
+nbproject/
