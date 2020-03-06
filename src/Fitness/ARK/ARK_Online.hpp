@@ -1,0 +1,33 @@
+//
+//  ARK_Online.hpp
+//  GA
+//
+//  Created by Tom den Ottelander on 28/02/2020.
+//  Copyright © 2020 Tom den Ottelander. All rights reserved.
+//
+
+#ifndef ARK_Online_hpp
+#define ARK_Online_hpp
+
+//#include <stdio.h>
+//#include <vector>
+//#include <Python.h>
+//#include "FitnessFunction.hpp"
+//
+//static PyObject *module;
+//static PyObject *py_evaluationFunction;
+//
+//class ARK_Online : public FitnessFunction {
+//public:
+//    ARK_Online();
+//    std::vector<float> evaluate(Individual &ind) override;
+//    void display() override;
+//    std::string id() override;
+//    ProblemType* getProblemType();
+//    FitnessFunction* clone() const override;
+//    void setLength (int length) override;
+//    
+//    static void pythonInit();
+//};
+
+#endif /* ARK_Online_hpp */
