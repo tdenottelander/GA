@@ -65,8 +65,13 @@ mt19937 rng(1234);
 // A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
 uniform_real_distribution<float> dist(0.0, 0.9999);
 
-const string projectsDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/";
-const string dataDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/";
+// MAC OS
+string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
+// Ross@CWI
+//string projectDir = "/export/scratch1/tdo/TomGA/";
+
+string dataDir = projectDir + "data/";
+string benchmarksDir = projectDir + "benchmarks/";
 
 extern json elitistArchiveJSON;
 
@@ -100,8 +105,8 @@ void runNasbench(){
     bool IMS = false;
     int nonIMSPopsize = 40;
     
-    int minProblemSize = 15;
-    int maxProblemSize = 15;
+    int minProblemSize = 14;
+    int maxProblemSize = 14;
     
     for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
         cout << "PROBLEMSIZE " << problemSize << endl;
@@ -120,7 +125,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-//        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
+        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK_Online();
@@ -133,11 +138,11 @@ void runNasbench(){
         
 //        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
-        FitnessFunction * fit = new TrapInverseTrap(problemSize);
+//        FitnessFunction * fit = new TrapInverseTrap(problemSize);
 //        FitnessFunction * fit = new MAXCUT(problemSize);
-        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-//        fit->epsilon = 0.00001;
+//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+        fit->epsilon = 0.00001;
         
 //        int blocksize = 5;
 //        int alphabetsize = 2;

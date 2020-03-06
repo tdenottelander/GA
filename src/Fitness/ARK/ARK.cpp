@@ -16,7 +16,8 @@ using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
-extern std::string ARK_Analysis_suffix;
+extern string ARK_Analysis_suffix;
+extern string benchmarksDir;
 
 ARK::ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, string folder) :
     FitnessFunction(vector<float>(1, getOptimum(folder, problemSize, allowIdentityLayers)), problemType),
@@ -75,7 +76,7 @@ vector<float> ARK::getFitness(uvec encoding){
     
     //Prepend "model_"
     //Append ".json"
-    layers = folderPrefix + folder + "/model_" + layers + ".json";
+    layers = benchmarksDir + folder + "/model_" + layers + ".json";
     
     //Load file
     ifstream ifs(layers);
@@ -93,7 +94,7 @@ int ARK::getNumParams(vector<int> encoding){
             layers += to_string(i);
         }
     }
-    layers = folderPrefix + folder + "/model_" + layers + ".json";
+    layers = benchmarksDir + folder + "/model_" + layers + ".json";
     ifstream ifs(layers);
     json rawdata = json::parse(ifs);
     return rawdata["number_of_parameters"];
@@ -233,12 +234,12 @@ void ARK::doAnalysis(int minLayerSize, int maxLayerSize){
         paretoFronts[to_string(i)] = paretoFront;
     }
     results["optima"] = optima;
-    Utility::write(results.dump(), folderPrefix + folder + "/", "analysis" + ARK_Analysis_suffix + "_" + Utility::getDateString() + ".json");
-    Utility::write(paretoFronts.dump(), folderPrefix + folder + "/", "paretofront_" + Utility::getDateString() + ".json");
+    Utility::write(results.dump(), benchmarksDir + folder + "/", "analysis" + ARK_Analysis_suffix + "_" + Utility::getDateString() + ".json");
+    Utility::write(paretoFronts.dump(), benchmarksDir + folder + "/", "paretofront_" + Utility::getDateString() + ".json");
 }
 
 float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
-    string filename = folderPrefix + folder + "/analysis" + ARK_Analysis_suffix + ".json";
+    string filename = benchmarksDir + folder + "/analysis" + ARK_Analysis_suffix + ".json";
     ifstream ifs(filename);
     if(!ifs.good()){
         cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimum to 100.0 for now." << endl;
@@ -260,7 +261,7 @@ float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
 }
 
 uvec ARK::getOptimalGenotype(){
-    string filename = folderPrefix + folder + "/analysis" + ARK_Analysis_suffix + ".json";
+    string filename = benchmarksDir + folder + "/analysis" + ARK_Analysis_suffix + ".json";
     ifstream ifs(filename);
     if (!ifs.good()){
         cout << "Cannot load optima. Consider first running the function \"doAnalysis\" first. Setting optimal genotype to {0}." << endl;

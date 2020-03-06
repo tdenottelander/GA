@@ -62,7 +62,6 @@ public:
     float noisePercentage = -1;
 };
 
-static std::string folderPrefix = "/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/Benchmarks/";
 static nlohmann::json lookupTable;
 
 #endif /* ARK_hpp */

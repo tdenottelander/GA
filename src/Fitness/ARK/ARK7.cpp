@@ -12,12 +12,14 @@ using namespace std;
 using namespace arma;
 using namespace nlohmann;
 
-extern std::string ARK_Analysis_suffix;
+extern string ARK_Analysis_suffix;
+extern string benchmarksDir;
 
 ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, false, genotypeChecking, getProblemType(), -1, 2, "ark7"), MO(MO)
 {
     if(lookupTable.empty()){
-        string filename = folderPrefix + folder + "/ark7";
+        string filename = benchmarksDir + folder + "/ark7";
+
         if (MO){
             filename += "_MO";
         }
@@ -36,7 +38,7 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
         setOptimum(vector<float>{-1, -1});
         setNumObjectives(2);
         
-        string filename = folderPrefix + folder + "/pareto.json";
+        string filename = benchmarksDir + folder + "/pareto.json";
         cout << "Reading in ARK-7" + ARK_Analysis_suffix + " pareto results from " + filename + ".... ";
         ifstream ifs(filename);
         if(!ifs.good()){
