@@ -20,7 +20,7 @@ class UniqueSolutions{
 public:
     UniqueSolutions(int alphabetSize);
     int alphabetSize;
-    std::unordered_set<int> genotypes;
+    std::unordered_set<long> genotypes;
     void put(arma::uvec &genotype);
     bool contains(arma::uvec &genotype);
 };
@@ -33,13 +33,13 @@ public:
     std::unordered_map<int, int> counterMap;
     void put(arma::uvec &genotype);
     bool contains(arma::uvec &genotype);
-    int get(arma::uvec &genotype);
+    long get(arma::uvec &genotype);
     nlohmann::json toJson (bool asHash);
 };
 
 namespace HashingFunctions {
-    int hash(arma::uvec &genotype, int alphabetSize);
-    arma::uvec decode(int hash, int problemSize, int alphabetSize);
+    long hash(arma::uvec &genotype, int alphabetSize);
+    arma::uvec decode(long hash, int problemSize, int alphabetSize);
 };
 
 #endif /* UniqueSolutions_hpp */

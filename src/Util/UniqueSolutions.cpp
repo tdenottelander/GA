@@ -13,7 +13,7 @@ using namespace std;
 using namespace nlohmann;
 
 // Constructor
-UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_set<int>()), alphabetSize(alphabetSize) {
+UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_set<long>()), alphabetSize(alphabetSize) {
 }
 
 // Inserts a hashed genotype into the unorderd set, regardless of already being in it
@@ -30,13 +30,13 @@ bool UniqueSolutions::contains(uvec &genotype){
 SolutionCounter::SolutionCounter (int alphabetSize, int problemSize) : alphabetSize(alphabetSize), problemSize(problemSize) {}
 
 void SolutionCounter::put(arma::uvec &genotype){
-    int hash = HashingFunctions::hash(genotype, alphabetSize);
+    long hash = HashingFunctions::hash(genotype, alphabetSize);
     int count = 1;
     if(contains(genotype)){
         count += counterMap.at(hash);
         counterMap.erase(hash);
     }
-    pair<int, int> insertion (hash, count);
+    pair<long, int> insertion (hash, count);
     counterMap.insert(insertion);
 }
 
@@ -44,7 +44,7 @@ bool SolutionCounter::contains(arma::uvec &genotype){
     return (counterMap.find(HashingFunctions::hash(genotype, alphabetSize)) != counterMap.end());
 }
 
-int SolutionCounter::get(arma::uvec &genotype){
+long SolutionCounter::get(arma::uvec &genotype){
     if(contains(genotype)){
         return counterMap.at(HashingFunctions::hash(genotype, alphabetSize));
     } else {
@@ -73,8 +73,8 @@ json SolutionCounter::toJson (bool asHash){
 // 0000010 - 3
 // 0000011 - 4
 // ...etc
-int HashingFunctions::hash(uvec &genotype, int alphabetSize){
-    int result = 0;
+long HashingFunctions::hash(uvec &genotype, int alphabetSize){
+    long result = 0;
     int n = genotype.size();
     //    for (int i = 0; i < n; i++){
     //        result += genotype[i] * pow(alphabetSize, n-i-1);
@@ -86,10 +86,10 @@ int HashingFunctions::hash(uvec &genotype, int alphabetSize){
     return result;
 }
 
-uvec HashingFunctions::decode(int hash, int problemSize, int alphabetSize){
+uvec HashingFunctions::decode(long hash, int problemSize, int alphabetSize){
     uvec genotype(problemSize);
     for(int i = 0; i < problemSize; i++){
-        int sub = pow(alphabetSize, problemSize - i - 1);
+        long sub = pow(alphabetSize, problemSize - i - 1);
         int layer = floor(hash / sub);
         genotype[i] = layer;
         hash = hash - layer * sub;
