@@ -70,6 +70,7 @@
 
 #include "FitnessFunction.hpp"
 #include "LearnedLTFOS.hpp"
+#include <nlohmann/json.hpp>
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 class MO_GOMEA {
@@ -206,7 +207,7 @@ void ezilaitiniProblemData();
 void run();
     
 public:
-int main_MO_GOMEA( int argc, const char **argv );
+int main_MO_GOMEA();
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 private:

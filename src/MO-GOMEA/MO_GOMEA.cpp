@@ -2,10 +2,12 @@
 
 using namespace std;
 using namespace arma;
+using namespace nlohmann; // for json
 
 extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
+extern json JSON_run;
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 #define FALSE 0
@@ -313,10 +315,13 @@ void MO_GOMEA::parseParameters( int argc, const char **argv, int *index )
 
     noError = 1;
     noError = noError && sscanf( argv[*index+0], "%d", &problem_index );
-    noError = noError && sscanf( argv[*index+1], "%d", &number_of_objectives );
-    noError = noError && sscanf( argv[*index+2], "%d", &number_of_parameters );
+    number_of_objectives = fitFunc->numObjectives;
+//    noError = noError && sscanf( argv[*index+1], "%d", &number_of_objectives );
+    number_of_parameters = fitFunc->totalProblemLength;
+//    noError = noError && sscanf( argv[*index+2], "%d", &number_of_parameters );
     noError = noError && sscanf( argv[*index+3], "%d", &elitist_archive_size_target );
-    noError = noError && sscanf( argv[*index+4], "%d", &maximum_number_of_evaluations );
+    maximum_number_of_evaluations = fitFunc->maxEvaluations;
+//    noError = noError && sscanf( argv[*index+4], "%d", &maximum_number_of_evaluations );
     noError = noError && sscanf( argv[*index+5], "%d", &log_progress_interval );
   
     if( !noError )
@@ -3613,20 +3618,22 @@ void MO_GOMEA::run( void )
  * - interpret parameters on the command line
  * - run the algorithm with the interpreted parameters
  */
-int MO_GOMEA::main_MO_GOMEA( int argc, const char **argv )
+int MO_GOMEA::main_MO_GOMEA()
 {
 //    cout << "Number of parameters: " << fitFunc->totalProblemLength << endl;
-    int argcHardcoded = 7;
-    string x = to_string(fitFunc->totalProblemLength);
-    const char* argvHardcoded[] =
+    int argc = 7;
+    string problength = to_string(fitFunc->totalProblemLength);
+    string maxevals = to_string(fitFunc->maxEvaluations);
+    string maxuniqueevals = to_string(fitFunc->maxUniqueEvaluations);
+    const char* argv[] =
     {
         (char*)("Placeholder"),
         (char*)("5"),
         (char*)("2"),
-        (char*)(x.c_str()),
+        (char*)(problength.c_str()),
         (char*)("200"),
-        (char*)("999999999"),
-        (char*)("999999999")
+        (char*)(maxevals.c_str()),
+        (char*)(maxuniqueevals.c_str())
     };
     
 //    for (int i = 0; i < argcHardcoded; i++){
@@ -3634,9 +3641,17 @@ int MO_GOMEA::main_MO_GOMEA( int argc, const char **argv )
 //    }
 //    cout << "ok" << endl;
     
-    interpretCommandLine( argcHardcoded, argvHardcoded );
+    interpretCommandLine( argc, argv );
 
+    long time = Utility::millis();
     run();
+    time = Utility::millis() - time;
+    
+    JSON_run["evals_total"] = fitFunc->totalEvaluations;
+    JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    JSON_run["time_taken"] = time;
+    JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    JSON_run["success"] = fitFunc->optimumFound;
 
     return( 0 );
 }

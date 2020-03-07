@@ -17,8 +17,10 @@ extern bool printPopulationOnOptimum;
 extern bool storeConvergence;
 extern bool storeElitistArchive;
 
+extern FitnessFunction * fitFunc;
+
 nlohmann::json convergence;
-nlohmann::json elitistArchiveJSON;
+nlohmann::json JSON_MO_info;
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -42,16 +44,11 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     }
     gaList.reserve(maxPopSizeLevel);
 
-    output["fitness"] = g->fitFunc_ptr->id();
     output["successfulGAPopulation"] = -1;
     output["successfulGARoundCount"] = -1;
     output["popsizereached"] = -1;
     output["success"] = false;
     output["stoppingCondition"] = "-1";
-    
-    g->fitFunc_ptr->setLength(problemSize);
-    g->fitFunc_ptr->maxEvaluations = maxEvaluations;
-    g->fitFunc_ptr->maxUniqueEvaluations = maxUniqueEvaluations;
     
     whichShouldRun.reserve(maxPopSizeLevel);
     for(int i = 0; i < maxPopSizeLevel; i++){
@@ -66,7 +63,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     convergence.clear();
     convergence["absolute"] = {};
     convergence["unique"] = {};
-    elitistArchiveJSON.clear();
+    JSON_MO_info.clear();
 }
 
 json RoundSchedule::run() {
@@ -121,12 +118,12 @@ json RoundSchedule::run() {
                         
                         // Define the first ever individual as bestIndividualOverall
                         if(i == 0){
-                            ga->fitFunc_ptr->bestIndividual = ga->population[0].copy();
+                            fitFunc->bestIndividual = ga->population[0].copy();
                         }
                         
                         ga->evaluateAll();
-                        if(ga->fitFunc_ptr->isMO()){
-                            ga->fitFunc_ptr->updateElitistArchive(ga->population);
+                        if(fitFunc->isMO()){
+                            fitFunc->updateElitistArchive(ga->population);
                         } 
                     }
                     
@@ -167,14 +164,14 @@ json RoundSchedule::run() {
                     } else if (i != 0 && !gaList[i-1]->terminated){
                         
                         // If this is a SO problem, check if this GA has a higher fitness than the previous GA. If so, terminate previous GA and all before.
-                        if (ga->fitFunc_ptr->numObjectives == 1 && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
+                        if (fitFunc->numObjectives == 1 && ga->getAvgFitness()[0] > gaList[i-1]->getAvgFitness()[0]){
                             terminateGAs(i - 1);
                             lowestActiveGAIdx = i;
                         }
                         
                         // If this is a MO problem, check if this GA's first front dominates at least (X % + 1) solutions in the previous GA. If so, terminate previous GA and all before.
                         float percentageRequired = 0.5;
-                        if (ga->fitFunc_ptr->numObjectives > 1 && MOterminationCondition(ga, gaList[i-1], percentageRequired)){
+                        if (fitFunc->numObjectives > 1 && MOterminationCondition(ga, gaList[i-1], percentageRequired)){
 //                            cout << "GA with " << ga->populationSize << " popsize dominates GA with " << gaList[i-1]->populationSize << " popsize." << endl;
                             terminateGAs(i - 1);
                             lowestActiveGAIdx = i;
@@ -207,11 +204,10 @@ json RoundSchedule::run() {
     }
     
     long stop = millis();
-    output["timeTaken"] = stop - start;
-    FitnessFunction *fit = gaList[0]->fitFunc_ptr;
-    output["evaluations"] = fit->totalEvaluations;
-    output["uniqueEvaluations"] =fit->totalUniqueEvaluations;
-    output["transformedUniqueEvaluations"] = fit->totalTransformedUniqueEvaluations;
+    output["time_taken"] = stop - start;
+    output["evals_total"] = fitFunc->totalEvaluations;
+    output["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    output["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
     if (storeConvergence)
         output["convergence"] = convergence;
     
@@ -269,11 +265,11 @@ int RoundSchedule::getAmountOfEvaluations(){
 }
 
 bool RoundSchedule::maxEvaluationsExceeded() {
-    return gaList[0]->fitFunc_ptr->maxEvaluationsExceeded();
+    return fitFunc->maxEvaluationsExceeded();
 }
 
 bool RoundSchedule::maxUniqueEvaluationsExceeded() {
-    return gaList[0]->fitFunc_ptr->maxUniqueEvaluationsExceeded();
+    return fitFunc->maxUniqueEvaluationsExceeded();
 }
 
 void RoundSchedule::writeOutputGenerationCSV(string filename){
@@ -281,7 +277,7 @@ void RoundSchedule::writeOutputGenerationCSV(string filename){
     myfile.open(filename);
     for (int i = 0; i < ga->population.size(); i++){
         myfile << ga->population[i].toString(ga->population[i].genotype);
-        for (int j = 0; j < ga->fitFunc_ptr->numObjectives; j++){
+        for (int j = 0; j < fitFunc->numObjectives; j++){
             myfile << "," << to_string(ga->population[i].fitness[j]);
         }
         myfile << "\n";

@@ -18,7 +18,7 @@ extern bool storeTransformedUniqueConvergence;
 extern bool printElitistArchiveOnUpdate;
 extern bool storeDistanceToParetoFrontOnElitistArchiveUpdate;
 extern nlohmann::json convergence;
-extern nlohmann::json elitistArchiveJSON;
+extern nlohmann::json JSON_MO_info;
 extern bool storeElitistArchive;
 extern bool updateElitistArchiveOnEveryEvaluation;
 extern int storeParetoDistanceMode;
@@ -64,7 +64,7 @@ void FitnessFunction::clear(){
     totalTransformedUniqueEvaluations = 0;
     uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
-    elitistArchiveJSON.clear();
+    JSON_MO_info.clear();
     done = false;
 }
 
@@ -87,11 +87,11 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
            || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalEvaluations, storeParetoDistanceLinearInterval))){
 
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["changes_on_interval"]["total_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
-            elitistArchiveJSON["changes_on_interval"]["total_evals"]["avg_dist"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["changes_on_interval"]["total_evals"]["max_dist"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
-            elitistArchiveJSON["changes_on_interval"]["total_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+            JSON_MO_info["changes_on_interval"]["total_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            JSON_MO_info["changes_on_interval"]["total_evals"]["avg_dist"].push_back(avg_max_distance.first);
+            JSON_MO_info["changes_on_interval"]["total_evals"]["max_dist"].push_back(avg_max_distance.second);
+            JSON_MO_info["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
+            JSON_MO_info["changes_on_interval"]["total_evals"]["pareto_points_found"].push_back(paretoPointsFound());
         }
     }
     
@@ -129,11 +129,11 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, storeParetoDistanceLinearInterval)))
         ){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
-            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["max_dist"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
-            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+            JSON_MO_info["changes_on_interval"]["unique_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            JSON_MO_info["changes_on_interval"]["unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
+            JSON_MO_info["changes_on_interval"]["unique_evals"]["max_dist"].push_back(avg_max_distance.second);
+            JSON_MO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
+            JSON_MO_info["changes_on_interval"]["unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
         }
     }
 }
@@ -227,12 +227,12 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         pair<float, float> avg_max_distance = {-1, -1};
 
         if(storeElitistArchive){
-            elitistArchiveJSON["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
-            elitistArchiveJSON["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
-            elitistArchiveJSON["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
+            JSON_MO_info["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            JSON_MO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
+            JSON_MO_info["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
             avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
+            JSON_MO_info["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
+            JSON_MO_info["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){

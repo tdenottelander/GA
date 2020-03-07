@@ -75,7 +75,7 @@ string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
 
-extern json elitistArchiveJSON;
+extern json JSON_MO_info;
 
 bool printfos = false;
 bool printPopulationAfterRound = false;
@@ -97,8 +97,8 @@ int populationInitializationMode = 1; // 0 = True Random, 1 = ARK (first all ide
 int maxRounds = -1;
 int maxSeconds = -1;
 int maxPopSizeLevel = 500;
-int maxEvaluations = -1;
-int maxUniqueEvaluations = -1;
+int maxEvaluations = 9999999;
+int maxUniqueEvaluations = 9999999;
 
 // (non-)IMS parameters
 int IMS_Interval = 4;
@@ -175,6 +175,8 @@ void setFitnessFunction(const char * argv[], int i){
         cout << "ark7" << endl;
         fitFunc = new ARK7(problemSize, genotypeChecking, true);
     }
+    fitFunc->maxEvaluations = maxEvaluations;
+    fitFunc->maxUniqueEvaluations = maxUniqueEvaluations;
 }
 
 void setOptimizer(const char * argv[], int i){
@@ -186,7 +188,7 @@ void setOptimizer(const char * argv[], int i){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "MO-LS") == 0){
         ga = new MO_LS(fitFunc, Utility::Order::RANDOM, 100000);
-    } else if (strcmp(argv[i], "MOGOMEA") == 0){
+    } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
     }
 }
@@ -199,13 +201,40 @@ void setFOS(const char * argv[], int i){
     }
 }
 
+void printCommandLineHelp(){
+    cout << "-?: print help" << endl;
+    cout << "-e [#1]: set max evaluations to #1" << endl;
+    cout << "-u [#1]: set max unique evaluations to #1" << endl;
+    cout << "-m [#1]: set max rounds to #1" << endl;
+    cout << "-s [#1]: set max seconds to #1" << endl;
+    cout << "-f [#1][#2]: set fitness function to #1={zmom, lotz, tit, maxcut, ark7} with problemsize #2" << endl;
+    cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}" << endl;
+    cout << "-E [#1]: set epsilon to #1" << endl;
+    cout << "-F [#1]: set FOS to #1={learned, uni}" << endl;
+    cout << "-o [#1]: set optimizer to #1={NSGA-II, MO-RS, MO-LS, MO-GOMEA}" << endl;
+    cout << "-r [#1]: set repetitions to #1" << endl;
+    cout << "-I [#1]: set IMS to #1={0,1}" << endl;
+    cout << "-p [#1]: set non-IMS Popsize to #1" << endl;
+}
+
+void setConvergenceCriteria(const char * argv[], int i){
+    if (strcmp(argv[i], "entire_pareto") == 0){
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+    } else if (strcmp(argv[i], "epsilon_pareto") == 0){
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+    }
+}
+
 void setParameter(char ch, const char * argv[], int i){
     switch (ch) {
+        case '?': printCommandLineHelp(); exit(0); break;
         case 'e': maxEvaluations = stoi(argv[i]); break;
         case 'u': maxUniqueEvaluations = stoi(argv[i]); break;
         case 'm': maxRounds = stoi(argv[i]); break;
         case 's': maxSeconds = stoi(argv[i]); break;
         case 'f': setFitnessFunction(argv, i); break;
+        case 'c': setConvergenceCriteria(argv, i); break;
+        case 'E': fitFunc->epsilon = stof(argv[i]); break;
         case 'F': setFOS(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r': repetitions = stoi(argv[i]); break;
@@ -222,15 +251,15 @@ void parseCommandLineArguments(int argc, const char * argv[]){
     }
 }
 
-void printRepetition(int rep, json result){
+void printRepetition(int rep){
     cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
-    << " ga=" << ga->id()
+    << " ga=" << (use_MOGOMEA ? "MO-GOMEA" : ga->id())
     << " l=" << problemSize
-    << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
-    << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 12)
-    << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 15)
-    << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15);
-    if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15);
+    << " success=" << padWithSpacesAfter(to_string(JSON_run.at("success")), 7)
+    << " time=" << padWithSpacesAfter(to_string(JSON_run.at("time_taken")), 12)
+    << " evals=" << padWithSpacesAfter(to_string(fitFunc->totalEvaluations), 15)
+    << " uniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalUniqueEvaluations), 15);
+    if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalTransformedUniqueEvaluations), 15);
     cout << endl;
 }
 
@@ -241,26 +270,28 @@ void performExperiment(){
     vector<int> times;
     
     for (int rep = 0; rep < repetitions; rep++){
+        JSON_run.clear();
+        JSON_MO_info.clear();
+        fitFunc->clear();
+        long time;
+        
         if(use_MOGOMEA){
-            MO_GOMEA().main_MO_GOMEA(NULL, NULL);
+            MO_GOMEA().main_MO_GOMEA();
         } else {
             RoundSchedule rs (maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, IMS_Interval);
             
-            fitFunc->clear();
-            
             rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
             
-            json result = rs.run();
-            
-            times.push_back(result.at("timeTaken"));
-            evals.push_back(result.at("evaluations"));
-            uniqueEvals.push_back(result.at("uniqueEvaluations"));
-            
-            printRepetition(rep, result);
-            
-            writeRawData(result.dump(), writeDir + "/exp" + to_string(rep) + ".json");
+            JSON_run = rs.run();
         }
-        writeRawData(elitistArchiveJSON.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
+        printRepetition(rep);
+        
+        times.push_back(time);
+        evals.push_back(fitFunc->totalEvaluations);
+        uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
+        
+        writeRawData(JSON_run.dump(), writeDir + "/run" + to_string(rep) + ".json");
+        writeRawData(JSON_MO_info.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
     }
     cout << endl;
     
@@ -470,7 +501,7 @@ void runNasbench(){
 
 void run_MO_GOMEA(int argc, const char * argv[]){
     if (argc <= 6){
-        MO_GOMEA().main_MO_GOMEA(argc, argv);
+        MO_GOMEA().main_MO_GOMEA();
         exit(0);
     }
     
@@ -498,8 +529,8 @@ void run_MO_GOMEA(int argc, const char * argv[]){
     json main;
     for (int i = 0; i < repetitions; i++){
         fitFunc->clear();
-        MO_GOMEA().main_MO_GOMEA(argc, argv);
-        main.push_back(elitistArchiveJSON);
+        MO_GOMEA().main_MO_GOMEA();
+        main.push_back(JSON_MO_info);
     }
     // TODO: Add different FOS
     string fos = "fos";
