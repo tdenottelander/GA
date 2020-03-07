@@ -64,9 +64,7 @@ void FitnessFunction::clear(){
     totalTransformedUniqueEvaluations = 0;
     uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
-    distanceToParetoFrontData.clear();
     elitistArchiveJSON.clear();
-    storeElitistArchiveCount = 0;
     done = false;
 }
 
@@ -85,16 +83,15 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         }
         
         // Store the distance of the front to the approximation on every log10 interval.
-        if((storeParetoDistanceMode == 0 && Utility::isLogPoint(totalEvaluations))
+        if((storeParetoDistanceMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
            || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalEvaluations, storeParetoDistanceLinearInterval))){
-//            cout << "log at eval " << totalEvaluations << endl;
 
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["avg"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["max"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Total"]["evals"].push_back(totalEvaluations);
-            
-//            cout << "Evaluations: " << totalEvaluations << "  distance: " << avg_max_distance.first << endl;
+            elitistArchiveJSON["changes_on_interval"]["total_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            elitistArchiveJSON["changes_on_interval"]["total_evals"]["avg_dist"].push_back(avg_max_distance.first);
+            elitistArchiveJSON["changes_on_interval"]["total_evals"]["max_dist"].push_back(avg_max_distance.second);
+            elitistArchiveJSON["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
+            elitistArchiveJSON["changes_on_interval"]["total_evals"]["pareto_points_found"].push_back(paretoPointsFound());
         }
     }
     
@@ -128,13 +125,15 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         
         // Store distance front to approximation only if MO-problem and if unique evaluations is on a log10 interval.
         if(numObjectives > 1 && (
-            (storeParetoDistanceMode == 0 && Utility::isLogPoint(totalUniqueEvaluations))
+            (storeParetoDistanceMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2))
             || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, storeParetoDistanceLinearInterval)))
         ){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["avg"].push_back(avg_max_distance.first);
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["max"].push_back(avg_max_distance.second);
-            elitistArchiveJSON["IntervalEvaluationsDistance"]["Unique"]["evals"].push_back(totalUniqueEvaluations);
+            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
+            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["max_dist"].push_back(avg_max_distance.second);
+            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
+            elitistArchiveJSON["changes_on_interval"]["unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
         }
     }
 }
@@ -228,15 +227,12 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         pair<float, float> avg_max_distance = {-1, -1};
 
         if(storeElitistArchive){
-            elitistArchiveJSON["archive"][storeElitistArchiveCount] = elitistArchiveToJSON();
-            elitistArchiveJSON["totalEvaluations"][storeElitistArchiveCount] = totalEvaluations;
-            elitistArchiveJSON["uniqueEvaluations"][storeElitistArchiveCount] = totalUniqueEvaluations;
-            if(storeDistanceToParetoFrontOnElitistArchiveUpdate){
-                avg_max_distance = calculateDistanceParetoToApproximation();
-                elitistArchiveJSON["avgDistanceParetoToApproximation"][storeElitistArchiveCount] = avg_max_distance.first;
-                elitistArchiveJSON["maxDistanceParetoToApproximation"][storeElitistArchiveCount] = avg_max_distance.second;
-            }
-            storeElitistArchiveCount++;
+            elitistArchiveJSON["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
+            elitistArchiveJSON["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
+            elitistArchiveJSON["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
+            avg_max_distance = calculateDistanceParetoToApproximation();
+            elitistArchiveJSON["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
+            elitistArchiveJSON["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){
@@ -333,18 +329,29 @@ pair<float, float> FitnessFunction::calculateDistanceParetoToApproximation(){
     }
     
     float avgDistance = summedDistance / trueParetoFront.size();
-    distanceToParetoFrontData.push_back(tuple<int, int, float>{totalEvaluations, totalUniqueEvaluations, avgDistance});
+//    distanceToParetoFrontData.push_back(tuple<int, int, float>{totalEvaluations, totalUniqueEvaluations, avgDistance});
     return {avgDistance, maxDistance};
 }
 
-json FitnessFunction::paretoDistanceToJSON(){
-    json result;
-    for (int i = 0; i < distanceToParetoFrontData.size(); i++){
-        result["totalEvaluations"][i] = get<0>(distanceToParetoFrontData[i]);
-        result["totalUniqueEvaluations"][i] = get<1>(distanceToParetoFrontData[i]);
-        result["distance"][i] = get<2>(distanceToParetoFrontData[i]);
+int FitnessFunction::paretoPointsFound(){
+    if(trueParetoFront.size() == 0){
+        cout << "No Pareto points known" << endl;
+        return 0;
     }
-    return result;
+    
+    int pointsFound = 0;
+    
+    for (int i = 0; i < trueParetoFront.size(); i++){
+        vector<float> paretoPoint = trueParetoFront[i];
+        for (int j = 0; j < elitistArchive.size(); j++){
+            if (elitistArchive[j].fitness[0] == paretoPoint[0]
+                && elitistArchive[j].fitness[1] == paretoPoint[1]){
+                pointsFound++;
+                break;
+            }
+        }
+    }
+    return pointsFound;
 }
 
 json FitnessFunction::elitistArchiveToJSON(){
@@ -466,6 +473,13 @@ void FitnessFunction::saveElitistArchiveToJSON(){
         result[i] = solution;
     }
     Utility::writeRawData(result.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/elitistArchiveData/", "");
+}
+
+void FitnessFunction::printElitistArchive(){
+    cout << "Elitist archive:   (size=" << elitistArchive.size() << ")" << endl;
+    for (int i = 0; i < elitistArchive.size(); i++){
+        cout << i << ": " << elitistArchive[i].toString() << endl;
+    }
 }
 
 

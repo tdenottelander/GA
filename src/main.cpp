@@ -10,6 +10,7 @@
 
 #include <random>
 #include <iostream>
+#include <sys/stat.h>
 #include <armadillo>
 #include <nlohmann/json.hpp>
 #include "Individual.hpp"
@@ -72,6 +73,7 @@ string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/project
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
+string writeDir;
 
 extern json elitistArchiveJSON;
 
@@ -89,8 +91,190 @@ bool updateElitistArchiveOnEveryEvaluation = true;
 int storeParetoDistanceMode = 0; // 0 = on a log10 scale, 1 = linear scale
 int storeParetoDistanceLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
-FitnessFunction *fit_global;
 int populationInitializationMode = 1; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+
+// Termination criteria
+int maxRounds = -1;
+int maxSeconds = -1;
+int maxPopSizeLevel = 500;
+int maxEvaluations = -1;
+int maxUniqueEvaluations = -1;
+
+// (non-)IMS parameters
+int IMS_Interval = 4;
+bool IMS = false;
+int nonIMSPopsize = 40;
+
+// Problem parameters
+int problemSize = 14;
+bool allowIdentityLayers = true;
+bool genotypeChecking = false;
+bool forcedImprovement = true;
+
+// Experiment parameters
+int repetitions = 30;
+
+// JSON
+json JSON_experiment;
+json JSON_fitfunc;
+json JSON_run;
+json JSON_MO_information;
+
+FitnessFunction* fitFunc;
+GA* ga;
+FOS* fos;
+bool use_MOGOMEA = false;
+
+void setJSONdata(){
+    string directoryName = Utility::getDateString();
+    JSON_experiment["maxPopSizeLevel"] = maxPopSizeLevel;
+    JSON_experiment["maxRounds"] = maxRounds;
+    JSON_experiment["maxSeconds"] = maxSeconds;
+    JSON_experiment["maxEvaluations"] = maxEvaluations;
+    JSON_experiment["maxUniqueEvaluations"] = maxUniqueEvaluations;
+    JSON_experiment["IMS"] = IMS;
+    JSON_experiment["IMS_Interval"] = IMS_Interval;
+    JSON_experiment["nonIMSPopsize"] = nonIMSPopsize;
+    JSON_experiment["allowIdentityLayers"] = allowIdentityLayers;
+    JSON_experiment["genotypeChecking"] = genotypeChecking;
+    JSON_experiment["forcedImprovement"] = forcedImprovement;
+    JSON_experiment["optimizer"] = (use_MOGOMEA ? "MO_GOMEA" : ga->id());
+    JSON_fitfunc["id"] = fitFunc->id();
+    JSON_fitfunc["problemSize"] = problemSize;
+    JSON_fitfunc["optimum"] = fitFunc->optimum;
+    JSON_fitfunc["alphabet"] = fitFunc->problemType->id();
+    JSON_fitfunc["ConvergenceCriteria"] = fitFunc->convergenceCriteria;
+    JSON_fitfunc["epsilon"] = fitFunc->epsilon;
+    JSON_fitfunc["isMO"] = fitFunc->isMO();
+    JSON_fitfunc["numberOfParetoPoints"] = fitFunc->trueParetoFront.size();
+    JSON_experiment["fitnessFunction"] = JSON_fitfunc;
+    writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + (use_MOGOMEA ? "MO_GOMEA" : ga->id());
+    if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
+        string filename = writeDir + "/experiment.json";
+        writeRawData(JSON_experiment.dump(), filename);
+    }
+}
+
+
+void setFitnessFunction(const char * argv[], int i){
+//    cout << argv[i] << argv[i+1] << endl;
+    problemSize = stoi(argv[i+1]);
+    if (strcmp(argv[i], "zmom") == 0){
+        cout << "ZMOM" << endl;
+        fitFunc = new ZeroMaxOneMax(problemSize);
+    } else if (strcmp(argv[i], "lotz") == 0){
+        cout << "lotz" << endl;
+        fitFunc = new LOTZ(problemSize);
+    } else if (strcmp(argv[i], "tit") == 0){
+        cout << "tit" << endl;
+        fitFunc = new TrapInverseTrap(problemSize);
+    } else if (strcmp(argv[i], "maxcut") == 0){
+        cout << "maxcut" << endl;
+        fitFunc = new MAXCUT(problemSize);
+    } else if (strcmp(argv[i], "ark7") == 0){
+        cout << "ark7" << endl;
+        fitFunc = new ARK7(problemSize, genotypeChecking, true);
+    }
+}
+
+void setOptimizer(const char * argv[], int i){
+    
+    //Currently only support for MO algorithms
+    if (strcmp(argv[i], "NSGA-II") == 0){
+        ga = new NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, true);
+    } else if (strcmp(argv[i], "MO-RS") == 0){
+        ga = new MO_RS(fitFunc);
+    } else if (strcmp(argv[i], "MO-LS") == 0){
+        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, 100000);
+    } else if (strcmp(argv[i], "MOGOMEA") == 0){
+        use_MOGOMEA = true;
+    }
+}
+
+void setFOS(const char * argv[], int i){
+    if (strcmp(argv[i], "learned") == 0){
+        fos = new LearnedLT_FOS(fitFunc->problemType);
+    } else if (strcmp(argv[i], "uni") == 0){
+        fos = new Univariate_FOS(Utility::Order::RANDOM);
+    }
+}
+
+void setParameter(char ch, const char * argv[], int i){
+    switch (ch) {
+        case 'e': maxEvaluations = stoi(argv[i]); break;
+        case 'u': maxUniqueEvaluations = stoi(argv[i]); break;
+        case 'm': maxRounds = stoi(argv[i]); break;
+        case 's': maxSeconds = stoi(argv[i]); break;
+        case 'f': setFitnessFunction(argv, i); break;
+        case 'F': setFOS(argv, i); break;
+        case 'o': setOptimizer(argv, i); break;
+        case 'r': repetitions = stoi(argv[i]); break;
+        case 'I': IMS = stoi(argv[i]) == 1; break;
+        case 'p': nonIMSPopsize = stoi(argv[i]); break;
+    }
+}
+
+void parseCommandLineArguments(int argc, const char * argv[]){
+    for (int i = 1; i < argc; i++){
+        if (argv[i][0] == '-'){
+            setParameter(argv[i][1], argv, i+1);
+        }
+    }
+}
+
+void printRepetition(int rep, json result){
+    cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
+    << " ga=" << ga->id()
+    << " l=" << problemSize
+    << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
+    << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 12)
+    << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 15)
+    << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15);
+    if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15);
+    cout << endl;
+}
+
+void performExperiment(){
+    string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
+    vector<int> evals;
+    vector<int> uniqueEvals;
+    vector<int> times;
+    
+    for (int rep = 0; rep < repetitions; rep++){
+        if(use_MOGOMEA){
+            MO_GOMEA().main_MO_GOMEA(NULL, NULL);
+        } else {
+            RoundSchedule rs (maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, IMS_Interval);
+            
+            fitFunc->clear();
+            
+            rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
+            
+            json result = rs.run();
+            
+            times.push_back(result.at("timeTaken"));
+            evals.push_back(result.at("evaluations"));
+            uniqueEvals.push_back(result.at("uniqueEvaluations"));
+            
+            printRepetition(rep, result);
+            
+            writeRawData(result.dump(), writeDir + "/exp" + to_string(rep) + ".json");
+        }
+        writeRawData(elitistArchiveJSON.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
+    }
+    cout << endl;
+    
+    cout << "Avg Time: " << Utility::getAverage(times) << endl;
+    cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
+    cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
+    fitFunc->printElitistArchive();
+}
+
+void run(int argc, const char * argv[]){
+    parseCommandLineArguments(argc, argv);
+    setJSONdata();
+    performExperiment();
+}
 
 void runNasbench(){
 
@@ -125,7 +309,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
     
 //        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
+//        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
 //        fit->setNoisy(0.01);
         
 //        FitnessFunction * fit = new ARK_Online();
@@ -136,7 +320,7 @@ void runNasbench(){
 //        FitnessFunction * fit = new OneMax(20);
 //        FitnessFunction * fit = new LeadingOnes(20);
         
-//        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
+        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
 //        FitnessFunction * fit = new LOTZ(problemSize);
 //        FitnessFunction * fit = new TrapInverseTrap(problemSize);
 //        FitnessFunction * fit = new MAXCUT(problemSize);
@@ -275,6 +459,7 @@ void runNasbench(){
                 // Extra write inbetween algorithms
                 main_json["experiments"] = experiments;
                 writeRawData(main_json.dump(), outputfileName);
+                writeRawData(setting.dump(), dataDir + Utility::getDateString() + "_" + ga->id() + "_elitistArchive.json");
             }
         }
         
@@ -293,15 +478,16 @@ void run_MO_GOMEA(int argc, const char * argv[]){
     
     string problem = argv[7];
     if (problem == "ark7"){
-        fit_global = new ARK7(problemsize, false, true);
-        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-        fit_global->epsilon = 0.0001;
+        fitFunc = new ARK7(problemsize, false, true);
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+        fitFunc->epsilon = 0.0001;
     } else if (problem == "zmom"){
-        fit_global = new ZeroMaxOneMax(problemsize);
-        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+        fitFunc = new ZeroMaxOneMax(problemsize);
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+        fitFunc->maxEvaluations = 200;
     } else if (problem == "tit"){
-        fit_global = new TrapInverseTrap(problemsize);
-        fit_global->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+        fitFunc = new TrapInverseTrap(problemsize);
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
     } else {
         cout << "Problem not known. Exiting now" << endl;
         exit(0);
@@ -311,11 +497,19 @@ void run_MO_GOMEA(int argc, const char * argv[]){
     
     json main;
     for (int i = 0; i < repetitions; i++){
-        fit_global->clear();
+        fitFunc->clear();
         MO_GOMEA().main_MO_GOMEA(argc, argv);
         main.push_back(elitistArchiveJSON);
     }
-    writeRawData(main.dump(), dataDir + "elitistArchive.json");
+    // TODO: Add different FOS
+    string fos = "fos";
+    writeRawData(main.dump(), dataDir + Utility::getDateString() + "_MOGOMEA_" + fos + "_elitistArchive.json");
+}
+
+
+void bisection(){
+    int neededPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
+    cout << "Needed popsize = " << neededPopsize << endl;
 }
 
 int main(int argc, const char * argv[]) {
@@ -323,11 +517,14 @@ int main(int argc, const char * argv[]) {
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
     putenv( mypath );
     
-    if (strcmp(argv[1], "nasbench") == 0){
-        runNasbench();
-    } else {
-        run_MO_GOMEA(argc, argv);
-    }
+//    if (strcmp(argv[1], "nasbench") == 0){
+//        runNasbench();
+//    } else {
+//        run_MO_GOMEA(argc, argv);
+//    }
+    
+    run(argc, argv);
+    
     
     return 0;
 }

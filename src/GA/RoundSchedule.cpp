@@ -212,12 +212,8 @@ json RoundSchedule::run() {
     output["evaluations"] = fit->totalEvaluations;
     output["uniqueEvaluations"] =fit->totalUniqueEvaluations;
     output["transformedUniqueEvaluations"] = fit->totalTransformedUniqueEvaluations;
-    output["paretoDistance"] = fit->paretoDistanceToJSON();
-//    output["elitistArchiveHistory"] = fit->elitistArchiveHistoryToJSON();  
     if (storeConvergence)
         output["convergence"] = convergence;
-    if (storeElitistArchive)
-        output["elitistArchive"] = elitistArchiveJSON;
     
     return output;
 }

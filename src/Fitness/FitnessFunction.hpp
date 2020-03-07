@@ -44,9 +44,6 @@ public:
     UniqueSolutions uniqueSolutions;
     UniqueSolutions transformedUniqueSolutions;
     
-    // Stored as TotalEvaluations, TotalUniqueEvaluations, Distance
-    std::vector<std::tuple<int, int, float>> distanceToParetoFrontData;
-    
     nlohmann::json elitistArchiveToJSON();
     
     FitnessFunction(std::vector<float> optimum, ProblemType *problemType);
@@ -68,8 +65,7 @@ public:
     bool updateElitistArchive(Individual &ind);
     virtual bool entireParetoFrontFound ();
     std::pair<float, float> calculateDistanceParetoToApproximation ();
-    nlohmann::json paretoDistanceToJSON ();
-    nlohmann::json elitistArchiveHistoryToJSON();
+    int paretoPointsFound();
     void setGenotypeChecking(arma::uvec genotype);
     
     int getTotalAmountOfEvaluations();
@@ -90,6 +86,8 @@ public:
     
     void saveElitistArchiveToJSON();
     int storeElitistArchiveCount = 0;
+    
+    void printElitistArchive();
 };
 
 class OneMax : public FitnessFunction {

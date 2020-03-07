@@ -3,7 +3,8 @@
 using namespace std;
 using namespace arma;
 
-extern FitnessFunction* fit_global;
+extern FitnessFunction* fitFunc;
+extern FOS* fos;
 extern int populationInitializationMode;
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -956,8 +957,8 @@ void MO_GOMEA::arkProblemEvaluation(char *solution, double *obj_values, double *
         ind.genotype[i] = solution[i];
     
     // Evaluate the individual
-    vector<float> fitness = fit_global->evaluate(ind);
-    cout << fit_global->totalEvaluations << ". " << ind.toString() << endl;
+    vector<float> fitness = fitFunc->evaluate(ind);
+//    cout << fitFunc->totalEvaluations << ". " << ind.toString() << endl;
     
     // Set the objective values from the evaluated fitness
     for(int k = 0; k < number_of_objectives; k++)
@@ -1057,9 +1058,9 @@ double **MO_GOMEA::getDefaultFront( int *default_front_size )
         case TRAP5: return( getDefaultFrontTrap5InverseTrap5( default_front_size ) );
         case LOTZ: return( getDefaultFrontLeadingOneTrailingZero( default_front_size ) );
 //        case ARK:
-//            if (fit_global->id() == "zmom"){
+//            if (fitFunc->id() == "zmom"){
 //                return( getDefaultFrontOnemaxZeromax( default_front_size ) );
-//            } else if (fit_global->id() == "lotz"){
+//            } else if (fitFunc->id() == "lotz"){
 //                return( getDefaultFrontLeadingOneTrailingZero( default_front_size ) );
 //            }
     }
@@ -1182,7 +1183,7 @@ void MO_GOMEA::logElitistArchiveAtSpecificPoints()
  */
 char MO_GOMEA::checkTerminationCondition()
 {
-    cout << "Check termination condition. ";
+//    cout << "Check termination condition. ";
     if( maximum_number_of_evaluations >= 0 )
     {
         if( checkNumberOfEvaluationsTerminationCondition() )
@@ -1195,11 +1196,11 @@ char MO_GOMEA::checkTerminationCondition()
             return( TRUE );
     }
     
-    if (problem_index == ARK && fit_global->isDone()){
+    if (problem_index == ARK && fitFunc->isDone()){
         return ( TRUE );
     }
 
-    cout << "Dont terminate" << endl;
+//    cout << "Dont terminate" << endl;
     return( FALSE );
 }
 /**
@@ -2297,7 +2298,7 @@ void MO_GOMEA::initializePopulationAndFitnessValues()
             if(populationInitializationMode == 1 && i == 0){
                 population[i][j] = 0;
             } else {
-                population[i][j] = fit_global->problemType->alphabet[Utility::getRand(0, fit_global->problemType->alphabet.size())];
+                population[i][j] = fitFunc->problemType->alphabet[Utility::getRand(0, fitFunc->problemType->alphabet.size())];
             }
         }
         evaluateIndividual( population[i], objective_values[i],  &(constraint_values[i]), NOT_EXTREME_CLUSTER );
@@ -2346,26 +2347,25 @@ void MO_GOMEA::learnLinkageOnCurrentPopulation()
     // find extreme-region clusters
     determineExtremeClusters();
     
-    LearnedLT_FOS learnedLTFOS (fit_global->problemType);
-
     // learn linkage tree for every cluster
     for( cluster_index = 0; cluster_index < number_of_mixing_components; cluster_index++ ){
         
         // Copy individuals in cluster to subpopulation
         vector<Individual> subpopulation;
         for ( j = 0; j < population_cluster_sizes[cluster_index]; j++){
-            Individual ind(fit_global->totalProblemLength, fit_global->numObjectives);
+            Individual ind(fitFunc->totalProblemLength, fitFunc->numObjectives);
             solution = population[population_indices_of_cluster_members[cluster_index][j]];
-            for ( g = 0; g < fit_global->totalProblemLength; g++){
+            for ( g = 0; g < fitFunc->totalProblemLength; g++){
                 ind.genotype[g] = solution[g];
             }
             subpopulation.push_back(ind);
         }
         
         // Learn the linkage tree (using my code)
-        vector<uvec> fos = learnedLTFOS.GenerateLinkageTreeFOS(subpopulation);
+        vector<uvec> fosToUse = fos->getFOS(subpopulation);
+        
         // Copy the learned linkage tree into MO_GOMEA variables
-        assignLinkageTreeVariables(fos, cluster_index);
+        assignLinkageTreeVariables(fosToUse, cluster_index);
         
         // Learn the linkage tree (using MO_GOMEA code)
 //        learnLinkageTree( i );
@@ -3615,7 +3615,26 @@ void MO_GOMEA::run( void )
  */
 int MO_GOMEA::main_MO_GOMEA( int argc, const char **argv )
 {
-    interpretCommandLine( argc, argv );
+//    cout << "Number of parameters: " << fitFunc->totalProblemLength << endl;
+    int argcHardcoded = 7;
+    string x = to_string(fitFunc->totalProblemLength);
+    const char* argvHardcoded[] =
+    {
+        (char*)("Placeholder"),
+        (char*)("5"),
+        (char*)("2"),
+        (char*)(x.c_str()),
+        (char*)("200"),
+        (char*)("999999999"),
+        (char*)("999999999")
+    };
+    
+//    for (int i = 0; i < argcHardcoded; i++){
+//        cout << argvHardcoded[i] << endl;
+//    }
+//    cout << "ok" << endl;
+    
+    interpretCommandLine( argcHardcoded, argvHardcoded );
 
     run();
 

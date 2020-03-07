@@ -305,10 +305,14 @@ float Utility::EuclideanDistance(vector<float> vecA, vector<float> vecB){
 // Returns true if evaluations is a point on a log10 scale.
 // (So return true if evaluations = 1, 2, 3, 10, 20, 30, 100, 200, 1000, 2000, ...
 //   and return false if evaluations = 11, 101, 1001, 10001, 10002, 10003, ...)
-bool Utility::isLogPoint(int value){
+bool Utility::isLogPoint(int value, int scaling){
     for (int i = 1; i < 15; i++){
         if (value <= pow(10, i)){
-            return value % (int)pow(10, i-1) == 0;
+            int divisor = (int)pow(10, i-1);
+            if (i > 1){
+                divisor = (int)(divisor/scaling);
+            }
+            return value % divisor == 0;
         }
     }
     return false;
