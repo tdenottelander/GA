@@ -123,6 +123,7 @@ json JSON_MO_information;
 FitnessFunction* fitFunc;
 GA* ga;
 FOS* fos;
+Variation* variation;
 bool use_MOGOMEA = false;
 
 void setJSONdata(){
@@ -183,7 +184,10 @@ void setOptimizer(const char * argv[], int i){
     
     //Currently only support for MO algorithms
     if (strcmp(argv[i], "NSGA-II") == 0){
-        ga = new NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, true);
+        if (variation == NULL){
+            variation = new TwoPointCrossover();
+        }
+        ga = new NSGA_II(fitFunc, variation, 0.9, true);
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "MO-LS") == 0){
@@ -201,6 +205,20 @@ void setFOS(const char * argv[], int i){
     }
 }
 
+void setVariation(const char * argv[], int i){
+    if (strcmp(argv[i], "1p") == 0){
+        variation = new OnePointCrossover();
+    } else if (strcmp(argv[i], "2p") == 0){
+        variation = new TwoPointCrossover();
+    } else if (strcmp(argv[i], "3p") == 0){
+        variation = new ThreePointCrossover();
+    } else if (strcmp(argv[i], "uni") == 0){
+        variation = new UnivariateCrossover();
+    } else if (strcmp(argv[i], "ark6") == 0){
+        variation = new ARK6_Crossover();
+    }
+}
+
 void printCommandLineHelp(){
     cout << "-?: print help" << endl;
     cout << "-e [#1]: set max evaluations to #1" << endl;
@@ -211,6 +229,7 @@ void printCommandLineHelp(){
     cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
     cout << "-F [#1]: set FOS to #1={learned, uni}" << endl;
+    cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
     cout << "-o [#1]: set optimizer to #1={NSGA-II, MO-RS, MO-LS, MO-GOMEA}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
     cout << "-I [#1]: set IMS to #1={0,1}" << endl;
@@ -236,6 +255,7 @@ void setParameter(char ch, const char * argv[], int i){
         case 'c': setConvergenceCriteria(argv, i); break;
         case 'E': fitFunc->epsilon = stof(argv[i]); break;
         case 'F': setFOS(argv, i); break;
+        case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r': repetitions = stoi(argv[i]); break;
         case 'I': IMS = stoi(argv[i]) == 1; break;
@@ -273,7 +293,6 @@ void performExperiment(){
         JSON_run.clear();
         JSON_MO_info.clear();
         fitFunc->clear();
-        long time;
         
         if(use_MOGOMEA){
             MO_GOMEA().main_MO_GOMEA();
@@ -286,7 +305,7 @@ void performExperiment(){
         }
         printRepetition(rep);
         
-        times.push_back(time);
+        times.push_back(JSON_run.at("time_taken"));
         evals.push_back(fitFunc->totalEvaluations);
         uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
         
