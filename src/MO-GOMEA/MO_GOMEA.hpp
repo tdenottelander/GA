@@ -124,8 +124,8 @@ void ezilaitiniMaxcutProblemData();
 void maxcutReadInstanceFromFile(char *filename, int objective_index);
 void maxcutProblemEvaluation( char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster );
     
-void arkLoadProblemData();
-void arkProblemEvaluation( char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster );
+void customLoadProblemData();
+void customProblemEvaluation( char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster );
 
 double **getDefaultFrontOnemaxZeromax( int *default_front_size );
 double **getDefaultFrontTrap5InverseTrap5( int *default_front_size );

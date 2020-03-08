@@ -25,7 +25,7 @@ extern int nonIMSPopsize;
 #define KNAPSACK 2
 #define LOTZ 3
 #define MAXCUTT 4
-#define ARK 5
+#define CUSTOM 5
 /*-=-=-=-=-=-=-=-=-=-=-=-= Section Utility Function -=-=-=-=-=-=-=-=-=-=-=-*/
 /**
  * Allocates memory and exits the program in case of a memory allocation failure.
@@ -415,7 +415,7 @@ void MO_GOMEA::evaluateIndividual(char *solution, double *obj, double *con, int 
         case LOTZ: lotzProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         case KNAPSACK: knapsackProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         case MAXCUTT: maxcutProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
-        case ARK: arkProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
+        case CUSTOM: customProblemEvaluation(solution, obj, con, objective_index_of_extreme_cluster); break;
         default:
             printf("Cannot evaluate this problem!\n");
             exit(1);
@@ -435,7 +435,7 @@ char *MO_GOMEA::installedProblemName( int index )
         case  KNAPSACK:         return( (char *) "Knapsack - 2 Objectives");
         case  LOTZ:             return( (char *) "Leading One Trailing Zero (LOTZ)");
         case  MAXCUTT:          return( (char *) "Maxcut - 2 Objectives");
-        case  ARK:              return( (char *) "ARK/Custom");
+        case  CUSTOM:              return( (char *) "Custom");
     }
     return( NULL );
 }
@@ -944,7 +944,7 @@ void MO_GOMEA::maxcutProblemEvaluation( char *solution, double *obj_values, doub
     }
 }
 
-void MO_GOMEA::arkLoadProblemData()
+void MO_GOMEA::customLoadProblemData()
 {
     optimization = (char*)Malloc(number_of_objectives*sizeof(char));
     for(int k = 0; k < number_of_objectives; k++)
@@ -954,7 +954,7 @@ void MO_GOMEA::arkLoadProblemData()
 //    vtr = 0;
 }
 
-void MO_GOMEA::arkProblemEvaluation(char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster)
+void MO_GOMEA::customProblemEvaluation(char *solution, double *obj_values, double *con_value, int objective_index_of_extreme_cluster)
 {
     *con_value = 0;
     
@@ -1064,7 +1064,7 @@ double **MO_GOMEA::getDefaultFront( int *default_front_size )
         case ZEROMAX_ONEMAX: return( getDefaultFrontOnemaxZeromax( default_front_size ) );
         case TRAP5: return( getDefaultFrontTrap5InverseTrap5( default_front_size ) );
         case LOTZ: return( getDefaultFrontLeadingOneTrailingZero( default_front_size ) );
-//        case ARK:
+//        case CUSTOM:
 //            if (fitFunc->id() == "zmom"){
 //                return( getDefaultFrontOnemaxZeromax( default_front_size ) );
 //            } else if (fitFunc->id() == "lotz"){
@@ -1203,7 +1203,7 @@ char MO_GOMEA::checkTerminationCondition()
             return( TRUE );
     }
     
-    if (problem_index == ARK && fitFunc->isDone()){
+    if (problem_index == CUSTOM && fitFunc->isDone()){
         return ( TRUE );
     }
 
@@ -3574,7 +3574,7 @@ void MO_GOMEA::loadProblemData()
         case LOTZ: lotzLoadProblemData(); break;
         case KNAPSACK: knapsackLoadProblemData(); break;
         case MAXCUTT: maxcutLoadProblemData(); break;
-        case ARK: arkLoadProblemData(); break;
+        case CUSTOM: customLoadProblemData(); break;
         default:
             printf("Cannot load problem data!\n");
             exit(1);
