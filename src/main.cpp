@@ -140,6 +140,9 @@ void setJSONdata(){
     JSON_experiment["genotypeChecking"] = genotypeChecking;
     JSON_experiment["forcedImprovement"] = forcedImprovement;
     JSON_experiment["optimizer"] = (use_MOGOMEA ? "MO_GOMEA" : ga->id());
+    JSON_experiment["populationInitializationMode"] = populationInitializationMode;
+    if(fos != NULL) JSON_experiment["fos"] = fos->id();
+    if(variation != NULL) JSON_experiment["variation"] = variation->id();
     JSON_fitfunc["id"] = fitFunc->id();
     JSON_fitfunc["problemSize"] = problemSize;
     JSON_fitfunc["optimum"] = fitFunc->optimum;
