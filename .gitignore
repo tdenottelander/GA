@@ -85,3 +85,7 @@ DerivedData/
 dependencies/
 dist/
 nbproject/
+
+
+## Benchmark files
+benchmarks/
