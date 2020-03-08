@@ -154,35 +154,75 @@ void setJSONdata(){
         string filename = writeDir + "/experiment.json";
         writeRawData(JSON_experiment.dump(), filename);
     }
+    cout << "Creating directory " << writeDir << " for writing results to." << endl;
 }
 
 
 void setFitnessFunction(const char * argv[], int i){
-//    cout << argv[i] << argv[i+1] << endl;
     problemSize = stoi(argv[i+1]);
+    
     if (strcmp(argv[i], "zmom") == 0){
-        cout << "ZMOM" << endl;
         fitFunc = new ZeroMaxOneMax(problemSize);
     } else if (strcmp(argv[i], "lotz") == 0){
-        cout << "lotz" << endl;
         fitFunc = new LOTZ(problemSize);
     } else if (strcmp(argv[i], "tit") == 0){
-        cout << "tit" << endl;
         fitFunc = new TrapInverseTrap(problemSize);
     } else if (strcmp(argv[i], "maxcut") == 0){
-        cout << "maxcut" << endl;
         fitFunc = new MAXCUT(problemSize);
+    } else if (strcmp(argv[i], "ark1") == 0){
+        fitFunc = new ARK1(problemSize, allowIdentityLayers);
+    } else if (strcmp(argv[i], "ark2") == 0){
+        fitFunc = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
+    } else if (strcmp(argv[i], "ark3") == 0){
+        fitFunc = new ARK3();
+    } else if (strcmp(argv[i], "ark4") == 0){
+        fitFunc = new ARK4(problemSize, allowIdentityLayers);
+    } else if (strcmp(argv[i], "ark5") == 0){
+        fitFunc = new ARK5(problemSize, allowIdentityLayers);
+    } else if (strcmp(argv[i], "ark6") == 0){
+        fitFunc = new ARK6(problemSize, genotypeChecking);
     } else if (strcmp(argv[i], "ark7") == 0){
-        cout << "ark7" << endl;
         fitFunc = new ARK7(problemSize, genotypeChecking, true);
+//    } else if (strcmp(argv[i], "ark-online") == 0){
+//        fitFunc = new ARK_Online();
+    } else if (strcmp(argv[i], "onemax") == 0){
+        fitFunc = new OneMax(problemSize);
+    } else if (strcmp(argv[i], "leadingones") == 0){
+        fitFunc = new LeadingOnes(problemSize);
+    } else if (strcmp(argv[i], "trap") == 0){
+        // Might not work yet
+        fitFunc = new Trap(5, 5);
+    } else if (strcmp(argv[i], "NK") == 0){
+        // Might not work yet
+        fitFunc = new NK(problemSize, 3, false, 3);
+    }
+    if(fitFunc == NULL){
+        cout << "Could not read fitfunc argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
+        exit(0);
     }
     fitFunc->maxEvaluations = maxEvaluations;
     fitFunc->maxUniqueEvaluations = maxUniqueEvaluations;
+    cout << Utility::padWithSpacesAfter("Setting fitfunc to ", 30) << fitFunc->id() << endl;
+    cout << Utility::padWithSpacesAfter("Setting problemsize to ", 30) << problemSize << endl;
+}
+
+Utility::Order getOrder(const char * orderString){
+    Utility::Order order = Utility::Order::RANDOM; // Default random
+    if (strcmp(orderString, "rand") == 0){
+        order = Utility::Order::RANDOM;
+    } else if (strcmp(orderString, "asc") == 0){
+        order = Utility::Order::ASCENDING;
+    } else if (strcmp(orderString, "desc") == 0){
+        order = Utility::Order::DESCENDING;
+    }
+    return order;
 }
 
 void setOptimizer(const char * argv[], int i){
     
-    //Currently only support for MO algorithms
+    const char * orderString = argv[i+1];
+    Utility::Order order = getOrder(orderString);
+    
     if (strcmp(argv[i], "NSGA-II") == 0){
         if (variation == NULL){
             variation = new TwoPointCrossover();
@@ -194,15 +234,59 @@ void setOptimizer(const char * argv[], int i){
         ga = new MO_LS(fitFunc, Utility::Order::RANDOM, 100000);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
+    } else if (strcmp(argv[i], "GOM") == 0){
+        ga = new GOM(fitFunc, fos, forcedImprovement);
+    } else if (strcmp(argv[i], "GOM-LS") == 0){
+        ga = new GOM_LS(fitFunc, fos, new LocalSearch(fitFunc, order), forcedImprovement);
+    } else if (strcmp(argv[i], "RS") == 0){
+        ga = new RandomSearch(fitFunc);
+    } else if (strcmp(argv[i], "SimpleGA") == 0){
+        ga = new SimpleGA(fitFunc, variation, new TournamentSelection(2));
+    } else if (strcmp(argv[i], "LS") == 0){
+        ga = new LocalSearch(fitFunc, order);
+    } else if (strcmp(argv[i], "LSS-0.01") == 0){
+        ga = new LocalSearchStochastic(fitFunc, order, 0.01);
+    } else if (strcmp(argv[i], "LSS-0.05") == 0){
+        ga = new LocalSearchStochastic(fitFunc, order, 0.05);
     }
+    if(!use_MOGOMEA && ga == NULL){
+        cout << "Could not read optimizer argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
+        exit(0);
+    }
+    cout << Utility::padWithSpacesAfter("Setting optimizer to ", 30) << (use_MOGOMEA ? "MO-GOMEA" : ga->id()) << endl;
 }
 
 void setFOS(const char * argv[], int i){
+    
+    const char * orderString = argv[i+1];
+    Utility::Order order = getOrder(orderString);
+    
     if (strcmp(argv[i], "learned") == 0){
         fos = new LearnedLT_FOS(fitFunc->problemType);
     } else if (strcmp(argv[i], "uni") == 0){
-        fos = new Univariate_FOS(Utility::Order::RANDOM);
+        fos = new Univariate_FOS(order);
+    } else if (strcmp(argv[i], "IncrLT") == 0){
+        fos = new IncrementalLT_FOS();
+    } else if (strcmp(argv[i], "IncrLTR") == 0){
+        fos = new IncrementalLTReversed_FOS();
+    } else if (strcmp(argv[i], "IncrLT_uni") == 0){
+        fos = new IncrementalLT_UnivariateOrdered_FOS();
+    } else if (strcmp(argv[i], "IncrLTR_uni") == 0){
+        fos = new IncrementalLTReversed_Univariate_FOS();
+    } else if (strcmp(argv[i], "IncrLTR_uniOrd") == 0){
+        fos = new IncrementalLTReversed_UnivariateOrdered_FOS();
+    } else if (strcmp(argv[i], "triplet") == 0){
+        fos = new Triplet_FOS(order);
+    } else if (strcmp(argv[i], "tripletTree") == 0){
+        fos = new TripletTree_FOS(order);
+    } else if (strcmp(argv[i], "ark6") == 0){
+        fos = new ARK6_FOS(order);
     }
+    if(fos == NULL){
+        cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
+        exit(0);
+    }
+    cout << Utility::padWithSpacesAfter("Setting FOS to ", 30) << fos->id() << endl;
 }
 
 void setVariation(const char * argv[], int i){
@@ -217,6 +301,11 @@ void setVariation(const char * argv[], int i){
     } else if (strcmp(argv[i], "ark6") == 0){
         variation = new ARK6_Crossover();
     }
+    if(variation == NULL){
+        cout << "Could not read variation argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
+        exit(0);
+    }
+    cout << Utility::padWithSpacesAfter("Setting variation to ", 30) << variation->id() << endl;
 }
 
 void printCommandLineHelp(){
@@ -225,12 +314,12 @@ void printCommandLineHelp(){
     cout << "-u [#1]: set max unique evaluations to #1" << endl;
     cout << "-m [#1]: set max rounds to #1" << endl;
     cout << "-s [#1]: set max seconds to #1" << endl;
-    cout << "-f [#1][#2]: set fitness function to #1={zmom, lotz, tit, maxcut, ark7} with problemsize #2" << endl;
+    cout << "-f [#1][#2]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2" << endl;
     cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
-    cout << "-F [#1]: set FOS to #1={learned, uni}" << endl;
+    cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6} with optional order #2={rand, asc, desc}" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
-    cout << "-o [#1]: set optimizer to #1={NSGA-II, MO-RS, MO-LS, MO-GOMEA}" << endl;
+    cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
     cout << "-I [#1]: set IMS to #1={0,1}" << endl;
     cout << "-p [#1]: set non-IMS Popsize to #1" << endl;
@@ -247,19 +336,43 @@ void setConvergenceCriteria(const char * argv[], int i){
 void setParameter(char ch, const char * argv[], int i){
     switch (ch) {
         case '?': printCommandLineHelp(); exit(0); break;
-        case 'e': maxEvaluations = stoi(argv[i]); break;
-        case 'u': maxUniqueEvaluations = stoi(argv[i]); break;
-        case 'm': maxRounds = stoi(argv[i]); break;
-        case 's': maxSeconds = stoi(argv[i]); break;
+        case 'e':
+            maxEvaluations = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting maxEvaluations to ", 30) << maxEvaluations << endl;
+            break;
+        case 'u':
+            maxUniqueEvaluations = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting maxUniqueEvaluations to ", 30) << maxUniqueEvaluations << endl;
+            break;
+        case 'm':
+            maxRounds = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting maxRounds to ", 30) << maxRounds << endl;
+            break;
+        case 's':
+            maxSeconds = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting maxSeconds to ", 30) << maxSeconds << endl;
+            break;
         case 'f': setFitnessFunction(argv, i); break;
         case 'c': setConvergenceCriteria(argv, i); break;
-        case 'E': fitFunc->epsilon = stof(argv[i]); break;
+        case 'E':
+            fitFunc->epsilon = stof(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting fitfunc epsilon to ", 30) << fitFunc->epsilon << endl;
+            break;
         case 'F': setFOS(argv, i); break;
         case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
-        case 'r': repetitions = stoi(argv[i]); break;
-        case 'I': IMS = stoi(argv[i]) == 1; break;
-        case 'p': nonIMSPopsize = stoi(argv[i]); break;
+        case 'r':
+            repetitions = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting repetitions to ", 30) << repetitions << endl;
+            break;
+        case 'I':
+            IMS = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting IMS to ", 30) << IMS << endl;
+            break;
+        case 'p':
+            nonIMSPopsize = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting non-IMS popsize to ", 30) << nonIMSPopsize << endl;
+            break;
     }
 }
 
@@ -518,45 +631,6 @@ void runNasbench(){
     }
 }
 
-void run_MO_GOMEA(int argc, const char * argv[]){
-    if (argc <= 6){
-        MO_GOMEA().main_MO_GOMEA();
-        exit(0);
-    }
-    
-    int problemsize = stoi(argv[3]);
-    
-    string problem = argv[7];
-    if (problem == "ark7"){
-        fitFunc = new ARK7(problemsize, false, true);
-        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-        fitFunc->epsilon = 0.0001;
-    } else if (problem == "zmom"){
-        fitFunc = new ZeroMaxOneMax(problemsize);
-        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-        fitFunc->maxEvaluations = 200;
-    } else if (problem == "tit"){
-        fitFunc = new TrapInverseTrap(problemsize);
-        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-    } else {
-        cout << "Problem not known. Exiting now" << endl;
-        exit(0);
-    }
-    
-    int repetitions = 10;
-    
-    json main;
-    for (int i = 0; i < repetitions; i++){
-        fitFunc->clear();
-        MO_GOMEA().main_MO_GOMEA();
-        main.push_back(JSON_MO_info);
-    }
-    // TODO: Add different FOS
-    string fos = "fos";
-    writeRawData(main.dump(), dataDir + Utility::getDateString() + "_MOGOMEA_" + fos + "_elitistArchive.json");
-}
-
-
 void bisection(){
     int neededPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
     cout << "Needed popsize = " << neededPopsize << endl;
@@ -567,11 +641,7 @@ int main(int argc, const char * argv[]) {
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
     putenv( mypath );
     
-//    if (strcmp(argv[1], "nasbench") == 0){
-//        runNasbench();
-//    } else {
-//        run_MO_GOMEA(argc, argv);
-//    }
+//    runNasbench();
     
     run(argc, argv);
     
