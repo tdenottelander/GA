@@ -323,6 +323,10 @@ void printCommandLineHelp(){
     cout << "-r [#1]: set repetitions to #1" << endl;
     cout << "-I [#1]: set IMS to #1={0,1}" << endl;
     cout << "-p [#1]: set non-IMS Popsize to #1" << endl;
+    cout << "-i [#1]: set forced improvement to #1={0,1}" << endl;
+    cout << "-g [#1]: set genotype checking to #1={0,1}" << endl;
+    cout << "-l [#1]: set allow identity layers to #1={0,1}" << endl;
+    cout << "-P [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -372,6 +376,22 @@ void setParameter(char ch, const char * argv[], int i){
         case 'p':
             nonIMSPopsize = stoi(argv[i]);
             cout << Utility::padWithSpacesAfter("Setting non-IMS popsize to ", 30) << nonIMSPopsize << endl;
+            break;
+        case 'i':
+            forcedImprovement = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting forced Improvement to ", 30) << forcedImprovement << endl;
+            break;
+        case 'g':
+            genotypeChecking = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting genotype checking to ", 30) << genotypeChecking << endl;
+            break;
+        case 'l':
+            allowIdentityLayers = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting allow Identity Layers to ", 30) << allowIdentityLayers << endl;
+            break;
+        case 'P':
+            populationInitializationMode = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting pop initialization mode to ", 30) << populationInitializationMode << endl;
             break;
     }
 }
