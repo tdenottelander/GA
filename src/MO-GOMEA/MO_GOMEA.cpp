@@ -8,6 +8,8 @@ extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
 extern json JSON_run;
+extern bool IMS;
+extern int nonIMSPopsize;
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 #define FALSE 0
@@ -3175,10 +3177,11 @@ void MO_GOMEA::freeAuxiliaryPopulations()
 void MO_GOMEA::initializeMemoryForArrayOfPopulations()
 {
     int i;
-    // SET THIS TO:
-    //  1 FOR NON-IMS
-    //  20 FOR IMS
-    maximum_number_of_populations      = 20;
+    if (IMS){
+        maximum_number_of_populations = 20;
+    } else {
+        maximum_number_of_populations = 1;
+    }
 
     array_of_populations                = (char***)Malloc(maximum_number_of_populations*sizeof(char**));
     array_of_objective_values           = (double***)Malloc(maximum_number_of_populations*sizeof(double**));
@@ -3271,10 +3274,11 @@ void MO_GOMEA::ezilaitiniArrayOfPopulation()
 void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
 {
     int i;
-    // SET THIS TO
-    //  8 FOR IMS
-    //  anything FOR NON-IMS
-    smallest_population_size = 8;
+    if(IMS){
+        smallest_population_size = 8;
+    } else {
+        smallest_population_size = nonIMSPopsize;
+    }
 
     initializeMemoryForArrayOfPopulations();
     initializeArrayOfParetoFronts();
@@ -3288,6 +3292,7 @@ void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
                 population_size = array_of_population_sizes[population_id];
                 number_of_mixing_components = array_of_number_of_clusters[population_id];
 
+//                cout << "init popsize " << population_size << endl;
                 initialize();
 
                 putInitializedPopulationIntoArray();
@@ -3328,11 +3333,11 @@ void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
             array_of_number_of_generations[population_id]++;
             if(use_print_progress_to_screen)
                 printf("%d ", array_of_number_of_generations[population_id]);
-            population_id++;
-//            if(population_id + 1 < maximum_number_of_populations){
-//                population_id++;
+//            population_id++;
+            if(population_id + 1 < maximum_number_of_populations){
+                population_id++;
 //                cout << "Increment population id" << endl;
-//            }
+            }
             if(checkTerminationCondition() == TRUE)
                 break;
         } while(array_of_number_of_generations[population_id-1] % generation_base == 0);

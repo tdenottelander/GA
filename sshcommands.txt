@@ -2,7 +2,7 @@ To connect to the CWI desktop machine, use:
 ssh tdo@ross.ls.cwi.nl
 
 To mount a folder from the CWI desktop machine, e.g. the git folder, use:
-sshfs tdo@ross.ls.cwi.nl:/export/scratch1/tdo/GA_clone ~/mount/point -ovolname=MountedFolder
+sshfs tdo@ross.ls.cwi.nl:/export/scratch1/tdo/TomGA ~/mount/point -ovolname=MountedFolder
 
 To open a file with textEdit, use:
 open -t sshcommands.txt
