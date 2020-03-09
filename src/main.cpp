@@ -122,6 +122,7 @@ json JSON_run;
 
 // Printing parameters
 bool printFullElitistArchive = false;
+int settingInfoStringLength = 30;
 
 FitnessFunction* fitFunc;
 GA* ga;
@@ -162,6 +163,13 @@ void setJSONdata(){
         writeRawData(JSON_experiment.dump(), filename);
     }
     cout << "Creating directory " << writeDir << " for writing results to." << endl;
+}
+
+void setDirectories(){
+    dataDir = projectDir + "data/";
+    cout << "Setting data directory to " << dataDir << endl;
+    benchmarksDir = projectDir + "benchmarks/";
+    cout << "Setting benchmark directory to " << benchmarksDir << endl;
 }
 
 
@@ -211,8 +219,8 @@ void setFitnessFunction(const char * argv[], int i){
     }
     fitFunc->maxEvaluations = maxEvaluations;
     fitFunc->maxUniqueEvaluations = maxUniqueEvaluations;
-    cout << Utility::padWithSpacesAfter("Setting fitfunc to ", 30) << fitFunc->id() << endl;
-    cout << Utility::padWithSpacesAfter("Setting problemsize to ", 30) << problemSize << endl;
+    cout << Utility::padWithSpacesAfter("Setting fitfunc to ", settingInfoStringLength) << fitFunc->id() << endl;
+    cout << Utility::padWithSpacesAfter("Setting problemsize to ", settingInfoStringLength) << problemSize << endl;
 }
 
 Utility::Order getOrder(const char * orderString){
@@ -262,7 +270,7 @@ void setOptimizer(const char * argv[], int i){
         cout << "Could not read optimizer argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
         exit(0);
     }
-    cout << Utility::padWithSpacesAfter("Setting optimizer to ", 30) << (use_MOGOMEA ? "MO-GOMEA" : ga->id()) << endl;
+    cout << Utility::padWithSpacesAfter("Setting optimizer to ", settingInfoStringLength) << (use_MOGOMEA ? "MO-GOMEA" : ga->id()) << endl;
 }
 
 void setFOS(const char * argv[], int i){
@@ -295,7 +303,7 @@ void setFOS(const char * argv[], int i){
         cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
         exit(0);
     }
-    cout << Utility::padWithSpacesAfter("Setting FOS to ", 30) << fos->id() << endl;
+    cout << Utility::padWithSpacesAfter("Setting FOS to ", settingInfoStringLength) << fos->id() << endl;
 }
 
 void setVariation(const char * argv[], int i){
@@ -314,11 +322,12 @@ void setVariation(const char * argv[], int i){
         cout << "Could not read variation argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
         exit(0);
     }
-    cout << Utility::padWithSpacesAfter("Setting variation to ", 30) << variation->id() << endl;
+    cout << Utility::padWithSpacesAfter("Setting variation to ", settingInfoStringLength) << variation->id() << endl;
 }
 
 void printCommandLineHelp(){
     cout << "-?: print help" << endl;
+    cout << "-P [#1]: set project directory to #1  !!IMPORTANT THAT THIS IS DONE!!" << endl;
     cout << "-e [#1]: set max evaluations to #1" << endl;
     cout << "-u [#1]: set max unique evaluations to #1" << endl;
     cout << "-m [#1]: set max rounds to #1" << endl;
@@ -335,7 +344,7 @@ void printCommandLineHelp(){
     cout << "-i [#1]: set forced improvement to #1={0,1}" << endl;
     cout << "-g [#1]: set genotype checking to #1={0,1}" << endl;
     cout << "-l [#1]: set allow identity layers to #1={0,1}" << endl;
-    cout << "-P [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
+    cout << "-M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
     cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
 }
 
@@ -350,62 +359,67 @@ void setConvergenceCriteria(const char * argv[], int i){
 void setParameter(char ch, const char * argv[], int i){
     switch (ch) {
         case '?': printCommandLineHelp(); exit(0); break;
+        case 'P':
+            projectDir = argv[i];
+            setDirectories();
+            cout << Utility::padWithSpacesAfter("Setting project directory to ", settingInfoStringLength) << projectDir << endl;
+            break;
         case 'e':
             maxEvaluations = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting maxEvaluations to ", 30) << maxEvaluations << endl;
+            cout << Utility::padWithSpacesAfter("Setting maxEvaluations to ", settingInfoStringLength) << maxEvaluations << endl;
             break;
         case 'u':
             maxUniqueEvaluations = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting maxUniqueEvaluations to ", 30) << maxUniqueEvaluations << endl;
+            cout << Utility::padWithSpacesAfter("Setting maxUniqueEvaluations to ", settingInfoStringLength) << maxUniqueEvaluations << endl;
             break;
         case 'm':
             maxRounds = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting maxRounds to ", 30) << maxRounds << endl;
+            cout << Utility::padWithSpacesAfter("Setting maxRounds to ", settingInfoStringLength) << maxRounds << endl;
             break;
         case 's':
             maxSeconds = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting maxSeconds to ", 30) << maxSeconds << endl;
+            cout << Utility::padWithSpacesAfter("Setting maxSeconds to ", settingInfoStringLength) << maxSeconds << endl;
             break;
         case 'f': setFitnessFunction(argv, i); break;
         case 'c': setConvergenceCriteria(argv, i); break;
         case 'E':
             fitFunc->epsilon = stof(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting fitfunc epsilon to ", 30) << fitFunc->epsilon << endl;
+            cout << Utility::padWithSpacesAfter("Setting fitfunc epsilon to ", settingInfoStringLength) << fitFunc->epsilon << endl;
             break;
         case 'F': setFOS(argv, i); break;
         case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r':
             repetitions = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting repetitions to ", 30) << repetitions << endl;
+            cout << Utility::padWithSpacesAfter("Setting repetitions to ", settingInfoStringLength) << repetitions << endl;
             break;
         case 'I':
             IMS = stoi(argv[i]) == 1;
-            cout << Utility::padWithSpacesAfter("Setting IMS to ", 30) << IMS << endl;
+            cout << Utility::padWithSpacesAfter("Setting IMS to ", settingInfoStringLength) << IMS << endl;
             break;
         case 'p':
             nonIMSPopsize = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting non-IMS popsize to ", 30) << nonIMSPopsize << endl;
+            cout << Utility::padWithSpacesAfter("Setting non-IMS popsize to ", settingInfoStringLength) << nonIMSPopsize << endl;
             break;
         case 'i':
             forcedImprovement = stoi(argv[i]) == 1;
-            cout << Utility::padWithSpacesAfter("Setting forced Improvement to ", 30) << forcedImprovement << endl;
+            cout << Utility::padWithSpacesAfter("Setting forced Improvement to ", settingInfoStringLength) << forcedImprovement << endl;
             break;
         case 'g':
             genotypeChecking = stoi(argv[i]) == 1;
-            cout << Utility::padWithSpacesAfter("Setting genotype checking to ", 30) << genotypeChecking << endl;
+            cout << Utility::padWithSpacesAfter("Setting genotype checking to ", settingInfoStringLength) << genotypeChecking << endl;
             break;
         case 'l':
             allowIdentityLayers = stoi(argv[i]) == 1;
-            cout << Utility::padWithSpacesAfter("Setting allow Identity Layers to ", 30) << allowIdentityLayers << endl;
+            cout << Utility::padWithSpacesAfter("Setting allow Identity Layers to ", settingInfoStringLength) << allowIdentityLayers << endl;
             break;
-        case 'P':
+        case 'M':
             populationInitializationMode = stoi(argv[i]);
-            cout << Utility::padWithSpacesAfter("Setting pop initialization mode to ", 30) << populationInitializationMode << endl;
+            cout << Utility::padWithSpacesAfter("Setting pop initialization mode to ", settingInfoStringLength) << populationInitializationMode << endl;
             break;
         case 'a':
             printFullElitistArchive = stoi(argv[i]) == 1;
-            cout << Utility::padWithSpacesAfter("Setting printFullElitistArchive to ", 30) << printFullElitistArchive << endl;
+            cout << Utility::padWithSpacesAfter("Setting printFullElitistArchive to ", settingInfoStringLength) << printFullElitistArchive << endl;
             break;
     }
 }
@@ -469,6 +483,8 @@ void performExperiment(){
 
 void run(int argc, const char * argv[]){
     parseCommandLineArguments(argc, argv);
+    cout << "Project directory set to " << projectDir << endl;
+    cout << "Make sure this is correct! ^^^^^ Otherwise, add it as argument with '-P [projectDirectory]'\n" << endl;
     setJSONdata();
     performExperiment();
 }
