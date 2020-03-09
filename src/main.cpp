@@ -118,7 +118,9 @@ int repetitions = 30;
 json JSON_experiment;
 json JSON_fitfunc;
 json JSON_run;
-json JSON_MO_information;
+
+// Printing parameters
+bool printFullElitistArchive = false;
 
 FitnessFunction* fitFunc;
 GA* ga;
@@ -330,6 +332,7 @@ void printCommandLineHelp(){
     cout << "-g [#1]: set genotype checking to #1={0,1}" << endl;
     cout << "-l [#1]: set allow identity layers to #1={0,1}" << endl;
     cout << "-P [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
+    cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -396,6 +399,10 @@ void setParameter(char ch, const char * argv[], int i){
             populationInitializationMode = stoi(argv[i]);
             cout << Utility::padWithSpacesAfter("Setting pop initialization mode to ", 30) << populationInitializationMode << endl;
             break;
+        case 'a':
+            printFullElitistArchive = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting printFullElitistArchive to ", 30) << printFullElitistArchive << endl;
+            break;
     }
 }
 
@@ -453,7 +460,7 @@ void performExperiment(){
     cout << "Avg Time: " << Utility::getAverage(times) << endl;
     cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
     cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
-    fitFunc->printElitistArchive();
+    fitFunc->printElitistArchive(printFullElitistArchive);
 }
 
 void run(int argc, const char * argv[]){

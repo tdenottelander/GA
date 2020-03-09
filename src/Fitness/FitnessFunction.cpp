@@ -475,10 +475,16 @@ void FitnessFunction::saveElitistArchiveToJSON(){
     Utility::writeRawData(result.dump(), "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/data/elitistArchiveData/", "");
 }
 
-void FitnessFunction::printElitistArchive(){
+void FitnessFunction::printElitistArchive(bool fullArchive){
+    bool printDots = true;
     cout << "Elitist archive:   (size=" << elitistArchive.size() << ")" << endl;
     for (int i = 0; i < elitistArchive.size(); i++){
-        cout << i << ": " << elitistArchive[i].toString() << endl;
+        if(fullArchive || i == 0 || i == 1 || i == elitistArchive.size() - 1){
+            cout << i << ": " << elitistArchive[i].toString() << endl;
+        } else if (printDots){
+            cout << "..." << endl;
+            printDots = false;
+        }
     }
 }
 

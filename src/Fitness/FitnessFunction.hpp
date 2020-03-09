@@ -87,7 +87,7 @@ public:
     void saveElitistArchiveToJSON();
     int storeElitistArchiveCount = 0;
     
-    void printElitistArchive();
+    void printElitistArchive(bool fullArchive = true);
 };
 
 class OneMax : public FitnessFunction {
