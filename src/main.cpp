@@ -31,6 +31,7 @@
 #include "ARK5.hpp"
 #include "ARK6.hpp"
 #include "ARK7.hpp"
+#include "ARK8.hpp"
 #include "ARK_Online.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
@@ -188,6 +189,8 @@ void setFitnessFunction(const char * argv[], int i){
         fitFunc = new ARK6(problemSize, genotypeChecking);
     } else if (strcmp(argv[i], "ark7") == 0){
         fitFunc = new ARK7(problemSize, genotypeChecking, true);
+    } else if (strcmp(argv[i], "ark8") == 0){
+        fitFunc = new ARK8(problemSize, genotypeChecking, true);
 //    } else if (strcmp(argv[i], "ark-online") == 0){
 //        fitFunc = new ARK_Online();
     } else if (strcmp(argv[i], "onemax") == 0){
@@ -672,6 +675,8 @@ int main(int argc, const char * argv[]) {
     putenv( mypath );
     
 //    runNasbench();
+    
+//    ARK8(1, false, true).doAnalysis(1, 14);
     
     run(argc, argv);
     
