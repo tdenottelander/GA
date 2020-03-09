@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C202623B2416B4C9005B21F5 /* ARK8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C202623A2416B4C9005B21F5 /* ARK8.cpp */; };
 		C22246C623CC712000EC93F8 /* ARK4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C423CC712000EC93F8 /* ARK4.cpp */; };
 		C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246C723CDC41000EC93F8 /* ARK5.cpp */; };
 		C22246CC23CDDB0900EC93F8 /* NK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C22246CA23CDDB0700EC93F8 /* NK.cpp */; };
@@ -63,6 +64,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C20262392416B4C9005B21F5 /* ARK8.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ARK8.hpp; sourceTree = "<group>"; };
+		C202623A2416B4C9005B21F5 /* ARK8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ARK8.cpp; sourceTree = "<group>"; };
 		C22246C423CC712000EC93F8 /* ARK4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK4.cpp; sourceTree = "<group>"; };
 		C22246C523CC712000EC93F8 /* ARK4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK4.hpp; sourceTree = "<group>"; };
 		C22246C723CDC41000EC93F8 /* ARK5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ARK5.cpp; sourceTree = "<group>"; };
@@ -173,6 +176,8 @@
 		C22246CD23CDFAB400EC93F8 /* ARK */ = {
 			isa = PBXGroup;
 			children = (
+				C202623A2416B4C9005B21F5 /* ARK8.cpp */,
+				C20262392416B4C9005B21F5 /* ARK8.hpp */,
 				C293D6E023A787AE001E0636 /* ARK.cpp */,
 				C293D6E123A787AE001E0636 /* ARK.hpp */,
 				C2B369D123BE2AED00E43633 /* ARK2.cpp */,
@@ -482,6 +487,7 @@
 				C2ABE4E62384113A00D6E774 /* GA.cpp in Sources */,
 				C2C6518E23D9A081007B567A /* ARK6.cpp in Sources */,
 				C2BC66E0238FE5BF006BA6BF /* FOS.cpp in Sources */,
+				C202623B2416B4C9005B21F5 /* ARK8.cpp in Sources */,
 				C2ABE4E3238410BE00D6E774 /* FitnessFunction.cpp in Sources */,
 				C2AC1A0C23F455690054524C /* nsga2r.cpp in Sources */,
 				C2C57BBB23C4BEA6008A5555 /* LocalSearchBase.cpp in Sources */,

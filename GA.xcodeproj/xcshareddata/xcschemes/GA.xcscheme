@@ -63,12 +63,16 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "-e 100 -f zmom 10 -F learned -o MO-GOMEA -r 1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "5 2 5 100 100 1000000 zmom"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "nasbench"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

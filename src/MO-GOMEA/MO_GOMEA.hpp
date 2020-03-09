@@ -313,6 +313,9 @@ void ezilaitiniArrayOfParetoFronts();
 void initializeArrayOfParetoFronts();
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
     
+    
+public:
+static std::string id();
 };
 
 #endif /* MO_GOMEA_hpp */

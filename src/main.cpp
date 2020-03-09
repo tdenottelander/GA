@@ -130,6 +130,14 @@ FOS* fos;
 Variation* variation;
 bool use_MOGOMEA = false;
 
+string gaID(){
+    if (use_MOGOMEA){
+        return MO_GOMEA::id();
+    } else {
+        return ga->id();
+    }
+}
+
 void setJSONdata(){
     string directoryName = Utility::getDateString();
     JSON_experiment["maxPopSizeLevel"] = maxPopSizeLevel;
@@ -144,7 +152,7 @@ void setJSONdata(){
     JSON_experiment["genotypeChecking"] = genotypeChecking;
     JSON_experiment["forcedImprovement"] = forcedImprovement;
     JSON_experiment["repetitions"] = repetitions;
-    JSON_experiment["optimizer"] = (use_MOGOMEA ? "MO_GOMEA" : ga->id());
+    JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
     if(fos != NULL) JSON_experiment["fos"] = fos->id();
     if(variation != NULL) JSON_experiment["variation"] = variation->id();
@@ -157,7 +165,7 @@ void setJSONdata(){
     JSON_fitfunc["isMO"] = fitFunc->isMO();
     JSON_fitfunc["numberOfParetoPoints"] = fitFunc->trueParetoFront.size();
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
-    writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + (use_MOGOMEA ? "MO_GOMEA" : ga->id());
+    writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
     if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
         string filename = writeDir + "/experiment.json";
         writeRawData(JSON_experiment.dump(), filename);
@@ -171,7 +179,6 @@ void setDirectories(){
     benchmarksDir = projectDir + "benchmarks/";
     cout << "Setting benchmark directory to " << benchmarksDir << endl;
 }
-
 
 void setFitnessFunction(const char * argv[], int i){
     problemSize = stoi(argv[i+1]);
@@ -200,7 +207,9 @@ void setFitnessFunction(const char * argv[], int i){
         fitFunc = new ARK7(problemSize, genotypeChecking, true);
     } else if (strcmp(argv[i], "ark8") == 0){
         fitFunc = new ARK8(problemSize, genotypeChecking, true);
-//    } else if (strcmp(argv[i], "ark-online") == 0){
+    } else if (strcmp(argv[i], "ark-online") == 0){
+        cout << "Add python to run ark-online. Exiting now." << endl;
+        exit(0);
 //        fitFunc = new ARK_Online();
     } else if (strcmp(argv[i], "onemax") == 0){
         fitFunc = new OneMax(problemSize);
@@ -270,7 +279,7 @@ void setOptimizer(const char * argv[], int i){
         cout << "Could not read optimizer argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
         exit(0);
     }
-    cout << Utility::padWithSpacesAfter("Setting optimizer to ", settingInfoStringLength) << (use_MOGOMEA ? "MO-GOMEA" : ga->id()) << endl;
+    cout << Utility::padWithSpacesAfter("Setting optimizer to ", settingInfoStringLength) << gaID() << endl;
 }
 
 void setFOS(const char * argv[], int i){
@@ -434,7 +443,7 @@ void parseCommandLineArguments(int argc, const char * argv[]){
 
 void printRepetition(int rep){
     cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
-    << " ga=" << (use_MOGOMEA ? "MO-GOMEA" : ga->id())
+    << " ga=" << gaID()
     << " l=" << problemSize
     << " success=" << padWithSpacesAfter(to_string(JSON_run.at("success")), 7)
     << " time=" << padWithSpacesAfter(to_string(JSON_run.at("time_taken")), 12)

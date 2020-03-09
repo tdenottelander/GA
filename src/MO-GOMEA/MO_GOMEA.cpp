@@ -3660,3 +3660,11 @@ int MO_GOMEA::main_MO_GOMEA()
 
     return( 0 );
 }
+
+string MO_GOMEA::id(){
+    if(fos == NULL){
+        cout << "Please set FOS before setting the optimizer" << endl;
+        exit(0);
+    }
+    return ("MO-GOMEA_fos=" + fos->id());
+}
