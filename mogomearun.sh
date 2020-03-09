@@ -2,9 +2,8 @@
 path_to_executable=dist/Release/GNU-Linux/
 
 evals=10000000
-fit="ark7 14"
+fit="ark8 14"
 convergence=entire_pareto
-variation=2p
 repetitions=30
 IMS=0
 optimizer="MO-GOMEA"
