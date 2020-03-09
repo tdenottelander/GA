@@ -1,0 +1,25 @@
+#!/bin/bash
+path_to_executable=dist/Release/GNU-Linux/
+
+evals=10000000
+fit="ark7 14"
+convergence=entire_pareto
+variation=2p
+repetitions=30
+IMS=0
+
+# for optimizer in MO-RS MO-LS
+# do
+#   $path_to_executable/tomga -I $IMS -e $evals -f $fit -c $convergence -v $variation -o $optimizer -r $repetitions
+# done
+
+# I have not yet removed IMS from MO-GOMEA, so first just run it with IMS.
+IMS=1
+optimizer=MO-GOMEA
+for fos in uni learned
+do
+  # for popsize in 50 100 200 500 1000
+  # do
+    $path_to_executable/tomga -I $IMS -e $evals -f $fit -c $convergence -F $fos -o $optimizer -r $repetitions
+  # done
+done
