@@ -14,3 +14,6 @@ To see which screens are running:
 To reconnect to a screen:
 > screen -r <nameOfScreen>
 
+To close a screen, go into the screen by reconnecting with it and then:
+> exit
+
