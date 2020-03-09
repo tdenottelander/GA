@@ -28,7 +28,7 @@ ssh meteor03
 ...etc
 
 
-I have my own folder there, at /export/scratch1/tdo
-There is also a shared folder (for me, Marco, Arkadiy), at /export/scratch1/shared
+I have my own folder there, at /export/scratch1/home/tdo
+There is also a shared folder (for me, Marco, Arkadiy), at /export/scratch1/home/shared
 
 Every meteor has its own file system. So to run on multiple servers at once, we should add the executables on every server.
