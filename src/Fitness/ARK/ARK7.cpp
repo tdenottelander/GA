@@ -28,6 +28,7 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "ERROR: cannot read results." << endl;
+            exit(0);
         } else {
             lookupTable = json::parse(ifs);
             cout << "Done loading ARK-7" + ARK_Analysis_suffix + " results" << endl;

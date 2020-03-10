@@ -169,6 +169,11 @@ void setJSONdata(){
     JSON_fitfunc["numberOfObjectives"] = numberOfObjectives;
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
     writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
+    if(IMS){
+        writeDir += "_IMS";
+    } else {
+        writeDir += ("_pop=" + to_string(nonIMSPopsize));
+    }
     if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
         string filename = writeDir + "/experiment.json";
         writeRawData(JSON_experiment.dump(), filename);

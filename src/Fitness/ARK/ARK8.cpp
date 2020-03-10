@@ -43,6 +43,7 @@ ARK8::ARK8(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
         ifstream ifs(filename);
         if(!ifs.good()){
             cout << "ERROR: cannot read pareto file." << endl;
+            exit(0);
         } else {
             json output = json::parse(ifs);
             json paretoInformation = output[to_string(problemSize)]["fitness"];
