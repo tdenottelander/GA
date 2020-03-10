@@ -9,25 +9,26 @@
 #ifndef ARK_Online_hpp
 #define ARK_Online_hpp
 
-//#include <stdio.h>
-//#include <vector>
+#include <stdio.h>
+#include <vector>
 //#include <Python.h>
-//#include "FitnessFunction.hpp"
-//
+#include "FitnessFunction.hpp"
+
 //static PyObject *module;
 //static PyObject *py_evaluationFunction;
-//
-//class ARK_Online : public FitnessFunction {
-//public:
-//    ARK_Online();
-//    std::vector<float> evaluate(Individual &ind) override;
-//    void display() override;
-//    std::string id() override;
-//    ProblemType* getProblemType();
-//    FitnessFunction* clone() const override;
-//    void setLength (int length) override;
-//    
+
+class ARK_Online : public FitnessFunction {
+public:
+    ARK_Online();
+    std::vector<float> evaluate(Individual &ind) override;
+//    std::vector<float> pyEvaluate(Individual &ind);
+    void display() override;
+    std::string id() override;
+    ProblemType* getProblemType();
+    FitnessFunction* clone() const override;
+    void setLength (int length) override;
+    
 //    static void pythonInit();
-//};
+};
 
 #endif /* ARK_Online_hpp */

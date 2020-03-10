@@ -20,9 +20,10 @@ class UniqueSolutions{
 public:
     UniqueSolutions(int alphabetSize);
     int alphabetSize;
-    std::unordered_set<long> genotypes;
-    void put(arma::uvec &genotype);
+    std::unordered_map<std::string, std::vector<float>> genotypes;
+    void put(arma::uvec &genotype, std::vector<float> &fitness);
     bool contains(arma::uvec &genotype);
+    std::vector<float> get(arma::uvec &genotype);
 };
 
 class SolutionCounter {
@@ -40,6 +41,8 @@ public:
 namespace HashingFunctions {
     long hash(arma::uvec &genotype, int alphabetSize);
     arma::uvec decode(long hash, int problemSize, int alphabetSize);
+    std::string toString(arma::uvec &genotype, std::string type="default");
+    arma::uvec toGenotype(std::string str);
 };
 
 #endif /* UniqueSolutions_hpp */

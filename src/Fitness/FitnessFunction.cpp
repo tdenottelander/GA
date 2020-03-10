@@ -106,7 +106,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         if(storeTransformedUniqueConvergence){
             uvec transformedGenotype = transform(ind.genotype);
             if (!transformedUniqueSolutions.contains(transformedGenotype)){
-                transformedUniqueSolutions.put(transformedGenotype);
+                transformedUniqueSolutions.put(transformedGenotype, ind.fitness);
                 totalTransformedUniqueEvaluations++;
                 convergence["transformedUnique"].push_back(bestIndividual.fitness[0]);
             }
@@ -115,7 +115,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     
     // Do stuff based on whether this is a new unique evaluation
     if(!uniqueSolutions.contains(ind.genotype)){
-        uniqueSolutions.put(ind.genotype);
+        uniqueSolutions.put(ind.genotype, ind.fitness);
         totalUniqueEvaluations++;
         
         // Store unique convergence only for SO-problems

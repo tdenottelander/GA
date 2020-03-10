@@ -704,7 +704,24 @@ int main(int argc, const char * argv[]) {
     
 //    ARK8(1, false, true).doAnalysis(1, 14);
     
-    run(argc, argv);
+//    run(argc, argv);
+    
+    int probSize = 17;
+    Individual ind(probSize, 2);
+    vector<int> alphabet = {0,1,2,3,4};
+    
+    for (int j = 0; j < 100; j++){
+        ind.initialize(alphabet);
+
+        for (int i = 0; i < probSize; i++){
+            cout << ind.genotype[i];
+        }
+        cout << endl;
+        
+        string x = HashingFunctions::toString(ind.genotype, "ark-online");
+        cout << x << endl;
+        cout << endl;
+    }
     
     
     return 0;

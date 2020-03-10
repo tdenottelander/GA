@@ -13,17 +13,22 @@ using namespace std;
 using namespace nlohmann;
 
 // Constructor
-UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_set<long>()), alphabetSize(alphabetSize) {
+UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_map<string, vector<float>>()), alphabetSize(alphabetSize) {
 }
 
 // Inserts a hashed genotype into the unorderd set, regardless of already being in it
-void UniqueSolutions::put(uvec &genotype){
-    genotypes.insert(HashingFunctions::hash(genotype, alphabetSize));
+void UniqueSolutions::put(uvec &genotype, vector<float> &fitness){
+    genotypes[HashingFunctions::toString(genotype)] = fitness;
+//    genotypes.insert(HashingFunctions::hash(genotype, alphabetSize), fitness);
 }
 
 // Returns true when the unordered set already contains the hash if this genotype
 bool UniqueSolutions::contains(uvec &genotype){
-    return (genotypes.find(HashingFunctions::hash(genotype, alphabetSize)) != genotypes.end());
+    return (genotypes.find(HashingFunctions::toString(genotype)) != genotypes.end());
+}
+
+vector<float> UniqueSolutions::get(arma::uvec &genotype){
+    return genotypes[HashingFunctions::toString(genotype)];
 }
 
 
@@ -96,4 +101,31 @@ uvec HashingFunctions::decode(long hash, int problemSize, int alphabetSize){
     }
     
     return genotype;
+}
+
+
+string HashingFunctions::toString(arma::uvec &genotype, string type){
+    string res = "";
+    for (int i = 0; i < genotype.size(); i++){
+        if (type == "default"){
+            res += to_string(genotype[i]);
+        } else if (type == "ark-online"){
+            if (i != 0 && (i % 5 == 0) || (i % 5) == 4){
+                res += ".";
+            }
+            if ((i % 5 == 4) || genotype[i] != 0){
+                res += to_string(genotype[i]);
+            }
+        }
+    }
+        
+    return res;
+}
+
+uvec HashingFunctions::toGenotype(string str){
+    uvec res(str.length());
+    for (int i = 0; i < str.length(); i++){
+        res[i] = (int)str.at(i) - 48; // Subtract 48 for ASCII characters
+    }
+    return res;
 }
