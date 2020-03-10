@@ -71,12 +71,12 @@ vector<float> ARK8::getFitness (uvec encoding){
         }
     }
     
+    float acc = lookupTable[layers]["val_acc"];
     if (MO){
         float mmacs = lookupTable[layers]["MMACs"];
-        float acc = lookupTable[layers]["val_acc"];
         return vector<float> {acc * normalization[0], 1.0f - (mmacs * normalization[1])};
     } else {
-        return vector<float>{lookupTable[layers]["val_acc"]};
+        return vector<float>{acc * normalization[0]};
     }
 }
 
@@ -85,7 +85,9 @@ void ARK8::display(){
 }
 
 string ARK8::id(){
-    return "ARK-8";
+    string res = "ARK-8-";
+    res += (numObjectives == 1 ? "SO" : "MO");
+    return res;
 }
 
 FitnessFunction* ARK8::clone() const {

@@ -21,6 +21,7 @@ extern FitnessFunction * fitFunc;
 
 nlohmann::json convergence;
 nlohmann::json JSON_MO_info;
+nlohmann::json JSON_SO_info;
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -64,6 +65,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     convergence["absolute"] = {};
     convergence["unique"] = {};
     JSON_MO_info.clear();
+    JSON_SO_info.clear();
 }
 
 json RoundSchedule::run() {
