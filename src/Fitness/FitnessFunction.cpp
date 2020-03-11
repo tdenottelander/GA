@@ -321,6 +321,10 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
             // To be implemented
         }
         
+        else if (convergenceCriteria == ConvergenceCriteria::NONE){
+            // Do nothing
+        }
+        
         if (printElitistArchiveOnUpdate){
             drawElitistArchive();
         }

@@ -19,9 +19,9 @@
 class FitnessFunction {
 public:
     
-    enum class ConvergenceCriteria {OPTIMAL_FITNESS, EPSILON_FITNESS, GENOTYPE, ENTIRE_PARETO, EPSILON_PARETO_DISTANCE, PERCENTAGE_PARETO_COVERAGE, ABSOLUTE_PARETO_COVERAGE};
+    enum class ConvergenceCriteria {OPTIMAL_FITNESS, EPSILON_FITNESS, GENOTYPE, ENTIRE_PARETO, EPSILON_PARETO_DISTANCE, PERCENTAGE_PARETO_COVERAGE, ABSOLUTE_PARETO_COVERAGE, NONE};
     
-    ConvergenceCriteria convergenceCriteria;
+    ConvergenceCriteria convergenceCriteria = ConvergenceCriteria::NONE;
     Individual bestIndividual;
     std::vector<Individual> elitistArchive;
     std::vector<float> optimum;
