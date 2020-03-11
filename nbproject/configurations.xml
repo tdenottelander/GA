@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <logicalFolder name="Analysis" displayName="Analysis" projectFiles="true">
+          <itemPath>src/Analysis/GreedyAnalysis.cpp</itemPath>
+          <itemPath>src/Analysis/GreedyAnalysis.hpp</itemPath>
+          <itemPath>src/Analysis/LocalSearchAnalysis.cpp</itemPath>
+          <itemPath>src/Analysis/LocalSearchAnalysis.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Fitness" displayName="Fitness" projectFiles="true">
+          <logicalFolder name="ARK" displayName="ARK" projectFiles="true">
+            <itemPath>src/Fitness/ARK/ARK.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK1.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK1.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK2.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK2.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK3.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK3.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK4.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK4.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK5.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK5.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK6.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK6.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK7.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK7.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK8.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK8.hpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK_Online.cpp</itemPath>
+            <itemPath>src/Fitness/ARK/ARK_Online.hpp</itemPath>
+          </logicalFolder>
+          <logicalFolder name="MO" displayName="MO" projectFiles="true">
+            <itemPath>src/Fitness/MO/LOTZ.cpp</itemPath>
+            <itemPath>src/Fitness/MO/LOTZ.hpp</itemPath>
+            <itemPath>src/Fitness/MO/MAXCUT.cpp</itemPath>
+            <itemPath>src/Fitness/MO/MAXCUT.hpp</itemPath>
+            <itemPath>src/Fitness/MO/TrapInverseTrap.cpp</itemPath>
+            <itemPath>src/Fitness/MO/TrapInverseTrap.hpp</itemPath>
+            <itemPath>src/Fitness/MO/ZeroMaxOneMax.cpp</itemPath>
+            <itemPath>src/Fitness/MO/ZeroMaxOneMax.hpp</itemPath>
+          </logicalFolder>
+          <itemPath>src/Fitness/FitnessFunction.cpp</itemPath>
+          <itemPath>src/Fitness/FitnessFunction.hpp</itemPath>
+          <itemPath>src/Fitness/NK.cpp</itemPath>
+          <itemPath>src/Fitness/NK.hpp</itemPath>
+          <itemPath>src/Fitness/ProblemType.cpp</itemPath>
+          <itemPath>src/Fitness/ProblemType.hpp</itemPath>
+          <itemPath>src/Fitness/Trap.cpp</itemPath>
+          <itemPath>src/Fitness/Trap.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="FOS" displayName="FOS" projectFiles="true">
+          <itemPath>src/FOS/FOS.cpp</itemPath>
+          <itemPath>src/FOS/FOS.hpp</itemPath>
+          <itemPath>src/FOS/LearnedLTFOS.cpp</itemPath>
+          <itemPath>src/FOS/LearnedLTFOS.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="GA" displayName="GA" projectFiles="true">
+          <itemPath>src/GA/GA.cpp</itemPath>
+          <itemPath>src/GA/GA.hpp</itemPath>
+          <itemPath>src/GA/GOM.cpp</itemPath>
+          <itemPath>src/GA/GOM.hpp</itemPath>
+          <itemPath>src/GA/GOM_LS.cpp</itemPath>
+          <itemPath>src/GA/GOM_LS.hpp</itemPath>
+          <itemPath>src/GA/LocalSearch.cpp</itemPath>
+          <itemPath>src/GA/LocalSearch.hpp</itemPath>
+          <itemPath>src/GA/LocalSearchBase.cpp</itemPath>
+          <itemPath>src/GA/LocalSearchBase.hpp</itemPath>
+          <itemPath>src/GA/LocalSearchStochastic.cpp</itemPath>
+          <itemPath>src/GA/LocalSearchStochastic.hpp</itemPath>
+          <itemPath>src/GA/MO_LS.cpp</itemPath>
+          <itemPath>src/GA/MO_LS.hpp</itemPath>
+          <itemPath>src/GA/MO_RS.cpp</itemPath>
+          <itemPath>src/GA/MO_RS.hpp</itemPath>
+          <itemPath>src/GA/NSGA_II.cpp</itemPath>
+          <itemPath>src/GA/NSGA_II.hpp</itemPath>
+          <itemPath>src/GA/RandomSearch.cpp</itemPath>
+          <itemPath>src/GA/RandomSearch.hpp</itemPath>
+          <itemPath>src/GA/RoundSchedule.cpp</itemPath>
+          <itemPath>src/GA/RoundSchedule.hpp</itemPath>
+          <itemPath>src/GA/SimpleGA.cpp</itemPath>
+          <itemPath>src/GA/SimpleGA.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Individual" displayName="Individual" projectFiles="true">
+          <itemPath>src/Individual/Individual.cpp</itemPath>
+          <itemPath>src/Individual/Individual.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="MO-GOMEA" displayName="MO-GOMEA" projectFiles="true">
+          <itemPath>src/MO-GOMEA/MO_GOMEA.cpp</itemPath>
+          <itemPath>src/MO-GOMEA/MO_GOMEA.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="NSGA-II" displayName="NSGA-II" projectFiles="true">
+          <itemPath>src/NSGA-II/global.h</itemPath>
+          <itemPath>src/NSGA-II/nsga2r.cpp</itemPath>
+          <itemPath>src/NSGA-II/rand.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Selection" displayName="Selection" projectFiles="true">
+          <itemPath>src/Selection/Selection.cpp</itemPath>
+          <itemPath>src/Selection/Selection.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Util" displayName="Util" projectFiles="true">
+          <itemPath>src/Util/SolutionLibrary.cpp</itemPath>
+          <itemPath>src/Util/SolutionLibrary.hpp</itemPath>
+          <itemPath>src/Util/Utility.cpp</itemPath>
+          <itemPath>src/Util/Utility.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Variation" displayName="Variation" projectFiles="true">
+          <itemPath>src/Variation/Variation.cpp</itemPath>
+          <itemPath>src/Variation/Variation.hpp</itemPath>
+        </logicalFolder>
+        <itemPath>src/main.cpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>11</standard>
+          <incDir>
+            <pElem>dependencies/json/include</pElem>
+            <pElem>src/Analysis</pElem>
+            <pElem>src/FOS</pElem>
+            <pElem>src/Fitness</pElem>
+            <pElem>src/GA</pElem>
+            <pElem>src/Individual</pElem>
+            <pElem>src/MO-GOMEA</pElem>
+            <pElem>src/NSGA-II</pElem>
+            <pElem>src/Util</pElem>
+            <pElem>src/Variation</pElem>
+            <pElem>src/Fitness/ARK</pElem>
+            <pElem>src/Fitness/MO</pElem>
+            <pElem>dependencies/armadillo-9.850.1/include</pElem>
+            <pElem>src/Selection</pElem>
+            <pElem>/usr/include/python3.6m</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <commandLine>-larmadillo -lpython3.6m</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="src/Analysis/GreedyAnalysis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Analysis/GreedyAnalysis.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Analysis/LocalSearchAnalysis.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/Analysis/LocalSearchAnalysis.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/FOS/FOS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FOS/FOS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/FOS/LearnedLTFOS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FOS/LearnedLTFOS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK1.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK1.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK2.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK3.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK3.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK4.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK4.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK5.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK6.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK6.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK7.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK7.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK8.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK8.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK_Online.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK_Online.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/FitnessFunction.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/FitnessFunction.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/LOTZ.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/LOTZ.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/MAXCUT.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/MAXCUT.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/TrapInverseTrap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/TrapInverseTrap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/ZeroMaxOneMax.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/ZeroMaxOneMax.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/NK.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/NK.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ProblemType.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ProblemType.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/Trap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/Trap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GOM.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GOM.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GOM_LS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GOM_LS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchBase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchBase.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchStochastic.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchStochastic.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/MO_LS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/MO_LS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/MO_RS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/MO_RS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/NSGA_II.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/NSGA_II.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/RandomSearch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/RandomSearch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/RoundSchedule.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/RoundSchedule.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/SimpleGA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/SimpleGA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Individual/Individual.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Individual/Individual.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/MO-GOMEA/MO_GOMEA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MO-GOMEA/MO_GOMEA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/global.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/nsga2r.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/rand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Selection/Selection.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Selection/Selection.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Util/SolutionLibrary.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Util/SolutionLibrary.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Util/Utility.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Util/Utility.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Variation/Variation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Variation/Variation.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>11</standard>
+          <incDir>
+            <pElem>dependencies/json/include</pElem>
+            <pElem>src/Analysis</pElem>
+            <pElem>src/FOS</pElem>
+            <pElem>src/Fitness</pElem>
+            <pElem>src/GA</pElem>
+            <pElem>src/Individual</pElem>
+            <pElem>src/MO-GOMEA</pElem>
+            <pElem>src/NSGA-II</pElem>
+            <pElem>src/Util</pElem>
+            <pElem>src/Variation</pElem>
+            <pElem>src/Fitness/ARK</pElem>
+            <pElem>src/Fitness/MO</pElem>
+            <pElem>dependencies/armadillo-9.850.1/include</pElem>
+            <pElem>src/Selection</pElem>
+            <pElem>/usr/include/python3.6m</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/tomga</output>
+          <commandLine>-larmadillo -lpython3.6m</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="src/Analysis/GreedyAnalysis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Analysis/GreedyAnalysis.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Analysis/LocalSearchAnalysis.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/Analysis/LocalSearchAnalysis.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/FOS/FOS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FOS/FOS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/FOS/LearnedLTFOS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FOS/LearnedLTFOS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK1.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK1.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK2.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK3.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK3.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK4.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK4.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK5.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK6.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK6.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK7.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK7.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK8.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK8.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK_Online.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ARK/ARK_Online.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/FitnessFunction.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/FitnessFunction.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/LOTZ.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/LOTZ.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/MAXCUT.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/MAXCUT.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/TrapInverseTrap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/TrapInverseTrap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/ZeroMaxOneMax.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/MO/ZeroMaxOneMax.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/NK.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/NK.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/ProblemType.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/ProblemType.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Fitness/Trap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Fitness/Trap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GOM.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GOM.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/GOM_LS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/GOM_LS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchBase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchBase.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchStochastic.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/LocalSearchStochastic.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/MO_LS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/MO_LS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/MO_RS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/MO_RS.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/NSGA_II.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/NSGA_II.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/RandomSearch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/RandomSearch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/RoundSchedule.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/RoundSchedule.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/GA/SimpleGA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/GA/SimpleGA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Individual/Individual.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Individual/Individual.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/MO-GOMEA/MO_GOMEA.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MO-GOMEA/MO_GOMEA.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/global.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/nsga2r.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/NSGA-II/rand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Selection/Selection.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Selection/Selection.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Util/SolutionLibrary.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Util/SolutionLibrary.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Util/Utility.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Util/Utility.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/Variation/Variation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Variation/Variation.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

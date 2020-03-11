@@ -84,8 +84,6 @@ DerivedData/
 ## Netbeans files
 dependencies/
 dist/
-nbproject/
-
 
 ## Benchmark files
 benchmarks/
