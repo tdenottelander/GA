@@ -166,6 +166,14 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         cout << "UniqEval: " << Utility::padWithSpacesAfter(to_string(totalUniqueEvaluations), 8);
         cout << "NetworkUniqEval: " << Utility::padWithSpacesAfter(to_string(totalNetworkUniqueEvaluations), 8);
         cout << "Ind: " << ind.toString();
+        if (storeNetworkUniqueEvaluations){
+            try{
+                SolutionLibrary sl (SolutionLibrary::Type::ARK_ONLINE);
+                cout << "    Network: " << sl.hash(ind.genotype);
+            } catch (exception) {
+                // Do nothing.
+            }
+        }
         cout << endl;
     }
 }
