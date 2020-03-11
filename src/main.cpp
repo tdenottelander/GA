@@ -74,12 +74,14 @@ string projectDir = "/export/scratch1/tdo/TomGA/";
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
-string progressWritePath;
+string path_JSON_Progress;
 
 string dataset = "cifar100";
 
 json JSON_MO_info;
+string path_JSON_MO_info;
 json JSON_SO_info;
+string path_JSON_SO_info;
 json JSON_Progress;
 
 bool printfos = false;
@@ -97,6 +99,7 @@ int loggingIntervalMode = 0; // 0 = on a log10 scale, 1 = linear scale
 int loggingLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
 int populationInitializationMode = 0; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+bool saveLogFilesOnEveryUpdate = false;
 
 // Termination criteria
 int maxRounds = -1;
@@ -163,6 +166,7 @@ void setJSONdata(){
     JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
     JSON_experiment["seed"] = mySeed;
+    JSON_experiment["saveLogFilesOnEveryUpdate"] = saveLogFilesOnEveryUpdate;
     if(fos != NULL) JSON_experiment["fos"] = fos->id();
     if(variation != NULL) JSON_experiment["variation"] = variation->id();
     JSON_fitfunc["id"] = fitFunc->id();
@@ -382,6 +386,7 @@ void printCommandLineHelp(){
     cout << "-M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
     cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
     cout << "-q [#1]: set print every evaluation to #1={0, 1}" << endl;
+    cout << "-x [#1]: set saving log files on every update to #1={0, 1}" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -474,6 +479,10 @@ void setParameter(char ch, const char * argv[], int i){
             printEveryEvaluation = stoi(argv[i]) == 1;
             cout << Utility::padWithSpacesAfter("Setting printEveryEvaluation to ", settingInfoStringLength) << printFullElitistArchive << endl;
             break;
+        case 'x':
+            saveLogFilesOnEveryUpdate = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting saveLogFilesOnEveryUpdate to ", settingInfoStringLength) << saveLogFilesOnEveryUpdate << endl;
+            break;
     }
 }
 
@@ -508,7 +517,9 @@ void performExperiment(){
     vector<int> times;
 
     for (int rep = 0; rep < repetitions; rep++){
-        progressWritePath = writeDir + "/progress" + to_string(rep) + ".json";
+        path_JSON_Progress = writeDir + "/progress" + to_string(rep) + ".json";
+        path_JSON_MO_info = writeDir + "/MO_info" + to_string(rep) + ".json";
+        path_JSON_SO_info = writeDir + "/SO_info" + to_string(rep) + ".json";
         JSON_run.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
@@ -531,8 +542,8 @@ void performExperiment(){
         networkUniqueEvals.push_back(fitFunc->totalNetworkUniqueEvaluations);
 
         writeRawData(JSON_run.dump(), writeDir + "/run" + to_string(rep) + ".json");
-        if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
-        else writeRawData(JSON_SO_info.dump(), writeDir + "/SO_info" + to_string(rep) + ".json");
+        if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
+        else writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
     }
     cout << endl;
 

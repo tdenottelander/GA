@@ -18,6 +18,9 @@ extern bool storeTransformedUniqueConvergence;
 extern bool printElitistArchiveOnUpdate;
 extern bool storeDistanceToParetoFrontOnElitistArchiveUpdate;
 extern nlohmann::json convergence;
+extern bool saveLogFilesOnEveryUpdate;
+extern string path_JSON_MO_info;
+extern string path_JSON_SO_info;
 extern nlohmann::json JSON_MO_info;
 extern nlohmann::json JSON_SO_info;
 extern bool storeElitistArchive;
@@ -101,6 +104,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             JSON_MO_info["changes_on_interval"]["total_evals"]["max_dist"].push_back(avg_max_distance.second);
             JSON_MO_info["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
             JSON_MO_info["changes_on_interval"]["total_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         }
     }
     
@@ -113,6 +117,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             JSON_SO_info["changes_on_interval"]["total_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
             JSON_SO_info["changes_on_interval"]["total_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
             JSON_SO_info["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
         }
         
         // Store the best fitness found so far
@@ -147,6 +152,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
                 JSON_SO_info["changes_on_interval"]["unique_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
                 JSON_SO_info["changes_on_interval"]["unique_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
                 JSON_SO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
+                if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
             }
         }
         
@@ -158,6 +164,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             JSON_MO_info["changes_on_interval"]["unique_evals"]["max_dist"].push_back(avg_max_distance.second);
             JSON_MO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
             JSON_MO_info["changes_on_interval"]["unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         }
     }
     
@@ -244,6 +251,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
         JSON_SO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
         JSON_SO_info["changes_on_update"]["unique_evaluations"].push_back(totalUniqueEvaluations);
         if (storeNetworkUniqueEvaluations) JSON_SO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
+        if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
     }
 }
 
@@ -289,6 +297,7 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
             avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
             JSON_MO_info["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){

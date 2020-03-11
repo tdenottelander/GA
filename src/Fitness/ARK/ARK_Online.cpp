@@ -10,10 +10,13 @@
 
 using namespace std;
 
+extern bool saveLogFilesOnEveryUpdate;
+extern string path_JSON_MO_info;
+extern string path_JSON_SO_info;
+extern string path_JSON_Progress;
 extern nlohmann::json JSON_MO_info;
 extern nlohmann::json JSON_SO_info;
 extern nlohmann::json JSON_Progress;
-extern string progressWritePath;
 extern string dataset;
 
 ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFunction(getProblemType()), networkLibrary(SolutionLibrary::Type::ARK_ONLINE) {
@@ -57,6 +60,7 @@ vector<float> ARK_Online::evaluate(Individual &ind){
             JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
             JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
             JSON_SO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
         } else {
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_interval"]["network_unique_evals"]["elitist_archive_fitness"].push_back(elitistArchiveToJSON());
@@ -64,6 +68,7 @@ vector<float> ARK_Online::evaluate(Individual &ind){
             JSON_MO_info["changes_on_interval"]["network_unique_evals"]["max_dist"].push_back(avg_max_distance.second);
             JSON_MO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
             JSON_MO_info["changes_on_interval"]["network_unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         }
     }
     
@@ -82,7 +87,7 @@ vector<float> ARK_Online::evaluate(Individual &ind){
         JSON_Progress["elitist_archive"].push_back(elitistArchiveToJSON());
     }
     
-    Utility:: writeRawData(JSON_Progress.dump(), progressWritePath);
+    Utility:: writeRawData(JSON_Progress.dump(), path_JSON_Progress);
     
 //    cout << (networkunique ? "eval: " : "lib:  ") << ind.toString() << " evals: " << totalEvaluations << " uniqEvals: " << totalUniqueEvaluations << " netUniqEvals: " << totalNetworkUniqueEvaluations << endl;
 //    cout << "Lib size: " << networkLibrary.library.size() << endl;
