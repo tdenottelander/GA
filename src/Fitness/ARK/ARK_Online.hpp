@@ -19,6 +19,8 @@ static PyObject *py_evaluationFunction;
 
 class ARK_Online : public FitnessFunction {
 public:
+    std::vector<float> normalization = {1.0f/100.0f, 1.0f/500.0f};
+
     ARK_Online(int problemSize, int numberOfObjectives);
     std::vector<float> evaluate(Individual &ind) override;
     std::vector<float> pyEvaluate(Individual &ind);

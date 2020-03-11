@@ -109,16 +109,22 @@ vector<float> ARK_Online::pyEvaluate(Individual &ind){
 
     // Evaluate the result
     PyObject* result = PyObject_CallObject(py_evaluationFunction, py_tuple);
+    if(!result){
+        PyErr_Print();
+        exit(-1);
+    }
 
     // Unpack the result
-    float validationAccuracy = PyFloat_AsDouble(PyTuple_GetItem(result, 0));
-    int evaluations = PyLong_AsLong(PyTuple_GetItem(result, 1));
-
-    // Print the result
-    cout << "Retrieved values: " << validationAccuracy << ", " << evaluations << endl;
-    vector<float> fitness = {validationAccuracy};
-
-    return fitness;
+    int mmacs = PyLong_AsLong(PyTuple_GetItem(result,0));
+    float val_acc = PyFloat_AsDouble(PyTuple_GetItem(result, 1));
+    float test_acc = PyFloat_AsDouble(PyTuple_GetItem(result, 2));
+    
+    // Return the normalized fitness values
+    if (numObjectives == 2){
+        return vector<float> {val_acc * normalization[0], 1.0f - (mmacs * normalization[1])};
+    } else {
+        return vector<float>{val_acc * normalization[0]};
+    }
 }
 
 void ARK_Online::display(){
@@ -143,18 +149,21 @@ void ARK_Online::setLength (int length){
 }
 
 void ARK_Online::pythonInit(){
-
+    
     // Init python connection
     Py_Initialize();
-
-    // Add path to script to sysPath
+    
+    //Path to folder containing python script
     PyObject* sysPath = PySys_GetObject((char*)"path");
-    PyList_Append(sysPath, PyUnicode_FromString("/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/nasbench/"));
+//    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/tdo/TomGA/"));
+    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/tdo/nas_online/"));
 
     // Import python module/script
-    module = PyImport_ImportModule("ark_online");
+    //module = PyImport_ImportModule("ark_online");
+    module = PyImport_ImportModule("nas_test");
     if(module == NULL){
-        printf("ERROR importing module 'ark_online'\n");
+        PyErr_Print();
+        printf("ERROR importing module 'nas_test'\n");
         exit(-1);
     }
 
@@ -164,6 +173,7 @@ void ARK_Online::pythonInit(){
         PyErr_Print();
         exit(-1);
     }
+    
     PyObject_CallObject(py_initFunc, NULL);
 
     // Set a reference to the evaluation function

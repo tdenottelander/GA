@@ -27,28 +27,29 @@ path_to_executable=dist/Release/GNU-Linux/tomga
 path_to_project=/export/scratch1/tdo/TomGA/
 # path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
 
-networkUniqueEvals=1000
+networkUniqueEvals=500
 fit="ark-online 17 2"
 optimization=('-F uni rand -o MO-GOMEA', '-F learned -o MO-GOMEA', '-v 2p -o NSGA-II', "-o MO-RS", "-o MO-LS rand")
-repetitions=3
+repetitions=2
 IMS=0
 popsize=300
 populationInitializationMode=1 #1 includes all-identity solution, 0 is true random
+printAtEveryEval=1
 
 fos="uni rand"
 optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
 
 fos="learned"
 optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
 
 variation="2p"
-optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -v $variation -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode
+optimizer="NSGA-II"
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -v $variation -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
 
 optimizer="MO-RS"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
 
 optimizer="MO-LS rand"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval

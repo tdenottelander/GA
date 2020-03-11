@@ -731,8 +731,8 @@ void bisection(){
 
 int main(int argc, const char * argv[]) {
 
-    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
-    putenv( mypath );
+//    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
+//    putenv( mypath );
 
 //    runNasbench();
 
