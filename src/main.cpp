@@ -45,6 +45,7 @@
 #include "NSGA_II.hpp"
 #include "MO_LS.hpp"
 #include "MO_RS.hpp"
+#include "MO_GOMEA.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
@@ -53,9 +54,6 @@
 
 // Include for the original NSGA-II implementation.
 //#include "global.h"
-
-// Include for MO-GOMEA
-#include "MO_GOMEA.hpp"
 
 using namespace std;
 using namespace arma;

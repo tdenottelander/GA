@@ -11,17 +11,17 @@
 
 #include <stdio.h>
 #include <vector>
-//#include <Python.h>
+#include <Python.h>
 #include "FitnessFunction.hpp"
 
-//static PyObject *module;
-//static PyObject *py_evaluationFunction;
+static PyObject *module;
+static PyObject *py_evaluationFunction;
 
 class ARK_Online : public FitnessFunction {
 public:
     ARK_Online(int problemSize, int numberOfObjectives);
     std::vector<float> evaluate(Individual &ind) override;
-//    std::vector<float> pyEvaluate(Individual &ind);
+    std::vector<float> pyEvaluate(Individual &ind);
     void display() override;
     std::string id() override;
     ProblemType* getProblemType();
@@ -31,7 +31,7 @@ public:
     void clear() override;
     SolutionLibrary networkLibrary;
     
-//    static void pythonInit();
+    static void pythonInit();
 };
 
 #endif /* ARK_Online_hpp */
