@@ -61,7 +61,8 @@ using namespace Utility;
 using nlohmann::json;
 
 // The random generator used throughout the whole application
-mt19937 rng(1234);
+long mySeed = millis();
+mt19937 rng(mySeed);
 // A distribution that is used to get values between 0.0 and 1.0 by use of the rng defined above
 uniform_real_distribution<float> dist(0.0, 0.9999);
 
@@ -161,6 +162,7 @@ void setJSONdata(){
     JSON_experiment["repetitions"] = repetitions;
     JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
+    JSON_experiment["seed"] = mySeed;
     if(fos != NULL) JSON_experiment["fos"] = fos->id();
     if(variation != NULL) JSON_experiment["variation"] = variation->id();
     JSON_fitfunc["id"] = fitFunc->id();
@@ -358,6 +360,7 @@ void setVariation(const char * argv[], int i){
 void printCommandLineHelp(){
     cout << "-?: print help" << endl;
     cout << "-P [#1]: set project directory to #1  !!IMPORTANT THAT THIS IS DONE!!" << endl;
+    cout << "-S [#1]: set seed to #1 (any integer number)" << endl;
     cout << "-e [#1]: set max evaluations to #1" << endl;
     cout << "-u [#1]: set max unique evaluations to #1" << endl;
     cout << "-n [#1]: set max network unique evaluations to #1" << endl;
@@ -396,6 +399,11 @@ void setParameter(char ch, const char * argv[], int i){
             projectDir = argv[i];
             setDirectories();
             cout << Utility::padWithSpacesAfter("Setting project directory to ", settingInfoStringLength) << projectDir << endl;
+            break;
+        case 'S':
+            mySeed = stol(argv[i]);
+            rng = mt19937(mySeed);
+            cout << Utility::padWithSpacesAfter("Setting seed to ", settingInfoStringLength) << mySeed << endl;
             break;
         case 'e':
             maxEvaluations = stoi(argv[i]);
@@ -475,6 +483,9 @@ void parseCommandLineArguments(int argc, const char * argv[]){
             setParameter(argv[i][1], argv, i+1);
         }
     }
+    cout << "Project directory set to " << projectDir << endl;
+    cout << "Make sure this is correct! ^^^^^ Otherwise, add it as argument with '-P [projectDirectory]'" << endl;
+    cout << "Seed = " << mySeed << "\n" << endl;
 }
 
 void printRepetition(int rep){
@@ -534,8 +545,6 @@ void performExperiment(){
 
 void run(int argc, const char * argv[]){
     parseCommandLineArguments(argc, argv);
-    cout << "Project directory set to " << projectDir << endl;
-    cout << "Make sure this is correct! ^^^^^ Otherwise, add it as argument with '-P [projectDirectory]'\n" << endl;
     setJSONdata();
     performExperiment();
 }
