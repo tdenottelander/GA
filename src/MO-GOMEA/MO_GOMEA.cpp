@@ -404,6 +404,10 @@ void MO_GOMEA::printVerboseOverview( void )
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Problems -=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 void MO_GOMEA::evaluateIndividual(char *solution, double *obj, double *con, int objective_index_of_extreme_cluster)
 {
+    if (checkTerminationCondition() == TRUE){
+        return;
+    }
+    
     number_of_evaluations++;
     if(population_id != -1)
         array_of_number_of_evaluations_per_population[population_id] += 1;
