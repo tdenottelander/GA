@@ -14,6 +14,7 @@ extern nlohmann::json JSON_MO_info;
 extern nlohmann::json JSON_SO_info;
 extern nlohmann::json JSON_Progress;
 extern string progressWritePath;
+extern string dataset;
 
 ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFunction(getProblemType()), networkLibrary(SolutionLibrary::Type::ARK_ONLINE) {
     numObjectives = numberOfObjectives;
@@ -132,7 +133,7 @@ void ARK_Online::display(){
 }
 
 string ARK_Online::id(){
-    return ("ARK-Online-" + to_string(numObjectives));
+    return ("ARK-Online-" + to_string(numObjectives) + "-" + dataset);
 }
 
 ProblemType* ARK_Online::getProblemType(){
@@ -174,7 +175,10 @@ void ARK_Online::pythonInit(){
         exit(-1);
     }
     
-    PyObject_CallObject(py_initFunc, NULL);
+    const char *dirname = dataset.c_str();
+    PyObject* py_dirname = PyUnicode_DecodeFSDefault(dirname);
+    PyObject* py_tuple = PyTuple_Pack(1, py_dirname);
+    PyObject_CallObject(py_initFunc, py_tuple);
 
     // Set a reference to the evaluation function
     py_evaluationFunction = PyObject_GetAttrString(module, "evaluate");

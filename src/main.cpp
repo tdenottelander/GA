@@ -75,6 +75,8 @@ string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
 string progressWritePath;
 
+string dataset = "cifar100";
+
 json JSON_MO_info;
 json JSON_SO_info;
 json JSON_Progress;
@@ -170,6 +172,7 @@ void setJSONdata(){
     JSON_fitfunc["isMO"] = fitFunc->isMO();
     JSON_fitfunc["numberOfParetoPoints"] = fitFunc->trueParetoFront.size();
     JSON_fitfunc["numberOfObjectives"] = numberOfObjectives;
+    JSON_fitfunc["dataset"] = dataset;
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
     writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
     if(IMS){
@@ -360,6 +363,7 @@ void printCommandLineHelp(){
     cout << "-n [#1]: set max network unique evaluations to #1" << endl;
     cout << "-m [#1]: set max rounds to #1" << endl;
     cout << "-s [#1]: set max seconds to #1" << endl;
+    cout << "-d [#1]: set dataset to #1={cifar10, cifar100} for ark-online" << endl;
     cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3" << endl;
     cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
@@ -412,6 +416,10 @@ void setParameter(char ch, const char * argv[], int i){
         case 's':
             maxSeconds = stoi(argv[i]);
             cout << Utility::padWithSpacesAfter("Setting maxSeconds to ", settingInfoStringLength) << maxSeconds << endl;
+            break;
+        case 'd':
+            dataset = argv[i];
+            cout << Utility::padWithSpacesAfter("Setting dataset to ", settingInfoStringLength) << dataset << endl;
             break;
         case 'f': setFitnessFunction(argv, i); break;
         case 'c': setConvergenceCriteria(argv, i); break;
