@@ -68,9 +68,9 @@ mt19937 rng(1234);
 uniform_real_distribution<float> dist(0.0, 0.9999);
 
 // MAC OS
-string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
+//string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
 // Ross@CWI
-//string projectDir = "/export/scratch1/tdo/TomGA/";
+string projectDir = "/export/scratch1/tdo/TomGA/";
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
@@ -199,7 +199,7 @@ void setFitnessFunction(const char * argv[], int i){
     try {
         numberOfObjectives = stoi(argv[i+2]);
     } catch (exception) {}
-    
+
     if (strcmp(argv[i], "zmom") == 0){
         fitFunc = new ZeroMaxOneMax(problemSize);
     } else if (strcmp(argv[i], "lotz") == 0){
@@ -264,10 +264,10 @@ Utility::Order getOrder(const char * orderString){
 }
 
 void setOptimizer(const char * argv[], int i){
-    
+
     const char * orderString = argv[i+1];
     Utility::Order order = getOrder(orderString);
-    
+
     if (strcmp(argv[i], "NSGA-II") == 0){
         if (variation == NULL){
             variation = new TwoPointCrossover();
@@ -302,10 +302,10 @@ void setOptimizer(const char * argv[], int i){
 }
 
 void setFOS(const char * argv[], int i){
-    
+
     const char * orderString = argv[i+1];
     Utility::Order order = getOrder(orderString);
-    
+
     if (strcmp(argv[i], "learned") == 0){
         fos = new LearnedLT_FOS(fitFunc->problemType);
     } else if (strcmp(argv[i], "uni") == 0){
@@ -483,36 +483,36 @@ void performExperiment(){
     vector<int> uniqueEvals;
     vector<int> networkUniqueEvals;
     vector<int> times;
-    
+
     for (int rep = 0; rep < repetitions; rep++){
         progressWritePath = writeDir + "/progress" + to_string(rep) + ".json";
         JSON_run.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
         fitFunc->clear();
-        
+
         if(use_MOGOMEA){
             MO_GOMEA().main_MO_GOMEA();
         } else {
             RoundSchedule rs (maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, maxNetworkUniqueEvaluations, IMS_Interval);
-            
+
             rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
-            
+
             JSON_run = rs.run();
         }
         printRepetition(rep);
-        
+
         times.push_back(JSON_run.at("time_taken"));
         evals.push_back(fitFunc->totalEvaluations);
         uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
         networkUniqueEvals.push_back(fitFunc->totalNetworkUniqueEvaluations);
-        
+
         writeRawData(JSON_run.dump(), writeDir + "/run" + to_string(rep) + ".json");
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
         else writeRawData(JSON_SO_info.dump(), writeDir + "/SO_info" + to_string(rep) + ".json");
     }
     cout << endl;
-    
+
     cout << "Avg Time: " << Utility::getAverage(times) << endl;
     cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
     cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
@@ -726,16 +726,16 @@ void bisection(){
 }
 
 int main(int argc, const char * argv[]) {
-    
+
     char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
     putenv( mypath );
-    
+
 //    runNasbench();
-    
+
 //    ARK8(1, false, true).doAnalysis(1, 14);
-    
+
     run(argc, argv);
-    
+
 //    int probSize = 17;
 //    Individual ind(probSize, 2);
 //    vector<int> alphabet = {0,1,2,3,4};
@@ -755,8 +755,6 @@ int main(int argc, const char * argv[]) {
 //        cout << endl;
 //    }
 //
-    
+
     return 0;
 }
-
-
