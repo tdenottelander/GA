@@ -54,6 +54,11 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
             Individual copiedIndividual = ind.copy();
             for (int bit : fitFunc_ptr->problemType->alphabet){
                 copiedIndividual.genotype[i] = bit;
+                
+                if(fitFunc_ptr->isDone()){
+                    return;
+                }
+                
                 fitFunc_ptr->evaluate(copiedIndividual);
                 if (copiedIndividual.dominates(ind, scalarization)){
                     ind.genotype[i] = bit;
