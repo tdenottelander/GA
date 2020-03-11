@@ -155,8 +155,8 @@ void ARK_Online::pythonInit(){
     
     //Path to folder containing python script
     PyObject* sysPath = PySys_GetObject((char*)"path");
-//    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/tdo/TomGA/"));
-    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/tdo/nas_online/"));
+    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/home/shared/nas_online/")); // Meteor folder structure
+    PyList_Append(sysPath, PyUnicode_FromString("/export/scratch1/tdo/nas_online/")); // Ross folder structure
 
     // Import python module/script
     //module = PyImport_ImportModule("ark_online");
