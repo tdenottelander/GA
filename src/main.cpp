@@ -513,197 +513,197 @@ void run(int argc, const char * argv[]){
     performExperiment();
 }
 
-void runNasbench(){
-
-    // Set to -1 if it should not be a stopping condition
-    int maxRounds = -1;
-    int maxSeconds = -1;
-    int maxPopSizeLevel = 500;
-    int maxEvaluations = 155000; //10000
-    int maxUniqueEvaluations = -1;
-    int interval = 4;
-    int repetitions = 20; //100
-    bool IMS = false;
-    int nonIMSPopsize = 40;
-    
-    int minProblemSize = 14;
-    int maxProblemSize = 14;
-    
-    for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
-        cout << "PROBLEMSIZE " << problemSize << endl;
-        
-        json main_json;
-        main_json["maxPopSizeLevel"] = maxPopSizeLevel;
-        main_json["maxRounds"] = maxRounds;
-        main_json["maxSeconds"] = maxSeconds;
-        main_json["maxEvaluations"] = maxEvaluations;
-        main_json["repetitions"] = repetitions;
-        main_json["interleavedRoundInterval"] = interval;
-        
-        bool allowIdentityLayers = true;
-        bool genotypeChecking = false;
-//        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
-//        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
-    
-//        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
-//        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
-//        fit->setNoisy(0.01);
-        
-//        FitnessFunction * fit = new ARK_Online();
-        
-//        FitnessFunction * fit = new ARK3();
-        
-//        FitnessFunction * fit = new Trap(5, 5);
-//        FitnessFunction * fit = new OneMax(20);
-//        FitnessFunction * fit = new LeadingOnes(20);
-        
-        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
-//        FitnessFunction * fit = new LOTZ(problemSize);
-//        FitnessFunction * fit = new TrapInverseTrap(problemSize);
-//        FitnessFunction * fit = new MAXCUT(problemSize);
-//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
-        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
-        fit->epsilon = 0.00001;
-        
-//        int blocksize = 5;
-//        int alphabetsize = 2;
-//        FitnessFunction * fit = new NK(problemSize, blocksize, false, alphabetsize);
-        
-        main_json["fitnessFunction"] = fit->id();
-        main_json["optimum"] = fit->optimum;
-        main_json["alphabet"] = fit->problemType->id();
-        
-        bool forcedImprovement = true;
-        vector<GA*> gaList = {
-            // ------------- SINGLE OBJECTIVE ALGORITHMS -------------
-//            new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
-//            new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
-
-//            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
-//            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
-
-//            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
-//            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
-//            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
-//            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
-
-//            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
-//            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
-//            new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
-
-//            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
-
-//            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
-//            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+//void runNasbench(){
 //
-//            new RandomSearch(fit),
-
-//            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
-//            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+//    // Set to -1 if it should not be a stopping condition
+//    int maxRounds = -1;
+//    int maxSeconds = -1;
+//    int maxPopSizeLevel = 500;
+//    int maxEvaluations = 155000; //10000
+//    int maxUniqueEvaluations = -1;
+//    int interval = 4;
+//    int repetitions = 20; //100
+//    bool IMS = false;
+//    int nonIMSPopsize = 40;
 //
-//            new LocalSearch(fit, Utility::Order::RANDOM),
-//            new LocalSearch(fit, Utility::Order::ASCENDING),
-//            new LocalSearch(fit, Utility::Order::DESCENDING),
-
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
-//            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
-            
-
-            // ------------- MULTI OBJECTIVE ALGORITHMS -------------
-            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true),
-//            new MO_LS(fit, Utility::Order::RANDOM, 1000000),
-//            new MO_RS(fit),
-            
-//            new NSGA_II(fit, new ARK6_Crossover(), 0.9, true),
-//            new NSGA_II(fit, new UnivariateCrossover(), 0.9, true),
-//            new NSGA_II(fit, new ThreePointCrossover(), 0.9, true),
-//            new NSGA_II(fit, new OnePointCrossover(), 0.9, true)
-        };
-        
-        string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
-        
-        json experiments;
-        for(GA* ga : gaList){
-            string gaID = ga->id();
-            if (!IMS){
-                if (nonIMSPopsize < 0){
-                    nonIMSPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
-                    cout << "Needed popsize = " << nonIMSPopsize << endl;
-                }
-                gaID += ("_pop=" + to_string(nonIMSPopsize));
-            }
-            
-            bool exceeded = false;
-            json setting;
-            vector<int> evals;
-            vector<int> uniqueEvals;
-            vector<int> times;
-            for(int rep = 0; rep < repetitions; rep++){
-                RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, interval);
-                ga->fitFunc_ptr->clear();
-                rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
-                json result = rs.run();
-//                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
-//                fit->saveElitistArchiveToJSON();
-                setting[to_string(rep)] = result;
-                cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
-                << " ga=" << gaID
-                << " l=" << problemSize
-                << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
-                << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 12)
-                << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 15)
-                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15);
-                if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15);
-                cout << endl;
-                if(result.at("stoppingCondition") == "maxTimeExceeded"){
-                    cout << "Max time exceeded, not starting anymore runs" << endl;
-                    break;
-                } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
-//                    exceeded = true;
-//                    cout << "Max evaluations exceeded";
-//                    if (storeConvergence){
-//                        cout << ", not starting anymore runs" << endl;;
-//                        break;
-//                    } else
-//                        cout << endl;
-                }
-                times.push_back(result.at("timeTaken"));
-                evals.push_back(result.at("evaluations"));
-                uniqueEvals.push_back(result.at("uniqueEvaluations"));
-            }
-            cout << endl;
-            
-            cout << "Avg Time: " << Utility::getAverage(times) << endl;
-            cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
-            cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
-            cout << "Elitist archive:   (size=" << fit->elitistArchive.size() << ")" << endl;
-            for (int i = 0; i < fit->elitistArchive.size(); i++){
-                cout << i << ": " << fit->elitistArchive[i].toString() << endl;
-            }
-            if(storeConvergence && exceeded){
-                continue;
-            } else {
-                json prob_json;
-                prob_json[to_string(problemSize)] = setting;
-                experiments[gaID] = prob_json;
-                
-                // Extra write inbetween algorithms
-                main_json["experiments"] = experiments;
-                writeRawData(main_json.dump(), outputfileName);
-                writeRawData(setting.dump(), dataDir + Utility::getDateString() + "_" + ga->id() + "_elitistArchive.json");
-            }
-        }
-        
-        main_json["experiments"] = experiments;
-        writeRawData(main_json.dump(), outputfileName);
-    }
-}
+//    int minProblemSize = 14;
+//    int maxProblemSize = 14;
+//
+//    for (int problemSize = minProblemSize; problemSize <= maxProblemSize; problemSize++){
+//        cout << "PROBLEMSIZE " << problemSize << endl;
+//
+//        json main_json;
+//        main_json["maxPopSizeLevel"] = maxPopSizeLevel;
+//        main_json["maxRounds"] = maxRounds;
+//        main_json["maxSeconds"] = maxSeconds;
+//        main_json["maxEvaluations"] = maxEvaluations;
+//        main_json["repetitions"] = repetitions;
+//        main_json["interleavedRoundInterval"] = interval;
+//
+//        bool allowIdentityLayers = true;
+//        bool genotypeChecking = false;
+////        FitnessFunction * fit = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
+////        FitnessFunction * fit = new ARK5(problemSize, allowIdentityLayers);
+//
+////        FitnessFunction * fit = new ARK6(problemSize, genotypeChecking);
+////        ARK * fit = new ARK7(problemSize, genotypeChecking, true);
+////        fit->setNoisy(0.01);
+//
+////        FitnessFunction * fit = new ARK_Online();
+//
+////        FitnessFunction * fit = new ARK3();
+//
+////        FitnessFunction * fit = new Trap(5, 5);
+////        FitnessFunction * fit = new OneMax(20);
+////        FitnessFunction * fit = new LeadingOnes(20);
+//
+//        FitnessFunction * fit = new ZeroMaxOneMax(problemSize);
+////        FitnessFunction * fit = new LOTZ(problemSize);
+////        FitnessFunction * fit = new TrapInverseTrap(problemSize);
+////        FitnessFunction * fit = new MAXCUT(problemSize);
+////        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
+//        fit->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+//        fit->epsilon = 0.00001;
+//
+////        int blocksize = 5;
+////        int alphabetsize = 2;
+////        FitnessFunction * fit = new NK(problemSize, blocksize, false, alphabetsize);
+//
+//        main_json["fitnessFunction"] = fit->id();
+//        main_json["optimum"] = fit->optimum;
+//        main_json["alphabet"] = fit->problemType->id();
+//
+//        bool forcedImprovement = true;
+//        vector<GA*> gaList = {
+//            // ------------- SINGLE OBJECTIVE ALGORITHMS -------------
+////            new GOM(fit, new Univariate_FOS(Utility::Order::RANDOM), forcedImprovement),
+////            new GOM(fit, new Univariate_FOS(Utility::Order::ASCENDING), forcedImprovement),
+////            new GOM(fit, new Univariate_FOS(Utility::Order::DESCENDING), forcedImprovement),
+//
+////            new GOM(fit, new IncrementalLTReversed_FOS(), forcedImprovement),
+////            new GOM(fit, new IncrementalLTReversed_Univariate_FOS(), forcedImprovement),
+////            new GOM(fit, new IncrementalLTReversed_UnivariateOrdered_FOS(), forcedImprovement),
+////            new GOM(fit, new IncrementalLT_UnivariateOrdered_FOS(), forcedImprovement),
+////            new GOM(fit, new IncrementalLT_FOS(), forcedImprovement),
+//
+////            new GOM(fit, new Triplet_FOS(Utility::Order::ASCENDING), forcedImprovement),
+////            new GOM(fit, new Triplet_FOS(Utility::Order::DESCENDING), forcedImprovement),
+////            new GOM(fit, new Triplet_FOS(Utility::Order::RANDOM), forcedImprovement),
+////            new GOM(fit, new TripletTree_FOS(Utility::Order::ASCENDING), forcedImprovement),
+////            new GOM(fit, new TripletTree_FOS(Utility::Order::DESCENDING), forcedImprovement),
+////            new GOM(fit, new TripletTree_FOS(Utility::Order::RANDOM), forcedImprovement),
+//
+////            new GOM(fit, new ARK6_FOS(Utility::Order::ASCENDING), forcedImprovement),
+////            new GOM(fit, new ARK6_FOS(Utility::Order::DESCENDING), forcedImprovement),
+////            new GOM(fit, new ARK6_FOS(Utility::Order::RANDOM), forcedImprovement),
+//
+////            new GOM(fit, new LearnedLT_FOS(fit->problemType), forcedImprovement),
+//
+////            new GOM_LS(fit, new LearnedLT_FOS(fit->problemType), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+////            new GOM_LS(fit, new IncrementalLT_UnivariateOrdered_FOS(), new LocalSearch(fit, Utility::Order::RANDOM), forcedImprovement),
+////
+////            new RandomSearch(fit),
+//
+////            new SimpleGA(fit, new UnivariateCrossover(), new TournamentSelection(2)),
+////            new SimpleGA(fit, new OnePointCrossover(), new TournamentSelection(2)),
+////
+////            new LocalSearch(fit, Utility::Order::RANDOM),
+////            new LocalSearch(fit, Utility::Order::ASCENDING),
+////            new LocalSearch(fit, Utility::Order::DESCENDING),
+//
+////            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.01),
+////            new LocalSearchStochastic(fit, Utility::Order::RANDOM, 0.05),
+//
+//
+//            // ------------- MULTI OBJECTIVE ALGORITHMS -------------
+//            new NSGA_II(fit, new TwoPointCrossover(), 0.9, true),
+////            new MO_LS(fit, Utility::Order::RANDOM, 1000000),
+////            new MO_RS(fit),
+//
+////            new NSGA_II(fit, new ARK6_Crossover(), 0.9, true),
+////            new NSGA_II(fit, new UnivariateCrossover(), 0.9, true),
+////            new NSGA_II(fit, new ThreePointCrossover(), 0.9, true),
+////            new NSGA_II(fit, new OnePointCrossover(), 0.9, true)
+//        };
+//
+//        string outputfileName = dataDir + Utility::getDateString() + "_rawdata.json";
+//
+//        json experiments;
+//        for(GA* ga : gaList){
+//            string gaID = ga->id();
+//            if (!IMS){
+//                if (nonIMSPopsize < 0){
+//                    nonIMSPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
+//                    cout << "Needed popsize = " << nonIMSPopsize << endl;
+//                }
+//                gaID += ("_pop=" + to_string(nonIMSPopsize));
+//            }
+//
+//            bool exceeded = false;
+//            json setting;
+//            vector<int> evals;
+//            vector<int> uniqueEvals;
+//            vector<int> times;
+//            for(int rep = 0; rep < repetitions; rep++){
+//                RoundSchedule rs(maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, interval);
+//                ga->fitFunc_ptr->clear();
+//                rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
+//                json result = rs.run();
+////                rs.writeOutputGenerationCSV(dataDir + "outputgen.csv");
+////                fit->saveElitistArchiveToJSON();
+//                setting[to_string(rep)] = result;
+//                cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
+//                << " ga=" << gaID
+//                << " l=" << problemSize
+//                << " success=" << padWithSpacesAfter(to_string(result.at("success")), 5)
+//                << " time=" << padWithSpacesAfter(to_string(result.at("timeTaken")), 12)
+//                << " evals=" << padWithSpacesAfter(to_string(result.at("evaluations")), 15)
+//                << " uniqEvals=" << padWithSpacesAfter(to_string(result.at("uniqueEvaluations")), 15);
+//                if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(result.at("transformedUniqueEvaluations")), 15);
+//                cout << endl;
+//                if(result.at("stoppingCondition") == "maxTimeExceeded"){
+//                    cout << "Max time exceeded, not starting anymore runs" << endl;
+//                    break;
+//                } else if(result.at("stoppingCondition") == "maxEvaluationsExceeded"){
+////                    exceeded = true;
+////                    cout << "Max evaluations exceeded";
+////                    if (storeConvergence){
+////                        cout << ", not starting anymore runs" << endl;;
+////                        break;
+////                    } else
+////                        cout << endl;
+//                }
+//                times.push_back(result.at("timeTaken"));
+//                evals.push_back(result.at("evaluations"));
+//                uniqueEvals.push_back(result.at("uniqueEvaluations"));
+//            }
+//            cout << endl;
+//
+//            cout << "Avg Time: " << Utility::getAverage(times) << endl;
+//            cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
+//            cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
+//            cout << "Elitist archive:   (size=" << fit->elitistArchive.size() << ")" << endl;
+//            for (int i = 0; i < fit->elitistArchive.size(); i++){
+//                cout << i << ": " << fit->elitistArchive[i].toString() << endl;
+//            }
+//            if(storeConvergence && exceeded){
+//                continue;
+//            } else {
+//                json prob_json;
+//                prob_json[to_string(problemSize)] = setting;
+//                experiments[gaID] = prob_json;
+//
+//                // Extra write inbetween algorithms
+//                main_json["experiments"] = experiments;
+//                writeRawData(main_json.dump(), outputfileName);
+//                writeRawData(setting.dump(), dataDir + Utility::getDateString() + "_" + ga->id() + "_elitistArchive.json");
+//            }
+//        }
+//
+//        main_json["experiments"] = experiments;
+//        writeRawData(main_json.dump(), outputfileName);
+//    }
+//}
 
 void bisection(){
     int neededPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
