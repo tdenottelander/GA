@@ -24,6 +24,7 @@ extern bool storeElitistArchive;
 extern bool updateElitistArchiveOnEveryEvaluation;
 extern int loggingIntervalMode;
 extern int loggingLinearInterval;
+extern bool printEveryEvaluation;
 
 bool errorParetoFrontSent = false;
 bool errorParetoPointsSent = false;
@@ -158,6 +159,14 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
             JSON_MO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
             JSON_MO_info["changes_on_interval"]["unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
         }
+    }
+    
+    if(printEveryEvaluation){
+        cout << "  Eval: " << Utility::padWithSpacesAfter(to_string(totalEvaluations), 8);
+        cout << "UniqEval: " << Utility::padWithSpacesAfter(to_string(totalUniqueEvaluations), 8);
+        cout << "NetworkUniqEval: " << Utility::padWithSpacesAfter(to_string(totalNetworkUniqueEvaluations), 8);
+        cout << "Ind: " << ind.toString();
+        cout << endl;
     }
 }
 

@@ -127,6 +127,7 @@ json JSON_run;
 
 // Printing parameters
 bool printFullElitistArchive = false;
+bool printEveryEvaluation = false;
 int settingInfoStringLength = 40;
 
 FitnessFunction* fitFunc;
@@ -375,6 +376,7 @@ void printCommandLineHelp(){
     cout << "-l [#1]: set allow identity layers to #1={0,1}" << endl;
     cout << "-M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
     cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
+    cout << "-q [#1]: set print every evaluation to #1={0, 1}" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -453,6 +455,10 @@ void setParameter(char ch, const char * argv[], int i){
         case 'a':
             printFullElitistArchive = stoi(argv[i]) == 1;
             cout << Utility::padWithSpacesAfter("Setting printFullElitistArchive to ", settingInfoStringLength) << printFullElitistArchive << endl;
+            break;
+        case 'q':
+            printEveryEvaluation = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting printEveryEvaluation to ", settingInfoStringLength) << printFullElitistArchive << endl;
             break;
     }
 }
