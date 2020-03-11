@@ -75,9 +75,11 @@ string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/project
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
+string progressWritePath;
 
-extern json JSON_MO_info;
-extern json JSON_SO_info;
+json JSON_MO_info;
+json JSON_SO_info;
+json JSON_Progress;
 
 bool printfos = false;
 bool printPopulationAfterRound = false;
@@ -101,6 +103,7 @@ int maxSeconds = -1;
 int maxPopSizeLevel = 500;
 int maxEvaluations = 9999999;
 int maxUniqueEvaluations = 9999999;
+int maxNetworkUniqueEvaluations = 9999999;
 
 // (non-)IMS parameters
 int IMS_Interval = 4;
@@ -147,6 +150,7 @@ void setJSONdata(){
     JSON_experiment["maxSeconds"] = maxSeconds;
     JSON_experiment["maxEvaluations"] = maxEvaluations;
     JSON_experiment["maxUniqueEvaluations"] = maxUniqueEvaluations;
+    JSON_experiment["maxNetworkUniqueEvaluations"] = maxNetworkUniqueEvaluations;
     JSON_experiment["IMS"] = IMS;
     JSON_experiment["IMS_Interval"] = IMS_Interval;
     JSON_experiment["nonIMSPopsize"] = nonIMSPopsize;
@@ -221,9 +225,9 @@ void setFitnessFunction(const char * argv[], int i){
     } else if (strcmp(argv[i], "ark8") == 0){
         fitFunc = new ARK8(problemSize, genotypeChecking, numberOfObjectives == 2);
     } else if (strcmp(argv[i], "ark-online") == 0){
-        cout << "Add python to run ark-online. Exiting now." << endl;
-        exit(0);
-//        fitFunc = new ARK_Online();
+//        cout << "Add python to run ark-online. Exiting now." << endl;
+//        exit(0);
+        fitFunc = new ARK_Online(problemSize, numberOfObjectives);
     } else if (strcmp(argv[i], "onemax") == 0){
         fitFunc = new OneMax(problemSize);
     } else if (strcmp(argv[i], "leadingones") == 0){
@@ -241,6 +245,7 @@ void setFitnessFunction(const char * argv[], int i){
     }
     fitFunc->maxEvaluations = maxEvaluations;
     fitFunc->maxUniqueEvaluations = maxUniqueEvaluations;
+    fitFunc->maxNetworkUniqueEvaluations = maxNetworkUniqueEvaluations;
     cout << Utility::padWithSpacesAfter("Setting fitfunc to ", settingInfoStringLength) << fitFunc->id() << endl;
     cout << Utility::padWithSpacesAfter("Setting problemsize to ", settingInfoStringLength) << problemSize << endl;
     cout << Utility::padWithSpacesAfter("Setting numberOfObjectives to ", settingInfoStringLength) << numberOfObjectives << endl;
@@ -353,6 +358,7 @@ void printCommandLineHelp(){
     cout << "-P [#1]: set project directory to #1  !!IMPORTANT THAT THIS IS DONE!!" << endl;
     cout << "-e [#1]: set max evaluations to #1" << endl;
     cout << "-u [#1]: set max unique evaluations to #1" << endl;
+    cout << "-n [#1]: set max network unique evaluations to #1" << endl;
     cout << "-m [#1]: set max rounds to #1" << endl;
     cout << "-s [#1]: set max seconds to #1" << endl;
     cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3" << endl;
@@ -394,6 +400,10 @@ void setParameter(char ch, const char * argv[], int i){
         case 'u':
             maxUniqueEvaluations = stoi(argv[i]);
             cout << Utility::padWithSpacesAfter("Setting maxUniqueEvaluations to ", settingInfoStringLength) << maxUniqueEvaluations << endl;
+            break;
+        case 'n':
+            maxNetworkUniqueEvaluations = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting maxNetworkUniqueEvaluations to ", settingInfoStringLength) << maxNetworkUniqueEvaluations << endl;
             break;
         case 'm':
             maxRounds = stoi(argv[i]);
@@ -463,6 +473,7 @@ void printRepetition(int rep){
     << " time=" << padWithSpacesAfter(to_string(JSON_run.at("time_taken")), 12)
     << " evals=" << padWithSpacesAfter(to_string(fitFunc->totalEvaluations), 15)
     << " uniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalUniqueEvaluations), 15);
+    if(fitFunc->storeNetworkUniqueEvaluations) cout << " networkUniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalNetworkUniqueEvaluations), 15);
     if(storeTransformedUniqueConvergence) cout << " trUniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalTransformedUniqueEvaluations), 15);
     cout << endl;
 }
@@ -470,9 +481,11 @@ void printRepetition(int rep){
 void performExperiment(){
     vector<int> evals;
     vector<int> uniqueEvals;
+    vector<int> networkUniqueEvals;
     vector<int> times;
     
     for (int rep = 0; rep < repetitions; rep++){
+        progressWritePath = writeDir + "/progress" + to_string(rep) + ".json";
         JSON_run.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
@@ -481,7 +494,7 @@ void performExperiment(){
         if(use_MOGOMEA){
             MO_GOMEA().main_MO_GOMEA();
         } else {
-            RoundSchedule rs (maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, IMS_Interval);
+            RoundSchedule rs (maxRounds, maxPopSizeLevel, maxSeconds, maxEvaluations, maxUniqueEvaluations, maxNetworkUniqueEvaluations, IMS_Interval);
             
             rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
             
@@ -492,6 +505,7 @@ void performExperiment(){
         times.push_back(JSON_run.at("time_taken"));
         evals.push_back(fitFunc->totalEvaluations);
         uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
+        networkUniqueEvals.push_back(fitFunc->totalNetworkUniqueEvaluations);
         
         writeRawData(JSON_run.dump(), writeDir + "/run" + to_string(rep) + ".json");
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), writeDir + "/MO_info" + to_string(rep) + ".json");
@@ -502,6 +516,7 @@ void performExperiment(){
     cout << "Avg Time: " << Utility::getAverage(times) << endl;
     cout << "Avg Evals: " << Utility::getAverage(evals) << endl;
     cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
+    cout << "Avg Network Unique Evals: " << Utility::getAverage(networkUniqueEvals) << endl;
     if (numberOfObjectives > 1) fitFunc->printElitistArchive(printFullElitistArchive);
 }
 
@@ -719,25 +734,27 @@ int main(int argc, const char * argv[]) {
     
 //    ARK8(1, false, true).doAnalysis(1, 14);
     
-//    run(argc, argv);
+    run(argc, argv);
     
-    int probSize = 17;
-    Individual ind(probSize, 2);
-    vector<int> alphabet = {0,1,2,3,4};
-    
-    for (int j = 0; j < 100; j++){
-        ind.initialize(alphabet);
-
-        for (int i = 0; i < probSize; i++){
-            cout << ind.genotype[i];
-        }
-        cout << endl;
-        
-        string x = HashingFunctions::toString(ind.genotype, "ark-online");
-        cout << x << endl;
-        cout << endl;
-    }
-    
+//    int probSize = 17;
+//    Individual ind(probSize, 2);
+//    vector<int> alphabet = {0,1,2,3,4};
+//
+//    SolutionLibrary library(SolutionLibrary::Type::ARK_ONLINE);
+//
+//    for (int j = 0; j < 100; j++){
+//        ind.initialize(alphabet);
+//
+//        for (int i = 0; i < probSize; i++){
+//            cout << ind.genotype[i];
+//        }
+//        cout << endl;
+//
+//        string x = library.hash(ind.genotype);
+//        cout << x << endl;
+//        cout << endl;
+//    }
+//
     
     return 0;
 }

@@ -67,6 +67,14 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-I 0 -p 50 -n 40 -f ark-online 3 1 -o RS -r 2 -M 1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-I 0 -p 50 -n 40 -f ark-online 3 2 -o NSGA-II -r 2 -M 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-I 0 -p 50 -e 100 -f ark8 14 2 -o NSGA-II -r 2 "
             isEnabled = "NO">
          </CommandLineArgument>
@@ -76,10 +84,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-I 0 -p 50 -e 1000 -f ark8 14 1 -o RS -r 2"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-I 0 -p 50 -e 1000 -f zmom 10 -c entire_pareto -v 2p -o NSGA-II -r 5"
+            argument = "-I 0 -p 50 -e 1000 -f zmom 5 -c entire_pareto -v 2p -o NSGA-II -r 10"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

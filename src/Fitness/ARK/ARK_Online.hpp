@@ -19,7 +19,7 @@
 
 class ARK_Online : public FitnessFunction {
 public:
-    ARK_Online();
+    ARK_Online(int problemSize, int numberOfObjectives);
     std::vector<float> evaluate(Individual &ind) override;
 //    std::vector<float> pyEvaluate(Individual &ind);
     void display() override;
@@ -27,6 +27,9 @@ public:
     ProblemType* getProblemType();
     FitnessFunction* clone() const override;
     void setLength (int length) override;
+    
+    void clear() override;
+    SolutionLibrary networkLibrary;
     
 //    static void pythonInit();
 };

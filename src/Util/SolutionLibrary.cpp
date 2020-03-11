@@ -6,29 +6,50 @@
 //  Copyright © 2019 Tom den Ottelander. All rights reserved.
 //
 
-#include "UniqueSolutions.hpp"
+#include "SolutionLibrary.hpp"
 
 using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
 // Constructor
-UniqueSolutions::UniqueSolutions(int alphabetSize) : genotypes(unordered_map<string, vector<float>>()), alphabetSize(alphabetSize) {
+SolutionLibrary::SolutionLibrary(Type type) : type(type), library(unordered_map<string, vector<float>>()){
 }
 
 // Inserts a hashed genotype into the unorderd set, regardless of already being in it
-void UniqueSolutions::put(uvec &genotype, vector<float> &fitness){
-    genotypes[HashingFunctions::toString(genotype)] = fitness;
-//    genotypes.insert(HashingFunctions::hash(genotype, alphabetSize), fitness);
+void SolutionLibrary::put(uvec &genotype, vector<float> &fitness){
+    library[hash(genotype)] = fitness;
 }
 
 // Returns true when the unordered set already contains the hash if this genotype
-bool UniqueSolutions::contains(uvec &genotype){
-    return (genotypes.find(HashingFunctions::toString(genotype)) != genotypes.end());
+bool SolutionLibrary::contains(uvec &genotype){
+    return (library.find(hash(genotype)) != library.end());
 }
 
-vector<float> UniqueSolutions::get(arma::uvec &genotype){
-    return genotypes[HashingFunctions::toString(genotype)];
+vector<float> SolutionLibrary::get(arma::uvec &genotype){
+    return library[hash(genotype)];
+}
+
+void SolutionLibrary::clear(){
+    library.clear();
+}
+
+string SolutionLibrary::hash(arma::uvec &genotype){
+    string res = "";
+    for (int i = 0; i < genotype.size(); i++){
+        if (type == Type::DEFAULT){
+            res += to_string(genotype[i]);
+        } else if (type == Type::ARK_ONLINE){
+            if (i != 0 && ((i % 5 == 0) || (i % 5 == 4))){
+                res += ".";
+            }
+            if ((i % 5 == 4) || genotype[i] != 0){
+                res += to_string(genotype[i]);
+            }
+        }
+    }
+    
+    return res;
 }
 
 

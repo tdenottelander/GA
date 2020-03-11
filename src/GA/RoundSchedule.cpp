@@ -20,15 +20,16 @@ extern bool storeElitistArchive;
 extern FitnessFunction * fitFunc;
 
 nlohmann::json convergence;
-nlohmann::json JSON_MO_info;
-nlohmann::json JSON_SO_info;
+extern json JSON_MO_info;
+extern json JSON_SO_info;
 
-RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval) :
+RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int maxNetworkUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
     maxPopSizeLevel(maxPopSizeLevel),
     maxSeconds(maxSeconds),
     maxEvaluations(maxEvaluations),
     maxUniqueEvaluations(maxUniqueEvaluations),
+    maxNetworkUniqueEvaluations(maxNetworkUniqueEvaluations),
     interval(interleavedRoundInterval)
 {}
 
@@ -90,6 +91,9 @@ json RoundSchedule::run() {
         } else if (maxUniqueEvaluationsExceeded()){
             output["stoppingCondition"] = "maxUniqueEvaluationsExceeded";
             break;
+        } else if (fitFunc->maxNetworkUniqueEvaluationsExceeded()){
+            output["stoppingCondition"] = "maxNetworkUniqueEvaluationsExceeded";
+            break;
         }
 
         //TODO: Loop only through active GA's, not until maxPopSizeLevel
@@ -135,7 +139,7 @@ json RoundSchedule::run() {
                     ga->round();
                     if(printPopulationAfterRound) ga->print();
                     
-                    if (maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded()){
+                    if (maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded() || fitFunc->maxNetworkUniqueEvaluationsExceeded()){
                         break;
                     }
                     
@@ -210,6 +214,7 @@ json RoundSchedule::run() {
     output["evals_total"] = fitFunc->totalEvaluations;
     output["evals_unique"] = fitFunc->totalUniqueEvaluations;
     output["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    output["evals_network_unique"] = fitFunc->totalNetworkUniqueEvaluations;
     if (storeConvergence)
         output["convergence"] = convergence;
     

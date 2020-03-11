@@ -22,7 +22,7 @@
 		C269FF152390090500B98092 /* SimpleGA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C269FF132390090500B98092 /* SimpleGA.cpp */; };
 		C293D6E223A787AE001E0636 /* ARK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E023A787AE001E0636 /* ARK.cpp */; };
 		C293D6E523A7AEE9001E0636 /* RandomSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */; };
-		C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */; };
+		C293D6E823AA48D7001E0636 /* SolutionLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C293D6E623AA48D7001E0636 /* SolutionLibrary.cpp */; };
 		C296F66B239A66E300C36EBC /* ProblemType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C296F669239A66E300C36EBC /* ProblemType.cpp */; };
 		C296F66F239E715100C36EBC /* LearnedLTFOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C296F66D239E714F00C36EBC /* LearnedLTFOS.cpp */; };
 		C2ABE4CF23840C6700D6E774 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2ABE4CE23840C6700D6E774 /* main.cpp */; };
@@ -97,8 +97,8 @@
 		C293D6E123A787AE001E0636 /* ARK.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ARK.hpp; sourceTree = "<group>"; };
 		C293D6E323A7AEE9001E0636 /* RandomSearch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RandomSearch.cpp; sourceTree = "<group>"; };
 		C293D6E423A7AEE9001E0636 /* RandomSearch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RandomSearch.hpp; sourceTree = "<group>"; };
-		C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UniqueSolutions.cpp; sourceTree = "<group>"; };
-		C293D6E723AA48D7001E0636 /* UniqueSolutions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UniqueSolutions.hpp; sourceTree = "<group>"; };
+		C293D6E623AA48D7001E0636 /* SolutionLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SolutionLibrary.cpp; sourceTree = "<group>"; };
+		C293D6E723AA48D7001E0636 /* SolutionLibrary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SolutionLibrary.hpp; sourceTree = "<group>"; };
 		C296F669239A66E300C36EBC /* ProblemType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ProblemType.cpp; sourceTree = "<group>"; };
 		C296F66A239A66E300C36EBC /* ProblemType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ProblemType.hpp; sourceTree = "<group>"; };
 		C296F66D239E714F00C36EBC /* LearnedLTFOS.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LearnedLTFOS.cpp; sourceTree = "<group>"; };
@@ -380,8 +380,8 @@
 			children = (
 				C2ABE4E7238441A300D6E774 /* Utility.cpp */,
 				C2ABE4E8238441A300D6E774 /* Utility.hpp */,
-				C293D6E623AA48D7001E0636 /* UniqueSolutions.cpp */,
-				C293D6E723AA48D7001E0636 /* UniqueSolutions.hpp */,
+				C293D6E623AA48D7001E0636 /* SolutionLibrary.cpp */,
+				C293D6E723AA48D7001E0636 /* SolutionLibrary.hpp */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -512,7 +512,7 @@
 				C2ABE4DD23840FC000D6E774 /* Selection.cpp in Sources */,
 				C22246C923CDC41000EC93F8 /* ARK5.cpp in Sources */,
 				C2ABE4E02384106F00D6E774 /* Variation.cpp in Sources */,
-				C293D6E823AA48D7001E0636 /* UniqueSolutions.cpp in Sources */,
+				C293D6E823AA48D7001E0636 /* SolutionLibrary.cpp in Sources */,
 				C2ABE4EC2387EF9500D6E774 /* RoundSchedule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

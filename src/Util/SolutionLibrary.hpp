@@ -16,14 +16,18 @@
 #include <nlohmann/json.hpp>
 #include "Utility.hpp"
 
-class UniqueSolutions{
+class SolutionLibrary{
 public:
-    UniqueSolutions(int alphabetSize);
-    int alphabetSize;
-    std::unordered_map<std::string, std::vector<float>> genotypes;
+    enum class Type {DEFAULT, ARK_ONLINE};
+
+    SolutionLibrary(Type = Type::DEFAULT);
+    Type type;
+    std::unordered_map<std::string, std::vector<float>> library;
     void put(arma::uvec &genotype, std::vector<float> &fitness);
     bool contains(arma::uvec &genotype);
     std::vector<float> get(arma::uvec &genotype);
+    void clear();
+    std::string hash(arma::uvec &genotype);
 };
 
 class SolutionCounter {

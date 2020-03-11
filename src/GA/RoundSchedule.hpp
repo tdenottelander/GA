@@ -18,7 +18,7 @@
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "Utility.hpp"
-#include "UniqueSolutions.hpp"
+#include "SolutionLibrary.hpp"
 
 class RoundSchedule {
 public:
@@ -27,6 +27,7 @@ public:
     int maxSeconds;
     int maxEvaluations;
     int maxUniqueEvaluations;
+    int maxNetworkUniqueEvaluations;
     int interval;
     Selection* selection;
     Variation* variation;
@@ -34,7 +35,7 @@ public:
     nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
-    RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int interleavedRoundInterval);
+    RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int maxNetworkUniqueEvaluations, int interleavedRoundInterval);
     void initialize(GA *ga, int problemSize, bool nonIMSmode = false, int nonIMSpopsize = 1);
     nlohmann::json run();
     void terminateGAs(int n);

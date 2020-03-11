@@ -25,6 +25,9 @@ extern bool updateElitistArchiveOnEveryEvaluation;
 extern int loggingIntervalMode;
 extern int loggingLinearInterval;
 
+bool errorParetoFrontSent = false;
+bool errorParetoPointsSent = false;
+
 /* ------------------------ Base Fitness Function ------------------------ */
 
 FitnessFunction::FitnessFunction(vector<float> optimum, ProblemType *problemType) :
@@ -33,12 +36,14 @@ FitnessFunction::FitnessFunction(vector<float> optimum, ProblemType *problemType
     optimumFound(false),
     maxEvaluations(-1),
     maxUniqueEvaluations(-1),
+    maxNetworkUniqueEvaluations(-1),
     problemType(problemType),
     totalEvaluations(0),
     totalUniqueEvaluations(0),
+    totalNetworkUniqueEvaluations(0),
     totalTransformedUniqueEvaluations(0),
-    uniqueSolutions(problemType->alphabet.size()),
-    transformedUniqueSolutions(problemType->alphabet.size())
+    uniqueSolutions(),
+    transformedUniqueSolutions()
 {
 }
 
@@ -47,12 +52,14 @@ FitnessFunction::FitnessFunction(ProblemType *problemType) :
     optimumFound(false),
     maxEvaluations(-1),
     maxUniqueEvaluations(-1),
+    maxNetworkUniqueEvaluations(-1),
     problemType(problemType),
     totalEvaluations(0),
     totalUniqueEvaluations(0),
+    totalNetworkUniqueEvaluations(0),
     totalTransformedUniqueEvaluations(0),
-    uniqueSolutions(problemType->alphabet.size()),
-    transformedUniqueSolutions(problemType->alphabet.size())
+    uniqueSolutions(),
+    transformedUniqueSolutions()
 {
 }
 
@@ -62,9 +69,10 @@ void FitnessFunction::clear(){
     optimumFound = false;
     totalEvaluations = 0;
     totalUniqueEvaluations = 0;
+    totalNetworkUniqueEvaluations = 0;
     totalTransformedUniqueEvaluations = 0;
-    uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
-    transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
+    uniqueSolutions.clear();
+    transformedUniqueSolutions.clear();
     JSON_MO_info.clear();
     JSON_SO_info.clear();
     done = false;
@@ -85,9 +93,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         }
         
         // Store the distance of the front to the approximation on every log10 interval.
-        if((loggingIntervalMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
-           || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalEvaluations, loggingLinearInterval))){
-
+        if(log(totalEvaluations)){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_interval"]["total_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
             JSON_MO_info["changes_on_interval"]["total_evals"]["avg_dist"].push_back(avg_max_distance.first);
@@ -100,10 +106,11 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     // Do this stuff only if it is a SO-problem
     if (numObjectives == 1){
         
-        if((loggingIntervalMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
-           || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalEvaluations, loggingLinearInterval))){
-            JSON_SO_info["changes_on_interval"]["total_evals"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
-            JSON_SO_info["changes_on_interval"]["total_evals"]["solution_fitness"].push_back(bestIndividual.fitness[0]);
+        if(log(totalEvaluations)){
+            JSON_SO_info["changes_on_interval"]["total_evals"]["evaluated_solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+            JSON_SO_info["changes_on_interval"]["total_evals"]["evaluated_solution_fitness"].push_back(ind.fitness[0]);
+            JSON_SO_info["changes_on_interval"]["total_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+            JSON_SO_info["changes_on_interval"]["total_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
             JSON_SO_info["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
         }
         
@@ -133,19 +140,17 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
                 convergence["unique"].push_back(bestIndividual.fitness[0]);
             }
             
-            if((loggingIntervalMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2)) || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, loggingLinearInterval))){
-            
-                JSON_SO_info["changes_on_interval"]["unique_evals"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
-                JSON_SO_info["changes_on_interval"]["unique_evals"]["solution_fitness"].push_back(bestIndividual.fitness[0]);
+            if(log(totalUniqueEvaluations)){
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["evaluated_solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["evaluated_solution_fitness"].push_back(ind.fitness[0]);
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
                 JSON_SO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
             }
         }
         
         // Store distance front to approximation only if MO-problem and if unique evaluations is on a log10 interval.
-        if(numObjectives > 1 && (
-            (loggingIntervalMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2))
-            || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, loggingLinearInterval)))
-        ){
+        if(numObjectives > 1 && log(totalUniqueEvaluations)){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_interval"]["unique_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
             JSON_MO_info["changes_on_interval"]["unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
@@ -156,12 +161,22 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     }
 }
 
+bool FitnessFunction::log(int evals){
+    switch (loggingIntervalMode) {
+        case 0: return Utility::isLogPoint(evals, 2);
+        case 1: return Utility::isLinearPoint(evals, loggingLinearInterval);
+        default:
+            cout << "Logging interval mode not set correctly." << endl;
+            return false;
+    }
+}
+
 bool FitnessFunction::isDone(){
     if(done) {
         return true;
     }
     
-    if(optimumFound || maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded()){
+    if(optimumFound || maxEvaluationsExceeded() || maxUniqueEvaluationsExceeded() || maxNetworkUniqueEvaluationsExceeded()){
         done = true;
     }
     
@@ -207,10 +222,11 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     // Set bestIndividual only for SO-problems.
     if(numObjectives == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
         bestIndividual = ind.copy();
-        JSON_SO_info["changes_on_update"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
-        JSON_SO_info["changes_on_update"]["solution_fitness"].push_back(ind.fitness[0]);
+        JSON_SO_info["changes_on_update"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+        JSON_SO_info["changes_on_update"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
         JSON_SO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
         JSON_SO_info["changes_on_update"]["unique_evaluations"].push_back(totalUniqueEvaluations);
+        if (storeNetworkUniqueEvaluations) JSON_SO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
     }
 }
 
@@ -252,6 +268,7 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
             JSON_MO_info["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
             JSON_MO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
             JSON_MO_info["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
+            if(storeNetworkUniqueEvaluations) JSON_MO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
             avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
             JSON_MO_info["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
@@ -323,7 +340,10 @@ bool FitnessFunction::updateElitistArchive(Individual &ind){
 //  value 2:  the maximum of the distances from the points on the true pareto to the closest point in the elitist archive
 pair<float, float> FitnessFunction::calculateDistanceParetoToApproximation(){
     if (trueParetoFront.size() == 0){
-        cout << "ERROR: Wanted to calculate distance of pareto to approximation, but true Pareto front is unknown" << endl;
+        if (!errorParetoFrontSent) {
+            cout << "ERROR: Wanted to calculate distance of pareto to approximation, but true Pareto front is unknown" << endl;
+            errorParetoFrontSent = true;
+        }
         storeDistanceToParetoFrontOnElitistArchiveUpdate = false;
         return {-1.0f, -1.0f};
     }
@@ -357,7 +377,10 @@ pair<float, float> FitnessFunction::calculateDistanceParetoToApproximation(){
 
 int FitnessFunction::paretoPointsFound(){
     if(trueParetoFront.size() == 0){
-        cout << "No Pareto points known" << endl;
+        if (!errorParetoPointsSent){
+            cout << "No Pareto points known" << endl;
+            errorParetoPointsSent = true;
+        }
         return 0;
     }
     
@@ -379,10 +402,15 @@ int FitnessFunction::paretoPointsFound(){
 json FitnessFunction::elitistArchiveToJSON(){
     json result;
     for (int i = 0; i < elitistArchive.size(); i++){
+        json solution;
+        solution["g"] = Utility::genotypeToString(elitistArchive[i].genotype);
+        
         json array;
         array[0] = elitistArchive[i].fitness[0];
         array[1] = elitistArchive[i].fitness[1];
-        result[i] = array;
+        solution["f"] = array;
+        
+        result[i] = solution;
     }
     return result;
 }
@@ -409,6 +437,10 @@ bool FitnessFunction::maxEvaluationsExceeded(){
 
 bool FitnessFunction::maxUniqueEvaluationsExceeded(){
     return totalUniqueEvaluations >= maxUniqueEvaluations && maxUniqueEvaluations != -1;
+}
+
+bool FitnessFunction::maxNetworkUniqueEvaluationsExceeded(){
+    return totalNetworkUniqueEvaluations >= maxNetworkUniqueEvaluations && maxNetworkUniqueEvaluations != -1;
 }
 
 // Returns the id of the fitness function

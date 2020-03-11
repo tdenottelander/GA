@@ -14,7 +14,7 @@
 #include <tuple>
 #include "Individual.hpp"
 #include "ProblemType.hpp"
-#include "UniqueSolutions.hpp"
+#include "SolutionLibrary.hpp"
 
 class FitnessFunction {
 public:
@@ -30,6 +30,7 @@ public:
     bool optimumFound;
     int maxEvaluations;
     int maxUniqueEvaluations;
+    int maxNetworkUniqueEvaluations;
     ProblemType *problemType;
     int totalProblemLength;
     int numObjectives = 1;
@@ -41,8 +42,10 @@ public:
     int totalEvaluations;
     int totalUniqueEvaluations;
     int totalTransformedUniqueEvaluations;
-    UniqueSolutions uniqueSolutions;
-    UniqueSolutions transformedUniqueSolutions;
+    int totalNetworkUniqueEvaluations;
+    bool storeNetworkUniqueEvaluations = false;
+    SolutionLibrary uniqueSolutions;
+    SolutionLibrary transformedUniqueSolutions;
     
     nlohmann::json elitistArchiveToJSON();
     
@@ -53,6 +56,7 @@ public:
     
     virtual std::vector<float> evaluate(Individual &ind) = 0;
     void evaluationProcedure(Individual &ind);
+    bool log(int evals);
     bool isDone();
     bool isMO();
     virtual void display();
@@ -71,6 +75,7 @@ public:
     int getTotalAmountOfEvaluations();
     bool maxEvaluationsExceeded();
     bool maxUniqueEvaluationsExceeded();
+    bool maxNetworkUniqueEvaluationsExceeded();
     
     virtual FitnessFunction* clone() const = 0;
     

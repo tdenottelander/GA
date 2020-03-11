@@ -138,10 +138,10 @@ void GA::roundPOVariationSelection(){
 
 void GA::evaluateAll(vector<Individual> &population){
     for(Individual &ind: population){
-        fitFunc_ptr->evaluate(ind);
-        if(fitFunc_ptr->optimumFound || fitFunc_ptr->maxEvaluationsExceeded() || fitFunc_ptr->maxUniqueEvaluationsExceeded()){
-            break;
+        if(fitFunc_ptr->optimumFound || fitFunc_ptr->maxEvaluationsExceeded() || fitFunc_ptr->maxUniqueEvaluationsExceeded() || fitFunc_ptr->maxNetworkUniqueEvaluationsExceeded()){
+            return;
         }
+        fitFunc_ptr->evaluate(ind);
     }
 }
 
