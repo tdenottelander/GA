@@ -64,7 +64,23 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-e 100 -f zmom 10 -F learned -o MO-GOMEA -r 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-I 0 -p 50 -e 100 -f ark8 14 2 -o NSGA-II -r 2 "
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-?"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-I 0 -p 50 -e 1000 -f ark8 14 1 -o RS -r 2"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-I 0 -p 50 -e 1000 -f zmom 10 -c entire_pareto -v 2p -o NSGA-II -r 5"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "5 2 5 100 100 1000000 zmom"
