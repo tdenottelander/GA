@@ -24,7 +24,7 @@
 
 path_to_executable=dist/Release/GNU-Linux/tomga
 # path_to_executable='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/out/GA-dxxucjfbkbbaercqnxcndhysuclb/Build/Products/Debug/GA'
-path_to_project=/export/scratch1/tdo/TomGA/
+path_to_project=src/../  #Will point to the current working directory
 # path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
 
 networkUniqueEvals=500
