@@ -1,12 +1,11 @@
 #!/bin/bash
-# path_to_executable=dist/Release/GNU-Linux/
-# path_to_executable=./out/GA-dxxucjfbkbbaercqnxcndhysuclb/Build/Products/Debug
-path_to_executable='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/out/GA-dxxucjfbkbbaercqnxcndhysuclb/Build/Products/Debug/GA'
-# path_to_project=/export/scratch1/tdo/TomGA/
-path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
+path_to_executable=dist/Release/GNU-Linux/tomga
+# path_to_executable='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/out/GA-dxxucjfbkbbaercqnxcndhysuclb/Build/Products/Debug/GA'
+path_to_project=/export/scratch1/tdo/TomGA/
+# path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
 
 evals=10000000
-fit="ark7 14 1"
+fit="ark8 14 1"
 repetitions=30
 populationInitializationMode=0
 IMS=0
