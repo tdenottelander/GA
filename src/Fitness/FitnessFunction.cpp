@@ -19,10 +19,11 @@ extern bool printElitistArchiveOnUpdate;
 extern bool storeDistanceToParetoFrontOnElitistArchiveUpdate;
 extern nlohmann::json convergence;
 extern nlohmann::json JSON_MO_info;
+extern nlohmann::json JSON_SO_info;
 extern bool storeElitistArchive;
 extern bool updateElitistArchiveOnEveryEvaluation;
-extern int storeParetoDistanceMode;
-extern int storeParetoDistanceLinearInterval;
+extern int loggingIntervalMode;
+extern int loggingLinearInterval;
 
 /* ------------------------ Base Fitness Function ------------------------ */
 
@@ -65,6 +66,7 @@ void FitnessFunction::clear(){
     uniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     transformedUniqueSolutions = UniqueSolutions(problemType->alphabet.size());
     JSON_MO_info.clear();
+    JSON_SO_info.clear();
     done = false;
 }
 
@@ -83,8 +85,8 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         }
         
         // Store the distance of the front to the approximation on every log10 interval.
-        if((storeParetoDistanceMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
-           || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalEvaluations, storeParetoDistanceLinearInterval))){
+        if((loggingIntervalMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
+           || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalEvaluations, loggingLinearInterval))){
 
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_interval"]["total_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
@@ -97,6 +99,13 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     
     // Do this stuff only if it is a SO-problem
     if (numObjectives == 1){
+        
+        if((loggingIntervalMode == 0 && Utility::isLogPoint(totalEvaluations, 2))
+           || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalEvaluations, loggingLinearInterval))){
+            JSON_SO_info["changes_on_interval"]["total_evals"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+            JSON_SO_info["changes_on_interval"]["total_evals"]["solution_fitness"].push_back(bestIndividual.fitness[0]);
+            JSON_SO_info["changes_on_interval"]["total_evals"]["evals"].push_back(totalEvaluations);
+        }
         
         // Store the best fitness found so far
         if(storeAbsoluteConvergence){
@@ -119,14 +128,23 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         totalUniqueEvaluations++;
         
         // Store unique convergence only for SO-problems
-        if(numObjectives == 1 && storeUniqueConvergence){
-            convergence["unique"].push_back(bestIndividual.fitness[0]);
+        if(numObjectives == 1){
+            if(storeUniqueConvergence){
+                convergence["unique"].push_back(bestIndividual.fitness[0]);
+            }
+            
+            if((loggingIntervalMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2)) || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, loggingLinearInterval))){
+            
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["solution_fitness"].push_back(bestIndividual.fitness[0]);
+                JSON_SO_info["changes_on_interval"]["unique_evals"]["evals"].push_back(totalUniqueEvaluations);
+            }
         }
         
         // Store distance front to approximation only if MO-problem and if unique evaluations is on a log10 interval.
         if(numObjectives > 1 && (
-            (storeParetoDistanceMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2))
-            || (storeParetoDistanceMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, storeParetoDistanceLinearInterval)))
+            (loggingIntervalMode == 0 && Utility::isLogPoint(totalUniqueEvaluations, 2))
+            || (loggingIntervalMode == 1 && Utility::isLinearPoint(totalUniqueEvaluations, loggingLinearInterval)))
         ){
             pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
             JSON_MO_info["changes_on_interval"]["unique_evals"]["elitist_archive"].push_back(elitistArchiveToJSON());
@@ -189,6 +207,10 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     // Set bestIndividual only for SO-problems.
     if(numObjectives == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
         bestIndividual = ind.copy();
+        JSON_SO_info["changes_on_update"]["solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+        JSON_SO_info["changes_on_update"]["solution_fitness"].push_back(ind.fitness[0]);
+        JSON_SO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
+        JSON_SO_info["changes_on_update"]["unique_evaluations"].push_back(totalUniqueEvaluations);
     }
 }
 
