@@ -2,11 +2,13 @@
 
 # -?: print help
 # -P [#1]: set project directory to #1  !!IMPORTANT THAT THIS IS DONE!!
+# -S [#1]: set seed to #1 (any integer number)
 # -e [#1]: set max evaluations to #1
 # -u [#1]: set max unique evaluations to #1
 # -n [#1]: set max network unique evaluations to #1
 # -m [#1]: set max rounds to #1
 # -s [#1]: set max seconds to #1
+# -d [#1]: set dataset to #1={cifar10, cifar100} for ark-online
 # -f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3
 # -c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}
 # -E [#1]: set epsilon to #1
@@ -21,35 +23,40 @@
 # -l [#1]: set allow identity layers to #1={0,1}
 # -M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}
 # -a [#1]: set print full elitist archive to #1={0, 1}
+# -q [#1]: set print every evaluation to #1={0, 1}
+# -x [#1]: set saving log files on every update to #1={0, 1}
+# Program ended with exit code: 0
 
 path_to_executable=dist/Release/GNU-Linux/tomga
 # path_to_executable='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/out/GA-dxxucjfbkbbaercqnxcndhysuclb/Build/Products/Debug/GA'
 path_to_project=src/../  #Will point to the current working directory
 # path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
 
-networkUniqueEvals=500
+networkUniqueEvals=1000
+dataset="cifar100"
 fit="ark-online 17 2"
 optimization=('-F uni rand -o MO-GOMEA', '-F learned -o MO-GOMEA', '-v 2p -o NSGA-II', "-o MO-RS", "-o MO-LS rand")
 repetitions=2
 IMS=0
-popsize=300
+popsize=200
 populationInitializationMode=1 #1 includes all-identity solution, 0 is true random
 printAtEveryEval=1
+saveLogFilesOnEveryUpdate=1
 
 fos="uni rand"
 optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
 fos="learned"
 optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
 variation="2p"
 optimizer="NSGA-II"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -v $variation -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -v $variation -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
 optimizer="MO-RS"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
 optimizer="MO-LS rand"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval
+$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
