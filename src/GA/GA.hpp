@@ -30,6 +30,7 @@ public:
     bool initialized;
     int roundsCount;
     bool isLocalSearchAlgorithm = false;
+    bool isRandomSearchAlgorithm = false;
     int noAdditionToElitistArchiveCount = 0;
     bool preventIMS = false;
     

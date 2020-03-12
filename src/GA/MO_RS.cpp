@@ -12,6 +12,7 @@ using namespace std;
 
 MO_RS::MO_RS (FitnessFunction * fitFunc) : GA(fitFunc){
     preventIMS = true;
+    isRandomSearchAlgorithm = true;
 }
 
 void MO_RS::round(){

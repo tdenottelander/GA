@@ -10,7 +10,9 @@
 
 using namespace std;
 
-RandomSearch::RandomSearch (FitnessFunction * fitFunc) : GA(fitFunc){}
+RandomSearch::RandomSearch (FitnessFunction * fitFunc) : GA(fitFunc){
+    isRandomSearchAlgorithm = true;
+}
 
 void RandomSearch::round(){
     int n = fitFunc_ptr->totalProblemLength;

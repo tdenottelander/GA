@@ -163,7 +163,7 @@ vector<float> GA::getAvgFitness(){
 }
 
 bool GA::isConverged(){
-    if(converged || isOptimal() || (!isDiverse() && !isLocalSearchAlgorithm)){
+    if(converged || isOptimal() || (!isDiverse() && !isLocalSearchAlgorithm && !isRandomSearchAlgorithm)){
         converged = true;
         terminated = true;
         return true;
