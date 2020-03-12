@@ -1,7 +1,6 @@
 #include "MO_GOMEA.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann; // for json
 
 extern FitnessFunction* fitFunc;
@@ -1927,7 +1926,7 @@ short MO_GOMEA::weaklyParetoDominates( double *objective_values_x, double *objec
 /**
  * Assigns the values of the fos elements to the correct variables used by MO-GOMEA
  */
-void MO_GOMEA::assignLinkageTreeVariables(vector<uvec> fos, int cluster_index){
+void MO_GOMEA::assignLinkageTreeVariables(vector<vector<int>> fos, int cluster_index){
     if( lt[cluster_index] != NULL )
     {
         for(int i = 0; i < lt_length[cluster_index]; i++ )
@@ -2373,7 +2372,7 @@ void MO_GOMEA::learnLinkageOnCurrentPopulation()
         }
         
         // Learn the linkage tree (using my code)
-        vector<uvec> fosToUse = fos->getFOS(subpopulation);
+        vector<vector<int>> fosToUse = fos->getFOS(subpopulation);
         
         // Copy the learned linkage tree into MO_GOMEA variables
         assignLinkageTreeVariables(fosToUse, cluster_index);

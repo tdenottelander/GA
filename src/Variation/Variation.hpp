@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-#include <armadillo>
 #include "Individual.hpp"
 #include "Utility.hpp"
 #include "FitnessFunction.hpp"
@@ -80,13 +79,13 @@ public:
     FitnessFunction *fitfunc;
     Individual *bestIndividual;
     bool forcedImprovement;
-    std::vector<arma::uvec> fos;
+    std::vector<std::vector<int>> fos;
     FOS *fosObject;
     GOM_Variation(bool forcedInprovement = false);
     std::vector<Individual> variate(std::vector<Individual> &population) override;
     Individual gom(Individual &ind, std::vector<Individual> &population, int indIdx);
     bool gomWithEliteIndividual(Individual &o, Individual &b);
-    void applyDonor(Individual &ind, Individual &parent, arma::uvec &subset);
+    void applyDonor(Individual &ind, Individual &parent, std::vector<int> &subset);
     void setFOSObject(FOS *f);
     void display() override;
     std::string id() override;

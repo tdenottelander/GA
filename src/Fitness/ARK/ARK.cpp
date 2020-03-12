@@ -12,7 +12,6 @@
 
 #include "ARK.hpp"
 
-using namespace arma;
 using namespace std;
 using namespace nlohmann;
 
@@ -50,21 +49,12 @@ vector<float> ARK::evaluate(Individual &ind){
 }
 
 // Returns the fitness of the architecture passed by its encoding by querying the benchmark
-vector<float> ARK::query(uvec encoding){
+vector<float> ARK::query(vector<int> encoding){
     vector<float> result = getFitness(encoding);
     return result;
 }
 
-// Returns the fitness of the architecture passed by its encoding (in vector<int>)
-vector<float> ARK::query(vector<int> encoding){
-    uvec uvecEncoding(encoding.size());
-    for (int i = 0; i < encoding.size(); i++){
-        uvecEncoding[i] = encoding[i];
-    }
-    return query(uvecEncoding);
-}
-
-vector<float> ARK::getFitness(uvec encoding){
+vector<float> ARK::getFitness(vector<int> encoding){
     //Transform encoding into string
     string layers;
     for (int i : encoding){
@@ -127,7 +117,7 @@ void ARK::printArchitecture(vector<int> architecture){
 }
 
 
-uvec ARK::transform(uvec &genotype){
+vector<int> ARK::transform(vector<int> &genotype){
     return Individual::removeIdentities(genotype, identityLayer);
 }
 
@@ -157,7 +147,7 @@ void ARK::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int
         vector<float> result = query (temp);
         Individual ind;
         ind.fitness = result;
-        uvec gen = Utility::vectorToUvec(temp);
+        vector<int> gen (temp);
         ind.genotype = gen;
         updateElitistArchive(ind);
         if (abs(result[0] - statistics.fitness) < 0.001){
@@ -181,7 +171,7 @@ pair<int, int> ARK::findAmountOfArchitecturesWithFitnessAboveThreshold(float thr
     int sum = 0;
     int total = pow(problemType->alphabet.size(), totalProblemLength);
     for (int i = 0; i < total; i++){
-        uvec genotype = HashingFunctions::decode(i, totalProblemLength, problemType->alphabet.size());
+        vector<int> genotype = HashingFunctions::decode(i, totalProblemLength, problemType->alphabet.size());
         vector<float> result = query(genotype);
         if(result[0] >= threshold){
             cout << Individual::toString(genotype) << " f=" << result[0] << endl;
@@ -260,7 +250,7 @@ float ARK::getOptimum(string folder, int layers, bool allowIdentityLayers){
     return result;
 }
 
-uvec ARK::getOptimalGenotype(){
+vector<int> ARK::getOptimalGenotype(){
     string filename = benchmarksDir + folder + "/analysis" + ARK_Analysis_suffix + ".json";
     ifstream ifs(filename);
     if (!ifs.good()){
@@ -269,24 +259,24 @@ uvec ARK::getOptimalGenotype(){
     } else {
         json analysis = json::parse(ifs);
         auto optGenotypes = analysis["optima"][to_string(totalProblemLength)]["genotypes"];
-        vector<uvec> genotypes;
+        vector<vector<int>> genotypes;
         for (string gen : optGenotypes){
             cout << gen << endl;
             genotypes.push_back(Utility::stringToGenotype(gen));
         }
         int selectedGenotypeIdx = findMostDifferentGenotype(genotypes);
-        uvec optGen = uvec(genotypes[selectedGenotypeIdx]);
+        vector<int> optGen (genotypes[selectedGenotypeIdx]);
         cout << "optimal Genotype: " << Utility::genotypeToString(optGen) << endl;
         return optGen;
     }
 }
 
 void ARK::setGenotypeChecking(){
-    uvec optGen = getOptimalGenotype();
+    vector<int> optGen = getOptimalGenotype();
     FitnessFunction::setGenotypeChecking(optGen);
 }
 
-int ARK::findMostDifferentGenotype(vector<arma::uvec> &genotypes){
+int ARK::findMostDifferentGenotype(vector<vector<int>> &genotypes){
     bool print = true;
     vector<vector<int>> distances;
     int n = genotypes.size();

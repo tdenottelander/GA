@@ -9,7 +9,6 @@
 #include "LearnedLTFOS.hpp"
 
 using namespace std;
-using namespace arma;
 
 
 /* ------------------------ Learned Linkage Tree FOS ------------------------ */
@@ -18,8 +17,8 @@ LearnedLT_FOS::LearnedLT_FOS(ProblemType *problemType) : problemType(problemType
     reinitializeOnNewRound = true;
 }
 
-vector<uvec> LearnedLT_FOS::getFOS(vector<Individual> &population){
-    vector<uvec> fos = GenerateLinkageTreeFOS(population);
+vector<vector<int>> LearnedLT_FOS::getFOS(vector<Individual> &population){
+    vector<vector<int>> fos = GenerateLinkageTreeFOS(population);
     
 //    fos = FOSStructures::sortFOSMeanAscending(fos);
 //    fos = FOSStructures::boundFOS(fos, 1, 3);
@@ -29,7 +28,7 @@ vector<uvec> LearnedLT_FOS::getFOS(vector<Individual> &population){
     return fos;
 }
 
-vector<uvec> LearnedLT_FOS::getFOS (int genotypeLength){
+vector<vector<int>> LearnedLT_FOS::getFOS (int genotypeLength){
     cout << "Error, not implemented" << endl;
     exit(0);
 }
@@ -40,11 +39,11 @@ string LearnedLT_FOS::toString(){ return "Learned Linkage Tree FOS"; }
 
 // Original function implementation by Marco Virgolin (https://github.com/marcovirgolin/GP-GOMEA/blob/master/GOMEA/GOMEAFOS.cpp).
 // Adapted by Tom den Ottelander.
-vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>& population) {
+vector<vector<int>> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>& population) {
     
     size_t problemLength = population[0].genotype.size();
 
-    vector<uvec> FOS;
+    vector<vector<int>> FOS;
 
     size_t pop_size = population.size();
 
@@ -53,54 +52,54 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
 
     // build frequency table for symbol pairs
     size_t alphabetSize = problemType->alphabet.size();
-    mat frequencies(alphabetSize, alphabetSize, fill::zeros);
-    uword val_i, val_j;
+    vector<vector<int>> frequencies(alphabetSize, vector<int>(alphabetSize, 0));
+    uint val_i, val_j;
     
-    uword encode_number = alphabetSize;
+    uint encode_number = alphabetSize;
 
     // measure frequencies of pairs & compute joint entropy
-    for (uword i = 0; i < problemLength; i++) {
-        for (uword j = i + 1; j < problemLength; j++) {
-            for (uword p = 0; p < pop_size; p++) {
+    for (uint i = 0; i < problemLength; i++) {
+        for (uint j = i + 1; j < problemLength; j++) {
+            for (uint p = 0; p < pop_size; p++) {
                 val_i = population[p].genotype[i];
                 val_j = population[p].genotype[j];
 
-                frequencies.at(val_i, val_j) += 1.0;
+                frequencies[val_i][val_j] += 1.0;
             }
 
             double_t freq;
-            for (uword k = 0; k < encode_number; k++) {
-                for (uword l = 0; l < encode_number; l++) {
-                    freq = frequencies(k, l);
+            for (uint k = 0; k < encode_number; k++) {
+                for (uint l = 0; l < encode_number; l++) {
+                    freq = frequencies[k][l];
 //                    if(pop_size > 4){
 //                        cout << "i: " << i << " j: " << j << " k: " << k << " l: " << l << " freq: " << freq << endl;
 //                    }
                     if (freq > 0.0) {
                         freq = freq / pop_size;
                         mi_matrix[i][j] += -freq * log2(freq);
-                        frequencies.at(k, l) = 0.0; // reset the freq;
+                        frequencies[k][l] = 0.0; // reset the freq;
                     }
                 }
             }
             mi_matrix[j][i] = mi_matrix[i][j];
         }
 
-        for (uword p = 0; p < pop_size; p++) {
+        for (uint p = 0; p < pop_size; p++) {
             val_i = population[p].genotype[i];
-            frequencies.at(val_i, val_i) += 1.0;
+            frequencies[val_i][val_i] += 1.0;
         }
 
         double_t freq;
-        for (uword k = 0; k < encode_number; k++) {
-            for (uword l = 0; l < encode_number; l++) {
-                freq = frequencies(k, l);
+        for (uint k = 0; k < encode_number; k++) {
+            for (uint l = 0; l < encode_number; l++) {
+                freq = frequencies[k][l];
 //                if(pop_size > 4){
 //                    cout << "i: " << i << " j: " << i << " k: " << k << " l: " << l << " freq: " << freq << endl;
 //                }
                 if (freq > 0) {
                     freq = freq / pop_size;
                     mi_matrix[i][i] += -freq * log2(freq);
-                    frequencies.at(k, l) = 0.0; // reset the freq;
+                    frequencies[k][l] = 0.0; // reset the freq;
                 }
             }
         }
@@ -131,9 +130,9 @@ vector<uvec> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Individual>
 
 // Code by Peter Bosman.
 // Adapted by Tom den Ottelander.
-vector<uvec> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, vector<vector<double_t>> &sim_matrix) {
+vector<vector<int>> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, vector<vector<double_t>> &sim_matrix) {
     
-    vector<uvec> FOS;
+    vector<vector<int>> FOS;
     
     vector<int> random_order = Utility::getRandomlyPermutedArrayV2(number_of_nodes);
     
@@ -150,7 +149,7 @@ vector<uvec> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_o
     FOS.resize(number_of_nodes + number_of_nodes - 1);
     size_t FOSs_index = 0;
     for (int i = 0; i < mpm_length; i++) {
-        uvec vec (mpm[i].size());
+        vector<int> vec (mpm[i].size());
         for (int j = 0; j < mpm[i].size(); j++){
             vec[j] = mpm[i][j];
         }
@@ -201,7 +200,7 @@ vector<uvec> LearnedLT_FOS::BuildLinkageTreeFromSimilarityMatrix(size_t number_o
         NN_chain_length -= 3;
         
         if (r1 < mpm_length) { /* This test is required for exceptional cases in which the nearest-neighbor ordering has changed within the chain while merging within that chain */
-            uvec indices(mpm_number_of_indices[r0] + mpm_number_of_indices[r1]);
+            vector<int> indices(mpm_number_of_indices[r0] + mpm_number_of_indices[r1]);
             //indices.resize((mpm_number_of_indices[r0] + mpm_number_of_indices[r1]));
             //indices.clear();
             
@@ -286,11 +285,11 @@ int LearnedLT_FOS::DetermineNearestNeighbour(int index, vector<vector<double_t>>
     return ( result);
 }
 
-vector<uvec> LearnedLT_FOS::transformLinkageTreeFOS(vector<vector<size_t>> FOS){
-    vector<uvec> result;
+vector<vector<int>> LearnedLT_FOS::transformLinkageTreeFOS(vector<vector<size_t>> FOS){
+    vector<vector<int>> result;
     result.reserve(FOS.size());
     for (vector<size_t> vec : FOS){
-        uvec newVec = uvec(vec.size());
+        vector<int> newVec (vec.size(), 0);
         for (size_t i = 0; i < vec.size(); i++){
             newVec[i] = vec[i];
         }

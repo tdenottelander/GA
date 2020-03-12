@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "FitnessFunction.hpp"
 #include <unordered_map>
+#include <sstream>
 
 
 class Maxcutmap {

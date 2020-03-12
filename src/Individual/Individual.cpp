@@ -8,7 +8,6 @@
 
 #include "Individual.hpp"
 
-using namespace arma;
 using namespace std;
 using namespace Utility;
 
@@ -24,7 +23,7 @@ Individual::Individual(int length, int objectives) :
     front(-1),
     crowdingDistance(0.0)
 {
-    genotype = uvec (length);
+    genotype = vector<int>(length, 0);
 }
 
 void Individual::initialize(vector<int> &alphabet){
@@ -98,7 +97,7 @@ bool Individual::equals(const Individual &ind) {
     return true;
 }
 
-bool Individual::genotypeEquals(uvec &g){
+bool Individual::genotypeEquals(vector<int> &g){
     return genotypeEquals(g, genotype);
 }
 
@@ -146,12 +145,7 @@ string Individual::toString(vector<int> &genotype){
     return result;
 }
 
-string Individual::toString(uvec &genotype){
-    vector<int> gen = Utility::uvecToVector(genotype);
-    return toString(gen);
-}
-
-int Individual::hammingDistance(uvec &g1, uvec &g2){
+int Individual::hammingDistance(vector<int> &g1, vector<int> &g2){
     if (g1.size() != g2.size()){
         cout << "Error: Cannot compare hamming distance between two genotypes of different length" << endl;
         return -1;
@@ -164,11 +158,11 @@ int Individual::hammingDistance(uvec &g1, uvec &g2){
     return distance;
 }
 
-int Individual::editDistance(uvec &g1, uvec &g2){
+int Individual::editDistance(vector<int> &g1, vector<int> &g2){
     return editDistance(g1, g2, g1.size(), g2.size());
 }
 
-int Individual::editDistance(uvec &g1, uvec &g2, int i, int j){
+int Individual::editDistance(vector<int> &g1, vector<int> &g2, int i, int j){
     if(i == 0 || j == 0){
         return max(i, j);
     } else {
@@ -182,8 +176,8 @@ int Individual::editDistance(uvec &g1, uvec &g2, int i, int j){
     }
 }
 
-uvec Individual::removeIdentities(uvec &genotype, int identityLayerIndex){
-    uvec newGenotype (genotype.size());
+vector<int> Individual::removeIdentities(vector<int> &genotype, int identityLayerIndex){
+    vector<int> newGenotype (genotype.size(), 0);
     int j = 0;
     for (int i = 0; i < genotype.size(); i++){
         if (genotype[i] != identityLayerIndex){
@@ -191,10 +185,11 @@ uvec Individual::removeIdentities(uvec &genotype, int identityLayerIndex){
             j++;
         }
     }
-    return newGenotype.head(j);
+    vector<int> newVec (newGenotype.begin(), newGenotype.begin() + j);
+    return newVec;
 }
 
-bool Individual::genotypeEquals(uvec &g1, uvec &g2){
+bool Individual::genotypeEquals(vector<int> &g1, vector<int> &g2){
     if(g1.size() != g2.size()){
         return false;
     }

@@ -10,7 +10,6 @@
 #define UniqueSolutions_hpp
 
 #include <stdio.h>
-#include <armadillo>
 #include <unordered_set>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
@@ -23,11 +22,11 @@ public:
     SolutionLibrary(Type = Type::DEFAULT);
     Type type;
     std::unordered_map<std::string, std::vector<float>> library;
-    void put(arma::uvec &genotype, std::vector<float> &fitness);
-    bool contains(arma::uvec &genotype);
-    std::vector<float> get(arma::uvec &genotype);
+    void put(std::vector<int> &genotype, std::vector<float> &fitness);
+    bool contains(std::vector<int> &genotype);
+    std::vector<float> get(std::vector<int> &genotype);
     void clear();
-    std::string hash(arma::uvec &genotype);
+    std::string hash(std::vector<int> &genotype);
 };
 
 class SolutionCounter {
@@ -36,17 +35,17 @@ public:
     int problemSize;
     int alphabetSize;
     std::unordered_map<int, int> counterMap;
-    void put(arma::uvec &genotype);
-    bool contains(arma::uvec &genotype);
-    long get(arma::uvec &genotype);
+    void put(std::vector<int> &genotype);
+    bool contains(std::vector<int> &genotype);
+    long get(std::vector<int> &genotype);
     nlohmann::json toJson (bool asHash);
 };
 
 namespace HashingFunctions {
-    long hash(arma::uvec &genotype, int alphabetSize);
-    arma::uvec decode(long hash, int problemSize, int alphabetSize);
-    std::string toString(arma::uvec &genotype, std::string type="default");
-    arma::uvec toGenotype(std::string str);
+    long hash(std::vector<int> &genotype, int alphabetSize);
+    std::vector<int> decode(long hash, int problemSize, int alphabetSize);
+    std::string toString(std::vector<int> &genotype, std::string type="default");
+    std::vector<int> toGenotype(std::string str);
 };
 
 #endif /* UniqueSolutions_hpp */

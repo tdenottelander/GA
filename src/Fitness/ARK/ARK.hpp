@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include <vector>
-#include <armadillo>
 #include <nlohmann/json.hpp>
 #include "FitnessFunction.hpp"
 #include <unordered_map>
@@ -25,9 +24,8 @@ public:
     std::string folder;
     ARK(int problemSize, bool allowIdentityLayers, bool genotypeChecking, ProblemType* problemType, int identity, int jsonAccuracyIndex, std::string folder);
     std::vector<float> evaluate(Individual &ind) override;
-    std::vector<float> query(arma::uvec encoding);
     std::vector<float> query(std::vector<int> encoding);
-    virtual std::vector<float> getFitness(arma::uvec encoding);
+    virtual std::vector<float> getFitness(std::vector<int> encoding);
     int getNumParams(std::vector<int> encoding);
     void display() override;
     std::string id() override;
@@ -37,7 +35,7 @@ public:
     
     static void printArchitecture(std::vector<int> architecture);
     
-    arma::uvec transform(arma::uvec &genotype) override;
+    std::vector<int> transform(std::vector<int> &genotype) override;
     
     struct solution {
         float fitness;
@@ -53,9 +51,9 @@ public:
     void doAnalysis(int minLayerSize, int maxLayerSize);
     
     float getOptimum(std::string folder, int layers, bool allowIdentityLayers);
-    arma::uvec getOptimalGenotype();
+    std::vector<int> getOptimalGenotype();
     void setGenotypeChecking();
-    int findMostDifferentGenotype(std::vector<arma::uvec> &genotypes);
+    int findMostDifferentGenotype(std::vector<std::vector<int>> &genotypes);
     
     void setNoisy(float percentage);
     bool noisy = false;

@@ -14,7 +14,6 @@
 #include "FitnessFunction.hpp"
 #include "Individual.hpp"
 
-#include <armadillo>
 #include <vector>
 #include <string>
 

@@ -23,14 +23,14 @@ class LearnedLT_FOS : public FOS {
 public:
     ProblemType *problemType;
     LearnedLT_FOS(ProblemType *problemType);
-    std::vector<arma::uvec> getFOS (std::vector<Individual> &population) override;
-    std::vector<arma::uvec> getFOS (int genotypeLength) override;
+    std::vector<std::vector<int>> getFOS (std::vector<Individual> &population) override;
+    std::vector<std::vector<int>> getFOS (int genotypeLength) override;
     std::string id() override;
     std::string toString() override;
-    std::vector<arma::uvec> GenerateLinkageTreeFOS(const std::vector<Individual>& population);
-    std::vector<arma::uvec> BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, std::vector<std::vector<double_t>> &sim_matrix);
+    std::vector<std::vector<int>> GenerateLinkageTreeFOS(const std::vector<Individual>& population);
+    std::vector<std::vector<int>> BuildLinkageTreeFromSimilarityMatrix(size_t number_of_nodes, std::vector<std::vector<double_t>> &sim_matrix);
     int DetermineNearestNeighbour(int index, std::vector<std::vector<double_t>> &S_matrix, std::vector<int> & mpm_number_of_indices, int mpm_length);
-    std::vector<arma::uvec> transformLinkageTreeFOS(std::vector<std::vector<size_t>>);
+    std::vector<std::vector<int>> transformLinkageTreeFOS(std::vector<std::vector<size_t>>);
 };
 
 #endif /* LearnedLTFOS_hpp */

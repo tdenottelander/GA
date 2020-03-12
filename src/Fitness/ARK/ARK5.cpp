@@ -10,7 +10,6 @@
 
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann;
 
 ARK5::ARK5() : ARK(8, true, false, getProblemType(true), 2, 2, "ark5") {}

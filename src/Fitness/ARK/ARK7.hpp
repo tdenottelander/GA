@@ -10,10 +10,6 @@
 #define ARK7_hpp
 
 #include <stdio.h>
-
-
-
-#include <stdio.h>
 #include "ARK.hpp"
 #include <algorithm>
 
@@ -23,8 +19,7 @@ public:
     bool MO = false;
     std::vector<float> normalization = {1.0f/100.0f, 1.0f/500.0f};
     
-//    float query (arma::uvec encoding) override;
-    std::vector<float> getFitness (arma::uvec encoding) override;
+    std::vector<float> getFitness (std::vector<int> encoding) override;
     
     void display() override;
     std::string id() override;

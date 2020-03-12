@@ -11,7 +11,6 @@
 using namespace std;
 using namespace chrono;
 using namespace nlohmann;
-using namespace arma;
 
 
 /* ------------------------ Ordered array utility functions------------------------ */
@@ -54,12 +53,11 @@ string Utility::orderToString(Order order){
 vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     vector<int> arr = Utility::getAscendingArray(n);
     
-    vector<int> result;
-    result.reserve(n);
+    vector<int> result (n, 0);
     for (int i = 0; i < n; i++){
         float rand = getRand();
         int idx = floor(rand * arr.size());
-        result.push_back(arr[idx]);
+        result[i] = arr[idx];
         arr.erase(arr.begin()+idx);
     }
     
@@ -68,19 +66,17 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
 
 // Returns an ascending array of length n   [0, 1, ..., n-2, n-1]
 vector<int> Utility::getAscendingArray(int n){
-    vector<int> arr;
-    arr.reserve(n);
+    vector<int> arr (n, 0);
     for(int i = 0; i < n; i++)
-        arr.push_back(i);
+        arr[i] = i;
     return arr;
 }
 
 // Returns a descending array of length n   [n-1, n-2, ..., 1, 0]
 vector<int> Utility::getDescendingArray(int n){
-    vector<int> arr;
-    arr.reserve(n);
-    for(int i = n-1; i >= 0; i--)
-        arr.push_back(i);
+    vector<int> arr (n, 0);
+    for (int i = 0; i < n; i++)
+        arr[i] = n - i - 1;
     return arr;
 }
 
@@ -197,20 +193,20 @@ void Utility::read(string filename){
 
 /* ------------------------ String utility functions------------------------ */
 
-// Converts a genotype in the form of an armadillo uvec to a string of concatenated integers
-string Utility::genotypeToString(arma::uvec &genotype){
+// Converts a genotype in the form of vector<int> to a string of concatenated integers
+string Utility::genotypeToString(vector<int> &genotype){
     string result = "";
     for(int i : genotype)
         result += to_string(i);
     return result;
 }
 
-// Converts a string of integers to a genotype in the form of an armadillo uvec
-uvec Utility::stringToGenotype (string &genotype){
+// Converts a string of integers to a genotype in the form of vector<int>
+vector<int> Utility::stringToGenotype (string &genotype){
     int n = genotype.size();
-    uvec result(n);
+    vector<int> result(n, 0);
     for (int i = 0; i < n; i++){
-        result[i] = std::stoi(genotype.substr(i,1));
+        result[i] = stoi(genotype.substr(i,1));
     }
     return result;
 }
@@ -257,26 +253,6 @@ string Utility::padWithSpacesAfter(string target, int length){
     for (int i = 0; i < length - n; i++)
         target = target + " ";
     return target;
-}
-
-
-/* ------------------------ Type conversion utility functions------------------------ */
-
-uvec Utility::vectorToUvec (vector<int> vec){
-    uvec result(vec.size());
-    for(int i = 0; i < vec.size(); i++){
-        result[i] = vec[i];
-    }
-    return result;
-}
-
-vector<int> Utility::uvecToVector (uvec vec){
-    vector<int> result;
-    result.reserve(vec.size());
-    for(int i = 0; i < vec.size(); i++){
-        result.push_back(vec[i]);
-    }
-    return result;
 }
 
 

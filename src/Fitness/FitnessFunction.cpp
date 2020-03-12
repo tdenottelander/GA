@@ -9,7 +9,6 @@
 #include "FitnessFunction.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann;
 
 extern bool storeAbsoluteConvergence;
@@ -126,7 +125,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         }
         
         if(storeTransformedUniqueConvergence){
-            uvec transformedGenotype = transform(ind.genotype);
+            vector<int> transformedGenotype = transform(ind.genotype);
             if (!transformedUniqueSolutions.contains(transformedGenotype)){
                 transformedUniqueSolutions.put(transformedGenotype, ind.fitness);
                 totalTransformedUniqueEvaluations++;
@@ -450,7 +449,7 @@ bool FitnessFunction::entireParetoFrontFound(){
     return elitistArchive.size() == optimalParetoFrontSize;
 }
 
-void FitnessFunction::setGenotypeChecking(uvec genotype){
+void FitnessFunction::setGenotypeChecking(vector<int> genotype){
     checkForGenotype = true;
     optimalGenotype = genotype;
 }
@@ -502,7 +501,7 @@ void FitnessFunction::setOptimum(float opt){
 
 // Transforms the genotype (e.g. remove identity layers in ARK)
 // Should be overridden in derived classes
-uvec FitnessFunction::transform(uvec &genotype){
+vector<int> FitnessFunction::transform(vector<int> &genotype){
     return genotype;
 }
 
@@ -579,7 +578,8 @@ OneMax::OneMax(int length) : FitnessFunction(vector<float>(1, length), getProble
 OneMax::OneMax() : FitnessFunction(getProblemType()) {}
 
 vector<float> OneMax::evaluate(Individual &ind) {
-    vector<float> result(1, sum(ind.genotype));
+    int summedGenotype = accumulate(ind.genotype.begin(), ind.genotype.end(), 0);
+    vector<float> result(1, summedGenotype);
     ind.fitness[0] = result[0];
     
     evaluationProcedure(ind);
@@ -653,7 +653,8 @@ NonBinaryMax::NonBinaryMax() : FitnessFunction(getProblemType()) {}
 //TODO: FINISH IMPLEMENTATION OF NONBINARY MAX FITNESS FUNCTION
 
 vector<float> NonBinaryMax::evaluate(Individual &ind){
-    vector<float> result (1, sum(ind.genotype));
+    int summedGenotype = accumulate(ind.genotype.begin(), ind.genotype.end(), 0);
+    vector<float> result (1, summedGenotype);
     ind.fitness[0] = result[0];
     evaluationProcedure(ind);
     return result;

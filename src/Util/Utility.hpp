@@ -11,10 +11,12 @@
 
 #include <stdio.h>
 #include <vector>
-#include <armadillo>
 #include <chrono>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <iostream>
+#include <fstream>
+#include <random>
 
 extern std::mt19937 rng;
 extern std::uniform_real_distribution<float> dist;
@@ -52,17 +54,13 @@ namespace Utility{
     void read(std::string filename);
     
     // String utility functions
-    std::string genotypeToString(arma::uvec &genotype);
-    arma::uvec stringToGenotype(std::string &genotype);
+    std::string genotypeToString(std::vector<int> &genotype);
+    std::vector<int> stringToGenotype(std::string &genotype);
     std::string vecOfFloatsToString (std::vector<float> vec, std::string separator);
     std::string wrapWithBrackets (std::string str);
     std::string padFrontWith0(std::string target, int length);
     std::string removeTrailingZeros(std::string target);
     std::string padWithSpacesAfter(std::string target, int length);
-    
-    // Type conversion utility functions
-    arma::uvec vectorToUvec (std::vector<int> vec);
-    std::vector<int> uvecToVector (arma::uvec vec);
     
     // Calculation utility functions
     float getAverage(std::vector<float> &vec);

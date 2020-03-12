@@ -8,12 +8,10 @@
 
 #include "FOS.hpp"
 using namespace std;
-using namespace arma;
-
 
 /* ------------------------ Base class FOS ------------------------ */
 
-vector<uvec> FOS::getFOS (vector<Individual> &population){
+vector<vector<int>> FOS::getFOS (vector<Individual> &population){
     return getFOS(population[0].genotype.size());
 }
 string FOS::id(){ return "base FOS"; }
@@ -26,7 +24,7 @@ IncrementalLT_FOS::IncrementalLT_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_FOS::getFOS (int genotypeLength){
+vector<vector<int>> IncrementalLT_FOS::getFOS (int genotypeLength){
     return FOSStructures::getIncrementalLT_FOS(genotypeLength);
 }
 string IncrementalLT_FOS::id(){ return "incrLT-asc"; }
@@ -39,7 +37,7 @@ IncrementalLTReversed_FOS::IncrementalLTReversed_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLTReversed_FOS::getFOS(int genotypeLength){
+vector<vector<int>> IncrementalLTReversed_FOS::getFOS(int genotypeLength){
     return FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
 }
 string IncrementalLTReversed_FOS::id(){ return "incrLT-desc"; }
@@ -52,11 +50,11 @@ IncrementalLT_UnivariateOrdered_FOS::IncrementalLT_UnivariateOrdered_FOS(){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLT_UnivariateOrdered_FOS::getFOS (int genotypeLength){
-    vector<uvec> fos;
+vector<vector<int>> IncrementalLT_UnivariateOrdered_FOS::getFOS (int genotypeLength){
+    vector<vector<int>> fos;
     fos.reserve(2 * genotypeLength);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLT_FOS(genotypeLength);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
+    vector<vector<int>> fixedLT = FOSStructures::getIncrementalLT_FOS(genotypeLength);
+    vector<vector<int>> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -71,11 +69,11 @@ IncrementalLTReversed_UnivariateOrdered_FOS::IncrementalLTReversed_UnivariateOrd
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> IncrementalLTReversed_UnivariateOrdered_FOS::getFOS (int genotypeLength){
-    vector<uvec> fos;
+vector<vector<int>> IncrementalLTReversed_UnivariateOrdered_FOS::getFOS (int genotypeLength){
+    vector<vector<int>> fos;
     fos.reserve(2 * genotypeLength);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
+    vector<vector<int>> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
+    vector<vector<int>> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::ASCENDING);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -90,11 +88,11 @@ IncrementalLTReversed_Univariate_FOS::IncrementalLTReversed_Univariate_FOS(){
     reinitializeOnNewRound = true;
 }
 
-vector<uvec> IncrementalLTReversed_Univariate_FOS::getFOS (int genotypeLength){
-    vector<uvec> fos;
+vector<vector<int>> IncrementalLTReversed_Univariate_FOS::getFOS (int genotypeLength){
+    vector<vector<int>> fos;
     fos.reserve(2 * genotypeLength);
-    vector<uvec> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
-    vector<uvec> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::RANDOM);
+    vector<vector<int>> fixedLT = FOSStructures::getIncrementalLTReversed_FOS(genotypeLength);
+    vector<vector<int>> univariate = FOSStructures::getUnivariate_FOS(genotypeLength, Utility::Order::RANDOM);
     fos.insert(fos.begin(), fixedLT.begin(), fixedLT.end());
     fos.insert(fos.end(), univariate.begin(), univariate.end());
     return fos;
@@ -113,7 +111,7 @@ Univariate_FOS::Univariate_FOS(Utility::Order order) : order(order){
     }
 }
 
-vector<uvec> Univariate_FOS::getFOS (int genotypeLength){
+vector<vector<int>> Univariate_FOS::getFOS (int genotypeLength){
     return FOSStructures::getUnivariate_FOS(genotypeLength, order);
 }
 
@@ -127,7 +125,7 @@ Triplet_FOS::Triplet_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> Triplet_FOS::getFOS (int genotypeLength){
+vector<vector<int>> Triplet_FOS::getFOS (int genotypeLength){
     return FOSStructures::getTriplet_FOS(genotypeLength, order);
 }
 
@@ -141,7 +139,7 @@ TripletTree_FOS::TripletTree_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> TripletTree_FOS::getFOS (int genotypeLength){
+vector<vector<int>> TripletTree_FOS::getFOS (int genotypeLength){
     return FOSStructures::getTripletTree_FOS(genotypeLength, order);
 }
 
@@ -157,7 +155,7 @@ ARK6_FOS::ARK6_FOS(Utility::Order order) : order(order){
     reinitializeOnNewRound = false;
 }
 
-vector<uvec> ARK6_FOS::getFOS (int genotypeLength){
+vector<vector<int>> ARK6_FOS::getFOS (int genotypeLength){
     return FOSStructures::getARK6_FOS(genotypeLength, order);
 }
 
@@ -167,11 +165,11 @@ string ARK6_FOS::toString(){ return Utility::orderToString(order) + " ARK6 FOS";
 
 /* ------------------------ Namespace FOS Structures ------------------------ */
 
-vector<uvec> FOSStructures::getIncrementalLT_FOS(int n){
-    vector<uvec> fos;
+vector<vector<int>> FOSStructures::getIncrementalLT_FOS(int n){
+    vector<vector<int>> fos;
     fos.reserve(n);
     for(int i = 0; i < n; i++){
-        uvec subset (i + 1);
+        vector<int> subset (i + 1, 0);
         for(int j = 0; j < (i + 1); j++){
             subset[j] = j;
         }
@@ -180,11 +178,11 @@ vector<uvec> FOSStructures::getIncrementalLT_FOS(int n){
     return fos;
 }
 
-vector<uvec> FOSStructures::getIncrementalLTReversed_FOS(int n){
-    vector<uvec> fos;
+vector<vector<int>> FOSStructures::getIncrementalLTReversed_FOS(int n){
+    vector<vector<int>> fos;
     fos.reserve(n);
-    for(int i = n - 1; i > 0; i--){
-        uvec subset (n - i);
+    for(int i = n - 1; i >= 0; i--){
+        vector<int> subset (n - i, 0);
         for(int j = n - 1; j >= i; j--){
             subset[n-j-1] = j;
         }
@@ -193,26 +191,26 @@ vector<uvec> FOSStructures::getIncrementalLTReversed_FOS(int n){
     return fos;
 }
 
-vector<uvec> FOSStructures::getUnivariate_FOS(int n, Utility::Order order){
-    vector<uvec> fos;
+vector<vector<int>> FOSStructures::getUnivariate_FOS(int n, Utility::Order order){
+    vector<vector<int>> fos;
     fos.reserve(n);
     vector<int> orderedArray = Utility::getOrderedArray(n, order);
     for(int i = 0; i < n; i++){
-        uvec subset(1);
+        vector<int> subset(1, 0);
         subset[0] = orderedArray[i];
         fos.push_back(subset);
     }
     return fos;
 }
 
-vector<uvec> FOSStructures::getTriplet_FOS(int n, Utility::Order order){
-    vector<uvec> fos;
+vector<vector<int>> FOSStructures::getTriplet_FOS(int n, Utility::Order order){
+    vector<vector<int>> fos;
     fos.reserve(n/3);
     
     vector<int> orderArray = Utility::getOrderedArray(n, order);
     
     for (int i = 0; i < n/3; i++){
-        uvec subset(3);
+        vector<int> subset(3, 0);
         subset[0] = orderArray[i * 3];
         subset[1] = orderArray[i * 3 + 1];
         subset[2] = orderArray[i * 3 + 2];
@@ -221,11 +219,11 @@ vector<uvec> FOSStructures::getTriplet_FOS(int n, Utility::Order order){
     return fos;
 }
 
-vector<uvec> FOSStructures::getTripletTree_FOS(int n, Utility::Order order){
-    vector<uvec> fos = getTriplet_FOS(n, order);
+vector<vector<int>> FOSStructures::getTripletTree_FOS(int n, Utility::Order order){
+    vector<vector<int>> fos = getTriplet_FOS(n, order);
     //Easy hardcoded way
     for (int i = 0; i < 2; i++){
-        uvec subset (6);
+        vector<int> subset (6, 0);
         for (int j = 0; j < 2; j++){
             for (int k = 0; k < 3; k++){
                 subset[j*3 + k] = fos[i*2 + j][k];
@@ -239,25 +237,25 @@ vector<uvec> FOSStructures::getTripletTree_FOS(int n, Utility::Order order){
 //    int count = 10;
 //    do {
 //        for (int i = 0; i < currentSize/2; i++){
-//            uvec subset (fos[i].size() + fos[i+1].size());
+//            vector<int> subset (fos[i].size() + fos[i+1].size());
 //        }
 //    } while (count >= 2);
     return fos;
 }
 
-vector<uvec> FOSStructures::getARK6_FOS(int n, Utility::Order order){
-    vector<uvec> temp;
+vector<vector<int>> FOSStructures::getARK6_FOS(int n, Utility::Order order){
+    vector<vector<int>> temp;
     temp.reserve(ceil(n / 4.0));
     
     for (int i = 0; i < n; i++){
         if(i % 4 == 0){
             int elementsLeft = min(n - i, 4);
-            temp.push_back(uvec (elementsLeft));
+            temp.push_back(vector<int> (elementsLeft));
         }
         temp[floor(i/4)][i % 4] = i;
     }
     
-    vector<uvec> fos;
+    vector<vector<int>> fos;
     vector<int> orderArray = Utility::getOrderedArray(temp.size(), order);
     
     for (int i : orderArray){
@@ -267,14 +265,14 @@ vector<uvec> FOSStructures::getARK6_FOS(int n, Utility::Order order){
     return fos;
 }
 
-void FOSStructures::printFOS(std::vector<arma::uvec> fos){
+void FOSStructures::printFOS(std::vector<vector<int>> fos){
     cout << "FOS: ";
     for (int i = 0; i < fos.size(); i++){
         // Uncomment below to display only subsets of a certain length
 //        if (fos[i].size() != 3)
 //            continue;
         cout << "[";
-        uvec subset = fos[i];
+        vector<int> subset = fos[i];
         for (int j = 0; j < subset.size(); j++){
             cout << subset[j];
             if(j != subset.size() - 1){
@@ -289,8 +287,8 @@ void FOSStructures::printFOS(std::vector<arma::uvec> fos){
     cout << endl;
 }
 
-vector<uvec> FOSStructures::sortFOSMeanAscending (vector<uvec> & fos){
-    sort( fos.begin(), fos.end(), []( const uvec& lhs, const uvec& rhs){
+vector<vector<int>> FOSStructures::sortFOSMeanAscending (vector<vector<int>> & fos){
+    sort( fos.begin(), fos.end(), []( const vector<int>& lhs, const vector<int>& rhs){
         float mean_lhs = 0.0;
         for (int i : lhs)
             mean_lhs += 1.0 * i;
@@ -306,14 +304,14 @@ vector<uvec> FOSStructures::sortFOSMeanAscending (vector<uvec> & fos){
     return fos;
 }
 
-vector<uvec> FOSStructures::sortFOSMeanDescending (vector<uvec> & fos){
-    vector<uvec> orderedFos = sortFOSMeanAscending(fos);
+vector<vector<int>> FOSStructures::sortFOSMeanDescending (vector<vector<int>> & fos){
+    vector<vector<int>> orderedFos = sortFOSMeanAscending(fos);
     reverse(orderedFos.begin(), orderedFos.end());
     return orderedFos;
 }
 
-vector<uvec> FOSStructures::boundFOS (vector<uvec> & fos, int bottomLevel, int topLevel){
-    vector<uvec> boundedFOS;
+vector<vector<int>> FOSStructures::boundFOS (vector<vector<int>> & fos, int bottomLevel, int topLevel){
+    vector<vector<int>> boundedFOS;
     
     for (int i = 0; i < fos.size(); i++){
         if(fos[i].size() >= bottomLevel && fos[i].size() <= topLevel){

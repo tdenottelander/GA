@@ -9,7 +9,6 @@
 #include "ARK6.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann;
 
 extern string ARK_Analysis_suffix;
@@ -31,7 +30,7 @@ ARK6::ARK6(int problemSize, bool genotypeChecking) : ARK(problemSize, false, gen
 }
 
 
-vector<float> ARK6::getFitness (uvec encoding){
+vector<float> ARK6::getFitness (vector<int> encoding){
     string layers;
     for (int i = 0; i < 14; i++){
         // Appends identity layers to the back of the architecture when we are dealing with problem lengths < 14.

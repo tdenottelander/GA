@@ -10,14 +10,13 @@
 #define Individual_hpp
 
 #include <stdio.h>
-#include <armadillo>
 #include <string>
 #include <vector>
 #include "Utility.hpp"
 
 class Individual {
 public:
-    arma::uvec genotype;
+    std::vector<int> genotype;
     std::vector<float> fitness;
     int counterNotChanged;
     
@@ -35,7 +34,7 @@ public:
     std::string toStringBlocks(int blocksize);
     std::string toStringFitness();
     bool equals(Individual const& ind);
-    bool genotypeEquals(arma::uvec &genotype);
+    bool genotypeEquals(std::vector<int> &genotype);
     bool fitnessEquals(Individual &ind, float margin = 0.001);
     bool dominates(Individual &indOther);
     bool dominates(Individual &indOther, std::vector<float> scalarization);
@@ -43,12 +42,11 @@ public:
     void clearMOinformation();
     
     static std::string toString(std::vector<int> &genotype);
-    static std::string toString(arma::uvec &genotype);
-    static int hammingDistance(arma::uvec &g1, arma::uvec &g2);
-    static int editDistance(arma::uvec &g1, arma::uvec &g2);
-    static int editDistance(arma::uvec &g1, arma::uvec &g2, int i, int j);
-    static arma::uvec removeIdentities(arma::uvec &genotype, int identityLayerIndex);
-    static bool genotypeEquals(arma::uvec &g1, arma::uvec &g2);
+    static int hammingDistance(std::vector<int> &g1, std::vector<int> &g2);
+    static int editDistance(std::vector<int> &g1, std::vector<int> &g2);
+    static int editDistance(std::vector<int> &g1, std::vector<int> &g2, int i, int j);
+    static std::vector<int> removeIdentities(std::vector<int> &genotype, int identityLayerIndex);
+    static bool genotypeEquals(std::vector<int> &g1, std::vector<int> &g2);
     static bool dominates(Individual &ind1, Individual &ind2);
     static bool dominates(Individual &ind1, Individual &ind2, std::vector<float> scalarization);
 };

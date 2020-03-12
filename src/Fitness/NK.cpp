@@ -9,7 +9,6 @@
 #include "NK.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann;
 
 //NK::NK() : FitnessFunction(-1, -1, getProblemType(3)), blocksize(3), wraparound(false), alphabetSize(3), numBlocks(8 - 3 + 1), tableIndex(0) {
@@ -91,7 +90,7 @@ void NK::clear(){
 vector<float> NK::evaluate(Individual &ind){
     vector<float> fitness (1, 0);
     for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++){
-        uvec block = ind.genotype.subvec(blockIndex, blockIndex + blocksize - 1);
+        vector<int> block (ind.genotype.begin() + blockIndex, ind.genotype.begin() + blockIndex + blocksize - 1 );
         fitness[0] += evaluateBlock(blockIndex, block);
     }
     
@@ -101,15 +100,14 @@ vector<float> NK::evaluate(Individual &ind){
     return fitness;
 }
 
-float NK::evaluateBlock(int blockIndex, uvec block){
+float NK::evaluateBlock(int blockIndex, vector<int> block){
     return table["block" + to_string(blockIndex)][HashingFunctions::hash(block, alphabetSize)];
 }
 
 ProblemType* NK::getProblemType(int alphabetsize){
-    vector<int> alphabet;
-    alphabet.reserve(alphabetsize);
+    vector<int> alphabet (alphabetsize, 0);
     for (int i = 0; i < alphabetsize; i++){
-        alphabet.push_back(i);
+        alphabet[i] = i;
     }
     return new AlphabetProblemType(alphabet);
 }
@@ -210,9 +208,9 @@ float NK::getOptimum(json table, int problemLength, int blocksize, bool wraparou
     
     for (int hash = 0; hash < numPossibleGenotypes; hash++){
         float fitness = 0;
-        uvec genotype = HashingFunctions::decode(hash, problemLength, alphabetSize);
+        vector<int> genotype = HashingFunctions::decode(hash, problemLength, alphabetSize);
         for (int i = 0; i < numSubFunctions; i++){
-            uvec block = genotype.subvec(i, i+(blocksize - 1));
+            vector<int> block (genotype.begin() + i, genotype.begin() + i + (blocksize - 1));
             int subhash = HashingFunctions::hash(block, alphabetSize);
             fitness = fitness + float(table["block" + to_string(i)][subhash]);
         }

@@ -9,7 +9,6 @@
 #include "Variation.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace Utility;
 
 extern bool printfos;
@@ -191,7 +190,7 @@ pair<Individual, Individual> FOSCrossover::crossover(Individual &ind1, Individua
     Individual newInd2 = ind2.copy();
     
     int genotypeLength = ind1.genotype.size();
-    vector<uvec> fos = fosObject->getFOS(genotypeLength);
+    vector<vector<int>> fos = fosObject->getFOS(genotypeLength);
     
     for (int i = 0; i < fos.size(); i++){
         bool swap = getRand() > 0.5;
@@ -285,7 +284,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
     bool changed = false;
     
 //    cout << "start\n";
-    for (uvec subset : fos) {
+    for (vector<int> subset : fos) {
 //        for (int i : subset) cout << i << " ";
 //        cout << endl;
         
@@ -328,7 +327,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
 
 bool GOM_Variation::gomWithEliteIndividual(Individual &o, Individual &b){
     bool changed = false;
-    for (uvec subset : fos) {
+    for (vector<int> subset : fos) {
         applyDonor(o, fitfunc->bestIndividual, subset);
         if(!o.equals(b)) {
             fitfunc->evaluate(o);
@@ -348,7 +347,7 @@ bool GOM_Variation::gomWithEliteIndividual(Individual &o, Individual &b){
     return changed;
 }
 
-void GOM_Variation::applyDonor(Individual &ind, Individual &parent, arma::uvec &subset){
+void GOM_Variation::applyDonor(Individual &ind, Individual &parent, vector<int> &subset){
     for (int idx : subset){
         ind.genotype[idx] = parent.genotype[idx];
     }

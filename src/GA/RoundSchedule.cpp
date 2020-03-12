@@ -52,9 +52,8 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     output["success"] = false;
     output["stoppingCondition"] = "-1";
     
-    whichShouldRun.reserve(maxPopSizeLevel);
+    whichShouldRun = vector<int>(maxPopSizeLevel, 0);
     for(int i = 0; i < maxPopSizeLevel; i++){
-        whichShouldRun.push_back(0);
         int popSize = pow(beginPopSize, i + 1);
         GA* newGA = g->clone();
         newGA->setPopulationSize(popSize);

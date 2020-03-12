@@ -26,7 +26,7 @@ public:
     void clear() override ;
     void createTable();
     std::vector<float> evaluate(Individual &ind) override;
-    float evaluateBlock(int blockIndex, arma::uvec block);
+    float evaluateBlock(int blockIndex, std::vector<int> block);
     ProblemType* getProblemType(int alphabetsize);
     
     void loadTable(int tableIndex);

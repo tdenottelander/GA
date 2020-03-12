@@ -160,7 +160,7 @@ short constraintWeaklyParetoDominates( double *objective_values_x, double constr
 short paretoDominates( double *objective_values_x, double *objective_values_y );
 short weaklyParetoDominates( double *objective_values_x, double *objective_values_y );
 /*-------------------------- Linkage Tree Learning --------------------------*/
-void assignLinkageTreeVariables(std::vector<arma::uvec> fos, int cluster_index);
+void assignLinkageTreeVariables(std::vector<std::vector<int>> fos, int cluster_index);
 void learnLinkageTree( int cluster_index );
 double *estimateParametersForSingleBinaryMarginal(  int cluster_index, int *indices, int number_of_indices, int *factor_size );
 int determineNearestNeighbour( int index, double **S_matrix, int mpm_length );

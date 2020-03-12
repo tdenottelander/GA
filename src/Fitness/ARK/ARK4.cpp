@@ -9,7 +9,6 @@
 #include "ARK4.hpp"
 
 using namespace std;
-using namespace arma;
 using namespace nlohmann;
 
 ARK4::ARK4() : ARK(10, true, false, getProblemType(true), 2, 4, "ark4") {}

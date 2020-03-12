@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <nlohmann/json.hpp>
 #include <tuple>
+#include <numeric>
 #include "Individual.hpp"
 #include "ProblemType.hpp"
 #include "SolutionLibrary.hpp"
@@ -35,7 +36,7 @@ public:
     int totalProblemLength;
     int numObjectives = 1;
     bool checkForGenotype = false;
-    arma::uvec optimalGenotype;
+    std::vector<int> optimalGenotype;
     float epsilon = 0.0f;
     bool done = false;
     
@@ -70,7 +71,7 @@ public:
     virtual bool entireParetoFrontFound ();
     std::pair<float, float> calculateDistanceParetoToApproximation ();
     int paretoPointsFound();
-    void setGenotypeChecking(arma::uvec genotype);
+    void setGenotypeChecking(std::vector<int> genotype);
     
     int getTotalAmountOfEvaluations();
     bool maxEvaluationsExceeded();
@@ -84,7 +85,7 @@ public:
     virtual void setOptimum (std::vector<float> optimum);
     virtual void setOptimum (float optimum);
     
-    virtual arma::uvec transform(arma::uvec &genotype);
+    virtual std::vector<int> transform(std::vector<int> &genotype);
     
     void draw2DVisualization(std::vector<Individual> &population, int maxX, int maxY);
     void drawElitistArchive();

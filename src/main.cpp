@@ -11,7 +11,6 @@
 #include <random>
 #include <iostream>
 #include <sys/stat.h>
-#include <armadillo>
 #include <nlohmann/json.hpp>
 #include "Individual.hpp"
 #include "Selection.hpp"
@@ -56,7 +55,6 @@
 //#include "global.h"
 
 using namespace std;
-using namespace arma;
 using namespace Utility;
 using nlohmann::json;
 
