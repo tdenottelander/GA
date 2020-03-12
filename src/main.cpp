@@ -281,8 +281,10 @@ void setOptimizer(const char * argv[], int i){
         ga = new NSGA_II(fitFunc, variation, 0.9, true);
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
-    } else if (strcmp(argv[i], "MO-LS") == 0){
-        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, 100000);
+    } else if (strcmp(argv[i], "MO-LS-loop") == 0){
+        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, true);
+    } else if (strcmp(argv[i], "MO-LS-noloop") == 0){
+        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, false);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
     } else if (strcmp(argv[i], "GOM") == 0){

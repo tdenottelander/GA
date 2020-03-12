@@ -16,9 +16,9 @@
 
 class MO_LS : public GA {
 public:
-    MO_LS(FitnessFunction * fitfunc, Utility::Order order, int targetAmountOfSolutions);
+    MO_LS(FitnessFunction * fitfunc, Utility::Order order, bool loop);
     Utility::Order LS_order;
-    int targetAmountOfSolutions;
+    bool loop;
     
     std::queue<float> scalarizationTargets;
     std::vector<std::pair<std::pair<float, float>, std::vector<float>>> LS_archive;

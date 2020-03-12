@@ -10,14 +10,24 @@
 
 using namespace std;
 
-MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, int targetAmountOfSolutions) : GA(fitfunc), LS_order(order), targetAmountOfSolutions(targetAmountOfSolutions) {
+extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+extern nlohmann::json JSON_MO_info;
+
+MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop) : GA(fitfunc), LS_order(order), loop(loop) {
     isLocalSearchAlgorithm = true;
 }
 
 void MO_LS::round(){
     if(roundsCount == 0){
-        scalarizationTargets.push(0.0f);
-        scalarizationTargets.push(1.0f);
+        if(populationInitializationMode == 1){
+            pair<float, float> scalarization = {0.0f, 1.0f};
+            pair<pair<float, float>, vector<float>> entry = {scalarization, population[0].fitness};
+            LS_archive.push_back(entry);
+        } else {
+            scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
+        }
+        
+        scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation accuracy)
     }
 
     for (Individual &ind : population){
@@ -34,10 +44,8 @@ void MO_LS::round(){
         pair<float,float> sc {scalarization, 1.0f - scalarization};
         vector<float> fit (ind.fitness);
         LS_archive.push_back(pair<pair<float, float>, vector<float>> {sc, fit});
-        
-        if(targetAmountOfSolutions != -1 && LS_archive.size() >= targetAmountOfSolutions){
-            converged = true;
-        }
+        JSON_MO_info["LS_converged_solutions"] = LS_archive.size();
+        JSON_MO_info["LS_archive"] = LS_archive;
     }
     
     roundsCount++;
@@ -47,7 +55,7 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
     vector<int> randIndexArray = Utility::getOrderedArray(ind.genotype.size(), LS_order);
     bool changed = true;
 //    cout << "Starting Individual: " << ind.toString() << endl;
-    while (changed){
+    do {
         changed = false;
         for (int i : randIndexArray){
 //            Individual originalIndividual = ind.copy();
@@ -68,7 +76,7 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
                 }
             }
         }
-    }
+    } while (changed && loop);
 }
 
 float MO_LS::getNewScalarizationTarget(){
