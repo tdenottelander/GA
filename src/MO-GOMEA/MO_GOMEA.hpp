@@ -316,6 +316,7 @@ void initializeArrayOfParetoFronts();
     
 public:
 static std::string id();
+long startTime;
 };
 
 #endif /* MO_GOMEA_hpp */

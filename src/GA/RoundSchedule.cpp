@@ -22,6 +22,9 @@ extern FitnessFunction * fitFunc;
 nlohmann::json convergence;
 extern json JSON_MO_info;
 extern json JSON_SO_info;
+extern json JSON_run;
+extern string path_JSON_Run;
+extern bool saveLogFilesOnEveryUpdate;
 
 RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int maxNetworkUniqueEvaluations, int interleavedRoundInterval) :
     maxRounds(maxRounds),
@@ -46,11 +49,11 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     }
     gaList.reserve(maxPopSizeLevel);
 
-    output["successfulGAPopulation"] = -1;
-    output["successfulGARoundCount"] = -1;
-    output["popsizereached"] = -1;
-    output["success"] = false;
-    output["stoppingCondition"] = "-1";
+    JSON_run["successfulGAPopulation"] = -1;
+    JSON_run["successfulGARoundCount"] = -1;
+    JSON_run["popsizereached"] = -1;
+    JSON_run["success"] = false;
+    JSON_run["stoppingCondition"] = "-1";
     
     whichShouldRun = vector<int>(maxPopSizeLevel, 0);
     for(int i = 0; i < maxPopSizeLevel; i++){
@@ -68,7 +71,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     JSON_SO_info.clear();
 }
 
-json RoundSchedule::run() {
+void RoundSchedule::run() {
     int round = 0;
     int lowestActiveGAIdx = 0;
     int highestActiveGAIdx = 0;
@@ -79,19 +82,19 @@ json RoundSchedule::run() {
 
         //Stopping conditions
         if (maxRounds != -1 && round >= maxRounds) {
-            output["stoppingCondition"] = "maxRoundsExceeded";
+            JSON_run["stoppingCondition"] = "maxRoundsExceeded";
             break;
         } else if (maxSeconds != -1 && millis() - start > maxSeconds * 1000) {
-            output["stoppingCondition"] = "maxTimeExceeded";
+            JSON_run["stoppingCondition"] = "maxTimeExceeded";
             break;
         } else if (maxEvaluationsExceeded()){
-            output["stoppingCondition"] = "maxEvaluationsExceeded";
+            JSON_run["stoppingCondition"] = "maxEvaluationsExceeded";
             break;
         } else if (maxUniqueEvaluationsExceeded()){
-            output["stoppingCondition"] = "maxUniqueEvaluationsExceeded";
+            JSON_run["stoppingCondition"] = "maxUniqueEvaluationsExceeded";
             break;
         } else if (fitFunc->maxNetworkUniqueEvaluationsExceeded()){
-            output["stoppingCondition"] = "maxNetworkUniqueEvaluationsExceeded";
+            JSON_run["stoppingCondition"] = "maxNetworkUniqueEvaluationsExceeded";
             break;
         }
 
@@ -119,7 +122,7 @@ json RoundSchedule::run() {
                     // Initialize the GA if that has not been done yet
                     if(!ga->initialized){
                         ga->initialize();
-                        output["popsizereached"] = ga->populationSize;
+                        JSON_run["popsizereached"] = ga->populationSize;
                         
                         // Define the first ever individual as bestIndividualOverall
                         if(i == 0){
@@ -147,8 +150,8 @@ json RoundSchedule::run() {
 //                        cout << "ga " << ga->populationSize << " is optimal" << endl;
                         if(printPopulationOnOptimum) ga->print();
                         optimumFound = true;
-                        output["successfulGAPopulation"] = ga->populationSize;
-                        output["successfulGARoundCount"] = ga->roundsCount;
+                        JSON_run["successfulGAPopulation"] = ga->populationSize;
+                        JSON_run["successfulGARoundCount"] = ga->roundsCount;
                         break;
 
                     // Else if the GA is converged, terminate this GA and all before.
@@ -185,7 +188,7 @@ json RoundSchedule::run() {
                     // Else if this GA had the highest population size and is terminated
                     } else if (i == maxPopSizeLevel - 1 && ga->terminated){
                         done = true;
-                        output["stoppingCondition"] = "terminated";
+                        JSON_run["stoppingCondition"] = "terminated";
                         break;
                     }
 
@@ -195,12 +198,22 @@ json RoundSchedule::run() {
                         highestActiveGAIdx = min(max(highestActiveGAIdx, i+1), maxPopSizeLevel - 1);
                     }
                 }
+                
+                JSON_run["time_taken"] = millis() - start;
+                JSON_run["evals_total"] = fitFunc->totalEvaluations;
+                JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+                JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+                JSON_run["evals_network_unique"] = fitFunc->totalNetworkUniqueEvaluations;
+                if (storeConvergence)
+                    JSON_run["convergence"] = convergence;
+                if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_run.dump(), path_JSON_Run);
+
             }
         }
 
         if(optimumFound){
-            output["success"] = true;
-            output["stoppingCondition"] = "optimumReached";
+            JSON_run["success"] = true;
+            JSON_run["stoppingCondition"] = "optimumReached";
             break;
         }
 
@@ -209,15 +222,15 @@ json RoundSchedule::run() {
     }
     
     long stop = millis();
-    output["time_taken"] = stop - start;
-    output["evals_total"] = fitFunc->totalEvaluations;
-    output["evals_unique"] = fitFunc->totalUniqueEvaluations;
-    output["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
-    output["evals_network_unique"] = fitFunc->totalNetworkUniqueEvaluations;
+    JSON_run["time_taken"] = stop - start;
+    JSON_run["evals_total"] = fitFunc->totalEvaluations;
+    JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    JSON_run["evals_network_unique"] = fitFunc->totalNetworkUniqueEvaluations;
     if (storeConvergence)
-        output["convergence"] = convergence;
+        JSON_run["convergence"] = convergence;
     
-    return output;
+    return;
 }
 
 // Terminate ga's in gaList up to and including index n

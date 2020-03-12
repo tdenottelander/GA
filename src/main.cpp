@@ -72,14 +72,15 @@ string projectDir = "/export/scratch1/tdo/TomGA/";
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
+string path_JSON_MO_info;
+string path_JSON_SO_info;
 string path_JSON_Progress;
+string path_JSON_Run;
 
 string dataset = "cifar100";
 
 json JSON_MO_info;
-string path_JSON_MO_info;
 json JSON_SO_info;
-string path_JSON_SO_info;
 json JSON_Progress;
 
 bool printfos = false;
@@ -520,6 +521,8 @@ void performExperiment(){
         path_JSON_Progress = writeDir + "/progress" + to_string(rep) + ".json";
         path_JSON_MO_info = writeDir + "/MO_info" + to_string(rep) + ".json";
         path_JSON_SO_info = writeDir + "/SO_info" + to_string(rep) + ".json";
+        path_JSON_Run = writeDir + "/run" + to_string(rep) + ".json";
+
         JSON_run.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
@@ -532,7 +535,7 @@ void performExperiment(){
 
             rs.initialize(ga, problemSize, IMS, nonIMSPopsize);
 
-            JSON_run = rs.run();
+            rs.run();
         }
         printRepetition(rep);
 
@@ -541,7 +544,7 @@ void performExperiment(){
         uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
         networkUniqueEvals.push_back(fitFunc->totalNetworkUniqueEvaluations);
 
-        writeRawData(JSON_run.dump(), writeDir + "/run" + to_string(rep) + ".json");
+        writeRawData(JSON_run.dump(), path_JSON_Run);
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         else writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
     }

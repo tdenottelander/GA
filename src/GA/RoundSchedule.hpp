@@ -32,12 +32,11 @@ public:
     Selection* selection;
     Variation* variation;
     GA* ga;
-    nlohmann::json output;
     std::vector<GA*> gaList;
     std::vector<int> whichShouldRun;
     RoundSchedule(int maxRounds, int maxPopSizeLevel, int maxSeconds, int maxEvaluations, int maxUniqueEvaluations, int maxNetworkUniqueEvaluations, int interleavedRoundInterval);
     void initialize(GA *ga, int problemSize, bool nonIMSmode = false, int nonIMSpopsize = 1);
-    nlohmann::json run();
+    void run();
     void terminateGAs(int n);
     bool MOterminationCondition(GA* gaCurrent, GA* gaPrev, float percentageRequired);
     int getAmountOfEvaluations();

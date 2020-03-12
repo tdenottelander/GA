@@ -10,6 +10,9 @@ extern json JSON_run;
 extern bool IMS;
 extern int nonIMSPopsize;
 
+extern bool saveLogFilesOnEveryUpdate;
+extern string path_JSON_Run;
+
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-= Section Constants -=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 #define FALSE 0
 #define TRUE 1
@@ -1111,6 +1114,14 @@ double MO_GOMEA::computeDPFSMetric( double **default_front, int default_front_si
  */
 void MO_GOMEA::writeGenerationalStatistics( void )
 {
+    
+    JSON_run["evals_total"] = fitFunc->totalEvaluations;
+    JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    JSON_run["time_taken"] = Utility::millis() - startTime;
+    JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    JSON_run["success"] = fitFunc->optimumFound;
+    if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_run.dump(), path_JSON_Run);
+    
     int     i;
     char    string[1000];
     FILE   *file;
@@ -3651,13 +3662,12 @@ int MO_GOMEA::main_MO_GOMEA()
     
     interpretCommandLine( argc, argv );
 
-    long time = Utility::millis();
+    startTime = Utility::millis();
     run();
-    time = Utility::millis() - time;
     
     JSON_run["evals_total"] = fitFunc->totalEvaluations;
     JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
-    JSON_run["time_taken"] = time;
+    JSON_run["time_taken"] = Utility::millis() - startTime;
     JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
     JSON_run["success"] = fitFunc->optimumFound;
 
