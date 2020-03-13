@@ -32,31 +32,28 @@ path_to_executable=dist/Release/GNU-Linux/tomga
 path_to_project=src/../  #Will point to the current working directory
 # path_to_project='/Users/tomdenottelander/Stack/#CS_MASTER/Afstuderen/projects/GA/'
 
-networkUniqueEvals=1000
+# networkUniqueEvals=1000
 dataset="cifar100"
 fit="ark-online 17 2"
 optimization=('-F uni rand -o MO-GOMEA', '-F learned -o MO-GOMEA', '-v 2p -o NSGA-II', "-o MO-RS", "-o MO-LS rand")
-repetitions=2
-IMS=0
-popsize=200
+repetitions=1
 populationInitializationMode=1 #1 includes all-identity solution, 0 is true random
 printAtEveryEval=1
 saveLogFilesOnEveryUpdate=1
+gpu=1
+seed=10
 
-fos="uni rand"
-optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
-
-fos="learned"
-optimizer="MO-GOMEA"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -F $fos -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+# fos="learned"
+# optimizer="MO-GOMEA"
+# CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -F $fos -o $optimizer -r $repetitions -I 1 -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
 variation="2p"
 optimizer="NSGA-II"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -v $variation -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+popsize=100
+CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -v $variation -o $optimizer -r $repetitions -I 0 -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+#
+# optimizer="MO-RS"
+# CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -o $optimizer -r $repetitions -I 0 -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
-optimizer="MO-RS"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
-
-optimizer="MO-LS rand"
-$path_to_executable -P $path_to_project -n $networkUniqueEvals -d $dataset -f $fit -o $optimizer -r $repetitions -I $IMS -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+# optimizer="MO-LS-noloop rand"
+# CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -o $optimizer -r $repetitions -I 0 -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
