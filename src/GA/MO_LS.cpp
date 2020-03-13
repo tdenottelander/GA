@@ -42,7 +42,6 @@ void MO_LS::round(){
         fitFunc_ptr->evaluate(ind);
 //        cout << "Performing LS in the direction of [" << scalarization << ", " << 1.0f - scalarization << "]" << endl;
         performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
-        fitFunc_ptr->updateElitistArchive(ind);
         pair<float,float> sc {scalarization, 1.0f - scalarization};
 //        cout << "New individual found: " << ind.toString() << "  for scalarization " << sc.first << "|" << sc.second << endl;
         updateLSArchive(sc, ind.fitness);
@@ -91,6 +90,8 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
         for (int i : randIndexArray){
 //            Individual originalIndividual = ind.copy();
             Individual copiedIndividual = ind.copy();
+            
+            // It does not matter in which order we loop over the available layers, because we search exhaustively and two different layers will have epsilon chance to result in the same objective values.
             for (int bit : fitFunc_ptr->problemType->alphabet){
                 copiedIndividual.genotype[i] = bit;
                 
