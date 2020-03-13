@@ -282,10 +282,13 @@ void setOptimizer(const char * argv[], int i){
         ga = new NSGA_II(fitFunc, variation, 0.9, true);
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
-    } else if (strcmp(argv[i], "MO-LS-loop") == 0){
-        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, true);
-    } else if (strcmp(argv[i], "MO-LS-noloop") == 0){
-        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, false);
+    } else if (strcmp(argv[i], "MO-LS") == 0){
+        bool loop = false; bool randSearchDirection = false;
+        if (strcmp(argv[i+1], "loop") == 0)
+            loop = true;
+        if (strcmp(argv[i+2], "randdir") == 0)
+            randSearchDirection = true;
+        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, loop, randSearchDirection);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
     } else if (strcmp(argv[i], "GOM") == 0){
@@ -377,7 +380,7 @@ void printCommandLineHelp(){
     cout << "-E [#1]: set epsilon to #1" << endl;
     cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6} with optional order #2={rand, asc, desc}" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
-    cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
+    cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS {loop, noloop} {randdir, noranddir}, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
     cout << "-I [#1]: set IMS to #1={0,1}" << endl;
     cout << "-p [#1]: set non-IMS Popsize to #1" << endl;

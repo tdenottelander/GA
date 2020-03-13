@@ -13,7 +13,7 @@ using namespace std;
 extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 extern nlohmann::json JSON_MO_info;
 
-MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop) : GA(fitfunc), LS_order(order), loop(loop) {
+MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir) : GA(fitfunc), LS_order(order), loop(loop) {
     isLocalSearchAlgorithm = true;
 }
 
@@ -24,15 +24,21 @@ void MO_LS::round(){
             pair<pair<float, float>, vector<float>> entry = {scalarization, population[0].fitness};
             LS_archive.push_back(entry);
         } else {
-            scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
+            if (!randDir)
+                scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
         }
         
-        scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation accuracy)
+        if (!randDir)
+            scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation accuracy)
     }
 
     for (Individual &ind : population){
         if (scalarizationTargets.empty()){
-            scalarizationTargets.push(getNewScalarizationTarget());
+            if(randDir){
+                scalarizationTargets.push(Utility::getRand());
+            } else {
+                scalarizationTargets.push(getNewScalarizationTarget());
+            }
         }
         float scalarization = scalarizationTargets.front();
         scalarizationTargets.pop();
