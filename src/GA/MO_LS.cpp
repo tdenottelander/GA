@@ -110,5 +110,6 @@ GA* MO_LS::clone() const {
 
 string MO_LS::id(){
     string loopString = loop ? "loop" : "noloop";
-    return ("MO-LS-" + loopString);
+    string randDirString = randDir ? "randdir" : "noranddir";
+    return ("MO-LS-" + loopString + "-" + randDirString);
 }
