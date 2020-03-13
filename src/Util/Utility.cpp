@@ -93,6 +93,11 @@ int Utility::getRand(int begin, int end){
     return floor(begin + (end - begin) * getRand());
 }
 
+// Returns a random integer from an array of ints.
+int Utility::getRand(std::vector<int> &vec){
+    return vec[getRand(0, vec.size())];
+}
+
 int Utility::getConditionalBit(int counter0, int counter1, int max){
     int leftFor0 = (max / 2) - counter0;
     int leftFor1 = (max / 2) - counter1;

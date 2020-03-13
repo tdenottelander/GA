@@ -21,8 +21,8 @@ void MO_LS::round(){
     if(roundsCount == 0){
         if(populationInitializationMode == 1){
             pair<float, float> scalarization = {0.0f, 1.0f};
-            pair<pair<float, float>, vector<float>> entry = {scalarization, population[0].fitness};
-            LS_archive.push_back(entry);
+//            cout << "New individual found: " << population[0].toString() << "  for scalarization " << scalarization.first << "|" << scalarization.second << endl;
+            updateLSArchive(scalarization, population[0].fitness);
         } else {
             if (!randDir)
                 scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
@@ -48,13 +48,42 @@ void MO_LS::round(){
         performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
         fitFunc_ptr->updateElitistArchive(ind);
         pair<float,float> sc {scalarization, 1.0f - scalarization};
-        vector<float> fit (ind.fitness);
-        LS_archive.push_back(pair<pair<float, float>, vector<float>> {sc, fit});
+//        cout << "New individual found: " << ind.toString() << "  for scalarization " << sc.first << "|" << sc.second << endl;
+        updateLSArchive(sc, ind.fitness);
         JSON_MO_info["LS_converged_solutions"] = LS_archive.size();
         JSON_MO_info["LS_archive"] = LS_archive;
     }
     
     roundsCount++;
+}
+
+void MO_LS::updateLSArchive(pair<float, float> scalarization, vector<float> objectiveValues){
+    /* SETTING THE SCALARIZATION VALUE AS THE MEAN OF TWO SOLUTIONS WITH IDENTICAL OBJECTIVE VALUES
+    for (int i = 0; i < old_archive.size(); i++){
+        if(equalObjectiveValues(objectiveValues, old_archive[i].second)){
+            float meanScalarization = (scalarization.first + old_archive[i].first.first) / 2;
+            pair<float, float> newScalarization {meanScalarization, 1.0f - meanScalarization};
+            old_archive.erase(old_archive.begin() + i);
+            old_archive.push_back(pair<pair<float, float>, vector<float>> {newScalarization, objectiveValues});
+            cout << "Found same fitness with other scalarization:         F: " << old_archive[i].second[0] << "|" << old_archive[i].second[1] << "   scalarization: " << old_archive[i].first.first << "|" << old_archive[i].first.second << ".... new scalarization: " << newScalarization.first << "|" << newScalarization.second << endl;
+            return;
+        }
+    }
+     */
+    LS_archive.push_back(pair<pair<float, float>, vector<float>> {scalarization, objectiveValues});
+}
+
+bool MO_LS::equalObjectiveValues(std::vector<float> &o1, std::vector<float> &o2){
+    if (o1.size() != o2.size()){
+        cout << "Objective values do not have the same size" << endl;
+        return false;
+    }
+    for (int i = 0; i < o1.size(); i++){
+        if (o1[i] != o2[i]){
+            return false;
+        }
+    }
+    return true;
 }
 
 void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
@@ -91,14 +120,23 @@ float MO_LS::getNewScalarizationTarget(){
         return lhs.first.first < rhs.first.first;
     });
     float largestDistance = -1;
-    int largestDistanceIdx = -1;
+    vector<int> indices;
     for (int i = 0; i < LS_archive.size() - 1; i++){
-        float dist = Utility::EuclideanDistanceSquared(LS_archive[i].second, LS_archive[i+1].second);
+//        float dist = Utility::EuclideanDistanceSquared(old_archive[i].second, old_archive[i+1].second); // OBJECTIVE SPACE DISTANCE
+        float dist = abs(LS_archive[i].first.first - LS_archive[i+1].first.first); // SCALARIZATION SPACE DISTANCE
+        
+        if (dist == largestDistance){
+            indices.push_back(i);
+        }
+        
         if (dist > largestDistance){
+            indices.clear();
+            indices.push_back(i);
             largestDistance = dist;
-            largestDistanceIdx = i;
         }
     }
+    
+    int largestDistanceIdx = Utility::getRand(indices);
     float result = (LS_archive[largestDistanceIdx].first.first + LS_archive[largestDistanceIdx+1].first.first) / 2;
     return result;
 }
@@ -113,3 +151,69 @@ string MO_LS::id(){
     string randDirString = randDir ? "randdir" : "noranddir";
     return ("MO-LS-" + loopString + "-" + randDirString);
 }
+
+
+
+
+//LS_Archive::LS_Archive (bool combineEntries) : combineEntries(combineEntries) {}
+//
+//bool LS_Archive::contains(std::vector<float> objectiveValues){
+//    for (int i = 0; i < archive.size(); i++){
+//        vector<float> objectiveValuesInArchive = archive[i].second;
+//        if (objectiveValues.size() != objectiveValuesInArchive.size()){
+//            cout << "Number of objectives do not match" << endl;
+//            return false;
+//        }
+//        bool equal = true;
+//        for (int j = 0; j < objectiveValuesInArchive.size(); j++){
+//            if (objectiveValues[j] != objectiveValuesInArchive[j]){
+//                equal = false;
+//                break;
+//            }
+//        }
+//        if (equal) return true;
+//    }
+//    return false;
+//}
+//
+//void LS_Archive::put(std::pair<std::pair<float, float>, std::vector<float> > pair){
+//    if (!combineEntries){
+//        archive.push_back(pair);
+//    } else {
+//        // TODO
+//    }
+//}
+//
+//void LS_Archive::put(std::pair<float, float> scalarization, std::vector<float> objectiveValues){
+//    put(pair<pair<float, float>, vector<float>> {scalarization, objectiveValues});
+//}
+//
+//pair<float, float> LS_Archive::getScalarization(std::vector<float> objectiveValues){
+//    for (int i = 0; i < archive.size(); i++){
+//        vector<float> objectiveValuesInArchive = archive[i].second;
+//        if (objectiveValues.size() != objectiveValuesInArchive.size()){
+//            cout << "Number of objectives do not match" << endl;
+//            return {-1, -1};
+//        }
+//        bool equal = true;
+//        for (int j = 0; j < objectiveValuesInArchive.size(); j++){
+//            if (objectiveValues[j] != objectiveValuesInArchive[j]){
+//                equal = false;
+//                break;
+//            }
+//        }
+//        if (equal) return archive[i].first;
+//    }
+//    return {-1, -1};
+//}
+//
+//vector<float> LS_Archive::getObjectivevalues(std::pair<float, float> scalarization){
+//    for (int i = 0; i < archive.size(); i++){
+//        if (scalarization.first == archive[i].first.first){
+//            return archive[i].second;
+//        }
+//    }
+//    return {-1};
+//}
+//
+//

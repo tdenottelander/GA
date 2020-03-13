@@ -36,6 +36,7 @@ namespace Utility{
     // Random utility functions
     double getRand();
     int getRand(int start, int end);
+    int getRand(std::vector<int> &vec);
     int getConditionalBit(int counter0, int counter1, int max);
     
     // Time & Date utility functions

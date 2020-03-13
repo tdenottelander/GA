@@ -14,6 +14,21 @@
 #include "GA.hpp"
 #include "Utility.hpp"
 
+//class LS_Archive {
+//public:
+//    LS_Archive(bool combineEntries);
+//    bool combineEntries;
+//    std::vector<std::pair<std::pair<float, float>, std::vector<float>>> archive;
+//    
+//    bool contains(std::vector<float> objectiveValues);
+//    void put(std::pair<std::pair<float, float>, std::vector<float>> pair);
+//    void put(std::pair<float, float> scalarization, std::vector<float> objectiveValues);
+//    
+//    std::pair<float, float> getScalarization (std::vector<float> objectiveValues);
+//    std::vector<float> getObjectivevalues (std::pair<float, float> scalarization);
+//};
+
+
 class MO_LS : public GA {
 public:
     MO_LS(FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir);
@@ -25,6 +40,8 @@ public:
     std::vector<std::pair<std::pair<float, float>, std::vector<float>>> LS_archive;
     
     void round() override;
+    void updateLSArchive(std::pair<float, float> scalarization, std::vector<float> objectiveValues);
+    bool equalObjectiveValues(std::vector<float> &o1, std::vector<float> &o2);
     void performLocalSearch(Individual &ind, std::vector<float> scalarization);
     float getNewScalarizationTarget();
     
