@@ -103,5 +103,6 @@ GA* MO_LS::clone() const {
 }
 
 string MO_LS::id(){
-    return "MO-LS";
+    string loopString = loop ? "loop" : "noloop";
+    return ("MO-LS-" + loopString);
 }
