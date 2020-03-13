@@ -13,7 +13,7 @@ using namespace std;
 extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 extern nlohmann::json JSON_MO_info;
 
-MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir) : GA(fitfunc), LS_order(order), loop(loop) {
+MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir) : GA(fitfunc), LS_order(order), loop(loop), randDir(randDir) {
     isLocalSearchAlgorithm = true;
 }
 
