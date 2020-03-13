@@ -13,7 +13,7 @@ using namespace std;
 extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 extern nlohmann::json JSON_MO_info;
 
-MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir) : GA(fitfunc), LS_order(order), loop(loop), randDir(randDir) {
+MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, NewScalarization newScalarization) : GA(fitfunc), LS_order(order), loop(loop), newScalarization(newScalarization) {
     isLocalSearchAlgorithm = true;
 }
 
@@ -24,21 +24,17 @@ void MO_LS::round(){
 //            cout << "New individual found: " << population[0].toString() << "  for scalarization " << scalarization.first << "|" << scalarization.second << endl;
             updateLSArchive(scalarization, population[0].fitness);
         } else {
-            if (!randDir)
+            if (newScalarization != NewScalarization::RANDOM)
                 scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
         }
         
-        if (!randDir)
+        if (newScalarization != NewScalarization::RANDOM)
             scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation accuracy)
     }
 
     for (Individual &ind : population){
         if (scalarizationTargets.empty()){
-            if(randDir){
-                scalarizationTargets.push(Utility::getRand());
-            } else {
-                scalarizationTargets.push(getNewScalarizationTarget());
-            }
+            scalarizationTargets.push(getNewScalarizationTarget());
         }
         float scalarization = scalarizationTargets.front();
         scalarizationTargets.pop();
@@ -115,30 +111,38 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
 }
 
 float MO_LS::getNewScalarizationTarget(){
-    // Sort the result array based on scalarization value
-    sort(LS_archive.begin(), LS_archive.end(), [](pair<pair<float, float>, vector<float>> lhs, pair<pair<float, float>, vector<float>> rhs){
-        return lhs.first.first < rhs.first.first;
-    });
-    float largestDistance = -1;
-    vector<int> indices;
-    for (int i = 0; i < LS_archive.size() - 1; i++){
-//        float dist = Utility::EuclideanDistanceSquared(old_archive[i].second, old_archive[i+1].second); // OBJECTIVE SPACE DISTANCE
-        float dist = abs(LS_archive[i].first.first - LS_archive[i+1].first.first); // SCALARIZATION SPACE DISTANCE
-        
-        if (dist == largestDistance){
-            indices.push_back(i);
+    if (newScalarization == NewScalarization::RANDOM){
+        return Utility::getRand();
+    } else {
+        // Sort the result array based on scalarization value
+        sort(LS_archive.begin(), LS_archive.end(), [](pair<pair<float, float>, vector<float>> lhs, pair<pair<float, float>, vector<float>> rhs){
+            return lhs.first.first < rhs.first.first;
+        });
+        float largestDistance = -1;
+        vector<int> indices;
+        for (int i = 0; i < LS_archive.size() - 1; i++){
+            float dist = 0.0f;
+            if (newScalarization == NewScalarization::OBJECTIVESPACE){
+                dist = Utility::EuclideanDistanceSquared(LS_archive[i].second, LS_archive[i+1].second); // OBJECTIVE SPACE DISTANCE
+            } else if (newScalarization == NewScalarization::SCALARIZATIONSPACE){
+                dist = abs(LS_archive[i].first.first - LS_archive[i+1].first.first); // SCALARIZATION SPACE DISTANCE
+            }
+            
+            if (dist == largestDistance){
+                indices.push_back(i);
+            }
+            
+            if (dist > largestDistance){
+                indices.clear();
+                indices.push_back(i);
+                largestDistance = dist;
+            }
         }
         
-        if (dist > largestDistance){
-            indices.clear();
-            indices.push_back(i);
-            largestDistance = dist;
-        }
+        int largestDistanceIdx = Utility::getRand(indices);
+        float result = (LS_archive[largestDistanceIdx].first.first + LS_archive[largestDistanceIdx+1].first.first) / 2;
+        return result;
     }
-    
-    int largestDistanceIdx = Utility::getRand(indices);
-    float result = (LS_archive[largestDistanceIdx].first.first + LS_archive[largestDistanceIdx+1].first.first) / 2;
-    return result;
 }
 
 
@@ -148,8 +152,13 @@ GA* MO_LS::clone() const {
 
 string MO_LS::id(){
     string loopString = loop ? "loop" : "noloop";
-    string randDirString = randDir ? "randdir" : "noranddir";
-    return ("MO-LS-" + loopString + "-" + randDirString);
+    string dirString = "";
+    switch (newScalarization) {
+        case NewScalarization::RANDOM: dirString = "randdir"; break;
+        case NewScalarization::SCALARIZATIONSPACE: dirString = "scalarizationdir"; break;
+        case NewScalarization::OBJECTIVESPACE: dirString = "objectivedir"; break;
+    }
+    return ("MO-LS-" + loopString + "-" + dirString);
 }
 
 

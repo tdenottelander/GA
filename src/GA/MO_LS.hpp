@@ -31,10 +31,11 @@
 
 class MO_LS : public GA {
 public:
-    MO_LS(FitnessFunction * fitfunc, Utility::Order order, bool loop, bool randDir);
+    enum class NewScalarization {RANDOM, SCALARIZATIONSPACE, OBJECTIVESPACE};
+    MO_LS(FitnessFunction * fitfunc, Utility::Order order, bool loop, NewScalarization newScalarization);
     Utility::Order LS_order;
     bool loop;
-    bool randDir;
+    NewScalarization newScalarization;
     
     std::queue<float> scalarizationTargets;
     std::vector<std::pair<std::pair<float, float>, std::vector<float>>> LS_archive;
