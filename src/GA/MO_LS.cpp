@@ -52,11 +52,11 @@ void MO_LS::round(){
 }
 
 void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
-    vector<int> randIndexArray = Utility::getOrderedArray(ind.genotype.size(), LS_order);
     bool changed = true;
 //    cout << "Starting Individual: " << ind.toString() << endl;
     do {
         changed = false;
+        vector<int> randIndexArray = Utility::getOrderedArray(ind.genotype.size(), LS_order);
         for (int i : randIndexArray){
 //            Individual originalIndividual = ind.copy();
             Individual copiedIndividual = ind.copy();
