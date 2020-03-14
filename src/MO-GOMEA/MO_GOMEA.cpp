@@ -70,16 +70,17 @@ void MO_GOMEA::initializeRandomNumberGenerator()
  */
 double MO_GOMEA::randomRealUniform01( void )
 {
-    int64_t n26, n27;
-    double  result;
-
-    random_seed_changing = (random_seed_changing * 0x5DEECE66DLLU + 0xBLLU) & ((1LLU << 48) - 1);
-    n26                  = (int64_t)(random_seed_changing >> (48 - 26));
-    random_seed_changing = (random_seed_changing * 0x5DEECE66DLLU + 0xBLLU) & ((1LLU << 48) - 1);
-    n27                  = (int64_t)(random_seed_changing >> (48 - 27));
-    result               = (((int64_t)n26 << 27) + n27) / ((double) (1LLU << 53));
-
-    return( result );
+//    int64_t n26, n27;
+//    double  result;
+//
+//    random_seed_changing = (random_seed_changing * 0x5DEECE66DLLU + 0xBLLU) & ((1LLU << 48) - 1);
+//    n26                  = (int64_t)(random_seed_changing >> (48 - 26));
+//    random_seed_changing = (random_seed_changing * 0x5DEECE66DLLU + 0xBLLU) & ((1LLU << 48) - 1);
+//    n27                  = (int64_t)(random_seed_changing >> (48 - 27));
+//    result               = (((int64_t)n26 << 27) + n27) / ((double) (1LLU << 53));
+//
+//    return( result );
+    return Utility::getRand();
 }
         
 /**
@@ -87,9 +88,10 @@ double MO_GOMEA::randomRealUniform01( void )
  */
 int MO_GOMEA::randomInt( int maximum )
 {
-    int result;
-    result = (int) (((double) maximum)*randomRealUniform01());
-    return( result );
+//    int result;
+//    result = (int) (((double) maximum)*randomRealUniform01());
+//    return( result );
+    return Utility::getRand(0, maximum);
 }
 /**
  * Computes the two-log of x.
