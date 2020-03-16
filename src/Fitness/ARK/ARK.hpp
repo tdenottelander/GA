@@ -54,10 +54,6 @@ public:
     std::vector<int> getOptimalGenotype();
     void setGenotypeChecking();
     int findMostDifferentGenotype(std::vector<std::vector<int>> &genotypes);
-    
-    void setNoisy(float percentage);
-    bool noisy = false;
-    float noisePercentage = -1;
 };
 
 static nlohmann::json lookupTable;
