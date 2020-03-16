@@ -84,7 +84,8 @@ def plotAllOnThisServer (algorithms_to_plot, network_unique_evaluations):
     ax.set_ylim(0.5, 1.0)
     ax.set_xlabel("Validation accuracy")
     ax.set_ylabel("normalized MMACs")
-    plt.show()
+    plt.savefig("plotElitistArchive.png")
+    # plt.show()
 
 def main():
     evaluations = int(sys.argv[1])
