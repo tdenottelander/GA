@@ -95,7 +95,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         
         // Update the elitist archive
         if(updateElitistArchiveOnEveryEvaluation){
-            updateElitistArchive(ind);
+            updateElitistArchive(&ind);
         }
         
         // Store the distance of the front to the approximation on every log10 interval.
@@ -266,36 +266,29 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
 
 
 // Update the eltist archive by supplying the best front found. It adds non-dominated solution to and removes dominated solutions from the archive. Returns true if the supplied front adds any individuals to the elitist archive
-bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
+bool FitnessFunction::updateElitistArchive(Individual* ind){
     
-    bool solutionsAdded = false;
+    bool addToArchive = true;
     
-    for (int i = front.size() - 1; i >= 0; i--){
-        bool addToArchive = true;
+    // Loop over every solution that is in the archive at the beginning of this method.
+    for (int i = elitistArchive.size() - 1; i >= 0; i--){
         
-        // Loop over every solution that is in the archive at the beginning of this method.
-        for (int j = elitistArchive.size() - 1; j >= 0; j--){
-            
-            // Delete every solution from the archive that is dominated by this solution.
-            if(front[i]->dominates(elitistArchive[j])){
-                elitistArchive.erase(elitistArchive.begin() + j);
-            }
-            
-            // If the solution from the archive dominates this one or it is equal, then don't add this solution to the archive. Thus, remove it from the front.
-            else if (elitistArchive[j].dominates(*front[i]) || front[i]->fitnessEquals(elitistArchive[j])){
-                front.erase(front.begin() + i);
-                addToArchive = false;
-                break;
-            }
+        // Delete every solution from the archive that is dominated by this solution.
+        if(ind->dominates(elitistArchive[i])){
+            elitistArchive.erase(elitistArchive.begin() + i);
         }
-        if (addToArchive){
-            elitistArchive.push_back(front[i]->copy());
-            solutionsAdded = true;
+        
+        // If the solution from the archive dominates this one or it is equal, then don't add this solution to the archive. Thus, remove it from the front.
+        else if (elitistArchive[i].dominates(*ind) || ind->fitnessEquals(elitistArchive[i])){
+            addToArchive = false;
+            return addToArchive;
         }
     }
     
-    // Only check for convergence criteria if there are new solutions added to the elitist archive.
-    if (solutionsAdded){
+    if (addToArchive){
+        elitistArchive.push_back(ind->copy());
+    
+        // Only check for convergence criteria if there are new solutions added to the elitist archive.
         pair<float, float> avg_max_distance = {-1, -1};
 
         if(storeElitistArchive){
@@ -355,21 +348,25 @@ bool FitnessFunction::updateElitistArchive(vector<Individual*> front){
         }
     }
     
-    return solutionsAdded;
+    return addToArchive;
 }
 
 bool FitnessFunction::updateElitistArchive(vector<Individual> &front){
-    vector<Individual*> pointerFront;
-    pointerFront.reserve(front.size());
+    bool solutionsAdded = false;
     for (int i = 0; i < front.size(); i++){
-        pointerFront.push_back(&front[i]);
+        bool added = updateElitistArchive(&front[i]);
+        solutionsAdded = solutionsAdded || added;
     }
-    return updateElitistArchive(pointerFront);
+    return solutionsAdded;
 }
 
-// Returns true if the given individual is added to the elitist archive
-bool FitnessFunction::updateElitistArchive(Individual &ind){
-    return updateElitistArchive(vector<Individual*> {&ind});
+bool FitnessFunction::updateElitistArchive(vector<Individual*> &front){
+    bool solutionsAdded = false;
+    for (int i = 0; i < front.size(); i++){
+        bool added = updateElitistArchive(front[i]);
+        solutionsAdded = solutionsAdded || added;
+    }
+    return solutionsAdded;
 }
 
 // The elitist archive is used as approximation

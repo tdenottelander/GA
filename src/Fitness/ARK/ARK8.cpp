@@ -60,6 +60,7 @@ ARK8::ARK8(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
 
 vector<float> ARK8::evaluate(Individual &ind){
     vector<float> fitness;
+    bool totalNetworkUniqueEvaluationsUpdate = false;
     
     if (networkLibrary.contains(ind.genotype)){
         fitness = networkLibrary.get(ind.genotype);
@@ -67,13 +68,14 @@ vector<float> ARK8::evaluate(Individual &ind){
         fitness = getFitness(ind.genotype);
         networkLibrary.put(ind.genotype, fitness);
         totalNetworkUniqueEvaluations++;
+        totalNetworkUniqueEvaluationsUpdate = true;
     }
     
     ind.fitness = fitness;
     
     evaluationProcedure(ind);
     
-    if(log(totalNetworkUniqueEvaluations)){
+    if(totalNetworkUniqueEvaluationsUpdate && log(totalNetworkUniqueEvaluations)){
         logNetworkUniqueEvaluations();
     }
     

@@ -182,7 +182,7 @@ void setJSONdata(){
     writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
     if(IMS){
         writeDir += "_IMS";
-    } else if (!ga->isRandomSearchAlgorithm && !ga->isLocalSearchAlgorithm){
+    } else if (use_MOGOMEA || (!ga->isRandomSearchAlgorithm && !ga->isLocalSearchAlgorithm)){
         writeDir += ("_pop=" + to_string(nonIMSPopsize));
     }
     if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){

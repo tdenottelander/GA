@@ -21,7 +21,7 @@ void MO_RS::round(){
     for (int i = 0; i < population.size(); i++){
         population[i].initialize(alphabet);
         fitFunc_ptr->evaluate(population[i]);
-        fitFunc_ptr->updateElitistArchive(population[i]);
+        fitFunc_ptr->updateElitistArchive(&population[i]);
         if(fitFunc_ptr->isDone()){
             break;
         }

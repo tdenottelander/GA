@@ -65,9 +65,9 @@ public:
     void setProblemType(ProblemType* problemType);
     
     void checkIfBestFound(Individual &ind);
-    bool updateElitistArchive(std::vector<Individual*> front);
+    bool updateElitistArchive(Individual* ind);
     bool updateElitistArchive(std::vector<Individual> &front);
-    bool updateElitistArchive(Individual &ind);
+    bool updateElitistArchive(std::vector<Individual*> &front);
     virtual bool entireParetoFrontFound ();
     std::pair<float, float> calculateDistanceParetoToApproximation ();
     int paretoPointsFound();

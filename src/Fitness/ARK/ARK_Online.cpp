@@ -25,6 +25,7 @@ ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFuncti
 vector<float> ARK_Online::evaluate(Individual &ind){
     
     vector<float> fitness;
+    bool totalNetworkUniqueEvaluationsUpdate = false;
     
     if (networkLibrary.contains(ind.genotype)){
         fitness = networkLibrary.get(ind.genotype);
@@ -32,13 +33,14 @@ vector<float> ARK_Online::evaluate(Individual &ind){
         fitness = pyEvaluate(ind);
         networkLibrary.put(ind.genotype, fitness);
         totalNetworkUniqueEvaluations++;
+        totalNetworkUniqueEvaluationsUpdate = true;
     }
     
     ind.fitness = fitness;
     
     evaluationProcedure(ind);
 
-    if(log(totalNetworkUniqueEvaluations)){
+    if(totalNetworkUniqueEvaluationsUpdate && log(totalNetworkUniqueEvaluations)){
         logNetworkUniqueEvaluations();
     }
     logAndSaveProgress(ind);
