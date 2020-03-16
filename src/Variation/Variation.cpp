@@ -17,7 +17,7 @@ extern bool printfos;
 
 vector<Individual> Variation::variate(vector<Individual> &population){
     int n = (int)population.size();
-    vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
+    vector<int> randomIndices = Utility::getRandomlyPermutedArrayV2(n);
     vector<Individual> newPopulation;
     newPopulation.reserve(n);
     
@@ -58,7 +58,7 @@ pair<Individual, Individual> UnivariateCrossover::crossover (Individual &ind1, I
     Individual newInd2 = ind2.copy();
     
     for(unsigned long i = 0; i < ind1.genotype.size(); i++){
-        if(getRand() < 0.5){
+        if(Utility::getRand() < 0.5){
             newInd1.genotype[i] = ind2.genotype[i];
             newInd2.genotype[i] = ind1.genotype[i];
         }
@@ -85,7 +85,7 @@ pair<Individual, Individual> OnePointCrossover::crossover(Individual &ind1, Indi
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
     
-    int beginIndex = ceil(getRand() * ind1.genotype.size() - 2);
+    int beginIndex = ceil(Utility::getRand() * ind1.genotype.size() - 2);
     for(int i = beginIndex; i < ind1.genotype.size(); i++){
         newInd1.genotype[i] = ind2.genotype[i];
         newInd2.genotype[i] = ind1.genotype[i];
@@ -115,8 +115,8 @@ pair<Individual, Individual> TwoPointCrossover::crossover(Individual &ind1, Indi
     
     // It is possible that the indices are the same. In that case, no crossover happens.
     // It is also possible for either index to be 0 or size()-1. In that case, it becomes one-point crossover.
-    int firstIndex = floor(getRand() * ind1.genotype.size());
-    int secondIndex = floor(getRand() * ind2.genotype.size());
+    int firstIndex = floor(Utility::getRand() * ind1.genotype.size());
+    int secondIndex = floor(Utility::getRand() * ind2.genotype.size());
     for(int i = min(firstIndex, secondIndex); i < max(firstIndex, secondIndex); i++){
         newInd1.genotype[i] = ind2.genotype[i];
         newInd2.genotype[i] = ind1.genotype[i];
@@ -146,7 +146,7 @@ pair<Individual, Individual> ThreePointCrossover::crossover(Individual &ind1, In
     int genotypeLength = ind1.genotype.size();
     vector<int> indices;
     for (int i = 0; i < 3; i++){
-        int index = floor(getRand() * genotypeLength);
+        int index = floor(Utility::getRand() * genotypeLength);
         indices.push_back(index);
     }
     
@@ -193,7 +193,7 @@ pair<Individual, Individual> FOSCrossover::crossover(Individual &ind1, Individua
     vector<vector<int>> fos = fosObject->getFOS(genotypeLength);
     
     for (int i = 0; i < fos.size(); i++){
-        bool swap = getRand() > 0.5;
+        bool swap = Utility::getRand() > 0.5;
         if (swap){
             for (int j = 0; j < fos[i].size(); j++){
                 int swapIndex = fos[i][j];
@@ -227,7 +227,7 @@ pair<Individual, Individual> ARK6_Crossover::crossover(Individual &ind1, Individ
     Individual newInd2 = ind2.copy();
     
     vector<int> possibleSwapIndices = {4, 8, 12};
-    int randIdx = getRand(0, possibleSwapIndices.size());
+    int randIdx = Utility::getRand(0, possibleSwapIndices.size());
     int swapIndex = possibleSwapIndices[randIdx];
     
     for (int i = 0; i < swapIndex; i++){
@@ -291,7 +291,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
         // Find a donor that is different than this individual.
         int donorIdx = indIdx;
         while(donorIdx == indIdx){
-            donorIdx = getRand(0, popSize);
+            donorIdx = Utility::getRand(0, popSize);
         }
         Individual *p = &population[donorIdx];
         applyDonor(o, *p, subset);

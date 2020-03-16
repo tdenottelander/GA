@@ -55,7 +55,7 @@ vector<int> Utility::getRandomlyPermutedArrayV2 (int n){
     
     vector<int> result (n, 0);
     for (int i = 0; i < n; i++){
-        float rand = getRand();
+        float rand = Utility::getRand();
         int idx = floor(rand * arr.size());
         result[i] = arr[idx];
         arr.erase(arr.begin()+idx);
@@ -90,12 +90,12 @@ double Utility::getRand(){
 
 // Returns a uniformly random integer between begin (including) and end (excluding)
 int Utility::getRand(int begin, int end){
-    return floor(begin + (end - begin) * getRand());
+    return floor(begin + (end - begin) * Utility::getRand());
 }
 
 // Returns a random integer from an array of ints.
 int Utility::getRand(std::vector<int> &vec){
-    return vec[getRand(0, vec.size())];
+    return vec[Utility::getRand(0, vec.size())];
 }
 
 int Utility::getConditionalBit(int counter0, int counter1, int max){
@@ -104,7 +104,7 @@ int Utility::getConditionalBit(int counter0, int counter1, int max){
     int totalLeft = leftFor0 + leftFor1;
     
     float chanceOn0 = (float)leftFor0 / totalLeft;
-    if (getRand() < chanceOn0){
+    if (Utility::getRand() < chanceOn0){
         return 0;
     } else {
         return 1;

@@ -34,7 +34,7 @@ vector<Individual> ProportionateSelection::select(vector<Individual> &population
     selection.reserve(outputSize);
     vector<float> proportions = getProportions(population);
     for(int i = 0; i < outputSize; i++){
-        float randomValue = getRand();
+        float randomValue = Utility::getRand();
         for (unsigned long j = 0; j < proportions.size(); j++){
             if(randomValue < proportions[j]){
                 selection.push_back(population[j]);
@@ -86,7 +86,7 @@ vector<Individual> TournamentSelection::select(vector<Individual> &population, i
     int rounds = tournamentSize * outputSize / n;
     
     for (int round = 0; round < rounds; round++){
-        vector<int> randomIndices = getRandomlyPermutedArrayV2(n);
+        vector<int> randomIndices = Utility::getRandomlyPermutedArrayV2(n);
         for (int i = 0; i < (n/tournamentSize); i++){
             vector<Individual*> selectedIndividuals;
             selectedIndividuals.reserve(tournamentSize);

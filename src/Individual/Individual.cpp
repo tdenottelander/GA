@@ -29,7 +29,7 @@ Individual::Individual(int length, int objectives) :
 void Individual::initialize(vector<int> &alphabet){
     int n = alphabet.size();
     for(int i = 0; i < genotype.size(); i++){
-        genotype[i] = alphabet[floor(getRand() * n)];
+        genotype[i] = alphabet[floor(Utility::getRand() * n)];
     }
 }
 
