@@ -53,8 +53,32 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
         }
         optimalParetoFrontSize = trueParetoFront.size();
     }
+    
+    networkLibrary.type = SolutionLibrary::Type::ARK_BENCHMARK;
+    storeNetworkUniqueEvaluations = true;
 }
 
+vector<float> ARK7::evaluate(Individual &ind){
+    vector<float> fitness;
+    
+    if (networkLibrary.contains(ind.genotype)){
+        fitness = networkLibrary.get(ind.genotype);
+    } else {
+        fitness = getFitness(ind.genotype);
+        networkLibrary.put(ind.genotype, fitness);
+        totalNetworkUniqueEvaluations++;
+    }
+    
+    ind.fitness = fitness;
+    
+    evaluationProcedure(ind);
+    
+    if(log(totalNetworkUniqueEvaluations)){
+        logNetworkUniqueEvaluations();
+    }
+    
+    return fitness;
+}
 
 vector<float> ARK7::getFitness (vector<int> encoding){
     string layers;

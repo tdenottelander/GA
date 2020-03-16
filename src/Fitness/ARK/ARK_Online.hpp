@@ -30,8 +30,7 @@ public:
     FitnessFunction* clone() const override;
     void setLength (int length) override;
     
-    void clear() override;
-    SolutionLibrary networkLibrary;
+    void logAndSaveProgress(Individual &ind);
     
     static void pythonInit();
 };

@@ -19,6 +19,7 @@ public:
     bool MO = false;
     std::vector<float> normalization = {1.0f/100.0f, 1.0f/500.0f};
     
+    std::vector<float> evaluate (Individual &ind) override;
     std::vector<float> getFitness (std::vector<int> encoding) override;
     
     void display() override;

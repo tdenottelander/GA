@@ -81,6 +81,7 @@ void FitnessFunction::clear(){
     JSON_MO_info.clear();
     JSON_SO_info.clear();
     done = false;
+    networkLibrary.clear();
 }
 
 // Performs additional operations like incrementing the amount of (unique) evaluations, checking whether an individual is the best so far yet and storing convergence data.
@@ -578,6 +579,24 @@ void FitnessFunction::printElitistArchive(bool fullArchive){
         }
     }
 }
+
+void FitnessFunction::logNetworkUniqueEvaluations(){
+    if (numObjectives == 1){
+        JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+        JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
+        JSON_SO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
+        if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
+    } else {
+        pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
+        JSON_MO_info["changes_on_interval"]["network_unique_evals"]["elitist_archive_fitness"].push_back(elitistArchiveToJSON());
+        JSON_MO_info["changes_on_interval"]["network_unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
+        JSON_MO_info["changes_on_interval"]["network_unique_evals"]["max_dist"].push_back(avg_max_distance.second);
+        JSON_MO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
+        JSON_MO_info["changes_on_interval"]["network_unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
+        if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
+    }
+}
+
 
 
 /* ------------------------ OneMax Fitness Function ------------------------ */

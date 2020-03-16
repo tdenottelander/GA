@@ -10,16 +10,12 @@
 
 using namespace std;
 
-extern bool saveLogFilesOnEveryUpdate;
-extern string path_JSON_MO_info;
-extern string path_JSON_SO_info;
 extern string path_JSON_Progress;
-extern nlohmann::json JSON_MO_info;
-extern nlohmann::json JSON_SO_info;
 extern nlohmann::json JSON_Progress;
 extern string dataset;
 
-ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFunction(getProblemType()), networkLibrary(SolutionLibrary::Type::ARK_ONLINE) {
+ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFunction(getProblemType()) {
+    networkLibrary.type = SolutionLibrary::Type::ARK_ONLINE;
     numObjectives = numberOfObjectives;
     totalProblemLength = problemSize;
     storeNetworkUniqueEvaluations = true;
@@ -28,27 +24,14 @@ ARK_Online::ARK_Online (int problemSize, int numberOfObjectives) : FitnessFuncti
 
 vector<float> ARK_Online::evaluate(Individual &ind){
     
-//    bool networkunique = false;
     vector<float> fitness;
     
-//    cout << ind.toString() << endl;
     if (networkLibrary.contains(ind.genotype)){
         fitness = networkLibrary.get(ind.genotype);
     } else {
-    
-    fitness = pyEvaluate(ind);
-        
-        // DUMMY EVALUATION:
-//        if (numObjectives == 1){
-//            fitness = {(float)Utility::getRand()};
-//        } else {
-//            fitness = {(float)Utility::getRand(), (float)Utility::getRand()};
-//        }
-        
-        
+        fitness = pyEvaluate(ind);
         networkLibrary.put(ind.genotype, fitness);
         totalNetworkUniqueEvaluations++;
-//        networkunique = true;
     }
     
     ind.fitness = fitness;
@@ -56,40 +39,11 @@ vector<float> ARK_Online::evaluate(Individual &ind){
     evaluationProcedure(ind);
 
     if(log(totalNetworkUniqueEvaluations)){
-        if (numObjectives == 1){
-            JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
-            JSON_SO_info["changes_on_interval"]["network_unique_evals"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
-            JSON_SO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
-            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
-        } else {
-            pair<float, float> avg_max_distance = calculateDistanceParetoToApproximation();
-            JSON_MO_info["changes_on_interval"]["network_unique_evals"]["elitist_archive_fitness"].push_back(elitistArchiveToJSON());
-            JSON_MO_info["changes_on_interval"]["network_unique_evals"]["avg_dist"].push_back(avg_max_distance.first);
-            JSON_MO_info["changes_on_interval"]["network_unique_evals"]["max_dist"].push_back(avg_max_distance.second);
-            JSON_MO_info["changes_on_interval"]["network_unique_evals"]["evals"].push_back(totalNetworkUniqueEvaluations);
-            JSON_MO_info["changes_on_interval"]["network_unique_evals"]["pareto_points_found"].push_back(paretoPointsFound());
-            if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
-        }
+        logNetworkUniqueEvaluations();
     }
+    logAndSaveProgress(ind);
     
-    JSON_Progress["total_evals"].push_back(totalEvaluations);
-    JSON_Progress["unique_evals"].push_back(totalUniqueEvaluations);
-    JSON_Progress["network_unique_evals"].push_back(totalNetworkUniqueEvaluations);
-    JSON_Progress["evaluated_solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
-    JSON_Progress["evaluated_solution_network"].push_back(networkLibrary.hash(ind.genotype));
-    JSON_Progress["evaluated_solution_fitness"].push_back(ind.fitness);
-    
-    if (numObjectives == 1){
-        JSON_Progress["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
-        JSON_Progress["best_solution_network"].push_back(networkLibrary.hash(bestIndividual.genotype));
-        JSON_Progress["best_solution_fitness"].push_back(bestIndividual.fitness);
-    } else {
-        JSON_Progress["elitist_archive"].push_back(elitistArchiveToJSON());
-    }
-    
-    Utility:: writeRawData(JSON_Progress.dump(), path_JSON_Progress);
-    
-//    cout << (networkunique ? "eval: " : "lib:  ") << ind.toString() << " evals: " << totalEvaluations << " uniqEvals: " << totalUniqueEvaluations << " netUniqEvals: " << totalNetworkUniqueEvaluations << endl;
+//    cout << ind.toString() << " evals: " << totalEvaluations << " uniqEvals: " << totalUniqueEvaluations << " netUniqEvals: " << totalNetworkUniqueEvaluations << endl;
 //    cout << "Lib size: " << networkLibrary.library.size() << endl;
     
     return fitness;
@@ -124,7 +78,7 @@ vector<float> ARK_Online::pyEvaluate(Individual &ind){
     int mmacs = PyLong_AsLong(PyTuple_GetItem(result,0));
     float val_acc = PyFloat_AsDouble(PyTuple_GetItem(result, 1));
     float test_acc = PyFloat_AsDouble(PyTuple_GetItem(result, 2));
-    
+
     // Return the normalized fitness values
     if (numObjectives == 2){
         return vector<float> {val_acc * normalization[0], 1.0f - (mmacs * normalization[1])};
@@ -193,7 +147,21 @@ void ARK_Online::pythonInit(){
     }
 }
 
-void ARK_Online::clear() {
-    networkLibrary.clear();
-    FitnessFunction::clear();
+void ARK_Online::logAndSaveProgress(Individual &ind){
+    JSON_Progress["total_evals"].push_back(totalEvaluations);
+    JSON_Progress["unique_evals"].push_back(totalUniqueEvaluations);
+    JSON_Progress["network_unique_evals"].push_back(totalNetworkUniqueEvaluations);
+    JSON_Progress["evaluated_solution_genotype"].push_back(Utility::genotypeToString(ind.genotype));
+    JSON_Progress["evaluated_solution_network"].push_back(networkLibrary.hash(ind.genotype));
+    JSON_Progress["evaluated_solution_fitness"].push_back(ind.fitness);
+    
+    if (numObjectives == 1){
+        JSON_Progress["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+        JSON_Progress["best_solution_network"].push_back(networkLibrary.hash(bestIndividual.genotype));
+        JSON_Progress["best_solution_fitness"].push_back(bestIndividual.fitness);
+    } else {
+        JSON_Progress["elitist_archive"].push_back(elitistArchiveToJSON());
+    }
+    
+    Utility:: writeRawData(JSON_Progress.dump(), path_JSON_Progress);
 }

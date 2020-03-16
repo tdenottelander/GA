@@ -286,7 +286,7 @@ void setOptimizer(const char * argv[], int i){
         bool loop = false; // Default
         if (strcmp(argv[i+1], "loop") == 0)
             loop = true;
-        MO_LS::NewScalarization newScalarization = MO_LS::NewScalarization::OBJECTIVESPACE; // Default
+        MO_LS::NewScalarization newScalarization = MO_LS::NewScalarization::RANDOM; // Default
         int scalarization = stoi(argv[i+2]);
         switch (scalarization) {
             case 0: newScalarization = MO_LS::NewScalarization::OBJECTIVESPACE; break;

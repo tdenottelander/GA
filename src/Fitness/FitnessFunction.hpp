@@ -94,6 +94,9 @@ public:
     int storeElitistArchiveCount = 0;
     
     void printElitistArchive(bool fullArchive = true);
+    
+    void logNetworkUniqueEvaluations();
+    SolutionLibrary networkLibrary;
 };
 
 class OneMax : public FitnessFunction {
