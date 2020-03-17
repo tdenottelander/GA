@@ -44,11 +44,11 @@ void MO_LS::round(){
         performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
         pair<float,float> sc {scalarization, 1.0f - scalarization};
 //        cout << "New individual found: " << ind.toString() << "  for scalarization " << sc.first << "|" << sc.second << endl;
-        updateLSArchive(sc, ind.fitness);
-        JSON_MO_info["LS_converged_solutions"] = LS_archive.size();
-        JSON_MO_info["LS_archive"] = LS_archive;
+        // updateLSArchive(sc, ind.fitness);
+        // JSON_MO_info["LS_converged_solutions"] = LS_archive.size();
+        // JSON_MO_info["LS_archive"] = LS_archive;
     }
-    
+
     roundsCount++;
 }
 
