@@ -286,7 +286,7 @@ bool FitnessFunction::updateElitistArchive(Individual* ind){
     }
     
     if (addToArchive){
-        cout << "Add to archive: " << ind->toString() << endl;
+//        cout << "Add to archive: " << ind->toString() << endl;
         elitistArchive.push_back(ind->copy());
     
         // Only check for convergence criteria if there are new solutions added to the elitist archive.
