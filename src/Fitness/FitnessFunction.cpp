@@ -256,11 +256,11 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     // Set bestIndividual only for SO-problems.
     if(numObjectives == 1 && ind.fitness[0] > bestIndividual.fitness[0]){
         bestIndividual = ind.copy();
-        JSON_SO_info["changes_on_update"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
-        JSON_SO_info["changes_on_update"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
-        JSON_SO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
-        JSON_SO_info["changes_on_update"]["unique_evaluations"].push_back(totalUniqueEvaluations);
-        if (storeNetworkUniqueEvaluations) JSON_SO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
+//        JSON_SO_info["changes_on_update"]["best_solution_genotype"].push_back(Utility::genotypeToString(bestIndividual.genotype));
+//        JSON_SO_info["changes_on_update"]["best_solution_fitness"].push_back(bestIndividual.fitness[0]);
+//        JSON_SO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
+//        JSON_SO_info["changes_on_update"]["unique_evaluations"].push_back(totalUniqueEvaluations);
+//        if (storeNetworkUniqueEvaluations) JSON_SO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
     }
 }
 
@@ -286,19 +286,20 @@ bool FitnessFunction::updateElitistArchive(Individual* ind){
     }
     
     if (addToArchive){
+        cout << "Add to archive: " << ind->toString() << endl;
         elitistArchive.push_back(ind->copy());
     
         // Only check for convergence criteria if there are new solutions added to the elitist archive.
         pair<float, float> avg_max_distance = {-1, -1};
 
         if(storeElitistArchive){
-            JSON_MO_info["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
-            JSON_MO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
-            JSON_MO_info["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
-            if(storeNetworkUniqueEvaluations) JSON_MO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
-            avg_max_distance = calculateDistanceParetoToApproximation();
-            JSON_MO_info["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
-            JSON_MO_info["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
+//            JSON_MO_info["changes_on_update"]["elitist_archive"].push_back(elitistArchiveToJSON());
+//            JSON_MO_info["changes_on_update"]["total_evaluations"].push_back(totalEvaluations);
+//            JSON_MO_info["changes_on_update"]["unique_evalutions"].push_back(totalUniqueEvaluations);
+//            if(storeNetworkUniqueEvaluations) JSON_MO_info["changes_on_update"]["network_unique_evaluations"].push_back(totalNetworkUniqueEvaluations);
+//            avg_max_distance = calculateDistanceParetoToApproximation();
+//            JSON_MO_info["changes_on_update"]["avg_distance"].push_back(avg_max_distance.first);
+//            JSON_MO_info["changes_on_update"]["max_distance"].push_back(avg_max_distance.second);
         }
         
         if (convergenceCriteria == ConvergenceCriteria::ENTIRE_PARETO){

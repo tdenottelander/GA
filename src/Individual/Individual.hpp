@@ -35,7 +35,7 @@ public:
     std::string toStringFitness();
     bool equals(Individual const& ind);
     bool genotypeEquals(std::vector<int> &genotype);
-    bool fitnessEquals(Individual &ind, float margin = 0.001);
+    bool fitnessEquals(Individual &ind, float margin = 0.000001);
     bool dominates(Individual &indOther);
     bool dominates(Individual &indOther, std::vector<float> scalarization);
     float scalarizeFitness(std::vector<float> scalarization);
