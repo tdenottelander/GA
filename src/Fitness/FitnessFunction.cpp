@@ -23,7 +23,7 @@ extern string path_JSON_SO_info;
 extern string path_JSON_Run;
 extern nlohmann::json JSON_MO_info;
 extern nlohmann::json JSON_SO_info;
-extern nlohmann::json JSON_run;
+extern nlohmann::json JSON_Run;
 extern bool storeElitistArchive;
 extern bool updateElitistArchiveOnEveryEvaluation;
 extern int loggingIntervalMode;
@@ -184,7 +184,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     
     if(saveLogFilesOnEveryUpdate){
         try{
-            Utility::writeRawData(JSON_run.dump(), path_JSON_Run);
+            Utility::writeRawData(JSON_Run.dump(), path_JSON_Run);
             if(numObjectives > 1)
                 Utility::writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
             else

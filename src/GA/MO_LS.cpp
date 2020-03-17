@@ -12,6 +12,8 @@ using namespace std;
 
 extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 extern nlohmann::json JSON_MO_info;
+extern nlohmann::json JSON_LS_Results;
+extern bool saveLSArchiveResults;
 
 MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, NewScalarization newScalarization) : GA(fitfunc), LS_order(order), loop(loop), newScalarization(newScalarization) {
     isLocalSearchAlgorithm = true;
@@ -44,9 +46,11 @@ void MO_LS::round(){
         performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
         pair<float,float> sc {scalarization, 1.0f - scalarization};
 //        cout << "New individual found: " << ind.toString() << "  for scalarization " << sc.first << "|" << sc.second << endl;
-        // updateLSArchive(sc, ind.fitness);
-        // JSON_MO_info["LS_converged_solutions"] = LS_archive.size();
-        // JSON_MO_info["LS_archive"] = LS_archive;
+        if (saveLSArchiveResults){
+             updateLSArchive(sc, ind.fitness);
+             JSON_LS_Results["LS_converged_solutions"] = LS_archive.size();
+             JSON_LS_Results["LS_archive"] = LS_archive;
+        }
     }
 
     roundsCount++;

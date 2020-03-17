@@ -74,6 +74,7 @@ string benchmarksDir = projectDir + "benchmarks/";
 string writeDir;
 string path_JSON_MO_info;
 string path_JSON_SO_info;
+string path_JSON_LS_Results;
 string path_JSON_Progress;
 string path_JSON_Run;
 
@@ -81,6 +82,7 @@ string dataset = "cifar100";
 
 json JSON_MO_info;
 json JSON_SO_info;
+json JSON_LS_Results;
 json JSON_Progress;
 
 bool printfos = false;
@@ -99,6 +101,7 @@ int loggingLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
 int populationInitializationMode = 0; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 bool saveLogFilesOnEveryUpdate = false;
+bool saveLSArchiveResults = false;
 
 // Termination criteria
 int maxRounds = -1;
@@ -126,7 +129,7 @@ int repetitions = 30;
 // JSON
 json JSON_experiment;
 json JSON_fitfunc;
-json JSON_run;
+json JSON_Run;
 
 // Printing parameters
 bool printFullElitistArchive = false;
@@ -166,6 +169,7 @@ void setJSONdata(){
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
     JSON_experiment["seed"] = mySeed;
     JSON_experiment["saveLogFilesOnEveryUpdate"] = saveLogFilesOnEveryUpdate;
+    JSON_experiment["saveLSArchiveResults"] = saveLSArchiveResults;
     if(fos != NULL) JSON_experiment["fos"] = fos->id();
     if(variation != NULL) JSON_experiment["variation"] = variation->id();
     JSON_fitfunc["id"] = fitFunc->id();
@@ -177,6 +181,8 @@ void setJSONdata(){
     JSON_fitfunc["isMO"] = fitFunc->isMO();
     JSON_fitfunc["numberOfParetoPoints"] = fitFunc->trueParetoFront.size();
     JSON_fitfunc["numberOfObjectives"] = numberOfObjectives;
+    if (gaID().find("ARK-7") != string::npos) dataset = "cifar100";
+    if (gaID().find("ARK-8") != string::npos) dataset = "cifar10";
     JSON_fitfunc["dataset"] = dataset;
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
     writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
@@ -396,6 +402,7 @@ void printCommandLineHelp(){
     cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
     cout << "-q [#1]: set print every evaluation to #1={0, 1}" << endl;
     cout << "-x [#1]: set saving log files on every update to #1={0, 1}" << endl;
+    cout << "-L [#1]: set saving LS archive results to #1={0, 1}" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -492,6 +499,10 @@ void setParameter(char ch, const char * argv[], int i){
             saveLogFilesOnEveryUpdate = stoi(argv[i]) == 1;
             cout << Utility::padWithSpacesAfter("Setting saveLogFilesOnEveryUpdate to ", settingInfoStringLength) << saveLogFilesOnEveryUpdate << endl;
             break;
+        case 'L':
+            saveLSArchiveResults = stoi(argv[i]) == 1;
+            cout << Utility::padWithSpacesAfter("Setting saveLSArchiveResults to ", settingInfoStringLength) << saveLSArchiveResults << endl;
+            break;
     }
 }
 
@@ -510,8 +521,8 @@ void printRepetition(int rep){
     cout << "rep" << padWithSpacesAfter(to_string(rep), 2)
     << " ga=" << gaID()
     << " l=" << problemSize
-    << " success=" << padWithSpacesAfter(to_string(JSON_run.at("success")), 7)
-    << " time=" << padWithSpacesAfter(to_string(JSON_run.at("time_taken")), 12)
+    << " success=" << padWithSpacesAfter(to_string(JSON_Run.at("success")), 7)
+    << " time=" << padWithSpacesAfter(to_string(JSON_Run.at("time_taken")), 12)
     << " evals=" << padWithSpacesAfter(to_string(fitFunc->totalEvaluations), 15)
     << " uniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalUniqueEvaluations), 15);
     if(fitFunc->storeNetworkUniqueEvaluations) cout << " networkUniqEvals=" << padWithSpacesAfter(to_string(fitFunc->totalNetworkUniqueEvaluations), 15);
@@ -529,11 +540,14 @@ void performExperiment(){
         path_JSON_Progress = writeDir + "/progress" + to_string(rep) + ".json";
         path_JSON_MO_info = writeDir + "/MO_info" + to_string(rep) + ".json";
         path_JSON_SO_info = writeDir + "/SO_info" + to_string(rep) + ".json";
+        path_JSON_LS_Results = writeDir + "/LS_results" + to_string(rep) + ".json";
         path_JSON_Run = writeDir + "/run" + to_string(rep) + ".json";
 
-        JSON_run.clear();
+        JSON_Progress.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
+        JSON_LS_Results.clear();
+        JSON_Run.clear();
         fitFunc->clear();
 
         if(use_MOGOMEA){
@@ -547,14 +561,15 @@ void performExperiment(){
         }
         printRepetition(rep);
 
-        times.push_back(JSON_run.at("time_taken"));
+        times.push_back(JSON_Run.at("time_taken"));
         evals.push_back(fitFunc->totalEvaluations);
         uniqueEvals.push_back(fitFunc->totalUniqueEvaluations);
         networkUniqueEvals.push_back(fitFunc->totalNetworkUniqueEvaluations);
 
-        writeRawData(JSON_run.dump(), path_JSON_Run);
+        writeRawData(JSON_Run.dump(), path_JSON_Run);
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         else writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
+        if (saveLSArchiveResults && gaID().find("MO-LS") != string::npos) writeRawData(JSON_LS_Results, path_JSON_LS_Results);
     }
     cout << endl;
 

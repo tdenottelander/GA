@@ -6,7 +6,7 @@ using namespace nlohmann; // for json
 extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
-extern json JSON_run;
+extern json JSON_Run;
 extern bool IMS;
 extern int nonIMSPopsize;
 
@@ -1117,12 +1117,12 @@ double MO_GOMEA::computeDPFSMetric( double **default_front, int default_front_si
 void MO_GOMEA::writeGenerationalStatistics( void )
 {
     
-    JSON_run["evals_total"] = fitFunc->totalEvaluations;
-    JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
-    JSON_run["time_taken"] = Utility::millis() - startTime;
-    JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
-    JSON_run["success"] = fitFunc->optimumFound;
-    if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_run.dump(), path_JSON_Run);
+    JSON_Run["evals_total"] = fitFunc->totalEvaluations;
+    JSON_Run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    JSON_Run["time_taken"] = Utility::millis() - startTime;
+    JSON_Run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    JSON_Run["success"] = fitFunc->optimumFound;
+    if(saveLogFilesOnEveryUpdate) Utility::writeRawData(JSON_Run.dump(), path_JSON_Run);
     
     int     i;
     char    string[1000];
@@ -3667,11 +3667,11 @@ int MO_GOMEA::main_MO_GOMEA()
     startTime = Utility::millis();
     run();
     
-    JSON_run["evals_total"] = fitFunc->totalEvaluations;
-    JSON_run["evals_unique"] = fitFunc->totalUniqueEvaluations;
-    JSON_run["time_taken"] = Utility::millis() - startTime;
-    JSON_run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
-    JSON_run["success"] = fitFunc->optimumFound;
+    JSON_Run["evals_total"] = fitFunc->totalEvaluations;
+    JSON_Run["evals_unique"] = fitFunc->totalUniqueEvaluations;
+    JSON_Run["time_taken"] = Utility::millis() - startTime;
+    JSON_Run["evals_unique_transformed"] = fitFunc->totalTransformedUniqueEvaluations;
+    JSON_Run["success"] = fitFunc->optimumFound;
 
     return( 0 );
 }
