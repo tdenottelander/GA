@@ -39,10 +39,11 @@ repetitions=1
 populationInitializationMode=1 #1 includes all-identity solution, 0 is true random
 printAtEveryEval=1
 saveLogFilesOnEveryUpdate=1
-gpu=1
-seed=$1
+run=$1
+gpu=$2
+seed=$3
 
 variation="2p"
 optimizer="NSGA-II"
 popsize=100
-CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -v $variation -o $optimizer -r $repetitions -I 0 -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -v $variation -o $optimizer -r $repetitions -I 0 -p $popsize -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate -O "NSGA-II_run$run""_seed$seed"
