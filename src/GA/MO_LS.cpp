@@ -117,8 +117,7 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
 
 float MO_LS::getNewScalarizationTarget(){
     if (newScalarization == NewScalarization::RANDOM){
-        return 1.0f;
-//        return Utility::getRand();
+        return Utility::getRand();
     } else {
         // Sort the result array based on scalarization value
         sort(LS_archive.begin(), LS_archive.end(), [](pair<pair<float, float>, vector<float>> lhs, pair<pair<float, float>, vector<float>> rhs){
