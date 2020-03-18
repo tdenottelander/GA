@@ -83,9 +83,9 @@ vector<float> ARK_Online::pyEvaluate(Individual &ind){
 
     // Return the normalized fitness values
     if (numObjectives == 2){
-        return vector<float> {val_acc * normalization[0], 1.0f - (mmacs * normalization[1])};
+        return vector<float> {val_acc * 0.01f, 1.0f - (mmacs - minMMACs / (maxMMACs - minMMACs))};
     } else {
-        return vector<float>{val_acc * normalization[0]};
+        return vector<float>{val_acc * 0.01f};
     }
 }
 

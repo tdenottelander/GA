@@ -17,7 +17,10 @@ class ARK8 : public ARK {
 public:
     ARK8(int problemSize, bool genotypeChecking, bool MO = false);
     bool MO = false;
-    std::vector<float> normalization = {1.0f/100.0f, 1.0f/500.0f};
+
+    // For normalizing the MMACs objective
+    float minMMACs = 21.31;
+    float maxMMACs = 239.28;
     
     std::vector<float> evaluate (Individual &ind) override;
     std::vector<float> getFitness (std::vector<int> encoding) override;
