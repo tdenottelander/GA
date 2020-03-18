@@ -102,6 +102,7 @@ std::string ARK_Analysis_suffix = "";
 int populationInitializationMode = 0; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 bool saveLogFilesOnEveryUpdate = false;
 bool saveLSArchiveResults = false;
+bool customOutputFolder = false;
 
 // Termination criteria
 int maxRounds = -1;
@@ -185,11 +186,13 @@ void setJSONdata(){
     if (gaID().find("ARK-8") != string::npos) dataset = "cifar10";
     JSON_fitfunc["dataset"] = dataset;
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
-    writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
-    if(IMS){
-        writeDir += "_IMS";
-    } else if (use_MOGOMEA || (!ga->isRandomSearchAlgorithm && !ga->isLocalSearchAlgorithm)){
-        writeDir += ("_pop=" + to_string(nonIMSPopsize));
+    if (!customOutputFolder){
+        writeDir = dataDir + directoryName + "_" + fitFunc->id() + "_" + gaID();
+        if(IMS){
+            writeDir += "_IMS";
+        } else if (use_MOGOMEA || (!ga->isRandomSearchAlgorithm && !ga->isLocalSearchAlgorithm)){
+            writeDir += ("_pop=" + to_string(nonIMSPopsize));
+        }
     }
     if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
         string filename = writeDir + "/experiment.json";
@@ -290,14 +293,16 @@ void setOptimizer(const char * argv[], int i){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "MO-LS") == 0){
         bool loop = false; // Default
-        if (strcmp(argv[i+1], "loop") == 0)
-            loop = true;
         MO_LS::NewScalarization newScalarization = MO_LS::NewScalarization::RANDOM; // Default
-        int scalarization = stoi(argv[i+2]);
-        switch (scalarization) {
-            case 0: newScalarization = MO_LS::NewScalarization::OBJECTIVESPACE; break;
-            case 1: newScalarization = MO_LS::NewScalarization::RANDOM; break;
-            case 2: newScalarization = MO_LS::NewScalarization::SCALARIZATIONSPACE; break;
+        if (argv[i+1][0] != '-'){
+            if (strcmp(argv[i+1], "loop") == 0)
+                loop = true;
+            int scalarization = stoi(argv[i+2]);
+            switch (scalarization) {
+                case 0: newScalarization = MO_LS::NewScalarization::OBJECTIVESPACE; break;
+                case 1: newScalarization = MO_LS::NewScalarization::RANDOM; break;
+                case 2: newScalarization = MO_LS::NewScalarization::SCALARIZATIONSPACE; break;
+            }
         }
         ga = new MO_LS(fitFunc, Utility::Order::RANDOM, loop, newScalarization);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
@@ -403,6 +408,7 @@ void printCommandLineHelp(){
     cout << "-q [#1]: set print every evaluation to #1={0, 1}" << endl;
     cout << "-x [#1]: set saving log files on every update to #1={0, 1}" << endl;
     cout << "-L [#1]: set saving LS archive results to #1={0, 1}" << endl;
+    cout << "-O [#1]: set custom write #1" << endl;
 }
 
 void setConvergenceCriteria(const char * argv[], int i){
@@ -502,6 +508,11 @@ void setParameter(char ch, const char * argv[], int i){
         case 'L':
             saveLSArchiveResults = stoi(argv[i]) == 1;
             cout << Utility::padWithSpacesAfter("Setting saveLSArchiveResults to ", settingInfoStringLength) << saveLSArchiveResults << endl;
+            break;
+        case 'O':
+            customOutputFolder = true;
+            writeDir = dataDir + argv[i];
+            cout << Utility::padWithSpacesAfter("Setting custom output write folder to ", settingInfoStringLength) << writeDir << endl;
             break;
     }
 }
