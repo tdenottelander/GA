@@ -39,10 +39,11 @@ repetitions=1
 populationInitializationMode=1 #1 includes all-identity solution, 0 is true random
 printAtEveryEval=1
 saveLogFilesOnEveryUpdate=1
-gpu=3
-seed=$1
+run=$1
+gpu=$2
+seed=$3
 
 
 
 optimizer="MO-RS"
-CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -o $optimizer -r $repetitions -I 0 -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+CUDA_VISIBLE_DEVICES=$gpu $path_to_executable -S $seed -P $path_to_project -d $dataset -f $fit -o $optimizer -r $repetitions -I 0 -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate -O "MO-RS_run$run""_seed$seed"
