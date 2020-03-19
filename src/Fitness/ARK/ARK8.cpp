@@ -100,7 +100,7 @@ vector<float> ARK8::getFitness (vector<int> encoding){
     float acc = lookupTable[layers]["val_acc"];
     if (MO){
         float mmacs = lookupTable[layers]["MMACs"];
-        return vector<float> {acc * 0.01f, 1.0f - (mmacs - minMMACs / (maxMMACs - minMMACs))};
+        return vector<float> {acc * 0.01f, 1.0f - ((mmacs - minMMACs) / (maxMMACs - minMMACs))};
     } else {
         return vector<float>{acc * 0.01f};
     }

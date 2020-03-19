@@ -173,8 +173,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
         cout << "Ind: " << ind.toString();
         if (storeNetworkUniqueEvaluations){
             try{
-                SolutionLibrary sl (SolutionLibrary::Type::ARK_ONLINE);
-                cout << "    Network: " << sl.hash(ind.genotype);
+                cout << "    Network: " << networkLibrary.hash(ind.genotype);
             } catch (exception) {
                 // Do nothing.
             }
