@@ -57,7 +57,7 @@ void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsi
     
     whichShouldRun = vector<int>(maxPopSizeLevel, 0);
     for(int i = 0; i < maxPopSizeLevel; i++){
-        int popSize = pow(beginPopSize, i + 1);
+        int popSize = beginPopSize * pow(2, i);
         GA* newGA = g->clone();
         newGA->setPopulationSize(popSize);
         gaList.push_back(newGA);
@@ -165,7 +165,11 @@ void RoundSchedule::run() {
                         if(lowestActiveGAIdx == maxPopSizeLevel){
                             done = true;
                             break;
+                        } else {
+                            // In case the ga converges before the next one has even started, make sure to start the next one.
+                            highestActiveGAIdx = max(highestActiveGAIdx, i + 1);
                         }
+                        
                         continue;
 
                     // Else if the previous GA has not terminated
