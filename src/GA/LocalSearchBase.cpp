@@ -10,19 +10,16 @@
 
 using namespace std;
 
-LocalSearchBase::LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity) : GA(fitFunc),  localSearchOrder(localSearchOrder), stochasticity(stochasticity){
+LocalSearchBase::LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity, bool loop) : GA(fitFunc),  stochasticity(stochasticity), loop(loop), localSearchOrder(localSearchOrder){
     isLocalSearchAlgorithm = true;
 }
 
 void LocalSearchBase::round(){
     
-    for(Individual ind : population){
-        
-        doLocalSearch(ind, fitFunc_ptr);
-        
-        if(fitFunc_ptr->optimumFound)
-            break;
-    }
+    Individual ind = population[0];
+    
+    doLocalSearch(ind, fitFunc_ptr);
+    
     roundsCount++;
 }
 
@@ -31,7 +28,7 @@ void LocalSearchBase::doLocalSearch(Individual &ind, FitnessFunction * fitfunc, 
     int randomFlips = 0;
     vector<int> alphabet = fitfunc->problemType->alphabet;
     
-    while(!converged){
+    do {
         converged = true;
         
         int probSize = fitfunc->totalProblemLength;
@@ -70,5 +67,5 @@ void LocalSearchBase::doLocalSearch(Individual &ind, FitnessFunction * fitfunc, 
                 converged = false;
             }
         }
-    }
+    } while(!converged && loop);
 }

@@ -15,8 +15,9 @@
 
 class LocalSearchBase : public GA {
 protected:
-    LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity);
+    LocalSearchBase (FitnessFunction * fitFunc, Utility::Order localSearchOrder, float stochasticity, bool loop = false);
     float stochasticity;
+    bool loop;
 public:
     Utility::Order localSearchOrder;
     void round() override;
