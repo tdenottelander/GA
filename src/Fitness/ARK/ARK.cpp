@@ -145,7 +145,7 @@ void ARK::findBestRecursion(int length, int alphabetSize, vector<int> &temp, int
         vector<int> gen (temp);
         ind.genotype = gen;
         updateElitistArchive(&ind);
-        if (abs(result[0] - statistics.fitness) < 0.001){
+        if (abs(result[0] - statistics.fitness) < 0.00001){
             statistics.genotypes.push_back(temp);
             statistics.optCount = statistics.optCount + 1;
         } else if (result[0] > statistics.fitness){
