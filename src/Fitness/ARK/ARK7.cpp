@@ -52,6 +52,8 @@ ARK7::ARK7(int problemSize, bool genotypeChecking, bool MO) : ARK(problemSize, f
             cout << "Done loading ARK-7 Pareto results" << endl;
         }
         optimalParetoFrontSize = trueParetoFront.size();
+    } else {
+        optimum[0] = optimum[0] * 0.01f;
     }
     
     networkLibrary.type = SolutionLibrary::Type::ARK_BENCHMARK;

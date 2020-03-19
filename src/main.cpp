@@ -392,7 +392,7 @@ void printCommandLineHelp(){
     cout << "-s [#1]: set max seconds to #1" << endl;
     cout << "-d [#1]: set dataset to #1={cifar10, cifar100} for ark-online" << endl;
     cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3" << endl;
-    cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto}" << endl;
+    cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto, optimal_fitness, epsilon_fitness}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
     cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6} with optional order #2={rand, asc, desc}" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
@@ -416,6 +416,10 @@ void setConvergenceCriteria(const char * argv[], int i){
         fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::ENTIRE_PARETO;
     } else if (strcmp(argv[i], "epsilon_pareto") == 0){
         fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_PARETO_DISTANCE;
+    } else if (strcmp(argv[i], "optimal_fitness") == 0){
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::OPTIMAL_FITNESS;
+    } else if (strcmp(argv[i], "epsilon_fitness") == 0){
+        fitFunc->convergenceCriteria = FitnessFunction::ConvergenceCriteria::EPSILON_FITNESS;
     }
 }
 
