@@ -20,8 +20,8 @@ static PyObject *py_evaluationFunction;
 class ARK_Online : public FitnessFunction {
 public:
     // For normalizing the MMACs objective
-    float minMMACs = 21.54;
-    float maxMMACs = 239.51;
+    float minMMACs = 13.03;
+    float maxMMACs = 255.86;
 
     ARK_Online(int problemSize, int numberOfObjectives);
     std::vector<float> evaluate(Individual &ind) override;
