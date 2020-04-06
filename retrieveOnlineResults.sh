@@ -1,8 +1,10 @@
+# Get all data from all meteors
 for i in 2 3 4 5
 do
   rsync -vamr --include='**/*run*seed*/*.json' --include='*/' --exclude='*' tdo@meteor0$i:/export/scratch1/home/shared/GA/data/ ./data/online
 done
 
+# Check the modification time of all files gathered.
 minutes=20
 FILES=data/online/*/MO_info0.json
 for f in $FILES
@@ -19,3 +21,5 @@ do
     echo "$f: Last updated: $difference minutes ago."
   fi
 done
+
+python3 checkOnlineEvaluations.py
