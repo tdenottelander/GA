@@ -37,7 +37,7 @@ RoundSchedule::RoundSchedule (int maxRounds, int maxPopSizeLevel, int maxSeconds
 {}
 
 void RoundSchedule::initialize(GA *g, int problemSize, bool IMS, int nonIMSpopsize) {
-    int beginPopSize = 4;
+    int beginPopSize = 8;
     
     // If IMS should not be used, or the algorithm doesn't require IMS (e.g. with LS or RS), then set the correct values.
     if(!IMS || g->isRandomSearchAlgorithm || g->isLocalSearchAlgorithm || g->preventIMS){
