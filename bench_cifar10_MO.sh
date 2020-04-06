@@ -18,7 +18,7 @@ seed=10
 optimizer=MO-GOMEA
 fos=learned
 IMS=1
-$path_to_executable -S $seed -P $path_to_project -I $IMS -n $netuniqevals -f $fit -c $convergence -F $fos -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate -O $optimizer$suffix"bluh"
+$path_to_executable -S $seed -P $path_to_project -I $IMS -n $netuniqevals -f $fit -c $convergence -F $fos -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate -O $optimizer$suffix
 
 # optimizer=NSGA-II
 # variation=2p
