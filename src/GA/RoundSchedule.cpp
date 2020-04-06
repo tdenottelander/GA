@@ -14,6 +14,7 @@ using Utility::millis;
 
 extern bool printPopulationAfterRound;
 extern bool printPopulationOnOptimum;
+extern bool printProgressOnIntervals;
 extern bool storeConvergence;
 extern bool storeElitistArchive;
 
@@ -78,6 +79,7 @@ void RoundSchedule::run() {
     bool optimumFound = false;
     bool done = false;
     long start = millis();
+    long intermediateTime = millis();
     while (!done) {
 
         //Stopping conditions
@@ -96,6 +98,12 @@ void RoundSchedule::run() {
         } else if (fitFunc->maxNetworkUniqueEvaluationsExceeded()){
             JSON_Run["stoppingCondition"] = "maxNetworkUniqueEvaluationsExceeded";
             break;
+        }
+        
+        // Write an update every 10 minutes.
+        if (printProgressOnIntervals && millis() - intermediateTime > (10 * 60 * 1000)){
+            cout << "evals: " << fitFunc->totalEvaluations << "  uniqEvals: " << fitFunc->totalUniqueEvaluations << "  netUniqEvals: " << fitFunc->totalNetworkUniqueEvaluations << "  time: " << (millis() - start) / 1000 << endl;
+            intermediateTime = millis();
         }
 
         //TODO: Loop only through active GA's, not until maxPopSizeLevel

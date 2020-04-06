@@ -89,6 +89,7 @@ bool printfos = false;
 bool printPopulationAfterRound = false;
 bool printPopulationOnOptimum = false;
 bool printElitistArchiveOnUpdate = false;
+bool printProgressOnIntervals = false;
 bool storeConvergence = false;
 bool storeAbsoluteConvergence = false;
 bool storeUniqueConvergence = true;
