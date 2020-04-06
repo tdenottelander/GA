@@ -87,3 +87,6 @@ dist/
 
 ## Benchmark files
 benchmarks/
+
+## Temporary files on ross server
+._*
