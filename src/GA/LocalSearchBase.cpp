@@ -18,6 +18,8 @@ void LocalSearchBase::round(){
     
     Individual ind = population[0];
     
+    ind.initialize(fitFunc_ptr->problemType->alphabet);
+    
     doLocalSearch(ind, fitFunc_ptr);
     
     roundsCount++;

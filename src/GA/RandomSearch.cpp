@@ -15,15 +15,8 @@ RandomSearch::RandomSearch (FitnessFunction * fitFunc) : GA(fitFunc){
 }
 
 void RandomSearch::round(){
-    int n = fitFunc_ptr->totalProblemLength;
-    vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
-    int alphLength = alphabet.size();
-    for (int i = 0; i < population.size(); i++){
-        for (int j = 0; j < n; j++){
-            population[i].genotype[j] = alphabet[floor(Utility::getRand() * alphLength)];
-        }
-    }
-    evaluateAll();
+    population[0].initialize(fitFunc_ptr->problemType->alphabet);
+    fitFunc_ptr->evaluate(population[0]);
     roundsCount++;
 }
 
