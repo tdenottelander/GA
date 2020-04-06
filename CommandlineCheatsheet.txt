@@ -1,0 +1,3 @@
+rsync -vamr --include='**/*_ark8_cifar10/*.json' --include='*/' --exclude='*' tdo@ross.ls.cwi.nl:/export/scratch1/tdo/TomGA/data/ data/bench_cifar10_MO/
+
+python3 plotHyperVolume.py 2000 MO-GOMEA NSGA-II MO-LS MO-RS
