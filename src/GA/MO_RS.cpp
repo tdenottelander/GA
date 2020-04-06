@@ -10,7 +10,7 @@
 
 using namespace std;
 
-MO_RS::MO_RS (FitnessFunction * fitFunc) : GA(fitFunc){
+MO_RS::MO_RS (FitnessFunction * fitFunc, bool adapted) : GA(fitFunc), adapted(adapted){
     preventIMS = true;
     isRandomSearchAlgorithm = true;
 }
@@ -19,7 +19,11 @@ void MO_RS::round(){
     vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
     
     for (int i = 0; i < population.size(); i++){
-        population[i].initialize(alphabet);
+        if (adapted){
+            adaptedInitializeIndividual(population[i]);
+        } else {
+            population[i].initialize(alphabet);
+        }
         fitFunc_ptr->evaluate(population[i]);
         fitFunc_ptr->updateElitistArchive(&population[i]);
         if(fitFunc_ptr->isDone()){
@@ -28,6 +32,18 @@ void MO_RS::round(){
     }
     
     roundsCount++;
+}
+
+void MO_RS::adaptedInitializeIndividual(Individual &ind){
+    int layersToFill = Utility::getRand(1, fitFunc_ptr->totalProblemLength + 1);
+    cout << "layers to fill: " << layersToFill << endl;
+    vector<int> shuffledIndices = Utility::getRandomlyPermutedArrayV2(fitFunc_ptr->totalProblemLength);
+    for (int i = 0; i < layersToFill; i++){
+        ind.genotype[shuffledIndices[i]] = Utility::getRand(1, fitFunc_ptr->problemType->alphabet.size());
+    }
+    for (int i = layersToFill; i < fitFunc_ptr->totalProblemLength; i++){
+        ind.genotype[shuffledIndices[i]] = 0;
+    }
 }
 
 GA* MO_RS::clone() const {
