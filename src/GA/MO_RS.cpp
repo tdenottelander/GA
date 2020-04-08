@@ -36,7 +36,6 @@ void MO_RS::round(){
 
 void MO_RS::adaptedInitializeIndividual(Individual &ind){
     int layersToFill = Utility::getRand(1, fitFunc_ptr->totalProblemLength + 1);
-    cout << "layers to fill: " << layersToFill << endl;
     vector<int> shuffledIndices = Utility::getRandomlyPermutedArrayV2(fitFunc_ptr->totalProblemLength);
     for (int i = 0; i < layersToFill; i++){
         ind.genotype[shuffledIndices[i]] = Utility::getRand(1, fitFunc_ptr->problemType->alphabet.size());

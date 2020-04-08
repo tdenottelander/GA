@@ -1,33 +1,30 @@
 #!/bin/bash
-path_to_executable=dist/Release/GNU-Linux/
+path_to_executable=dist/Release/GNU-Linux/tomga
+path_to_project=src/../
 
 evals=10000000
-fit="ark8 14"
+fit="ark8 14 2"
 convergence=entire_pareto
-variation=2p
 repetitions=30
-IMS=0
-popsize=100
+populationInitializationMode=1
+printAtEveryEval=0
+saveLogFilesOnEveryUpdate=0
 
-# for optimizer in MO-RS MO-LS NSGA-II
-# do
-  # $path_to_executable/tomga -I $IMS -p $popsize -e $evals -f $fit -c $convergence -v $variation -o $optimizer -r $repetitions
-# done
+seed=10
 
+# optimizer=MO-GOMEA
+# fos=learned
+# IMS=1
+# $path_to_executable -S $seed -P $path_to_project -I $IMS -e $evals -f $fit -c $convergence -F $fos -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+
+#optimizer=NSGA-II
+#variation=2p
+#popsize=100
+#$path_to_executable -S $seed -P $path_to_project -p $popsize -e $evals -f $fit -c $convergence -v $variation -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
+#
 optimizer=MO-LS
-evals=1000000
-$path_to_executable/tomga -I $IMS -p $popsize -e $evals -f $fit -c $convergence -v $variation -o $optimizer -r $repetitions
+maxnetworkunique=50000
+$path_to_executable -S $seed -P $path_to_project -n $maxnetworkunique -e $evals -f $fit -c $convergence -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
 
-optimizer=NSGA-II
-evals=10000000
-$path_to_executable/tomga -I $IMS -p $popsize -e $evals -f $fit -c $convergence -v $variation -o $optimizer -r $repetitions
-
-IMS=1
-optimizer=MO-GOMEA
-for fos in uni learned
-do
-  # for popsize in 50 100 200 500 1000
-  # do
-    $path_to_executable/tomga -I $IMS -e $evals -f $fit -c $convergence -F $fos -o $optimizer -r $repetitions
-  # done
-done
+#optimizer=MO-RS
+#$path_to_executable -S $seed -P $path_to_project -e $evals -f $fit -c $convergence -o $optimizer -r $repetitions -M $populationInitializationMode -q $printAtEveryEval -x $saveLogFilesOnEveryUpdate
