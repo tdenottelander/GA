@@ -10,6 +10,8 @@
 
 using namespace std;
 
+extern bool nsgamutation;
+
 NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, true, false){}
 
 NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), crossoverProbability(crossoverProbability), doMutation(mutation), visualize(visualize) {
@@ -325,13 +327,23 @@ void NSGA_II::mutation(vector<Individual> &children){
 }
 
 void NSGA_II::mutate(Individual &ind, float probability){
+    vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
     for (int gene = 0; gene < ind.genotype.size(); gene++){
         float rand = Utility::getRand();
         if (rand < probability) {
-            if(ind.genotype[gene] == 0){
-                ind.genotype[gene] = 1;
+            if (nsgamutation){
+                int currentBit = ind.genotype[gene];
+                int newBit = currentBit;
+                while(newBit == currentBit){
+                    newBit = Utility::getRand(alphabet);
+                }
+                ind.genotype[gene] = newBit;
             } else {
-                ind.genotype[gene] = 0;
+                if(ind.genotype[gene] == 0){
+                    ind.genotype[gene] = 1;
+                } else {
+                    ind.genotype[gene] = 0;
+                }
             }
         }
     }

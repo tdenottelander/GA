@@ -97,6 +97,7 @@ bool storeTransformedUniqueConvergence = false;
 bool storeDistanceToParetoFrontOnElitistArchiveUpdate = true;
 bool storeElitistArchive = true;
 bool updateElitistArchiveOnEveryEvaluation = true;
+bool nsgamutation = false;
 int loggingIntervalMode = 0; // 0 = on a log10 scale, 1 = linear scale
 int loggingLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
@@ -518,6 +519,10 @@ void setParameter(char ch, const char * argv[], int i){
             customOutputFolder = true;
             writeDir = dataDir + argv[i];
             cout << Utility::padWithSpacesAfter("Setting custom output write folder to ", settingInfoStringLength) << writeDir << endl;
+            break;
+        case 'N':
+            nsgamutation = true;
+            cout << "set nsgamutation to " << nsgamutation << endl;
             break;
     }
 }
