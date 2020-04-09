@@ -12,6 +12,7 @@ using namespace std;
 using namespace chrono;
 using namespace nlohmann;
 
+unsigned long long randcount = 0;
 
 /* ------------------------ Ordered array utility functions------------------------ */
 
@@ -85,6 +86,7 @@ vector<int> Utility::getDescendingArray(int n){
 
 // Returns a uniformly random double between 0.0 and 1.0
 double Utility::getRand(){
+    randcount++;
     return dist(rng);
 }
 
@@ -95,7 +97,8 @@ int Utility::getRand(int begin, int end){
 
 // Returns a random integer from an array of ints.
 int Utility::getRand(std::vector<int> &vec){
-    return vec[Utility::getRand(0, vec.size())];
+    int idx = Utility::getRand(0, vec.size());
+    return vec[idx];
 }
 
 int Utility::getConditionalBit(int counter0, int counter1, int max){

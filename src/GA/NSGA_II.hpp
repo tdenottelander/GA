@@ -16,10 +16,10 @@
 class NSGA_II : public SimpleGA {
 public:
     NSGA_II(FitnessFunction * fitFunc);
-    NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, bool mutation, bool visualize = false);
+    NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, float mutationProbability);
     float crossoverProbability;
-    bool doMutation;
-    bool visualize = false;
+    float mutationProbability;
+    
     void round() override;
     
     std::vector<Individual> parentPop;
