@@ -292,6 +292,8 @@ void setOptimizer(const char * argv[], int i){
         ga = new NSGA_II(fitFunc, variation, 0.9, (1.0f / fitFunc->totalProblemLength));
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
+    } else if (strcmp(argv[i], "RSUSS") == 0){
+        ga = new MO_RS(fitFunc, true);
     } else if (strcmp(argv[i], "MO-LS") == 0){
         ga = new MO_LS(fitFunc);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){

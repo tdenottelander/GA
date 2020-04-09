@@ -10,31 +10,26 @@
 
 using namespace std;
 
-MO_RS::MO_RS (FitnessFunction * fitFunc, bool adapted) : GA(fitFunc), adapted(adapted){
+MO_RS::MO_RS (FitnessFunction * fitFunc, bool RSUSS) : GA(fitFunc), RSUSS(RSUSS){
     preventIMS = true;
     isRandomSearchAlgorithm = true;
 }
 
 void MO_RS::round(){
-    vector<int> alphabet = fitFunc_ptr->problemType->alphabet;
+    Individual &ind = population[0];
     
-    for (int i = 0; i < population.size(); i++){
-        if (adapted){
-            adaptedInitializeIndividual(population[i]);
-        } else {
-            population[i].initialize(alphabet);
-        }
-        fitFunc_ptr->evaluate(population[i]);
-        fitFunc_ptr->updateElitistArchive(&population[i]);
-        if(fitFunc_ptr->isDone()){
-            break;
-        }
+    if (RSUSS){
+        RSUSSInitialize(ind);
+    } else {
+        ind.initialize(fitFunc_ptr->problemType->alphabet);
     }
+    fitFunc_ptr->evaluate(ind);
+    fitFunc_ptr->updateElitistArchive(&ind);
     
     roundsCount++;
 }
 
-void MO_RS::adaptedInitializeIndividual(Individual &ind){
+void MO_RS::RSUSSInitialize(Individual &ind){
     int layersToFill = Utility::getRand(1, fitFunc_ptr->totalProblemLength + 1);
     vector<int> shuffledIndices = Utility::getRandomlyPermutedArrayV2(fitFunc_ptr->totalProblemLength);
     for (int i = 0; i < layersToFill; i++){
@@ -50,5 +45,9 @@ GA* MO_RS::clone() const {
 }
 
 string MO_RS::id() {
-    return "MO-RandomSearch";
+    if (RSUSS){
+        return "RSUSS";
+    } else {
+        return "MO-RS";
+    }
 }

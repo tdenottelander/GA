@@ -14,10 +14,10 @@
 
 class MO_RS : public GA {
 public:
-    MO_RS (FitnessFunction * fitFunc, bool adapted = false);
-    bool adapted;
+    MO_RS (FitnessFunction * fitFunc, bool RSUSS = false);
+    bool RSUSS;
     void round() override;
-    void adaptedInitializeIndividual(Individual &ind);
+    void RSUSSInitialize(Individual &ind);
     GA* clone() const override;
     std::string id() override;
 };
