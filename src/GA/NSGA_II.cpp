@@ -10,9 +10,14 @@
 
 using namespace std;
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, true, false){}
+NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, (1.0f / fitFunc->totalProblemLength)){}
 
-NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, bool mutation, bool visualize) : SimpleGA(fitFunc, var, NULL), crossoverProbability(crossoverProbability), doMutation(mutation), visualize(visualize) {
+NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, float mutationProbability) : SimpleGA(fitFunc, var, NULL),
+    crossoverProbability(crossoverProbability),
+    mutationProbability(mutationProbability) {
+        cout << "Variation: " << var->id() << endl;
+        cout << "CrossoverProbability: " << crossoverProbability << endl;
+        cout << "MutationProbability: " << mutationProbability << endl;
 }
 
 void NSGA_II::round() {
@@ -21,7 +26,6 @@ void NSGA_II::round() {
         sortedPopulation = nonDominatedSorting(population);
         fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
         parentPop = truncate(sortedPopulation);
-        if(visualize) draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
     }
     
     // Do tournament selection on the truncated parent population to create a child population
@@ -43,19 +47,6 @@ void NSGA_II::round() {
     // Select Pt by truncating based on rank and crowding distance
     parentPop = truncate(sortedPopulation);
     population = parentPop;
-    
-    if(visualize) draw2DVisualization(population, fitFunc_ptr->optimum[0]+1, fitFunc_ptr->optimum[1]+1);
-    
-    // Update elitist archive with the best front of the sorted population
-    bool updated = fitFunc_ptr->updateElitistArchive(sortedPopulation[0]);
-    if (updated){
-        noAdditionToElitistArchiveCount = 0;
-    } else {
-        noAdditionToElitistArchiveCount++;
-        if (noAdditionToElitistArchiveCount >= 10){
-//            converged = true;
-        }
-    }
     
     roundsCount++;
 }
@@ -84,7 +75,7 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
     }
     
     // Put a pointer to every individual in a pool that we can iterate over and modify.
-    list<Individual*> pool;
+    vector<Individual*> pool;
     for (int i = 0; i < population.size(); i++){
         pool.push_back(&population[i]);
     }
@@ -94,15 +85,15 @@ vector<vector<Individual*>> NSGA_II::nonDominatedSorting (vector<Individual> &po
     int individualCount = 0;
     // See which individuals have domination count 0. Put these in the same front.
     while (!pool.empty()) {
-        list<Individual*> remainder_pool;
+        vector<Individual*> remainder_pool;
         vector<Individual*> front;
-        for (auto it = pool.begin(); it != pool.end(); it++){
-            if((*it)->dominationCount == 0){
-                (*it)->front = frontIdx;
-                front.push_back(*it);
+        for (int i = 0; i < pool.size(); i++){
+            if(pool[i]->dominationCount == 0){
+                pool[i]->front = frontIdx;
+                front.push_back(pool[i]);
                 individualCount++;
             } else {
-                remainder_pool.push_back(*it);
+                remainder_pool.push_back(pool[i]);
             }
         }
         
@@ -275,7 +266,8 @@ vector<Individual> NSGA_II::truncate(vector<vector<Individual*>> sortedPopulatio
         CrowdingDistanceSorting(front);
         for (int i = 0; i < front.size(); i++){
             parentPop.push_back(front[i]->copy());
-            if (++individualsAdded == populationSize){
+            individualsAdded++;
+            if (individualsAdded == populationSize){
                 return parentPop;
             }
         }
@@ -318,8 +310,7 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
 }
 
 void NSGA_II::mutation(vector<Individual> &children){
-    float mutationFactor = 1.0f / children[0].genotype.size();
-    Variation::mutate(children, mutationFactor, fitFunc_ptr->problemType->alphabet);
+    Variation::mutate(children, mutationProbability, fitFunc_ptr->problemType->alphabet);
 }
 
 vector<Individual> NSGA_II::merge(vector<Individual> &parentPop, vector<Individual> &childPop){
@@ -334,13 +325,9 @@ vector<Individual> NSGA_II::merge(vector<Individual> &parentPop, vector<Individu
 }
 
 bool NSGA_II::isDiverse() {
-    if (doMutation){
-        return true;
-    } else {
-        return GA::isDiverse();
-    }
+    // Since there is mutation in this algorithm, diversity will always be ensured.
+    return true;
 }
-
 
 GA* NSGA_II::clone() const {
     return new NSGA_II(static_cast<const NSGA_II&>(*this));

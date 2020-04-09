@@ -289,7 +289,7 @@ void setOptimizer(const char * argv[], int i){
         if (variation == NULL){
             variation = new TwoPointCrossover();
         }
-        ga = new NSGA_II(fitFunc, variation, 0.9, true);
+        ga = new NSGA_II(fitFunc, variation, 0.9, (1.0f / fitFunc->totalProblemLength));
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "MO-LS") == 0){
