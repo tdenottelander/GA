@@ -282,6 +282,11 @@ ${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o: src/MO-GOMEA/MO_GOMEA.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o src/MO-GOMEA/MO_GOMEA.cpp
 
+${OBJECTDIR}/src/NSGA-II/nsga2r.o: src/NSGA-II/nsga2r.cpp
+	${MKDIR} -p ${OBJECTDIR}/src/NSGA-II
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/NSGA-II/nsga2r.o src/NSGA-II/nsga2r.cpp
+
 ${OBJECTDIR}/src/Selection/Selection.o: src/Selection/Selection.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Selection
 	${RM} "$@.d"
