@@ -71,7 +71,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/GA/SimpleGA.o \
 	${OBJECTDIR}/src/Individual/Individual.o \
 	${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o \
-	${OBJECTDIR}/src/NSGA-II/nsga2r.o \
 	${OBJECTDIR}/src/Selection/Selection.o \
 	${OBJECTDIR}/src/Util/SolutionLibrary.o \
 	${OBJECTDIR}/src/Util/Utility.o \
@@ -106,212 +105,207 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/tomga: ${OBJECTFILES}
 ${OBJECTDIR}/src/Analysis/GreedyAnalysis.o: src/Analysis/GreedyAnalysis.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Analysis
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Analysis/GreedyAnalysis.o src/Analysis/GreedyAnalysis.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Analysis/GreedyAnalysis.o src/Analysis/GreedyAnalysis.cpp
 
 ${OBJECTDIR}/src/Analysis/LocalSearchAnalysis.o: src/Analysis/LocalSearchAnalysis.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Analysis
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Analysis/LocalSearchAnalysis.o src/Analysis/LocalSearchAnalysis.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Analysis/LocalSearchAnalysis.o src/Analysis/LocalSearchAnalysis.cpp
 
 ${OBJECTDIR}/src/FOS/FOS.o: src/FOS/FOS.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/FOS
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FOS/FOS.o src/FOS/FOS.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FOS/FOS.o src/FOS/FOS.cpp
 
 ${OBJECTDIR}/src/FOS/LearnedLTFOS.o: src/FOS/LearnedLTFOS.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/FOS
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FOS/LearnedLTFOS.o src/FOS/LearnedLTFOS.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FOS/LearnedLTFOS.o src/FOS/LearnedLTFOS.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK.o: src/Fitness/ARK/ARK.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK.o src/Fitness/ARK/ARK.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK.o src/Fitness/ARK/ARK.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK1.o: src/Fitness/ARK/ARK1.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK1.o src/Fitness/ARK/ARK1.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK1.o src/Fitness/ARK/ARK1.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK2.o: src/Fitness/ARK/ARK2.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK2.o src/Fitness/ARK/ARK2.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK2.o src/Fitness/ARK/ARK2.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK3.o: src/Fitness/ARK/ARK3.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK3.o src/Fitness/ARK/ARK3.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK3.o src/Fitness/ARK/ARK3.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK4.o: src/Fitness/ARK/ARK4.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK4.o src/Fitness/ARK/ARK4.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK4.o src/Fitness/ARK/ARK4.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK5.o: src/Fitness/ARK/ARK5.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK5.o src/Fitness/ARK/ARK5.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK5.o src/Fitness/ARK/ARK5.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK6.o: src/Fitness/ARK/ARK6.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK6.o src/Fitness/ARK/ARK6.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK6.o src/Fitness/ARK/ARK6.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK7.o: src/Fitness/ARK/ARK7.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK7.o src/Fitness/ARK/ARK7.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK7.o src/Fitness/ARK/ARK7.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK8.o: src/Fitness/ARK/ARK8.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK8.o src/Fitness/ARK/ARK8.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK8.o src/Fitness/ARK/ARK8.cpp
 
 ${OBJECTDIR}/src/Fitness/ARK/ARK_Online.o: src/Fitness/ARK/ARK_Online.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/ARK
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK_Online.o src/Fitness/ARK/ARK_Online.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ARK/ARK_Online.o src/Fitness/ARK/ARK_Online.cpp
 
 ${OBJECTDIR}/src/Fitness/FitnessFunction.o: src/Fitness/FitnessFunction.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/FitnessFunction.o src/Fitness/FitnessFunction.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/FitnessFunction.o src/Fitness/FitnessFunction.cpp
 
 ${OBJECTDIR}/src/Fitness/MO/LOTZ.o: src/Fitness/MO/LOTZ.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/MO
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/LOTZ.o src/Fitness/MO/LOTZ.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/LOTZ.o src/Fitness/MO/LOTZ.cpp
 
 ${OBJECTDIR}/src/Fitness/MO/MAXCUT.o: src/Fitness/MO/MAXCUT.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/MO
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/MAXCUT.o src/Fitness/MO/MAXCUT.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/MAXCUT.o src/Fitness/MO/MAXCUT.cpp
 
 ${OBJECTDIR}/src/Fitness/MO/TrapInverseTrap.o: src/Fitness/MO/TrapInverseTrap.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/MO
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/TrapInverseTrap.o src/Fitness/MO/TrapInverseTrap.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/TrapInverseTrap.o src/Fitness/MO/TrapInverseTrap.cpp
 
 ${OBJECTDIR}/src/Fitness/MO/ZeroMaxOneMax.o: src/Fitness/MO/ZeroMaxOneMax.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness/MO
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/ZeroMaxOneMax.o src/Fitness/MO/ZeroMaxOneMax.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/MO/ZeroMaxOneMax.o src/Fitness/MO/ZeroMaxOneMax.cpp
 
 ${OBJECTDIR}/src/Fitness/NK.o: src/Fitness/NK.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/NK.o src/Fitness/NK.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/NK.o src/Fitness/NK.cpp
 
 ${OBJECTDIR}/src/Fitness/ProblemType.o: src/Fitness/ProblemType.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ProblemType.o src/Fitness/ProblemType.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/ProblemType.o src/Fitness/ProblemType.cpp
 
 ${OBJECTDIR}/src/Fitness/Trap.o: src/Fitness/Trap.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Fitness
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/Trap.o src/Fitness/Trap.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Fitness/Trap.o src/Fitness/Trap.cpp
 
 ${OBJECTDIR}/src/GA/GA.o: src/GA/GA.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GA.o src/GA/GA.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GA.o src/GA/GA.cpp
 
 ${OBJECTDIR}/src/GA/GOM.o: src/GA/GOM.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GOM.o src/GA/GOM.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GOM.o src/GA/GOM.cpp
 
 ${OBJECTDIR}/src/GA/GOM_LS.o: src/GA/GOM_LS.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GOM_LS.o src/GA/GOM_LS.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/GOM_LS.o src/GA/GOM_LS.cpp
 
 ${OBJECTDIR}/src/GA/LocalSearch.o: src/GA/LocalSearch.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearch.o src/GA/LocalSearch.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearch.o src/GA/LocalSearch.cpp
 
 ${OBJECTDIR}/src/GA/LocalSearchBase.o: src/GA/LocalSearchBase.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearchBase.o src/GA/LocalSearchBase.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearchBase.o src/GA/LocalSearchBase.cpp
 
 ${OBJECTDIR}/src/GA/LocalSearchStochastic.o: src/GA/LocalSearchStochastic.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearchStochastic.o src/GA/LocalSearchStochastic.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/LocalSearchStochastic.o src/GA/LocalSearchStochastic.cpp
 
 ${OBJECTDIR}/src/GA/MO_LS.o: src/GA/MO_LS.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/MO_LS.o src/GA/MO_LS.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/MO_LS.o src/GA/MO_LS.cpp
 
 ${OBJECTDIR}/src/GA/MO_RS.o: src/GA/MO_RS.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/MO_RS.o src/GA/MO_RS.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/MO_RS.o src/GA/MO_RS.cpp
 
 ${OBJECTDIR}/src/GA/NSGA_II.o: src/GA/NSGA_II.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/NSGA_II.o src/GA/NSGA_II.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/NSGA_II.o src/GA/NSGA_II.cpp
 
 ${OBJECTDIR}/src/GA/RandomSearch.o: src/GA/RandomSearch.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/RandomSearch.o src/GA/RandomSearch.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/RandomSearch.o src/GA/RandomSearch.cpp
 
 ${OBJECTDIR}/src/GA/RoundSchedule.o: src/GA/RoundSchedule.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/RoundSchedule.o src/GA/RoundSchedule.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/RoundSchedule.o src/GA/RoundSchedule.cpp
 
 ${OBJECTDIR}/src/GA/SimpleGA.o: src/GA/SimpleGA.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/GA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/SimpleGA.o src/GA/SimpleGA.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/GA/SimpleGA.o src/GA/SimpleGA.cpp
 
 ${OBJECTDIR}/src/Individual/Individual.o: src/Individual/Individual.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Individual
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Individual/Individual.o src/Individual/Individual.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Individual/Individual.o src/Individual/Individual.cpp
 
 ${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o: src/MO-GOMEA/MO_GOMEA.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/MO-GOMEA
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o src/MO-GOMEA/MO_GOMEA.cpp
-
-${OBJECTDIR}/src/NSGA-II/nsga2r.o: src/NSGA-II/nsga2r.cpp
-	${MKDIR} -p ${OBJECTDIR}/src/NSGA-II
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/NSGA-II/nsga2r.o src/NSGA-II/nsga2r.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MO-GOMEA/MO_GOMEA.o src/MO-GOMEA/MO_GOMEA.cpp
 
 ${OBJECTDIR}/src/Selection/Selection.o: src/Selection/Selection.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Selection
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Selection/Selection.o src/Selection/Selection.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Selection/Selection.o src/Selection/Selection.cpp
 
 ${OBJECTDIR}/src/Util/SolutionLibrary.o: src/Util/SolutionLibrary.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Util
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Util/SolutionLibrary.o src/Util/SolutionLibrary.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Util/SolutionLibrary.o src/Util/SolutionLibrary.cpp
 
 ${OBJECTDIR}/src/Util/Utility.o: src/Util/Utility.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Util
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Util/Utility.o src/Util/Utility.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Util/Utility.o src/Util/Utility.cpp
 
 ${OBJECTDIR}/src/Variation/Variation.o: src/Variation/Variation.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/Variation
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Variation/Variation.o src/Variation/Variation.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Variation/Variation.o src/Variation/Variation.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/NSGA-II -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
+	$(COMPILE.cc) -O2 -Idependencies/json/include -Isrc/Analysis -Isrc/FOS -Isrc/Fitness -Isrc/GA -Isrc/Individual -Isrc/MO-GOMEA -Isrc/Util -Isrc/Variation -Isrc/Fitness/ARK -Isrc/Fitness/MO  -Isrc/Selection -I/usr/include/python3.6m -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
 
 # Subprojects
 .build-subprojects:

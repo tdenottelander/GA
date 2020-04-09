@@ -101,11 +101,6 @@
           <itemPath>src/MO-GOMEA/MO_GOMEA.cpp</itemPath>
           <itemPath>src/MO-GOMEA/MO_GOMEA.hpp</itemPath>
         </logicalFolder>
-        <logicalFolder name="NSGA-II" displayName="NSGA-II" projectFiles="true">
-          <itemPath>src/NSGA-II/global.h</itemPath>
-          <itemPath>src/NSGA-II/nsga2r.cpp</itemPath>
-          <itemPath>src/NSGA-II/rand.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="Selection" displayName="Selection" projectFiles="true">
           <itemPath>src/Selection/Selection.cpp</itemPath>
           <itemPath>src/Selection/Selection.hpp</itemPath>
@@ -157,7 +152,6 @@
             <pElem>src/GA</pElem>
             <pElem>src/Individual</pElem>
             <pElem>src/MO-GOMEA</pElem>
-            <pElem>src/NSGA-II</pElem>
             <pElem>src/Util</pElem>
             <pElem>src/Variation</pElem>
             <pElem>src/Fitness/ARK</pElem>
@@ -321,12 +315,6 @@
       </item>
       <item path="src/MO-GOMEA/MO_GOMEA.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/NSGA-II/global.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/NSGA-II/nsga2r.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/NSGA-II/rand.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/Selection/Selection.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Selection/Selection.hpp" ex="false" tool="3" flavor2="0">
@@ -367,7 +355,6 @@
             <pElem>src/GA</pElem>
             <pElem>src/Individual</pElem>
             <pElem>src/MO-GOMEA</pElem>
-            <pElem>src/NSGA-II</pElem>
             <pElem>src/Util</pElem>
             <pElem>src/Variation</pElem>
             <pElem>src/Fitness/ARK</pElem>
@@ -537,12 +524,6 @@
       <item path="src/MO-GOMEA/MO_GOMEA.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/MO-GOMEA/MO_GOMEA.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/NSGA-II/global.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/NSGA-II/nsga2r.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/NSGA-II/rand.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Selection/Selection.cpp" ex="false" tool="1" flavor2="0">
       </item>
