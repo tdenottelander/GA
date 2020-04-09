@@ -35,7 +35,6 @@ public:
     std::vector<Individual> truncate (std::vector<std::vector<Individual*>> sortedCandidates);
     std::vector<Individual> selection(std::vector<Individual> parentPop);
     void mutation(std::vector<Individual> &children);
-    void mutate(Individual &ind, float probability);
     std::vector<Individual> merge (std::vector<Individual> &parentPop, std::vector<Individual> &childPop);
     
     

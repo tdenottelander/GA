@@ -2846,7 +2846,7 @@ void MO_GOMEA::mutateSolution(char *solution, int lt_factor_index, int cluster_i
             int currentValue = solution[parameter_index];
             int newValue;
             do {
-                newValue = Utility::getRand(0, 3);
+                newValue = Utility::getRand(fitFunc->problemType->alphabet);
             } while (newValue == currentValue);
             solution[parameter_index] = newValue;
         }

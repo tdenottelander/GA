@@ -76,7 +76,15 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-e 1000000 -I 1 -f ark7 14 1 -v 2p -o SimpleGA -r 10 -M 0 -x 0 -q 0"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-e 10000 -f ark7 14 2 -v 2p -o NSGA-II -r 1 -q 1 -M 1"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-e 10000 -f ark7 14 1 -v 2p -o SimpleGA -r 1 -q 1 -M 0"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-S 1 -e 10000 -f ark-online 17 2 -c entire_pareto -v 2p -o NSGA-II -I 0 -p 200 -r 5 -a 1"

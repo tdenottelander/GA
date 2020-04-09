@@ -23,6 +23,9 @@ public:
     virtual std::pair<Individual, Individual> crossover(Individual &ind1, Individual &ind2);
     virtual void display();
     virtual std::string id();
+    
+    static void mutate(Individual &ind, float mutationRate, std::vector<int> alphabet);
+    static void mutate(std::vector<Individual> &pop, float mutationRate, std::vector<int> alphabet);
 };
 
 class UnivariateCrossover : public Variation {

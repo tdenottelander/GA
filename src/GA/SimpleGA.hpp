@@ -24,8 +24,6 @@ public:
     GA* clone() const override;
     
     std::string id() override;
-    
-    void mutate(std::vector<Individual> &pop);
 };
 
 #endif /* SimpleGA_hpp */

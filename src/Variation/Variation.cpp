@@ -48,6 +48,25 @@ string Variation::id(){
     return "base";
 }
 
+void Variation::mutate(Individual &ind, float mutationRate, vector<int> alphabet){
+    for (int i = 0; i < ind.genotype.size(); i++){
+        if (Utility::getRand() < mutationRate){
+            int currentBit = ind.genotype[i];
+            int newBit = currentBit;
+            while (newBit == currentBit){
+                newBit = Utility::getRand(alphabet);
+            }
+            ind.genotype[i] = newBit;
+        }
+    }
+}
+
+void Variation::mutate(vector<Individual> &pop, float mutationRate, vector<int> alphabet){
+    for (int i = 0; i < pop.size(); i++){
+        mutate(pop[i], mutationRate, alphabet);
+    }
+}
+
 
 /* ------------------------ Univariate Crossover Variation ------------------------ */
 
