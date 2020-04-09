@@ -37,8 +37,6 @@ public:
     bool genotypeEquals(std::vector<int> &genotype);
     bool fitnessEquals(Individual &ind, float margin = 0.000001);
     bool dominates(Individual &indOther);
-    bool dominates(Individual &indOther, std::vector<float> scalarization);
-    float scalarizeFitness(std::vector<float> scalarization);
     void clearMOinformation();
     
     static std::string toString(std::vector<int> &genotype);
@@ -48,7 +46,6 @@ public:
     static std::vector<int> removeIdentities(std::vector<int> &genotype, int identityLayerIndex);
     static bool genotypeEquals(std::vector<int> &g1, std::vector<int> &g2);
     static bool dominates(Individual &ind1, Individual &ind2);
-    static bool dominates(Individual &ind1, Individual &ind2, std::vector<float> scalarization);
 };
 
 #endif /* Individual_hpp */

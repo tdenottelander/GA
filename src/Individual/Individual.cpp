@@ -114,18 +114,6 @@ bool Individual::dominates(Individual &indOther){
     return dominates(*this, indOther);
 }
 
-bool Individual::dominates(Individual &indOther, vector<float> scalarization){
-    return dominates(*this, indOther, scalarization);
-}
-
-float Individual::scalarizeFitness(vector<float> scalarization){
-    float scalarizedFitness = 0.0;
-    for (int obj = 0; obj < fitness.size(); obj++){
-        scalarizedFitness += (scalarization[obj] * fitness[obj]);
-    }
-    return scalarizedFitness;
-}
-
 void Individual::clearMOinformation(){
     dominationCount = 0;
     dominationList.clear();
@@ -213,12 +201,4 @@ bool Individual::dominates(Individual &ind1, Individual &ind2){
         }
     }
     return domination;
-}
-
-// Returns true if [ind1] dominates [ind2]
-// Domination is based on the difference between scalarized fitness of the individuals.
-bool Individual::dominates(Individual &ind1, Individual &ind2, vector<float> scalarization){
-    float scalarizedFitness1 = ind1.scalarizeFitness(scalarization);
-    float scalarizedFitness2 = ind2.scalarizeFitness(scalarization);
-    return scalarizedFitness1 > scalarizedFitness2;
 }

@@ -32,6 +32,7 @@
 class MO_LS : public GA {
 public:
     enum class NewScalarization {RANDOM, SCALARIZATIONSPACE, OBJECTIVESPACE};
+    MO_LS(FitnessFunction * fitfunc);
     MO_LS(FitnessFunction * fitfunc, Utility::Order order, bool loop, NewScalarization newScalarization);
     Utility::Order LS_order;
     bool loop;
@@ -41,13 +42,17 @@ public:
     std::vector<std::pair<std::pair<float, float>, std::vector<float>>> LS_archive;
     
     void round() override;
+    void performLocalSearch(Individual &ind, std::vector<float> scalarization);
+    bool dominates(Individual &indThis, Individual &indOther, std::vector<float> scalarization);
+    float scalarizeFitness(Individual &ind, std::vector<float> scalarization);
+    float getNewScalarizationTarget();
+    
     void updateLSArchive(std::pair<float, float> scalarization, std::vector<float> objectiveValues);
     bool equalObjectiveValues(std::vector<float> &o1, std::vector<float> &o2);
-    void performLocalSearch(Individual &ind, std::vector<float> scalarization);
-    float getNewScalarizationTarget();
     
     GA* clone() const override;
     std::string id() override;
+    std::string NewScalarizationToString(NewScalarization newScalarization);
 };
 
 #endif /* MO_LS_hpp */

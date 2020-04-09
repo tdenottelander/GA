@@ -10,89 +10,69 @@
 
 using namespace std;
 
-extern int populationInitializationMode; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+// 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+extern int populationInitializationMode;
+extern bool saveLSArchiveResults;
 extern nlohmann::json JSON_MO_info;
 extern nlohmann::json JSON_LS_Results;
-extern bool saveLSArchiveResults;
+
+MO_LS::MO_LS (FitnessFunction * fitfunc) : MO_LS::MO_LS (fitfunc, Utility::Order::RANDOM, false, NewScalarization::RANDOM) {};
 
 MO_LS::MO_LS (FitnessFunction * fitfunc, Utility::Order order, bool loop, NewScalarization newScalarization) : GA(fitfunc), LS_order(order), loop(loop), newScalarization(newScalarization) {
     isLocalSearchAlgorithm = true;
+    cout << "traversal order: " << Utility::orderToID(order) << endl;
+    cout << "loop: " << loop << endl;
+    cout << "NewScalarization: " << NewScalarizationToString(newScalarization) << endl;
+
 }
 
 void MO_LS::round(){
     if(roundsCount == 0){
-        if(populationInitializationMode == 1){
-            pair<float, float> scalarization = {0.0f, 1.0f};
-//            cout << "New individual found: " << population[0].toString() << "  for scalarization " << scalarization.first << "|" << scalarization.second << endl;
-            updateLSArchive(scalarization, population[0].fitness);
-        } else {
-            if (newScalarization != NewScalarization::RANDOM)
-                scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
+        // If we do not search for random scalarizations, first search in both extreme directions.
+        if (newScalarization != NewScalarization::RANDOM){
+            scalarizationTargets.push(0.0f); // In the direction of efficient network (MMACS)
+            scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation
         }
-        
-        if (newScalarization != NewScalarization::RANDOM)
-            scalarizationTargets.push(1.0f); // In the direction of good predicting network (validation accuracy)
+
+        // Do this if the all-identity solution is added beforehand:
+        if (populationInitializationMode == 1){
+            if (!scalarizationTargets.empty()) scalarizationTargets.pop();
+            updateLSArchive({0.0f, 1.0f}, population[0].fitness);
+        }
     }
 
-    for (Individual &ind : population){
-        if (scalarizationTargets.empty()){
-            scalarizationTargets.push(getNewScalarizationTarget());
-        }
-        float scalarization = scalarizationTargets.front();
-        scalarizationTargets.pop();
-        ind.initialize(fitFunc_ptr->problemType->alphabet);
-        fitFunc_ptr->evaluate(ind);
-//        cout << "Performing LS in the direction of [" << scalarization << ", " << 1.0f - scalarization << "]" << endl;
-        performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
+    // Getting the next scalarization value
+    if (scalarizationTargets.empty()){
+        scalarizationTargets.push(getNewScalarizationTarget());
+    }
+    float scalarization = scalarizationTargets.front();
+    scalarizationTargets.pop();
+
+    // Initialize individual and evaluate
+    Individual &ind = population[0];
+    ind.initialize(fitFunc_ptr->problemType->alphabet);
+    fitFunc_ptr->evaluate(ind);
+
+    // Perform local search
+    performLocalSearch(ind, vector<float>{scalarization, 1.0f - scalarization});
+
+    // Add scalarization to the archive
+    if (saveLSArchiveResults){
         pair<float,float> sc {scalarization, 1.0f - scalarization};
-//        cout << "New individual found: " << ind.toString() << "  for scalarization " << sc.first << "|" << sc.second << endl;
-        if (saveLSArchiveResults){
-             updateLSArchive(sc, ind.fitness);
-             JSON_LS_Results["LS_converged_solutions"] = LS_archive.size();
-             JSON_LS_Results["LS_archive"] = LS_archive;
-        }
+        updateLSArchive(sc, ind.fitness);
+        JSON_LS_Results["LS_converged_solutions"] = LS_archive.size();
+        JSON_LS_Results["LS_archive"] = LS_archive;
     }
 
     roundsCount++;
 }
 
-void MO_LS::updateLSArchive(pair<float, float> scalarization, vector<float> objectiveValues){
-    /* SETTING THE SCALARIZATION VALUE AS THE MEAN OF TWO SOLUTIONS WITH IDENTICAL OBJECTIVE VALUES
-    for (int i = 0; i < old_archive.size(); i++){
-        if(equalObjectiveValues(objectiveValues, old_archive[i].second)){
-            float meanScalarization = (scalarization.first + old_archive[i].first.first) / 2;
-            pair<float, float> newScalarization {meanScalarization, 1.0f - meanScalarization};
-            old_archive.erase(old_archive.begin() + i);
-            old_archive.push_back(pair<pair<float, float>, vector<float>> {newScalarization, objectiveValues});
-            cout << "Found same fitness with other scalarization:         F: " << old_archive[i].second[0] << "|" << old_archive[i].second[1] << "   scalarization: " << old_archive[i].first.first << "|" << old_archive[i].first.second << ".... new scalarization: " << newScalarization.first << "|" << newScalarization.second << endl;
-            return;
-        }
-    }
-     */
-    LS_archive.push_back(pair<pair<float, float>, vector<float>> {scalarization, objectiveValues});
-}
-
-bool MO_LS::equalObjectiveValues(std::vector<float> &o1, std::vector<float> &o2){
-    if (o1.size() != o2.size()){
-        cout << "Objective values do not have the same size" << endl;
-        return false;
-    }
-    for (int i = 0; i < o1.size(); i++){
-        if (o1[i] != o2[i]){
-            return false;
-        }
-    }
-    return true;
-}
-
 void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
     bool changed = true;
-//    cout << "Starting Individual: " << ind.toString() << endl;
     do {
         changed = false;
         vector<int> randIndexArray = Utility::getOrderedArray(ind.genotype.size(), LS_order);
         for (int i : randIndexArray){
-//            Individual originalIndividual = ind.copy();
             Individual copiedIndividual = ind.copy();
             
             // It does not matter in which order we loop over the available layers, because we search exhaustively and two different layers will have epsilon chance to result in the same objective values.
@@ -104,15 +84,31 @@ void MO_LS::performLocalSearch(Individual &ind, vector<float> scalarization){
                 }
                 
                 fitFunc_ptr->evaluate(copiedIndividual);
-                if (copiedIndividual.dominates(ind, scalarization)){
+                if (dominates(copiedIndividual, ind, scalarization)){
                     ind.genotype[i] = bit;
                     ind.fitness = copiedIndividual.fitness;
-//                    cout << "Improvement: " << ind.toString() << endl;
                     changed = true;
                 }
             }
         }
     } while (changed && loop);
+}
+
+// Returns true if [indThis] dominates [indOther]
+// Domination is based on the difference between scalarized fitness of the individuals.
+bool MO_LS::dominates(Individual &indThis, Individual &indOther, vector<float> scalarization){
+    float scalarizedFitnessThis =scalarizeFitness(indThis, scalarization);
+    float scalarizedFitnessOther = scalarizeFitness(indOther, scalarization);
+    return scalarizedFitnessThis > scalarizedFitnessOther;
+}
+
+// Scalarizes an individual's fitness using the scalarization values.
+float MO_LS::scalarizeFitness(Individual &ind, vector<float> scalarization){
+    float scalarizedFitness = 0.0;
+    for (int obj = 0; obj < ind.fitness.size(); obj++){
+        scalarizedFitness += (scalarization[obj] * ind.fitness[obj]);
+    }
+    return scalarizedFitness;
 }
 
 float MO_LS::getNewScalarizationTarget(){
@@ -150,6 +146,35 @@ float MO_LS::getNewScalarizationTarget(){
     }
 }
 
+void MO_LS::updateLSArchive(pair<float, float> scalarization, vector<float> objectiveValues){
+    /* SETTING THE SCALARIZATION VALUE AS THE MEAN OF TWO SOLUTIONS WITH IDENTICAL OBJECTIVE VALUES
+    for (int i = 0; i < old_archive.size(); i++){
+        if(equalObjectiveValues(objectiveValues, old_archive[i].second)){
+            float meanScalarization = (scalarization.first + old_archive[i].first.first) / 2;
+            pair<float, float> newScalarization {meanScalarization, 1.0f - meanScalarization};
+            old_archive.erase(old_archive.begin() + i);
+            old_archive.push_back(pair<pair<float, float>, vector<float>> {newScalarization, objectiveValues});
+            cout << "Found same fitness with other scalarization:         F: " << old_archive[i].second[0] << "|" << old_archive[i].second[1] << "   scalarization: " << old_archive[i].first.first << "|" << old_archive[i].first.second << ".... new scalarization: " << newScalarization.first << "|" << newScalarization.second << endl;
+            return;
+        }
+    }
+     */
+    LS_archive.push_back(pair<pair<float, float>, vector<float>> {scalarization, objectiveValues});
+}
+
+bool MO_LS::equalObjectiveValues(std::vector<float> &o1, std::vector<float> &o2){
+    if (o1.size() != o2.size()){
+        cout << "Objective values do not have the same size" << endl;
+        return false;
+    }
+    for (int i = 0; i < o1.size(); i++){
+        if (o1[i] != o2[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
 
 GA* MO_LS::clone() const {
     return new MO_LS(static_cast<const MO_LS&>(*this));
@@ -166,8 +191,17 @@ string MO_LS::id(){
     return ("MO-LS-" + loopString + "-" + dirString);
 }
 
-
-
+string MO_LS::NewScalarizationToString(NewScalarization newScalarization){
+    switch (newScalarization) {
+        case NewScalarization::RANDOM:
+            return "RANDOM";
+        case NewScalarization::SCALARIZATIONSPACE:
+            return "SCALARIZATIONSPACE";
+        case NewScalarization::OBJECTIVESPACE:
+            return "OBJECTIVESPACE";
+    }
+    return "UNDEFINED";
+}
 
 //LS_Archive::LS_Archive (bool combineEntries) : combineEntries(combineEntries) {}
 //

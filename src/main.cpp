@@ -293,19 +293,7 @@ void setOptimizer(const char * argv[], int i){
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "MO-LS") == 0){
-        bool loop = false; // Default
-        MO_LS::NewScalarization newScalarization = MO_LS::NewScalarization::RANDOM; // Default
-        if (argv[i+1][0] != '-'){
-            if (strcmp(argv[i+1], "loop") == 0)
-                loop = true;
-            int scalarization = stoi(argv[i+2]);
-            switch (scalarization) {
-                case 0: newScalarization = MO_LS::NewScalarization::OBJECTIVESPACE; break;
-                case 1: newScalarization = MO_LS::NewScalarization::RANDOM; break;
-                case 2: newScalarization = MO_LS::NewScalarization::SCALARIZATIONSPACE; break;
-            }
-        }
-        ga = new MO_LS(fitFunc, Utility::Order::RANDOM, loop, newScalarization);
+        ga = new MO_LS(fitFunc);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
     } else if (strcmp(argv[i], "GOM") == 0){
