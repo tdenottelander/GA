@@ -15,6 +15,11 @@ do
     touch queue/done.json
     rm queue/encoding.json
   else
+    # Create done.json if for some reason it is deleted for some other worker
+    if [ ! -f queue/done.json ]
+    then 
+      touch queue/done.json
+    fi
     echo "No encoding available right now. Sleeping for $1 seconds."
     echo ""
     sleep $1
