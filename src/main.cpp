@@ -71,6 +71,7 @@ string projectDir = "/export/scratch1/tdo/TomGA/";
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
+string queuelistDir = projectDir + "queue/";
 string writeDir;
 string path_JSON_MO_info;
 string path_JSON_SO_info;
@@ -286,6 +287,7 @@ void setOptimizer(const char * argv[], int i){
     Utility::Order order = getOrder(orderString);
 
     if (strcmp(argv[i], "NSGA-II") == 0){
+        mkdir(queuelistDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (variation == NULL){
             variation = new TwoPointCrossover();
         }

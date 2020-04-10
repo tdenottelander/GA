@@ -10,6 +10,8 @@
 
 using namespace std;
 
+extern string queuelistDir;
+
 NSGA_II::NSGA_II(FitnessFunction * fitFunc) : NSGA_II::NSGA_II(fitFunc, new TwoPointCrossover(), 0.9, (1.0f / fitFunc->totalProblemLength)){}
 
 NSGA_II::NSGA_II(FitnessFunction * fitFunc, Variation * var, float crossoverProbability, float mutationProbability) : SimpleGA(fitFunc, var, NULL),
@@ -33,6 +35,9 @@ void NSGA_II::round() {
     
     // Mutate the child population and evaluate all resulting individuals
     mutation(childPop);
+    
+    writePopToFile(childPop);
+    
     evaluateAll(childPop);
     if(fitFunc_ptr->isDone()){
         return;
@@ -322,6 +327,17 @@ vector<Individual> NSGA_II::merge(vector<Individual> &parentPop, vector<Individu
         mergedPop.push_back(childPop[i].copy());
     }
     return mergedPop;
+}
+
+void NSGA_II::writePopToFile(vector<Individual> &pop){
+    nlohmann::json main_json;
+    vector<vector<int>> population;
+    for (int i = 0; i < pop.size(); i++){
+        population.push_back(pop[pop.size() - i - 1].genotype);
+    }
+    main_json["encodings"] = population;
+    
+    Utility::write(main_json.dump(), queuelistDir, "queue.json");
 }
 
 bool NSGA_II::isDiverse() {

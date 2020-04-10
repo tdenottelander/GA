@@ -37,6 +37,7 @@ public:
     void mutation(std::vector<Individual> &children);
     std::vector<Individual> merge (std::vector<Individual> &parentPop, std::vector<Individual> &childPop);
     
+    void writePopToFile(std::vector<Individual> &pop);
     
     bool isDiverse() override;
     GA* clone() const override;
