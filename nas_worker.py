@@ -13,5 +13,6 @@ with open(encodings_fn) as json_file:
     encodings = data["encodings"]
     print("Encodings: ", encodings)
 
-for encoding in encodings:
+for i, encoding in enumerate(encodings):
+    print("-----------",i,"/",len(encodings),"-----------")
     nas_test.evaluate(encoding)
