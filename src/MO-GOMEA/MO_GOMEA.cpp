@@ -3347,6 +3347,18 @@ void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
             }
             
             array_of_number_of_generations[population_id]++;
+            
+            json IMS_information;
+            vector<int> popsizes;
+            vector<int> generation_counts;
+            for (int i = 0; i < 10; i++){
+                generation_counts.push_back(array_of_number_of_generations[i]);
+                popsizes.push_back((int)smallest_population_size * pow(2, i));
+            }
+            IMS_information["popsizes"] = popsizes;
+            IMS_information["generation_counts"] = generation_counts;
+            JSON_Run["IMS-information"] = IMS_information;
+            
             if(use_print_progress_to_screen)
                 printf("%d ", array_of_number_of_generations[population_id]);
 //            population_id++;
