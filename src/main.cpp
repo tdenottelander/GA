@@ -71,7 +71,7 @@ string projectDir = "/export/scratch1/tdo/TomGA/";
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
-string queuelistDir = projectDir + "queue/";
+string queuelistDir = "/export/scratch1/home/shared/GA/queue/";
 string writeDir;
 string path_JSON_MO_info;
 string path_JSON_SO_info;
