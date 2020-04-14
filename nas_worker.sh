@@ -12,10 +12,6 @@ do
     echo "New batch of encodings available"
     # Rename the encodingsfile
     mv queue/encodings.json queue/encodings_gpu$GPU.json
-  fi
-
-  if [ -f queue/encodings_gpu$GPU.json ]
-  then
 
     # Run python script here to evaluate the encoding
     python3 nas_worker.py queue/encodings_gpu$GPU.json
