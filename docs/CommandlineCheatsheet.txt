@@ -1,3 +1,9 @@
 rsync -vamr --include='**/*_ark8_cifar10/*.json' --include='*/' --exclude='*' tdo@ross.ls.cwi.nl:/export/scratch1/tdo/TomGA/data/ data/bench_cifar10_MO/
 
 python3 plotHyperVolume.py 2000 MO-GOMEA NSGA-II MO-LS MO-RS
+
+
+On Ross: To use add-ssh, you first need to execute:
+eval $(ssh-agent)
+Then it is possible to do add an ssh key:
+ssh-add ~/.ssh/tdo_meteor
