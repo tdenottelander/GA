@@ -130,7 +130,6 @@ TwoPointCrossover::TwoPointCrossover(){}
 pair<Individual, Individual> TwoPointCrossover::crossover(Individual &ind1, Individual &ind2){
     Individual newInd1 = ind1.copy();
     Individual newInd2 = ind2.copy();
-    // Tested and confirmed: Makes no difference to create new individuals instead of copying.
     
     // It is possible that the indices are the same. In that case, no crossover happens.
     // It is also possible for either index to be 0 or size()-1. In that case, it becomes one-point crossover.
@@ -235,40 +234,6 @@ string FOSCrossover::id() {
     return "fos";
 }
 
-
-/* ------------------------ ARk-6 Crossover ------------------------ */
-// Does one-point crossover, but the pivot is chosen to be one of the maxpooling positions.
-
-ARK6_Crossover::ARK6_Crossover(){}
-
-pair<Individual, Individual> ARK6_Crossover::crossover(Individual &ind1, Individual &ind2){
-    Individual newInd1 = ind1.copy();
-    Individual newInd2 = ind2.copy();
-    
-    vector<int> possibleSwapIndices = {4, 8, 12};
-    int randIdx = Utility::getRand(0, possibleSwapIndices.size());
-    int swapIndex = possibleSwapIndices[randIdx];
-    
-    for (int i = 0; i < swapIndex; i++){
-        newInd1.genotype[i] = ind2.genotype[i];
-        newInd2.genotype[i] = ind1.genotype[i];
-    }
-    
-    pair<Individual, Individual> result(newInd1, newInd2);
-    
-    return result;
-}
-
-void ARK6_Crossover::display() {
-    cout << "ARK-6 Crossover" << endl;
-}
-
-string ARK6_Crossover::id() {
-    return "ark6xo";
-}
-
-
-
 /* ------------------------ GOM Variation ------------------------ */
 
 GOM_Variation::GOM_Variation(bool forcedImprovement) : forcedImprovement(forcedImprovement) {
@@ -302,10 +267,7 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
     Individual o = ind.copy();
     bool changed = false;
     
-//    cout << "start\n";
     for (vector<int> subset : fos) {
-//        for (int i : subset) cout << i << " ";
-//        cout << endl;
         
         // Find a donor that is different than this individual.
         int donorIdx = indIdx;
@@ -330,8 +292,6 @@ Individual GOM_Variation::gom(Individual &ind, std::vector<Individual> &populati
             break;
         }
     }
-//    cout << "end\n";
-//    cout << endl;
     
     if(!fitfunc->optimumFound && !fitfunc->maxEvaluationsExceeded() && forcedImprovement && (!changed || o.counterNotChanged > (1 + log(popSize) / log(10)))){
         changed = gomWithEliteIndividual(o, b);

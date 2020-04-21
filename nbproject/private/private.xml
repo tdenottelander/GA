@@ -2,28 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <data xmlns="http://www.netbeans.org/ns/make-project-private/1">
         <activeConfTypeElem>1</activeConfTypeElem>
-        <activeConfIndexElem>0</activeConfIndexElem>
+        <activeConfIndexElem>1</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK.hpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK6.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK1.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/GA/NSGA_II.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK2.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK4.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK8.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/GA/RoundSchedule.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/main.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK5.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK_Online.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK8.hpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/GA/GA.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK3.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK7.cpp</file>
-            <file>file:/export/scratch1/tdo/TomGA/src/Fitness/ARK/ARK_Online.hpp</file>
+            <file>file:/Users/tomdenottelander/Stack/%23CS_MASTER/Afstuderen/projects/GA-test/GA/Makefile</file>
         </group>
     </open-files>
 </project-private>

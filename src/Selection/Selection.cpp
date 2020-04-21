@@ -116,7 +116,6 @@ Individual* TournamentSelection::tournament(vector<Individual *> selectedIndivid
             bestFitness = selectedIndividuals[i]->fitness[0];
         }
     }
-//    cout << "Winner is " << bestIndIdx << " with fitness " << bestFitness << "\n" << endl;
     return selectedIndividuals[bestIndIdx];
 }
 

@@ -19,12 +19,6 @@ LearnedLT_FOS::LearnedLT_FOS(ProblemType *problemType) : problemType(problemType
 
 vector<vector<int>> LearnedLT_FOS::getFOS(vector<Individual> &population){
     vector<vector<int>> fos = GenerateLinkageTreeFOS(population);
-    
-//    fos = FOSStructures::sortFOSMeanAscending(fos);
-//    fos = FOSStructures::boundFOS(fos, 1, 3);
-    
-//    FOSStructures::printFOS(fos);
-    
     return fos;
 }
 

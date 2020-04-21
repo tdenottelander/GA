@@ -17,7 +17,7 @@
 
 class SolutionLibrary{
 public:
-    enum class Type {DEFAULT, ARK_ONLINE, ARK_BENCHMARK};
+    enum class Type {DEFAULT, LARGE_SCALE, BENCHMARK};
 
     SolutionLibrary(Type = Type::DEFAULT);
     Type type;
@@ -27,8 +27,8 @@ public:
     std::vector<float> get(std::vector<int> &genotype);
     void clear();
     std::string hash(std::vector<int> &genotype);
-    std::string hash_ARK_BENCHMARK(std::vector<int> &genotype);
-    std::string hash_ARK_ONLINE(std::vector<int> &genotype);
+    std::string hash_BENCHMARK(std::vector<int> &genotype);
+    std::string hash_LARGESCALE(std::vector<int> &genotype);
     std::string hash_DEFAULT(std::vector<int> &genotype);
 };
 

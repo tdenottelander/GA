@@ -37,15 +37,15 @@ string SolutionLibrary::hash(vector<int> &genotype){
     switch (type) {
         case Type::DEFAULT:
             return hash_DEFAULT(genotype);
-        case Type::ARK_ONLINE:
-            return hash_ARK_ONLINE(genotype);
-        case Type::ARK_BENCHMARK:
-            return hash_ARK_BENCHMARK(genotype);
+        case Type::LARGE_SCALE:
+            return hash_LARGESCALE(genotype);
+        case Type::BENCHMARK:
+            return hash_BENCHMARK(genotype);
     }
     return "";
 }
 
-string SolutionLibrary::hash_ARK_BENCHMARK(vector<int> &genotype){
+string SolutionLibrary::hash_BENCHMARK(vector<int> &genotype){
     string res = "";
     for (int i = 0; i < genotype.size(); i++){
         if (i != 0 && (i % 4 == 0)){
@@ -58,7 +58,7 @@ string SolutionLibrary::hash_ARK_BENCHMARK(vector<int> &genotype){
     return res;
 }
 
-string SolutionLibrary::hash_ARK_ONLINE(vector<int> &genotype){
+string SolutionLibrary::hash_LARGESCALE(vector<int> &genotype){
     string res = "";
     for (int i = 0; i < genotype.size(); i++){
         if (i != 0 && ((i % 5 == 0) || (i % 5 == 4))){
@@ -157,7 +157,7 @@ string HashingFunctions::toString(vector<int> &genotype, string type){
     for (int i = 0; i < genotype.size(); i++){
         if (type == "default"){
             res += to_string(genotype[i]);
-        } else if (type == "ark-online"){
+        } else if (type == "largescale"){
             if (i != 0 && (i % 5 == 0) || (i % 5) == 4){
                 res += ".";
             }

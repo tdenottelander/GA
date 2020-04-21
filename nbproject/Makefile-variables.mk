@@ -7,21 +7,21 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-Linux
-CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
-CND_ARTIFACT_NAME_Debug=tomga
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/tomga
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=tomga.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/tomga.tar
+CND_PLATFORM_Debug=GNU-MacOSX
+CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
+CND_ARTIFACT_NAME_Debug=ga
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/ga
+CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
+CND_PACKAGE_NAME_Debug=ga.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/ga.tar
 # Release configuration
-CND_PLATFORM_Release=GNU-Linux
-CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
+CND_PLATFORM_Release=GNU-MacOSX
+CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX
 CND_ARTIFACT_NAME_Release=tomga
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/tomga
-CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=tomga.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/tomga.tar
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/tomga
+CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
+CND_PACKAGE_NAME_Release=ga.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/ga.tar
 #
 # include compiler specific variables
 #

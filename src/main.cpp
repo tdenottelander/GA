@@ -6,8 +6,6 @@
 //  Copyright © 2019 Tom den Ottelander. All rights reserved.
 //
 
-#include "GreedyAnalysis.hpp"
-
 #include <random>
 #include <iostream>
 #include <sys/stat.h>
@@ -16,43 +14,29 @@
 #include "Selection.hpp"
 #include "Variation.hpp"
 #include "FitnessFunction.hpp"
-#include "Trap.hpp"
 #include "ZeroMaxOneMax.hpp"
 #include "LOTZ.hpp"
 #include "TrapInverseTrap.hpp"
 #include "MAXCUT.hpp"
-#include "NK.hpp"
-#include "ARK.hpp"
-#include "ARK1.hpp"
-#include "ARK2.hpp"
-#include "ARK3.hpp"
-#include "ARK4.hpp"
-#include "ARK5.hpp"
-#include "ARK6.hpp"
-#include "ARK7.hpp"
-#include "ARK8.hpp"
-#include "ARK_Online.hpp"
+#include "Bench_CIFAR_base.hpp"
+#include "Bench_CIFAR100.hpp"
+#include "Bench_CIFAR10.hpp"
+#include "CIFAR_Largescale.hpp"
 #include "Utility.hpp"
 #include "RoundSchedule.hpp"
 #include "GA.hpp"
-#include "GOM.hpp"
-#include "GOM_LS.hpp"
+#include "GOMEA.hpp"
 #include "SimpleGA.hpp"
 #include "RandomSearch.hpp"
 #include "LocalSearch.hpp"
 #include "LocalSearchStochastic.hpp"
 #include "NSGA_II.hpp"
-#include "MO_LS.hpp"
-#include "MO_RS.hpp"
+#include "LS.hpp"
+#include "RS.hpp"
 #include "MO_GOMEA.hpp"
 #include "ProblemType.hpp"
 #include "LearnedLTFOS.hpp"
 #include <stdlib.h>
-
-#include "LocalSearchAnalysis.hpp"
-
-// Include for the original NSGA-II implementation.
-//#include "global.h"
 
 using namespace std;
 using namespace Utility;
@@ -65,13 +49,12 @@ mt19937 rng(mySeed);
 uniform_real_distribution<float> dist(0.0, 0.9999);
 
 // MAC OS
-//string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
+string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA-test/GA/";
 // Ross@CWI
-string projectDir = "/export/scratch1/tdo/TomGA/";
+//string projectDir = "/export/scratch1/tdo/TomGA/";
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
-string queuelistDir = "/export/scratch1/home/shared/GA/queue/";
 string writeDir;
 string path_JSON_MO_info;
 string path_JSON_SO_info;
@@ -100,8 +83,8 @@ bool storeElitistArchive = true;
 bool updateElitistArchiveOnEveryEvaluation = true;
 int loggingIntervalMode = 0; // 0 = on a log10 scale, 1 = linear scale
 int loggingLinearInterval = 10;
-std::string ARK_Analysis_suffix = "";
-int populationInitializationMode = 0; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+std::string Bench_Analysis_suffix = "";
+int populationInitializationMode = 0; // 0 = True Random, 1 = NAS (first all identity individual), 2 = Solvable
 bool saveLogFilesOnEveryUpdate = false;
 bool saveLSArchiveResults = false;
 bool customOutputFolder = false;
@@ -127,7 +110,7 @@ bool genotypeChecking = false;
 bool forcedImprovement = true;
 
 // Experiment parameters
-int repetitions = 30;
+int repetitions = 1;
 
 // JSON
 json JSON_experiment;
@@ -184,8 +167,8 @@ void setJSONdata(){
     JSON_fitfunc["isMO"] = fitFunc->isMO();
     JSON_fitfunc["numberOfParetoPoints"] = fitFunc->trueParetoFront.size();
     JSON_fitfunc["numberOfObjectives"] = numberOfObjectives;
-    if (gaID().find("ARK-7") != string::npos) dataset = "cifar100";
-    if (gaID().find("ARK-8") != string::npos) dataset = "cifar10";
+    if (gaID().find("CIFAR-100") != string::npos) dataset = "cifar100";
+    if (gaID().find("CIFAR-10") != string::npos) dataset = "cifar10";
     JSON_fitfunc["dataset"] = dataset;
     JSON_experiment["fitnessFunction"] = JSON_fitfunc;
     if (!customOutputFolder){
@@ -226,36 +209,18 @@ void setFitnessFunction(const char * argv[], int i){
         fitFunc = new TrapInverseTrap(problemSize);
     } else if (strcmp(argv[i], "maxcut") == 0){
         fitFunc = new MAXCUT(problemSize);
-    } else if (strcmp(argv[i], "ark1") == 0){
-        fitFunc = new ARK1(problemSize, allowIdentityLayers);
-    } else if (strcmp(argv[i], "ark2") == 0){
-        fitFunc = new ARK2(problemSize, allowIdentityLayers, genotypeChecking);
-    } else if (strcmp(argv[i], "ark3") == 0){
-        fitFunc = new ARK3();
-    } else if (strcmp(argv[i], "ark4") == 0){
-        fitFunc = new ARK4(problemSize, allowIdentityLayers);
-    } else if (strcmp(argv[i], "ark5") == 0){
-        fitFunc = new ARK5(problemSize, allowIdentityLayers);
-    } else if (strcmp(argv[i], "ark6") == 0){
-        fitFunc = new ARK6(problemSize, genotypeChecking);
-    } else if (strcmp(argv[i], "ark7") == 0){
-        fitFunc = new ARK7(problemSize, genotypeChecking, numberOfObjectives == 2);
-    } else if (strcmp(argv[i], "ark8") == 0){
-        fitFunc = new ARK8(problemSize, genotypeChecking, numberOfObjectives == 2);
-    } else if (strcmp(argv[i], "ark-online") == 0){
-//        cout << "Add python to run ark-online. Exiting now." << endl;
-//        exit(0);
-        fitFunc = new ARK_Online(problemSize, numberOfObjectives);
     } else if (strcmp(argv[i], "onemax") == 0){
         fitFunc = new OneMax(problemSize);
     } else if (strcmp(argv[i], "leadingones") == 0){
         fitFunc = new LeadingOnes(problemSize);
-    } else if (strcmp(argv[i], "trap") == 0){
-        // Might not work yet
-        fitFunc = new Trap(5, 5);
-    } else if (strcmp(argv[i], "NK") == 0){
-        // Might not work yet
-        fitFunc = new NK(problemSize, 3, false, 3);
+    } else if (strcmp(argv[i], "cifar-largescale") == 0){
+        //        cout << "Add python to run ark-online. Exiting now." << endl;
+        //        exit(0);
+        fitFunc = new CIFAR_Largescale(problemSize, numberOfObjectives);
+    } else if (strcmp(argv[i], "cifar10") == 0){
+        fitFunc = new Bench_CIFAR10(problemSize, genotypeChecking, numberOfObjectives == 2);
+    } else if (strcmp(argv[i], "cifar100") == 0){
+        fitFunc = new Bench_CIFAR100(problemSize, genotypeChecking, numberOfObjectives == 2);
     }
     if(fitFunc == NULL){
         cout << "Could not read fitfunc argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
@@ -287,33 +252,24 @@ void setOptimizer(const char * argv[], int i){
     Utility::Order order = getOrder(orderString);
 
     if (strcmp(argv[i], "NSGA-II") == 0){
-        mkdir(queuelistDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (variation == NULL){
             variation = new TwoPointCrossover();
         }
         ga = new NSGA_II(fitFunc, variation, 0.9, (1.0f / fitFunc->totalProblemLength));
-    } else if (strcmp(argv[i], "MO-RS") == 0){
-        ga = new MO_RS(fitFunc);
-    } else if (strcmp(argv[i], "RSUSS") == 0){
-        ga = new MO_RS(fitFunc, true);
-    } else if (strcmp(argv[i], "MO-LS") == 0){
-        ga = new MO_LS(fitFunc);
+    } else if (strcmp(argv[i], "RS") == 0){
+        ga = new RS(fitFunc);
+    } else if (strcmp(argv[i], "LS") == 0){
+        ga = new LS(fitFunc);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         use_MOGOMEA = true;
-    } else if (strcmp(argv[i], "GOM") == 0){
-        ga = new GOM(fitFunc, fos, forcedImprovement);
-    } else if (strcmp(argv[i], "GOM-LS") == 0){
-        ga = new GOM_LS(fitFunc, fos, new LocalSearch(fitFunc, order), forcedImprovement);
-    } else if (strcmp(argv[i], "RS") == 0){
+    } else if (strcmp(argv[i], "GOMEA") == 0){
+        ga = new GOMEA(fitFunc, fos, forcedImprovement);
+    } else if (strcmp(argv[i], "SO-RS") == 0){
         ga = new RandomSearch(fitFunc);
     } else if (strcmp(argv[i], "SimpleGA") == 0){
         ga = new SimpleGA(fitFunc, variation, new TournamentSelection(2));
-    } else if (strcmp(argv[i], "LS") == 0){
+    } else if (strcmp(argv[i], "SO-LS") == 0){
         ga = new LocalSearch(fitFunc, order);
-    } else if (strcmp(argv[i], "LSS-0.01") == 0){
-        ga = new LocalSearchStochastic(fitFunc, order, 0.01);
-    } else if (strcmp(argv[i], "LSS-0.05") == 0){
-        ga = new LocalSearchStochastic(fitFunc, order, 0.05);
     }
     if(!use_MOGOMEA && ga == NULL){
         cout << "Could not read optimizer argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
@@ -345,9 +301,8 @@ void setFOS(const char * argv[], int i){
         fos = new Triplet_FOS(order);
     } else if (strcmp(argv[i], "tripletTree") == 0){
         fos = new TripletTree_FOS(order);
-    } else if (strcmp(argv[i], "ark6") == 0){
-        fos = new ARK6_FOS(order);
     }
+    
     if(fos == NULL){
         cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
         exit(0);
@@ -364,8 +319,6 @@ void setVariation(const char * argv[], int i){
         variation = new ThreePointCrossover();
     } else if (strcmp(argv[i], "uni") == 0){
         variation = new UnivariateCrossover();
-    } else if (strcmp(argv[i], "ark6") == 0){
-        variation = new ARK6_Crossover();
     }
     if(variation == NULL){
         cout << "Could not read variation argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
@@ -384,19 +337,19 @@ void printCommandLineHelp(){
     cout << "-m [#1]: set max rounds to #1" << endl;
     cout << "-s [#1]: set max seconds to #1" << endl;
     cout << "-d [#1]: set dataset to #1={cifar10, cifar100} for ark-online" << endl;
-    cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3" << endl;
+    cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, cifar10, cifar100, ark-online, onemax, leadingones} with problemsize #2 and number of objectives #3" << endl;
     cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto, optimal_fitness, epsilon_fitness}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
     cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6} with optional order #2={rand, asc, desc}" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
-    cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS {loop, noloop} {0 (objectivespace), 1 (random), 2 (scalarizationspace)}, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
+    cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, RS, LS {loop, noloop} {0 (objectivespace), 1 (random), 2 (scalarizationspace)}, MO-GOMEA, GOMEA, SO-RS, SimpleGA, SO-LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
     cout << "-I [#1]: set IMS to #1={0,1}" << endl;
     cout << "-p [#1]: set non-IMS Popsize to #1" << endl;
     cout << "-i [#1]: set forced improvement to #1={0,1}" << endl;
     cout << "-g [#1]: set genotype checking to #1={0,1}" << endl;
     cout << "-l [#1]: set allow identity layers to #1={0,1}" << endl;
-    cout << "-M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity), 2 (solvable)}" << endl;
+    cout << "-M [#1]: set population initialization mode to #1={0 (true random), 1 (random, but first individual to all identity)}" << endl;
     cout << "-a [#1]: set print full elitist archive to #1={0, 1}" << endl;
     cout << "-q [#1]: set print every evaluation to #1={0, 1}" << endl;
     cout << "-x [#1]: set saving log files on every update to #1={0, 1}" << endl;
@@ -577,7 +530,7 @@ void performExperiment(){
         writeRawData(JSON_Run.dump(), path_JSON_Run);
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         else writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
-        if (saveLSArchiveResults && gaID().find("MO-LS") != string::npos) writeRawData(JSON_LS_Results, path_JSON_LS_Results);
+        if (saveLSArchiveResults && gaID().find("LS") != string::npos) writeRawData(JSON_LS_Results, path_JSON_LS_Results);
     }
     cout << endl;
 
@@ -590,13 +543,9 @@ void performExperiment(){
 
 void run(int argc, const char * argv[]){
     parseCommandLineArguments(argc, argv);
+    mkdir(dataDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     setJSONdata();
     performExperiment();
-}
-
-void bisection(){
-    int neededPopsize = ga->findMinimallyNeededPopulationSize(100, 99);
-    cout << "Needed popsize = " << neededPopsize << endl;
 }
 
 int main(int argc, const char * argv[]) {
@@ -604,7 +553,7 @@ int main(int argc, const char * argv[]) {
 //    char mypath[]="PYTHONHOME=/Users/tomdenottelander/miniconda3/envs/nasbench/";
 //    putenv( mypath );
     
-//    ARK8(1, false, true).doAnalysis(1, 14);
+//    Bench_CIFAR10(1, false, true).doAnalysis(1, 14);
 
     run(argc, argv);
 
