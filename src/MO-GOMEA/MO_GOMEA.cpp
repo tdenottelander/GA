@@ -6,6 +6,7 @@ using namespace nlohmann; // for json
 extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
+extern int numClusters;
 extern json JSON_Run;
 extern json JSON_FOSElementSuccessRate;
 extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
@@ -2874,7 +2875,8 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
     obj_backup = (double *) Malloc( number_of_objectives*sizeof( double ) );
     copyFromAToB(result, obj, *con, backup, obj_backup, &con_backup);
 
-    number_of_linkage_sets = lt_length[cluster_index] - 1; /* Remove root from the linkage tree. */
+//    number_of_linkage_sets = lt_length[cluster_index] - 1; /* Remove root from the linkage tree. */
+    number_of_linkage_sets = lt_length[cluster_index]; /* Root is already removed in generating LT */
     order = createRandomOrdering(number_of_linkage_sets);
     
     /* Traverse the linkage tree for Gene-pool Optimal Mixing */
@@ -2943,7 +2945,7 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
             mutateSolution(result, linkage_group_index, cluster_index);
 
             /* Check if the new intermediate solution is different from the previous state. */
-            is_unchanged = TRUE;    
+            is_unchanged = TRUE;
             for( j = 0; j < lt_number_of_indices[cluster_index][linkage_group_index]; j++ )
             {
                 if( backup[lt[cluster_index][linkage_group_index][j]] != result[lt[cluster_index][linkage_group_index][j]] )
