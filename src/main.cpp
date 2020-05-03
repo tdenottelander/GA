@@ -104,7 +104,7 @@ bool updateElitistArchiveOnEveryEvaluation = true;
 int loggingIntervalMode = 0; // 0 = on a log10 scale, 1 = linear scale
 int loggingLinearInterval = 10;
 std::string ARK_Analysis_suffix = "";
-int populationInitializationMode = 0; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
+int populationInitializationMode = 1; // 0 = True Random, 1 = ARK (first all identity individual), 2 = Solvable
 bool saveLogFilesOnEveryUpdate = false;
 bool saveLSArchiveResults = false;
 bool customOutputFolder = false;
@@ -112,10 +112,10 @@ bool customOutputFolder = false;
 // Termination criteria
 int maxRounds = -1;
 int maxSeconds = -1;
-int maxPopSizeLevel = 500;
-int maxEvaluations = 9999999;
-int maxUniqueEvaluations = 9999999;
-int maxNetworkUniqueEvaluations = 9999999;
+int maxPopSizeLevel = 50;
+int maxEvaluations = INT_MAX;
+int maxUniqueEvaluations = INT_MAX;
+int maxNetworkUniqueEvaluations = INT_MAX;
 
 // (non-)IMS parameters
 int IMS_Interval = 4;
