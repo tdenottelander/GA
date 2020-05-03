@@ -7,6 +7,8 @@ extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
 extern json JSON_Run;
+extern json JSON_FOSElementSuccessRate;
+extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
 extern bool IMS;
 extern int nonIMSPopsize;
 
@@ -2920,6 +2922,9 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
             }
             else
                 copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
+            
+            int generation = array_of_number_of_generations[population_id];
+            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
         }
     }
     free(order);
@@ -2971,6 +2976,9 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
                 }
                 else
                     copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
+                
+                int generation = array_of_number_of_generations[population_id];
+                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
             }
         }
         free(order);
@@ -3049,7 +3057,10 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
                 copyFromAToB(result, obj, *con,  backup, obj_backup, &con_backup);
             }
             else
-                copyFromAToB(backup, obj_backup, con_backup, result, obj, con);    
+                copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
+            
+            int generation = array_of_number_of_generations[population_id];
+            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
         }
     }
     free(order);
@@ -3694,4 +3705,27 @@ string MO_GOMEA::id(){
         exit(0);
     }
     return ("MO-GOMEA_fos=" + fos->id());
+}
+
+void MO_GOMEA::updateFOSElementSuccess(int generation, int clusterIdx, int linkageIdx, int is_improved){
+    vector<int> FOSElement;
+    for(int i = 0; i < lt_number_of_indices[clusterIdx][linkageIdx]; i++){
+        FOSElement.push_back(lt[clusterIdx][linkageIdx][i]);
+    }
+    vector<int> orderedFOSElement = FOSStructures::sortFOSElement(FOSElement);
+    string FOSElement_string = FOSStructures::elementToString(orderedFOSElement);
+    vector<int> entry;
+//    unordered_map<string, vector<int>> FOSElementSuccess = FOSElementSuccessPerGeneration[generation];
+    if (FOSElementSuccessPerGeneration[generation].find(FOSElement_string) == FOSElementSuccessPerGeneration[generation].end()){
+        // Element not yet in unordered map
+        entry = {0, 0};
+    } else {
+        entry = FOSElementSuccessPerGeneration[generation][FOSElement_string];
+    }
+    if (is_improved == TRUE){
+        entry[0] += 1;
+    } else {
+        entry[1] += 1;
+    }
+    FOSElementSuccessPerGeneration[generation][FOSElement_string] = entry;
 }

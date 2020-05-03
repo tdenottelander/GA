@@ -78,6 +78,9 @@ string path_JSON_SO_info;
 string path_JSON_LS_Results;
 string path_JSON_Progress;
 string path_JSON_Run;
+string path_JSON_FOSElementSuccess;
+
+std::vector<std::unordered_map<std::string, std::vector<int>>> FOSElementSuccessPerGeneration;
 
 string dataset = "cifar100";
 
@@ -133,6 +136,7 @@ int repetitions = 30;
 json JSON_experiment;
 json JSON_fitfunc;
 json JSON_Run;
+json JSON_FOSElementSuccessRate;
 
 // Printing parameters
 bool printFullElitistArchive = false;
@@ -299,6 +303,10 @@ void setOptimizer(const char * argv[], int i){
     } else if (strcmp(argv[i], "MO-LS") == 0){
         ga = new MO_LS(fitFunc);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
+        for (int i = 0; i < 1000; i++){
+            unordered_map<string, vector<int>> map;
+            FOSElementSuccessPerGeneration.push_back(map);
+        }
         use_MOGOMEA = true;
     } else if (strcmp(argv[i], "GOM") == 0){
         ga = new GOM(fitFunc, fos, forcedImprovement);
@@ -347,6 +355,8 @@ void setFOS(const char * argv[], int i){
         fos = new TripletTree_FOS(order);
     } else if (strcmp(argv[i], "ark6") == 0){
         fos = new ARK6_FOS(order);
+    } else if (strcmp(argv[i], "RT") == 0){
+        fos = new RandomTree_FOS();
     }
     if(fos == NULL){
         cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
@@ -543,6 +553,7 @@ void performExperiment(){
     vector<int> uniqueEvals;
     vector<int> networkUniqueEvals;
     vector<int> times;
+    path_JSON_FOSElementSuccess = writeDir + "/FOSElementSuccess.json";
 
     for (int rep = 0; rep < repetitions; rep++){
         path_JSON_Progress = writeDir + "/progress" + to_string(rep) + ".json";
@@ -586,6 +597,19 @@ void performExperiment(){
     cout << "Avg Unique Evals: " << Utility::getAverage(uniqueEvals) << endl;
     cout << "Avg Network Unique Evals: " << Utility::getAverage(networkUniqueEvals) << endl;
     if (numberOfObjectives > 1) fitFunc->printElitistArchive(printFullElitistArchive);
+
+    if(use_MOGOMEA){
+        for (int i = 0; i < FOSElementSuccessPerGeneration.size(); i++){
+            json generationalFOSElementSuccess;
+            for (auto it = FOSElementSuccessPerGeneration[i].begin(); it != FOSElementSuccessPerGeneration[i].end(); ++it ){
+                string key = it->first;
+                vector<int> value = it->second;
+                generationalFOSElementSuccess[key] = value;
+            }
+            JSON_FOSElementSuccessRate[to_string(i)] = generationalFOSElementSuccess;
+        }
+        writeRawData(JSON_FOSElementSuccessRate.dump(), path_JSON_FOSElementSuccess);
+    }
 }
 
 void run(int argc, const char * argv[]){

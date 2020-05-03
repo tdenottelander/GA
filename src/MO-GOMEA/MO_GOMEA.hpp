@@ -315,8 +315,9 @@ void initializeArrayOfParetoFronts();
     
     
 public:
-static std::string id();
-long startTime;
+    static std::string id();
+    long startTime;
+    void updateFOSElementSuccess(int generation, int clusterIdx, int linkageIdx, int is_improved);
 };
 
 #endif /* MO_GOMEA_hpp */
