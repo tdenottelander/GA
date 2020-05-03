@@ -287,11 +287,11 @@ void setOptimizer(const char * argv[], int i){
     Utility::Order order = getOrder(orderString);
 
     if (strcmp(argv[i], "NSGA-II") == 0){
-        mkdir(queuelistDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+//        mkdir(queuelistDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if (variation == NULL){
             variation = new TwoPointCrossover();
         }
-        ga = new NSGA_II(fitFunc, variation, 0.9, (1.0f / fitFunc->totalProblemLength));
+        ga = new NSGA_II(fitFunc, variation, 0.9f, (1.0f / fitFunc->totalProblemLength));
     } else if (strcmp(argv[i], "MO-RS") == 0){
         ga = new MO_RS(fitFunc);
     } else if (strcmp(argv[i], "RSUSS") == 0){

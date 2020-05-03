@@ -36,7 +36,7 @@ void NSGA_II::round() {
     // Mutate the child population and evaluate all resulting individuals
     mutation(childPop);
     
-    writePopToFile(childPop);
+//    writePopToFile(childPop);
     
     evaluateAll(childPop);
     if(fitFunc_ptr->isDone()){
@@ -301,7 +301,12 @@ vector<Individual> NSGA_II::selection(vector<Individual> parentPop){
         Individual parent2 = tournament(parentPop[randIdxArray[index+2]], parentPop[randIdxArray[index+3]]);
         
         // Combine winners of the tournament selections by doing crossover.
-        pair<Individual, Individual> offspring = variation_ptr->crossover(parent1, parent2);
+        pair<Individual, Individual> offspring;
+        if (Utility::getRand() < crossoverProbability){
+            offspring = variation_ptr->crossover(parent1, parent2);
+        } else {
+            offspring = pair<Individual, Individual> {parent1.copy(), parent2.copy()};
+        }
         childPop.push_back(offspring.first);
         
         if (i+1 < populationSize){
