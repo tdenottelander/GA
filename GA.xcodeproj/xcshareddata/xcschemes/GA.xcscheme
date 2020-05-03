@@ -71,15 +71,39 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-S 1 -e 10000 -f zmom 5 2 -c entire_pareto -v 2p -o NSGA-II -I 0 -p 16 -r 5 -a 1"
+            argument = "-M 1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-n 50000"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-f ark7 14 2"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-F learned"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-F RT"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-e 1000000 -I 1 -f ark7 14 1 -v 2p -o SimpleGA -r 10 -M 0 -x 0 -q 0"
+            argument = "-I 1 -o MO-GOMEA -r 30 -q 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-c entire_pareto"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-e 10000 -f ark7 14 2 -v 2p -o NSGA-II -r 1 -q 1 -M 1"
+            argument = "-O testrun"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-O MO-GOMEA_LT_bound4"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -100,6 +124,14 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-I 0 -p 50 -n 40 -f ark-online 3 1 -o RS -r 2 -M 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-S 1 -e 10000 -f zmom 5 2 -c entire_pareto -v 2p -o NSGA-II -I 0 -p 16 -r 5 -a 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-e 1000000 -I 1 -f ark7 14 1 -v 2p -o SimpleGA -r 10 -M 0 -x 0 -q 0"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
@@ -129,10 +161,6 @@
          <CommandLineArgument
             argument = "-I 0 -p 50 -e 1000 -f zmom 5 -c entire_pareto -v 2p -o NSGA-II -r 10"
             isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-O testrun"
-            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
