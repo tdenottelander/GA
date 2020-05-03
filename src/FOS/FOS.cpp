@@ -163,6 +163,48 @@ string ARK6_FOS::id() { return "ARK6-" + Utility::orderToID(order); }
 string ARK6_FOS::toString(){ return Utility::orderToString(order) + " ARK6 FOS"; }
 
 
+/* ------------------------ RandomTree FOS ------------------------------------- */
+
+RandomTree_FOS::RandomTree_FOS() {
+    reinitializeOnNewRound = true;
+}
+
+vector<vector<int>> RandomTree_FOS::getFOS (int genotypeLength){
+    vector<vector<int>> result;
+    vector<vector<int>> pool;
+    for (int i = 0; i < genotypeLength; i++){
+        vector<int> temp = {i};
+        result.push_back(temp);
+        pool.push_back(temp);
+    }
+    while (pool.size() >= 2){
+//    for (int i = 0; i < genotypeLength - 1; i++){
+        int rand1 = Utility::getRand(0, pool.size());
+        vector<int> element1 = pool[rand1];
+        pool.erase(pool.begin() + rand1);
+        
+        int rand2 = Utility::getRand(0, pool.size());
+        vector<int> element2 = pool[rand2];
+        pool.erase(pool.begin() + rand2);
+        
+        vector<int> newElement = mergeElements(element1, element2);
+        result.push_back(newElement);
+        pool.push_back(newElement);
+    }
+    result.pop_back(); // Removing the last element containing all variables.
+    return result;
+}
+
+vector<int> RandomTree_FOS::mergeElements (vector<int> &element1, vector<int> &element2){
+    vector<int> result (element1);
+    result.insert(result.end(), element2.begin(), element2.end());
+    return result;
+}
+
+string RandomTree_FOS::id() { return "RT"; }
+string RandomTree_FOS::toString(){ return "Random Tree FOS"; }
+
+
 /* ------------------------ Namespace FOS Structures ------------------------ */
 
 vector<vector<int>> FOSStructures::getIncrementalLT_FOS(int n){
@@ -322,3 +364,19 @@ vector<vector<int>> FOSStructures::boundFOS (vector<vector<int>> & fos, int bott
     return boundedFOS;
 }
 
+vector<int> FOSStructures::sortFOSElement(std::vector<int> &element){
+    vector<int> result(element);
+    sort(result.begin(), result.end());
+    return result;
+}
+
+string FOSStructures::elementToString(std::vector<int> &element){
+    string result = "";
+    for (int i = 0; i < element.size(); i++){
+        result += to_string(element[i]);
+        if (i != element.size()-1){
+            result += ",";
+        }
+    }
+    return result;
+}

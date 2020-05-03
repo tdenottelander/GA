@@ -99,6 +99,16 @@ public:
     std::string toString() override;
 };
 
+class RandomTree_FOS : public FOS {
+public:
+    RandomTree_FOS();
+    std::vector<std::vector<int>> getFOS (int genotypeLength) override;
+    std::vector<int> mergeElements (std::vector<int> &element1, std::vector<int> &element2);
+    std::string id() override;
+    std::string toString() override;
+};
+
+
 namespace FOSStructures {
     std::vector<std::vector<int>> getIncrementalLT_FOS (int n);
     std::vector<std::vector<int>> getIncrementalLTReversed_FOS (int n);
@@ -110,6 +120,8 @@ namespace FOSStructures {
     std::vector<std::vector<int>> sortFOSMeanAscending (std::vector<std::vector<int>> & fos);
     std::vector<std::vector<int>> sortFOSMeanDescending (std::vector<std::vector<int>> & fos);
     std::vector<std::vector<int>> boundFOS (std::vector<std::vector<int>> & fos, int bottomLevel, int topLevel);
+    std::vector<int> sortFOSElement (std::vector<int> &element);
+    std::string elementToString (std::vector<int> &element);
 };
 
 
