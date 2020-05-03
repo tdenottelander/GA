@@ -120,7 +120,9 @@ int maxNetworkUniqueEvaluations = 9999999;
 // (non-)IMS parameters
 int IMS_Interval = 4;
 bool IMS = false;
-int nonIMSPopsize = 40;
+int nonIMSPopsize = 100;
+
+int numClusters = -1; // -1 = adaptive number of clusters
 
 // Problem parameters
 int problemSize = 14;
@@ -171,6 +173,7 @@ void setJSONdata(){
     JSON_experiment["allowIdentityLayers"] = allowIdentityLayers;
     JSON_experiment["genotypeChecking"] = genotypeChecking;
     JSON_experiment["forcedImprovement"] = forcedImprovement;
+    JSON_experiment["numClusters"] = numClusters;
     JSON_experiment["repetitions"] = repetitions;
     JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
@@ -397,7 +400,8 @@ void printCommandLineHelp(){
     cout << "-f [#1][#2][#3]: set fitness function to #1={zmom, lotz, tit, maxcut, ark1, ark2, ark3, ark4, ark5, ark6, ark7, ark-online, onemax, leadingones, trap, NK} with problemsize #2 and number of objectives #3" << endl;
     cout << "-c [#1]: set convergence criteria to #1={entire_pareto, epsilon_pareto, optimal_fitness, epsilon_fitness}" << endl;
     cout << "-E [#1]: set epsilon to #1" << endl;
-    cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6} with optional order #2={rand, asc, desc}" << endl;
+    cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6, RT} with optional order #2={rand, asc, desc}" << endl;
+    cout << "-C [#1]: set number of clusters to #1 (default -1 = adaptive. 0 is not valid)" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
     cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS {loop, noloop} {0 (objectivespace), 1 (random), 2 (scalarizationspace)}, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
@@ -470,6 +474,13 @@ void setParameter(char ch, const char * argv[], int i){
             cout << Utility::padWithSpacesAfter("Setting fitfunc epsilon to ", settingInfoStringLength) << fitFunc->epsilon << endl;
             break;
         case 'F': setFOS(argv, i); break;
+        case 'C':
+            numClusters = stoi(argv[i]);
+            if (numClusters == 0 || numClusters < -1){
+                cout << "Not valid number of clusters. Choose -1 (adaptive) or a value > 0. Exiting now" << endl;
+                exit(0);
+            }
+            cout << Utility::padWithSpacesAfter("Setting number of clusters to ", settingInfoStringLength) << numClusters << endl;
         case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r':

@@ -3237,9 +3237,18 @@ void MO_GOMEA::initializeMemoryForArrayOfPopulations()
 
     /* Number-of-clusters parameter-free scheme. */
     array_of_number_of_clusters         = (int*)Malloc(maximum_number_of_populations*sizeof(int));
-    array_of_number_of_clusters[0]      = number_of_objectives + 1;
-    for(i = 1; i < maximum_number_of_populations; i++)
-        array_of_number_of_clusters[i]  = array_of_number_of_clusters[i-1] + 1;
+    
+    if (numClusters == -1){
+        // ADAPTIVE (DEFAULT)
+        array_of_number_of_clusters[0]      = number_of_objectives + 1;
+        for(i = 1; i < maximum_number_of_populations; i++)
+            array_of_number_of_clusters[i]  = array_of_number_of_clusters[i-1] + 1;
+    } else {
+        // FIXED
+        array_of_number_of_clusters[0]      = numClusters;
+        for(i = 1; i < maximum_number_of_populations; i++)
+            array_of_number_of_clusters[i]  = array_of_number_of_clusters[i-1];
+    }
 }
 
 void MO_GOMEA::putInitializedPopulationIntoArray()
