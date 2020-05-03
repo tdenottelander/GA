@@ -12,6 +12,7 @@ extern json JSON_FOSElementSuccessRate;
 extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
 extern bool IMS;
 extern int nonIMSPopsize;
+extern int maxSeconds;
 
 extern bool saveLogFilesOnEveryUpdate;
 extern string path_JSON_Run;
@@ -1224,6 +1225,11 @@ char MO_GOMEA::checkTerminationCondition()
     
     if (problem_index == CUSTOM && fitFunc->isDone()){
         return ( TRUE );
+    }
+    
+    // My addition to terminate based on seconds
+    if (maxSeconds != -1 && Utility::millis() - startTime > maxSeconds * 1000){
+        return TRUE;
     }
 
 //    cout << "Dont terminate" << endl;
