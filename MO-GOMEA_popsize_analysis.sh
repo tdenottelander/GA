@@ -5,7 +5,7 @@ path_to_project=src/../
 
 # evals=10000000000
 netuniqevals=50000
-maxseconds=50
+maxseconds=180
 fit="ark7 14 2"
 convergence=none
 repetitions=30

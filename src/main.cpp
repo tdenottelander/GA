@@ -481,6 +481,7 @@ void setParameter(char ch, const char * argv[], int i){
                 exit(0);
             }
             cout << Utility::padWithSpacesAfter("Setting number of clusters to ", settingInfoStringLength) << numClusters << endl;
+	    break;
         case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r':
