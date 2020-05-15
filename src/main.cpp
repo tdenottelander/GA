@@ -123,6 +123,7 @@ bool IMS = false;
 int nonIMSPopsize = 100;
 
 int numClusters = -1; // -1 = adaptive number of clusters
+int extremeClusters = 1; // 0 = false, 1 = true
 
 // Problem parameters
 int problemSize = 14;
@@ -402,6 +403,7 @@ void printCommandLineHelp(){
     cout << "-E [#1]: set epsilon to #1" << endl;
     cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6, RT} with optional order #2={rand, asc, desc}" << endl;
     cout << "-C [#1]: set number of clusters to #1 (default -1 = adaptive. 0 is not valid)" << endl;
+    cout << "-X [#1]: set extreme clusters to #1 (default 1 = true, 0 = false)" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
     cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS {loop, noloop} {0 (objectivespace), 1 (random), 2 (scalarizationspace)}, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
@@ -481,7 +483,11 @@ void setParameter(char ch, const char * argv[], int i){
                 exit(0);
             }
             cout << Utility::padWithSpacesAfter("Setting number of clusters to ", settingInfoStringLength) << numClusters << endl;
-	    break;
+            break;
+        case 'X':
+            extremeClusters = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting extreme clusters to ", settingInfoStringLength) << (extremeClusters == 1 ? "True" : "False") << endl;
+            break;
         case 'v': setVariation(argv, i); break;
         case 'o': setOptimizer(argv, i); break;
         case 'r':

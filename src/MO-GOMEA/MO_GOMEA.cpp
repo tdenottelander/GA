@@ -7,6 +7,7 @@ extern FitnessFunction* fitFunc;
 extern FOS* fos;
 extern int populationInitializationMode;
 extern int numClusters;
+extern int extremeClusters;
 extern json JSON_Run;
 extern json JSON_FOSElementSuccessRate;
 extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
@@ -2638,14 +2639,14 @@ int *MO_GOMEA::greedyScatteredSubsetSelection( double **points, int number_of_po
 
 void MO_GOMEA::determineExtremeClusters()
 {
-    int i,j, index_best, a,b,c, *order;
+    int i,j, index_best, *order;
     // find extreme clusters
     order = createRandomOrdering(number_of_objectives);
-        
+    
     for (i = 0; i < number_of_mixing_components; i++)
         which_extreme[i] = -1;  // not extreme cluster
     
-    if(number_of_mixing_components > 1)
+    if(number_of_mixing_components > 1 && extremeClusters == 1)
     {
         for (i = 0; i < number_of_objectives; i++)
         {
