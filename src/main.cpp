@@ -175,6 +175,7 @@ void setJSONdata(){
     JSON_experiment["genotypeChecking"] = genotypeChecking;
     JSON_experiment["forcedImprovement"] = forcedImprovement;
     JSON_experiment["numClusters"] = numClusters;
+    JSON_experiment["extremeClusters"] = extremeClusters;
     JSON_experiment["repetitions"] = repetitions;
     JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
