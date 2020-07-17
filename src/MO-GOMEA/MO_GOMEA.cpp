@@ -8,6 +8,7 @@ extern FOS* fos;
 extern int populationInitializationMode;
 extern int numClusters;
 extern int extremeClusters;
+extern int startingAmountOfClusters;
 extern json JSON_Run;
 extern json JSON_FOSElementSuccessRate;
 extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
@@ -2932,8 +2933,8 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
             else
                 copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
             
-            int generation = array_of_number_of_generations[population_id];
-            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+//            int generation = array_of_number_of_generations[population_id];
+//            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
         }
     }
     free(order);
@@ -2986,8 +2987,8 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
                 else
                     copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
                 
-                int generation = array_of_number_of_generations[population_id];
-                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+//                int generation = array_of_number_of_generations[population_id];
+//                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
             }
         }
         free(order);
@@ -3068,8 +3069,10 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
             else
                 copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
             
-            int generation = array_of_number_of_generations[population_id];
-            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+//            if(objective_index == 0){
+//                int generation = array_of_number_of_generations[population_id];
+//                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+//            }
         }
     }
     free(order);
@@ -3247,9 +3250,14 @@ void MO_GOMEA::initializeMemoryForArrayOfPopulations()
     
     if (numClusters == -1){
         // ADAPTIVE (DEFAULT)
-        array_of_number_of_clusters[0]      = number_of_objectives + 1;
-        for(i = 1; i < maximum_number_of_populations; i++)
-            array_of_number_of_clusters[i]  = array_of_number_of_clusters[i-1] + 1;
+//        array_of_number_of_clusters[0]      = number_of_objectives + 1;
+        int amountOfClusters = startingAmountOfClusters;
+        array_of_number_of_clusters[0]      = std::max(1, startingAmountOfClusters);
+        for(i = 1; i < maximum_number_of_populations; i++){
+//            array_of_number_of_clusters[i]  = array_of_number_of_clusters[i-1] + 1;
+            amountOfClusters++;
+            array_of_number_of_clusters[i]  = std::max(1, amountOfClusters);
+        }
     } else {
         // FIXED
         array_of_number_of_clusters[0]      = numClusters;

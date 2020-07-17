@@ -239,7 +239,7 @@ void FitnessFunction::checkIfBestFound(Individual &ind){
     if(convergenceCriteria == ConvergenceCriteria::OPTIMAL_FITNESS){
         optimumFound = true;
         for (int obj = 0; obj < optimum.size(); obj++){
-            if (ind.fitness[obj] < optimum[obj] || optimum[obj] == -1){
+            if (ind.fitness[obj] < optimum[obj] * 100 || optimum[obj] == -1){
                 optimumFound = false;
                 break;
             }

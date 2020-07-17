@@ -16,7 +16,7 @@ unsigned long long randcount = 0;
 
 /* ------------------------ Ordered array utility functions------------------------ */
 
-// Returns an specified ordered array of length n   (containing values [0, 1, ..., n-2, n-1])
+// Returns an array of length n with specified order   (containing values [0, 1, ..., n-2, n-1])
 vector<int> Utility::getOrderedArray(int n, Order order){
     switch (order) {
         case Order::RANDOM:
@@ -26,6 +26,18 @@ vector<int> Utility::getOrderedArray(int n, Order order){
         case Order::DESCENDING:
             return getDescendingArray(n);
     }
+}
+
+// Returns an array containing [min, min+1, ..., max-1] with specified order.
+// Min is included, max is excluded.
+vector<int> Utility::getOrderedArray(int min, int max, Order order){
+    vector<int> res = getOrderedArray(max - min, order);
+    if (min > 0){
+        for (int i = 0; i < res.size(); i++){
+            res[i] = res[i] + min;
+        }
+    }
+    return res;
 }
 
 string Utility::orderToID(Order order){

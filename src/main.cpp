@@ -124,6 +124,7 @@ int nonIMSPopsize = 100;
 
 int numClusters = -1; // -1 = adaptive number of clusters
 int extremeClusters = 1; // 0 = false, 1 = true
+int startingAmountOfClusters = 3; // 3 = default, 1 more for every subsequent IMS population
 
 // Problem parameters
 int problemSize = 14;
@@ -176,6 +177,7 @@ void setJSONdata(){
     JSON_experiment["forcedImprovement"] = forcedImprovement;
     JSON_experiment["numClusters"] = numClusters;
     JSON_experiment["extremeClusters"] = extremeClusters;
+    JSON_experiment["startingAmountOfClusters"] = startingAmountOfClusters;
     JSON_experiment["repetitions"] = repetitions;
     JSON_experiment["optimizer"] = gaID();
     JSON_experiment["populationInitializationMode"] = populationInitializationMode;
@@ -205,10 +207,10 @@ void setJSONdata(){
             writeDir += ("_pop=" + to_string(nonIMSPopsize));
         }
     }
-    if(mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0){
-        string filename = writeDir + "/experiment.json";
-        writeRawData(JSON_experiment.dump(), filename);
-    }
+    mkdir(writeDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    string filename = writeDir + "/experiment.json";
+    writeRawData(JSON_experiment.dump(), filename);
+    
     cout << "Creating directory " << writeDir << " for writing results to." << endl;
 }
 
@@ -405,6 +407,7 @@ void printCommandLineHelp(){
     cout << "-F [#1][#2]: set FOS to #1={learned, uni, IncrLT, IncrLTR, IncrLT_uni, IncrLTR_uni, IncrLTR_uniOrd, triplet, tripletTree, ark6, RT} with optional order #2={rand, asc, desc}" << endl;
     cout << "-C [#1]: set number of clusters to #1 (default -1 = adaptive. 0 is not valid)" << endl;
     cout << "-X [#1]: set extreme clusters to #1 (default 1 = true, 0 = false)" << endl;
+    cout << "-A [#1]: set starting amount of clusters for IMS configuration to #1 (default num of objectives + 1)" << endl;
     cout << "-v [#1]: set variation operator to #1={1p, 2p, 3p, uni, ark6}" << endl;
     cout << "-o [#1][#2]: set optimizer to #1={NSGA-II, MO-RS, MO-LS {loop, noloop} {0 (objectivespace), 1 (random), 2 (scalarizationspace)}, MO-GOMEA, GOM, GOM-LS, RS, SimpleGA, LS, LSS-0.01, LSS-0.05} with optional order #2={rand, asc, desc}" << endl;
     cout << "-r [#1]: set repetitions to #1" << endl;
@@ -485,6 +488,10 @@ void setParameter(char ch, const char * argv[], int i){
             }
             cout << Utility::padWithSpacesAfter("Setting number of clusters to ", settingInfoStringLength) << numClusters << endl;
             break;
+        case 'A':
+            startingAmountOfClusters = stoi(argv[i]);
+            cout << Utility::padWithSpacesAfter("Setting starting amount of clusters to ", settingInfoStringLength) << startingAmountOfClusters << endl;
+            break;
         case 'X':
             extremeClusters = stoi(argv[i]);
             cout << Utility::padWithSpacesAfter("Setting extreme clusters to ", settingInfoStringLength) << (extremeClusters == 1 ? "True" : "False") << endl;
@@ -544,6 +551,16 @@ void setParameter(char ch, const char * argv[], int i){
 }
 
 void parseCommandLineArguments(int argc, const char * argv[]){
+    string executable = argv[0];
+    string allArguments = "";
+    for (int i = 1; i < argc; i++){
+        allArguments += argv[i];
+        allArguments += " ";
+    }
+    cout << "Command Line Arguments: " << allArguments << endl;
+    JSON_experiment["commandLineExecutable"] = executable;
+    JSON_experiment["commandLineArguments"] = allArguments;
+    
     for (int i = 1; i < argc; i++){
         if (argv[i][0] == '-'){
             setParameter(argv[i][1], argv, i+1);

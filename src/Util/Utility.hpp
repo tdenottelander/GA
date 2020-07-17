@@ -29,6 +29,7 @@ namespace Utility{
     std::string orderToID (Order order);
     std::string orderToString (Order order);
     std::vector<int> getOrderedArray (int n, Order order);
+    std::vector<int> getOrderedArray (int min, int max, Order order);
     std::vector<int> getRandomlyPermutedArrayV2 (int n);
     std::vector<int> getAscendingArray (int n);
     std::vector<int> getDescendingArray (int n);
