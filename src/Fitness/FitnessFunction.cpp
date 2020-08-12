@@ -196,7 +196,7 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
 
 bool FitnessFunction::log(int evals){
     switch (loggingIntervalMode) {
-        case 0: return Utility::isLogPoint(evals, 2);
+        case 0: return Utility::isLogPoint(evals, 10);
         case 1: return Utility::isLinearPoint(evals, loggingLinearInterval);
         default:
             cout << "Logging interval mode not set correctly." << endl;
