@@ -304,13 +304,15 @@ RandomLT_FOS::RandomLT_FOS(ProblemType *problemType) : LearnedLT_FOS(problemType
 
 vector<vector<int>> RandomLT_FOS::getFOS(vector<Individual> &population){
 
-    int problemLength = population[0].genotype.size();
+    size_t problemLength = population[0].genotype.size();
 
     // Create a Mutual Information Matrix but fill it with random values
     vector<vector<double_t>> MIM(problemLength, vector<double_t>(problemLength, 0.0));
-    for (int i = 0; i < problemLength; i++){
-        for (int j = 0; j < problemLength; j++){
-            MIM[i][j] = Utility::getRand();
+    for (size_t i = 0; i < problemLength; i++){
+        for (size_t j = i; j < problemLength; j++){
+            double_t rand = Utility::getRand();
+            MIM[i][j] = rand;
+            MIM[j][i] = rand;
         }
     }
 
