@@ -364,6 +364,8 @@ void setFOS(const char * argv[], int i){
         fos = new ARK6_FOS(order);
     } else if (strcmp(argv[i], "RT") == 0){
         fos = new RandomTree_FOS();
+    } else if (strcmp(argv[i], "RandLT") == 0){
+        fos = new RandomLT_FOS(fitFunc->problemType);
     }
     if(fos == NULL){
         cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;

@@ -297,3 +297,31 @@ vector<vector<int>> LearnedLT_FOS::transformLinkageTreeFOS(vector<vector<size_t>
     }
     return result;
 }
+
+RandomLT_FOS::RandomLT_FOS(ProblemType *problemType) : LearnedLT_FOS(problemType){
+    reinitializeOnNewRound = true;
+}
+
+vector<vector<int>> RandomLT_FOS::getFOS(vector<Individual> &population){
+
+    int problemLength = population[0].genotype.size();
+
+    // Create a Mutual Information Matrix but fill it with random values
+    vector<vector<double_t>> MIM(problemLength, vector<double_t>(problemLength, 0.0));
+    for (int i = 0; i < problemLength; i++){
+        for (int j = 0; j < problemLength; j++){
+            MIM[i][j] = Utility::getRand();
+        }
+    }
+
+    // Build a linkage tree from the MIM.
+    vector<vector<int>> FOS = BuildLinkageTreeFromSimilarityMatrix(problemLength, MIM);
+
+    // remove the root of the Linkage Tree (containing all variables)
+    FOS.pop_back();
+
+    return FOS;
+}
+
+string RandomLT_FOS::id() { return "RandomLT"; }
+string RandomLT_FOS::toString(){ return "Random Linkage Tree FOS"; }

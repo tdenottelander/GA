@@ -33,4 +33,12 @@ public:
     std::vector<std::vector<int>> transformLinkageTreeFOS(std::vector<std::vector<size_t>>);
 };
 
+class RandomLT_FOS : public LearnedLT_FOS {
+public:
+    RandomLT_FOS(ProblemType *problemType);
+    std::vector<std::vector<int>> getFOS (std::vector<Individual> &population) override;
+    std::string id() override;
+    std::string toString() override;
+};
+
 #endif /* LearnedLTFOS_hpp */
