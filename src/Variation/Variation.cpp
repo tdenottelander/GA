@@ -154,7 +154,7 @@ string TwoPointCrossover::id() {
 }
 
 
-/* ------------------------ TwoPoint Crossover Variation ------------------------ */
+/* ------------------------ ThreePoint Crossover Variation ------------------------ */
 
 ThreePointCrossover::ThreePointCrossover(){}
 
