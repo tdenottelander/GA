@@ -97,6 +97,8 @@ public:
     
     void logNetworkUniqueEvaluations();
     SolutionLibrary networkLibrary;
+    
+    std::vector<float> accuracies;
 };
 
 class OneMax : public FitnessFunction {

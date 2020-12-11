@@ -90,6 +90,18 @@ void FitnessFunction::evaluationProcedure(Individual &ind){
     checkIfBestFound(ind);
     totalEvaluations++;
     
+//    accuracies.push_back(ind.fitness[0]);
+//    if (accuracies.size() == 1000){
+//        float sum = 0;
+//        for (int i = 0; i < accuracies.size(); i++){
+//            sum += accuracies[i];
+//        }
+//        sum = sum / accuracies.size();
+//        cout << "Average accuracy after 1000 evaluations: " << sum << endl;
+//        exit(0);
+//    }
+    
+    
     // Do this stuff only if it is a MO-problem.
     if(numObjectives > 1){
         

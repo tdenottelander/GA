@@ -11,10 +11,24 @@ extern int extremeClusters;
 extern int startingAmountOfClusters;
 extern json JSON_Run;
 extern json JSON_FOSElementSuccessRate;
-extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration;
+extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration_accuracy;
+extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration_mmacs;
+extern vector<unordered_map<string, vector<int>>> FOSElementSuccessPerGeneration_mixed;
+extern vector<unordered_map<string, int>> FOSElementDetectionPerGeneration_accuracy;
+extern vector<unordered_map<string, int>> FOSElementDetectionPerGeneration_mmacs;
+extern vector<unordered_map<string, int>> FOSElementDetectionPerGeneration_mixed;
+extern vector<int> FOSLearnCount_accuracy;
+extern vector<int> FOSLearnCount_mmacs;
+extern vector<int> FOSLearnCount_mixed;
+extern vector<vector<int>> ForcedImprovementUsedPerGeneration;
 extern bool IMS;
 extern int nonIMSPopsize;
 extern int maxSeconds;
+
+extern int currentGeneration;
+extern int currentPopulation;
+extern int currentObjective;
+extern bool isExtremeCluster;
 
 extern bool saveLogFilesOnEveryUpdate;
 extern string path_JSON_Run;
@@ -2383,7 +2397,7 @@ void MO_GOMEA::learnLinkageOnCurrentPopulation()
     
     // learn linkage tree for every cluster
     for( cluster_index = 0; cluster_index < number_of_mixing_components; cluster_index++ ){
-        
+                
         // Copy individuals in cluster to subpopulation
         vector<Individual> subpopulation;
         for ( j = 0; j < population_cluster_sizes[cluster_index]; j++){
@@ -2396,7 +2410,36 @@ void MO_GOMEA::learnLinkageOnCurrentPopulation()
         }
         
         // Learn the linkage tree (using my code)
+        if (which_extreme[cluster_index] == -1)
+            isExtremeCluster = false;
+        else {
+            isExtremeCluster = true;
+            currentObjective = which_extreme[cluster_index];
+//            cout << "Gen " << currentGeneration << ":  Learning FOS for objective " << currentObjective << " with individuals: " << endl;
+//            for (int i = 0; i < subpopulation.size(); i++){
+//                cout << subpopulation[i].toString() << endl;
+//            }
+        }
         vector<vector<int>> fosToUse = fos->getFOS(subpopulation);
+//        cout << "FOS: ";
+//        FOSStructures::printFOS(fosToUse);
+//        cout << "FOS: " << FOSStructures::printFOS(fosToUse) << endl;
+        if (not isExtremeCluster){ //MIXED
+            FOSLearnCount_mixed[currentGeneration] = FOSLearnCount_mixed[currentGeneration] + 1;
+            updateFOSElementDetection(FOSElementSuccessPerGeneration_mixed, currentGeneration, fosToUse);
+        } else if (currentObjective == 1){ //MMACS
+            FOSLearnCount_mmacs[currentGeneration] = FOSLearnCount_mmacs[currentGeneration] + 1;
+            updateFOSElementDetection(FOSElementSuccessPerGeneration_mmacs, currentGeneration, fosToUse);
+        } else if (currentObjective == 0){ //ACCURACY
+            FOSLearnCount_accuracy[currentGeneration] = FOSLearnCount_accuracy[currentGeneration] + 1;
+            updateFOSElementDetection(FOSElementSuccessPerGeneration_accuracy, currentGeneration, fosToUse);
+        }
+        
+//        fosToUse = FOSStructures::boundFOS(fosToUse, 2, 13);
+//        FOSStructures::printFOS(fosToUse);
+
+//        fosToUse = FOSStructures::boundFOS(fosToUse, 4, 20);
+//        FOSStructures::printFOS(fosToUse);
         
         // Copy the learned linkage tree into MO_GOMEA variables
         assignLinkageTreeVariables(fosToUse, cluster_index);
@@ -2647,6 +2690,12 @@ void MO_GOMEA::determineExtremeClusters()
     for (i = 0; i < number_of_mixing_components; i++)
         which_extreme[i] = -1;  // not extreme cluster
     
+//    if(number_of_mixing_components > 1 && extremeClusters == 1){
+//        cout << "Defining extreme clusters" << endl;
+//    } else {
+//        cout << "Not defining extreme clusters" << endl;
+//    }
+
     if(number_of_mixing_components > 1 && extremeClusters == 1)
     {
         for (i = 0; i < number_of_objectives; i++)
@@ -2669,6 +2718,7 @@ void MO_GOMEA::determineExtremeClusters()
                 }
             }
             which_extreme[index_best] = order[i];
+//            cout << "which_extreme[" << index_best << "] = order[ " << i << "] = " << order[i] << endl;
         }
     }
 
@@ -2791,12 +2841,14 @@ void MO_GOMEA::improveCurrentPopulation( void )
         sum_cluster[cluster_index]++;
         if(which_extreme[cluster_index] == -1)
         {
+//            cout << "MO on cluster" << cluster_index << endl;
             performMultiObjectiveGenepoolOptimalMixing( cluster_index, population[i], objective_values[i], constraint_values[i],
                                 offspring[i], objective_values_offspring[i], &(constraint_values_offspring[i]));
         }
         else
         {
             objective_index = which_extreme[cluster_index];
+//            cout << "SO on cluster" << cluster_index << "with objective index" << objective_index << endl;
             performSingleObjectiveGenepoolOptimalMixing(cluster_index, objective_index, population[i], objective_values[i], constraint_values[i], 
                                 offspring[i], objective_values_offspring[i], &(constraint_values_offspring[i]));
         }
@@ -2872,7 +2924,8 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
                             char *result, double *obj,  double *con)
 {
     char   *backup, *donor, is_unchanged, changed, is_improved, is_new_nondominated_point, is_dominated_by_archive;
-    int     i, j, index, donor_index, position_of_existed_member, *order, linkage_group_index, number_of_linkage_sets;
+    int     i, j, index, donor_index, position_of_existed_member, //*order,
+        linkage_group_index, number_of_linkage_sets;
     double  *obj_backup, con_backup;
 
     /* Clone the parent solution. */
@@ -2884,8 +2937,15 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
     copyFromAToB(result, obj, *con, backup, obj_backup, &con_backup);
 
 //    number_of_linkage_sets = lt_length[cluster_index] - 1; /* Remove root from the linkage tree. */
-    number_of_linkage_sets = lt_length[cluster_index]; /* Root is already removed in generating LT */
-    order = createRandomOrdering(number_of_linkage_sets);
+//    number_of_linkage_sets = lt_length[cluster_index]; /* Root is already removed in generating LT */
+    
+    //    order = createRandomOrdering(number_of_linkage_sets);
+    
+    int max_linkage = max_linkage_set;
+    if (max_linkage_set == -1)
+        max_linkage = lt_length[cluster_index];
+    number_of_linkage_sets = max_linkage - min_linkage_set;
+    vector<int> order = Utility::getOrderedArray(min_linkage_set, max_linkage, Utility::Order::RANDOM);
     
     /* Traverse the linkage tree for Gene-pool Optimal Mixing */
     changed = FALSE;
@@ -2933,17 +2993,18 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
             else
                 copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
             
-//            int generation = array_of_number_of_generations[population_id];
-//            updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+            int generation = array_of_number_of_generations[population_id];
+            updateFOSElementSuccess(FOSElementSuccessPerGeneration_mixed, generation, cluster_index, linkage_group_index, is_improved);
         }
     }
-    free(order);
+//    free(order);
 
     /* Forced Improvement */
     if (  (!changed) || (t_NIS > (1+floor(log10(population_size))))  )
     {
         changed = FALSE;
-        order = createRandomOrdering(number_of_linkage_sets);
+//        order = createRandomOrdering(number_of_linkage_sets);
+        order = Utility::getOrderedArray(min_linkage_set, max_linkage, Utility::Order::RANDOM);
         /* Perform another round of Gene-pool Optimal Mixing with the donors randomly selected from the archive. */
         for(i = 0; i < number_of_linkage_sets; i++)
         {
@@ -2991,7 +3052,7 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
 //                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
             }
         }
-        free(order);
+//        free(order);
 
         if(!changed)
         {
@@ -3001,6 +3062,12 @@ void MO_GOMEA::performMultiObjectiveGenepoolOptimalMixing( int cluster_index, ch
                     elitist_archive_constraint_values[donor_index], 
                     result, obj, con);
         }
+        int gen = array_of_number_of_generations[population_id];
+//        ForcedImprovementUsedPerGeneration[gen] = {ForcedImprovementUsedPerGeneration[gen][0] + 1, ForcedImprovementUsedPerGeneration[gen][1]};
+    } else {
+        // No forced improvement used
+//        int gen = array_of_number_of_generations[population_id];
+//        ForcedImprovementUsedPerGeneration[gen] = {ForcedImprovementUsedPerGeneration[gen][0], ForcedImprovementUsedPerGeneration[gen][1] + 1};
     }
 
     free( backup ); free( obj_backup ); 
@@ -3014,7 +3081,7 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
                                 char *result, double *obj, double *con )
 {
     char   *backup, *donor, *elitist_copy, is_unchanged, changed, is_improved, is_new_nondominated_point, is_dominated_by_archive;
-    int     i, j, index, donor_index, number_of_linkage_sets, linkage_group_index, *order;
+    int     i, j, index, donor_index, number_of_linkage_sets, linkage_group_index; //, *order;
     double  *obj_backup, con_backup;
 
     /* Clone the parent solution. */
@@ -3025,9 +3092,23 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
     obj_backup = (double *) Malloc( number_of_objectives*sizeof( double ) );
     copyFromAToB(result, obj, *con, backup, obj_backup, &con_backup);
 
-    number_of_linkage_sets = lt_length[cluster_index] - 1; /* Remove root from the linkage tree. */
+//    number_of_linkage_sets = lt_length[cluster_index] - 1; /* Remove root from the linkage tree. */
+//    number_of_linkage_sets = lt_length[cluster_index]; /* Root is already removed in generating LT */
     
-    order = createRandomOrdering(number_of_linkage_sets);
+    //    order = createRandomOrdering(number_of_linkage_sets);
+    
+    int max_linkage = max_linkage_set;
+    if (max_linkage_set == -1){
+        max_linkage = lt_length[cluster_index];
+    }
+    number_of_linkage_sets = max_linkage - min_linkage_set;
+//    cout << "min: " << min_linkage_set << endl;
+//    cout << "max: " << max_linkage_set << endl;
+    vector<int> order = Utility::getOrderedArray(min_linkage_set, max_linkage, Utility::Order::RANDOM);
+//    for (int i = 0; i < number_of_linkage_sets; i++){
+//        cout << order[i] << ", ";
+//    }
+//    cout << endl;
 
     /* Traverse the linkage tree for Gene-pool Optimal Mixing */
     changed = FALSE;
@@ -3069,13 +3150,15 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
             else
                 copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
             
-//            if(objective_index == 0){
-//                int generation = array_of_number_of_generations[population_id];
-//                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
-//            }
+            int generation = array_of_number_of_generations[population_id];
+            if(objective_index == 0){ // 0 IS ACCURACY
+                updateFOSElementSuccess(FOSElementSuccessPerGeneration_accuracy, generation, cluster_index, linkage_group_index, is_improved);
+            } else if (objective_index == 1){ // 1 IS MMACS
+                updateFOSElementSuccess(FOSElementSuccessPerGeneration_mmacs, generation, cluster_index, linkage_group_index, is_improved);
+            }
         }
     }
-    free(order);
+//    free(order);
 
     elitist_copy = (char*)Malloc(number_of_parameters*sizeof(char));
     /* Forced Improvement*/
@@ -3102,7 +3185,8 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
             elitist_copy[j] = elitist_archive[donor_index][j];
 
         /* Perform Gene-pool Optimal Mixing with the single-objective best-found solution as the donor. */
-        order = createRandomOrdering(number_of_linkage_sets);
+//        order = createRandomOrdering(number_of_linkage_sets);
+        vector<int> order = Utility::getOrderedArray(min_linkage_set, max_linkage, Utility::Order::RANDOM);
         for( i = 0; i < number_of_linkage_sets; i++ )
         {
             linkage_group_index = order[i];
@@ -3140,7 +3224,7 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
                     copyFromAToB(backup, obj_backup, con_backup, result, obj, con);
             }
         }
-        free(order);
+//        free(order);
 
         if(!changed)
         {
@@ -3162,10 +3246,23 @@ void MO_GOMEA::performSingleObjectiveGenepoolOptimalMixing( int cluster_index, i
             copyFromAToB(elitist_archive[donor_index], elitist_archive_objective_values[donor_index], 
                     elitist_archive_constraint_values[donor_index], 
                     result, obj, con);
+            
+//            if(objective_index == 1){
+//                int generation = array_of_number_of_generations[population_id];
+//                updateFOSElementSuccess(generation, cluster_index, linkage_group_index, is_improved);
+//            }
         }
+//        int gen = array_of_number_of_generations[population_id];
+//        ForcedImprovementUsedPerGeneration[gen] = {ForcedImprovementUsedPerGeneration[gen][0] + 1, ForcedImprovementUsedPerGeneration[gen][1]};
+//    } else {
+//        // No forced improvement used
+//        int gen = array_of_number_of_generations[population_id];
+//        ForcedImprovementUsedPerGeneration[gen] = {ForcedImprovementUsedPerGeneration[gen][0], ForcedImprovementUsedPerGeneration[gen][1] + 1};
     }
     
     free( backup ); free( obj_backup ); free( elitist_copy );
+    
+//    cout << "Cluster idx: " << cluster_index << "   obj: " << objective_index << endl;
 }
 /**
  * Determines the solutions that finally survive the generation (offspring only).
@@ -3362,6 +3459,9 @@ void MO_GOMEA::schedule_runMultiplePop_clusterPop_learnPop_improvePop()
             {
                 assignPointersToCorrespondingPopulation();
 
+                currentPopulation = population_id;
+                currentGeneration = array_of_number_of_generations[population_id];
+                cout << "Generation " << currentGeneration << " of popsize " << array_of_population_sizes[population_id] << " with " << array_of_number_of_clusters[population_id] << " clusters and evaluations: " << fitFunc->totalNetworkUniqueEvaluations << endl;
                 learnLinkageOnCurrentPopulation();
 
                 improveCurrentPopulation();
@@ -3712,6 +3812,9 @@ int MO_GOMEA::main_MO_GOMEA()
 //    cout << "ok" << endl;
     
     interpretCommandLine( argc, argv );
+    
+    min_linkage_set = 0;//fitFunc->totalProblemLength;
+    max_linkage_set = -1;//fitFunc->totalProblemLength;//-1;
 
     startTime = Utility::millis();
     run();
@@ -3733,7 +3836,31 @@ string MO_GOMEA::id(){
     return ("MO-GOMEA_fos=" + fos->id());
 }
 
-void MO_GOMEA::updateFOSElementSuccess(int generation, int clusterIdx, int linkageIdx, int is_improved){
+//void MO_GOMEA::updateFOSElementGenerationCount(vector<unordered_map<string, <#class _Tp#>>)
+
+void MO_GOMEA::updateFOSElementDetection(vector<unordered_map<string, vector<int>>> &FOSElementSuccessPerGeneration, int generation, vector<vector<int>> &FOS){
+    for (int i = 0; i < FOS.size(); i++){
+        vector<int> &FOSElement = FOS[i];
+        vector<int> orderedFOSElement = FOSStructures::sortFOSElement(FOSElement);
+        string FOSElement_string = FOSStructures::elementToString(orderedFOSElement);
+        vector<int> entry;
+//        cout << "insert element " << FOSElement_string << " for generation " << generation;
+//        if (isExtremeCluster){
+//            cout<< ", objective " << currentObjective << endl;
+//        } else {
+//            cout << ", objective mixed" << endl;
+//        }
+        if (FOSElementSuccessPerGeneration[generation].find(FOSElement_string) == FOSElementSuccessPerGeneration[generation].end()){
+            entry = {0, 0, 1};
+        } else {
+            entry = FOSElementSuccessPerGeneration[generation][FOSElement_string];
+            entry[2] += 1;
+        }
+        FOSElementSuccessPerGeneration[generation][FOSElement_string] = entry;
+    }
+}
+
+void MO_GOMEA::updateFOSElementSuccess(vector<unordered_map<string, vector<int>>> &FOSElementSuccessPerGeneration, int generation, int clusterIdx, int linkageIdx, int is_improved){
     vector<int> FOSElement;
     for(int i = 0; i < lt_number_of_indices[clusterIdx][linkageIdx]; i++){
         FOSElement.push_back(lt[clusterIdx][linkageIdx][i]);

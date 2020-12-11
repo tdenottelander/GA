@@ -204,6 +204,18 @@ vector<int> RandomTree_FOS::mergeElements (vector<int> &element1, vector<int> &e
 string RandomTree_FOS::id() { return "RT"; }
 string RandomTree_FOS::toString(){ return "Random Tree FOS"; }
 
+/* ------------------------ TupleTree FOS ------------------------------------- */
+TupleTree_FOS::TupleTree_FOS(Utility::Order order) : order(order){
+    reinitializeOnNewRound = true;
+}
+
+vector<vector<int>> TupleTree_FOS::getFOS (int genotypeLength){
+    return FOSStructures::getTupleTree_FOS(genotypeLength, order);
+}
+
+string TupleTree_FOS::id() { return "TT-" + Utility::orderToID(order); }
+string TupleTree_FOS::toString(){ return Utility::orderToString(order) + "Tuple Tree FOS"; }
+
 
 /* ------------------------ Namespace FOS Structures ------------------------ */
 
@@ -307,6 +319,53 @@ vector<vector<int>> FOSStructures::getARK6_FOS(int n, Utility::Order order){
     return fos;
 }
 
+vector<vector<int>> FOSStructures::getTuple_FOS(int n, Utility::Order order){
+    vector<vector<int>> fos;
+    fos.reserve(n/2);
+    
+    vector<int> orderArray = Utility::getOrderedArray(n, order);
+    
+    for (int i = 0; i < n/2; i++){
+        vector<int> subset(2, 0);
+        subset[0] = orderArray[i * 2];
+        subset[1] = orderArray[i * 2 + 1];
+        fos.push_back(subset);
+    }
+    return fos;
+}
+
+vector<vector<int>> FOSStructures::getTupleTree_FOS(int n, Utility::Order order){
+    vector<vector<int>> fos = getTuple_FOS(n, order);
+    vector<vector<int>> pool;
+    for (int i = 0; i < fos.size(); i++){
+        vector<int> temp;
+        temp = fos[i];
+        pool.push_back(temp);
+    }
+    while(pool.size() > 2){
+        vector<int> orderedArray = Utility::getOrderedArray(pool.size(), order);
+        int idx1 = orderedArray[0];
+        int idx2 = orderedArray[1];
+        vector<int> temp;
+        for (int i = 0; i < pool[idx1].size(); i++){
+            temp.push_back(pool[idx1][i]);
+        }
+        for (int i = 0; i < pool[idx2].size(); i++){
+            temp.push_back(pool[idx2][i]);
+        }
+        fos.push_back(temp);
+        if (idx1 > idx2){
+            pool.erase(pool.begin() + idx1);
+            pool.erase(pool.begin() + idx2);
+        } else {
+            pool.erase(pool.begin() + idx2);
+            pool.erase(pool.begin() + idx1);
+        }
+        pool.push_back(temp);
+    }
+    return fos;
+}
+
 void FOSStructures::printFOS(std::vector<vector<int>> fos){
     cout << "FOS: ";
     for (int i = 0; i < fos.size(); i++){
@@ -352,6 +411,9 @@ vector<vector<int>> FOSStructures::sortFOSMeanDescending (vector<vector<int>> & 
     return orderedFos;
 }
 
+/**
+ Bounds the FOS by trimming the layers with < bottomLevel elements and > topLevel elements
+ */
 vector<vector<int>> FOSStructures::boundFOS (vector<vector<int>> & fos, int bottomLevel, int topLevel){
     vector<vector<int>> boundedFOS;
     

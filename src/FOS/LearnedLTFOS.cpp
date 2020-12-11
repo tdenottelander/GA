@@ -10,6 +10,12 @@
 
 using namespace std;
 
+extern int currentGeneration;
+extern int currentPopulation;
+extern int currentObjective;
+extern bool isExtremeCluster;
+extern nlohmann::json JSON_MIM;
+
 
 /* ------------------------ Learned Linkage Tree FOS ------------------------ */
 
@@ -119,6 +125,9 @@ vector<vector<int>> LearnedLT_FOS::GenerateLinkageTreeFOS(const std::vector<Indi
 //        }
 //        cout << endl;
 //    }
+    
+    if (isExtremeCluster && currentObjective == 0)
+        JSON_MIM[to_string(currentPopulation)][to_string(currentGeneration)] = mi_matrix;
     
     // assemble the Linkage Tree with UPGMA
     FOS = BuildLinkageTreeFromSimilarityMatrix(problemLength, mi_matrix);

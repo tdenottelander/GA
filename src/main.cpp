@@ -65,9 +65,9 @@ mt19937 rng(mySeed);
 uniform_real_distribution<float> dist(0.0, 0.9999);
 
 // MAC OS
-//string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
+string projectDir = "/Users/tomdenottelander/Stack/#CS_Master/Afstuderen/projects/GA/";
 // Ross@CWI
-string projectDir = "/export/scratch1/tdo/TomGA/";
+//string projectDir = "/export/scratch1/tdo/TomGA/";
 
 string dataDir = projectDir + "data/";
 string benchmarksDir = projectDir + "benchmarks/";
@@ -79,8 +79,20 @@ string path_JSON_LS_Results;
 string path_JSON_Progress;
 string path_JSON_Run;
 string path_JSON_FOSElementSuccess;
+string path_JSON_ForcedImprovement;
+string path_JSON_MIM;
 
-std::vector<std::unordered_map<std::string, std::vector<int>>> FOSElementSuccessPerGeneration;
+std::vector<std::unordered_map<std::string, std::vector<int>>> FOSElementSuccessPerGeneration_accuracy;
+std::vector<std::unordered_map<std::string, std::vector<int>>> FOSElementSuccessPerGeneration_mmacs;
+std::vector<std::unordered_map<std::string, std::vector<int>>> FOSElementSuccessPerGeneration_mixed;
+std::vector<int> FOSLearnCount_accuracy (10000, 0);
+std::vector<int> FOSLearnCount_mmacs (10000, 0);
+std::vector<int> FOSLearnCount_mixed (10000, 0);
+std::vector<std::vector<int>> ForcedImprovementUsedPerGeneration; //First idx = generation. Vector = {[used, notused]}.
+int currentGeneration;
+int currentPopulation;
+int currentObjective;
+bool isExtremeCluster;
 
 string dataset = "cifar100";
 
@@ -141,6 +153,8 @@ json JSON_experiment;
 json JSON_fitfunc;
 json JSON_Run;
 json JSON_FOSElementSuccessRate;
+json JSON_MIM;
+//json JSON_ForcedImprovement;
 
 // Printing parameters
 bool printFullElitistArchive = false;
@@ -311,8 +325,11 @@ void setOptimizer(const char * argv[], int i){
         ga = new MO_LS(fitFunc);
     } else if (strcmp(argv[i], "MO-GOMEA") == 0){
         for (int i = 0; i < 1000; i++){
-            unordered_map<string, vector<int>> map;
-            FOSElementSuccessPerGeneration.push_back(map);
+//            unordered_map<string, vector<int>> map;
+            FOSElementSuccessPerGeneration_accuracy.push_back(unordered_map<string, vector<int>>());
+            FOSElementSuccessPerGeneration_mmacs.push_back(unordered_map<string, vector<int>>());
+            FOSElementSuccessPerGeneration_mixed.push_back(unordered_map<string, vector<int>>());
+            ForcedImprovementUsedPerGeneration.push_back({0,0});
         }
         use_MOGOMEA = true;
     } else if (strcmp(argv[i], "GOM") == 0){
@@ -366,6 +383,8 @@ void setFOS(const char * argv[], int i){
         fos = new RandomTree_FOS();
     } else if (strcmp(argv[i], "RandLT") == 0){
         fos = new RandomLT_FOS(fitFunc->problemType);
+    } else if (strcmp(argv[i], "TupleTree") == 0){
+        fos = new TupleTree_FOS(order);
     }
     if(fos == NULL){
         cout << "Could not read fos argument '" << argv[i] << "'. Use -? to see info on arguments. Exiting now." << endl;
@@ -586,12 +605,26 @@ void printRepetition(int rep){
     cout << endl;
 }
 
+void writeFOSElementSuccessToJSON (vector<unordered_map<string, vector<int>>> &FOSElementSuccessPerGeneration, vector<int> &FOSLearnCount, string keyValue){
+    for (int i = 0; i < FOSElementSuccessPerGeneration.size(); i++){
+        json generationalFOSElementSuccess;
+        for (auto it = FOSElementSuccessPerGeneration[i].begin(); it != FOSElementSuccessPerGeneration[i].end(); ++it ){
+            string key = it->first;
+            vector<int> value = it->second;
+            generationalFOSElementSuccess[key] = value;
+        }
+        JSON_FOSElementSuccessRate[keyValue][to_string(i)] = generationalFOSElementSuccess;
+        JSON_FOSElementSuccessRate["FOSLearnCount"][keyValue] = FOSLearnCount;
+    }
+}
+
 void performExperiment(){
     vector<int> evals;
     vector<int> uniqueEvals;
     vector<int> networkUniqueEvals;
     vector<int> times;
     path_JSON_FOSElementSuccess = writeDir + "/FOSElementSuccess.json";
+    path_JSON_ForcedImprovement = writeDir + "/ForcedImprovement.json";
 
     for (int rep = 0; rep < repetitions; rep++){
         path_JSON_Progress = writeDir + "/progress" + to_string(rep) + ".json";
@@ -599,12 +632,14 @@ void performExperiment(){
         path_JSON_SO_info = writeDir + "/SO_info" + to_string(rep) + ".json";
         path_JSON_LS_Results = writeDir + "/LS_results" + to_string(rep) + ".json";
         path_JSON_Run = writeDir + "/run" + to_string(rep) + ".json";
+        path_JSON_MIM = writeDir + "/MIM" + to_string(rep) + ".json";
 
         JSON_Progress.clear();
         JSON_MO_info.clear();
         JSON_SO_info.clear();
         JSON_LS_Results.clear();
         JSON_Run.clear();
+        JSON_MIM.clear();
         fitFunc->clear();
 
         if(use_MOGOMEA){
@@ -627,6 +662,7 @@ void performExperiment(){
         if (numberOfObjectives > 1) writeRawData(JSON_MO_info.dump(), path_JSON_MO_info);
         else writeRawData(JSON_SO_info.dump(), path_JSON_SO_info);
         if (saveLSArchiveResults && gaID().find("MO-LS") != string::npos) writeRawData(JSON_LS_Results, path_JSON_LS_Results);
+//        writeRawData(JSON_MIM.dump(), path_JSON_MIM);
     }
     cout << endl;
 
@@ -637,16 +673,16 @@ void performExperiment(){
     if (numberOfObjectives > 1) fitFunc->printElitistArchive(printFullElitistArchive);
 
     if(use_MOGOMEA){
-        for (int i = 0; i < FOSElementSuccessPerGeneration.size(); i++){
-            json generationalFOSElementSuccess;
-            for (auto it = FOSElementSuccessPerGeneration[i].begin(); it != FOSElementSuccessPerGeneration[i].end(); ++it ){
-                string key = it->first;
-                vector<int> value = it->second;
-                generationalFOSElementSuccess[key] = value;
-            }
-            JSON_FOSElementSuccessRate[to_string(i)] = generationalFOSElementSuccess;
-        }
+        
+        writeFOSElementSuccessToJSON(FOSElementSuccessPerGeneration_accuracy, FOSLearnCount_accuracy, "accuracy");
+        writeFOSElementSuccessToJSON(FOSElementSuccessPerGeneration_mmacs, FOSLearnCount_mmacs, "mmacs");
+        writeFOSElementSuccessToJSON(FOSElementSuccessPerGeneration_mixed, FOSLearnCount_mixed, "mixed");
         writeRawData(JSON_FOSElementSuccessRate.dump(), path_JSON_FOSElementSuccess);
+        json JSON_ForcedImprovement (ForcedImprovementUsedPerGeneration);
+//        for (int i = 0; i < 5; i++){
+//            JSON_ForcedImprovement[i] = ForcedImprovementUsedPerGeneration[i];
+//        }
+        writeRawData(JSON_ForcedImprovement.dump(), path_JSON_ForcedImprovement);
     }
 }
 

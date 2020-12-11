@@ -317,7 +317,10 @@ void initializeArrayOfParetoFronts();
 public:
     static std::string id();
     long startTime;
-    void updateFOSElementSuccess(int generation, int clusterIdx, int linkageIdx, int is_improved);
+    void updateFOSElementDetection(std::vector<std::unordered_map<std::string, std::vector<int>>> &FOSElementSuccessPerGeneration, int generation, std::vector<std::vector<int>> &FOS);
+    void updateFOSElementSuccess(std::vector<std::unordered_map<std::string, std::vector<int>>> &FOSElementSuccessPerGeneration, int generation, int clusterIdx, int linkageIdx, int is_improved);
+    int min_linkage_set;
+    int max_linkage_set;
 };
 
 #endif /* MO_GOMEA_hpp */

@@ -108,6 +108,14 @@ public:
     std::string toString() override;
 };
 
+class TupleTree_FOS : public FOS {
+public:
+    TupleTree_FOS(Utility::Order order);
+    Utility::Order order;
+    std::vector<std::vector<int>> getFOS(int genotypeLength) override;
+    std::string id() override;
+    std::string toString() override;
+};
 
 namespace FOSStructures {
     std::vector<std::vector<int>> getIncrementalLT_FOS (int n);
@@ -116,6 +124,8 @@ namespace FOSStructures {
     std::vector<std::vector<int>> getTriplet_FOS (int n, Utility::Order order);
     std::vector<std::vector<int>> getTripletTree_FOS (int n, Utility::Order order);
     std::vector<std::vector<int>> getARK6_FOS (int n, Utility::Order order);
+    std::vector<std::vector<int>> getTuple_FOS (int n, Utility::Order order);
+    std::vector<std::vector<int>> getTupleTree_FOS (int n, Utility::Order order);
     void printFOS(std::vector<std::vector<int>> fos);
     std::vector<std::vector<int>> sortFOSMeanAscending (std::vector<std::vector<int>> & fos);
     std::vector<std::vector<int>> sortFOSMeanDescending (std::vector<std::vector<int>> & fos);

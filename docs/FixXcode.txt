@@ -1,0 +1,8 @@
+When Xcode is not able to load the project, do this:
+
+Right-click GA.xcodeproj -> Show Package Contents
+Delete project.xcworkspace
+
+Now open the project as usual. It should work.
+
+(source: https://developer.apple.com/forums/thread/123204 comment by SeniorMoment)
